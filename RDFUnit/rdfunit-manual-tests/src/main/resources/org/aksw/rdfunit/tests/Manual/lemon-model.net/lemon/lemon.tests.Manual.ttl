@@ -1,0 +1,198 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix rutg:    <http://rdfunit.aksw.org/data/generators#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rlog:    <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/rlog#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rut:    <http://rdfunit.aksw.org/ns/core#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rutt:    <http://rdfunit.aksw.org/data/tests#> .
+@prefix rutp:    <http://rdfunit.aksw.org/data/patterns#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+
+
+# A lemon:LexicalEntry needs at least one lemon:canonicalForm.
+# TODO use TYPRODEP pattern
+rutt:lemon-entryWithoutCanonicalForm
+      a rut:ManualTestCase ;
+      dcterms:description "A lemon:LexicalEntry needs exactly one lemon:canonicalForm property";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#LexicalEntry>;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:ERROR ;
+      rut:sparqlWhere """ {
+                           ?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> .
+                           FILTER (NOT EXISTS {?this <http://lemon-model.net/lemon#canonicalForm> ?v1 .})
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> . } """ .
+
+# A lemon:LexicalEntry should have an rdfs:label
+# TODO use TYPRODEP pattern
+rutt:lemon-entryWithoutLabel
+      a rut:ManualTestCase ;
+      dcterms:description "Resource has no rdfs:label";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#LexicalEntry>;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:INFO ;
+      rut:sparqlWhere """ {
+                           ?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> .
+                           FILTER (NOT EXISTS {?this <http://www.w3.org/2000/01/rdf-schema#label> ?v1 .})
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> . } """ .
+
+# A lemon:LexicalEntry should have exactly one lemon:language.
+# TODO use TYPRODEP (exists) & CARDT (exactly once) patterns
+rutt:lemon-entryExactlyOneLanguage
+      a rut:ManualTestCase ;
+      dcterms:description "Resource has no lemon:language property";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#LexicalEntry>;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:INFO ;
+      rut:sparqlWhere """ {
+                           		{?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> .
+                           			FILTER (NOT EXISTS {?this <http://lemon-model.net/lemon#language> ?lang .})
+                           		}UNION{
+								 ?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> .
+								 ?this <http://lemon-model.net/lemon#language> ?lang1 .
+								 ?this <http://lemon-model.net/lemon#language> ?lang2 .
+                           			FILTER (?lang1!=?lang2)
+								}
+                           		# README
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this rdf:type <http://lemon-model.net/lemon#LexicalEntry> . } """ .
+
+# A lemon:LexicalSense either needs a subsense or exactly one reference
+rutt:lemon-lexicalSenseReferenceCount
+      a rut:ManualTestCase ;
+      dcterms:description "A lemon:LexicalSense either needs a subsense or exactly one reference";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#LexicalSense>;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:ERROR ;
+      rut:sparqlWhere """ {
+                           		{?this rdf:type <http://lemon-model.net/lemon#LexicalSense> .
+                           			FILTER (NOT EXISTS {?this <http://lemon-model.net/lemon#subsense> ?sub .})
+                                    FILTER (NOT EXISTS {?this <http://lemon-model.net/lemon#reference> ?ref .})
+                           		}UNION{
+								 ?this rdf:type <http://lemon-model.net/lemon#LexicalSense> .
+								 ?this <http://lemon-model.net/lemon#reference> ?ref1 .
+								 ?this <http://lemon-model.net/lemon#reference> ?ref2 .
+                           			FILTER (?ref1!=?ref2)
+								}
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this rdf:type <http://lemon-model.net/lemon#LexicalSense> . } """ .
+
+
+
+# Narrower should not be symmetric
+# TODO use OWLSYMMETRICPROP pattern
+rutt:lemon-narrowerNotSymmetric
+      a rut:ManualTestCase ;
+      dcterms:description "Resource is a broader sense from narrower and the relation can not be symmetric";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#narrower> ;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:ERROR ;
+      rut:sparqlWhere """ {
+                           ?this <http://lemon-model.net/lemon#narrower>+ ?narrower .
+                           ?narrower <http://lemon-model.net/lemon#narrower>+ ?this .
+                          } """ ;
+      rut:sparqlPrevalence
+              " " .
+
+# Broader should not be symmetric
+# TODO use OWLSYMMETRICPROP pattern
+rutt:lemon-broaderNotSymmetric
+      a rut:ManualTestCase ;
+      dcterms:description "Resource is a narrower sense than a broader and the relation can not be symmetric";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#broader> ;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:ERROR ;
+      rut:sparqlWhere """ {
+                           ?this <http://lemon-model.net/lemon#broader>+ ?broader .
+                           ?broader <http://lemon-model.net/lemon#broader>+ ?this .
+                          } """ ;
+      rut:sparqlPrevalence
+              " " .
+
+# If a sense is narrower than another, the other should be broader than the first one
+rutt:lemon-narrowerNoBroaderInverse
+      a rut:ManualTestCase ;
+      dcterms:description "Resource is a broader sense than a narrower, so there should be an inverse lemon:broader property";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#broader> ;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:INFO ;
+      rut:sparqlWhere """ {
+                           ?this <http://lemon-model.net/lemon#narrower> ?narrower .
+                           FILTER (NOT EXISTS {?narrower <http://lemon-model.net/lemon#broader> ?this .})
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this <http://lemon-model.net/lemon#narrower> ?narrower . } """ .
+
+# A lemon:component should have at least one lemon:element.
+# TODO use TYPRODEP pattern
+rutt:lemon-componentNoElement
+      a rut:ManualTestCase ;
+      dcterms:description "A lemon:Component needs a lemon:element property";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://lemon-model.net/lemon#Component> , <http://lemon-model.net/lemon#element> ;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:WARN ;
+      rut:sparqlWhere """ {
+                           ?this rdf:type <http://lemon-model.net/lemon#Component> .
+                           FILTER (NOT EXISTS {?this <http://lemon-model.net/lemon#element> ?v1 .})
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this rdf:type <http://lemon-model.net/lemon#Component> . } """ .
+
+#Language property value should not have a language tag itself
+rutt:lemon-languageTagOnLanguageProperty
+      a rut:ManualTestCase ;
+      dcterms:description "Language literals may not have a language tag themselves";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://www.lemon-model.net/lemon#language> ;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:ERROR ;
+      rut:sparqlWhere """ {
+                           ?this <http://www.lemon-model.net/lemon#language> ?v1 .
+                           FILTER (lang(?v1)!="")
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this <http://www.lemon-model.net/lemon#language> ?v1 . } """ .
+
+#Rule property value should not have a language tag
+rutt:lemon-languageTagOnRuleProperty
+      a rut:ManualTestCase ;
+      dcterms:description "Rule literals may not have a language tag";
+      rut:appliesTo rut:Schema ;
+      rut:generated rut:ManuallyGenerated ;
+      rut:references <http://www.lemon-model.net/lemon#rule> ;
+      rut:source <http://lemon-model.net/lemon#> ;
+      rut:testCaseLogLevel rlog:ERROR ;
+      rut:sparqlWhere """ {
+                           ?this <http://www.lemon-model.net/lemon#rule> ?v1 .
+                           FILTER (lang(?v1)!="")
+                            } """ ;
+      rut:sparqlPrevalence """ SELECT (count(?this) AS ?total) WHERE {
+                                 ?this <http://www.lemon-model.net/lemon#rule> ?v1 . } """ .
+
+#check for multiple lemon types
+
+#Strings should have language tags, language tags should match a regex (may take a long time to query, omitted)

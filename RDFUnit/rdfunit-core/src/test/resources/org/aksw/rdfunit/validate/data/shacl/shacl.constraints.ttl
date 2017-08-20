@@ -1,0 +1,197 @@
+@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rlog: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/rlog#> .
+
+
+# A sample shape, meant only to test the shape readers (ATM)
+
+ex:Person
+	a sh:Shape ;
+	a rdfs:Class ;
+	# sh:targetClass ex:Person ; implicit target
+
+####
+# ValueTypeConstraints
+
+	sh:property [
+		sh:path ex:classCheckProperty ;
+		sh:class ex:SuperClass ;
+	] ;
+
+
+    sh:property [
+        sh:path ex:checkDatatype ;
+        sh:datatype xsd:date ;
+    ] ;
+
+
+    # sh:nodeType
+	sh:property [
+		sh:path ex:checkNodeKindIRI ;
+		sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path ex:checkNodeKindLiteral ;
+        sh:nodeKind sh:Literal ;
+    ]  ;
+    sh:property [
+        sh:path ex:checkNodeKindBlankNode ;
+        sh:nodeKind sh:BlankNode ;
+    ] ;
+    sh:property [
+        sh:path ex:checkNodeKindBlankNodeOrIRI ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
+    ] ;
+    sh:property [
+        sh:path ex:checkNodeKindBlankNodeOrLiteral ;
+        sh:nodeKind sh:BlankNodeOrLiteral ;
+    ] ;
+    sh:property [
+        sh:path ex:checkNodeKindIRIOrLiteral ;
+        sh:nodeKind sh:IRIOrLiteral ;
+    ] ;
+
+####
+##
+
+    sh:property [
+        sh:path ex:checkEquals ;
+        sh:equals ex:checkEqualsTo ;
+    ] ;
+    sh:property [
+        sh:path ex:checkNotEquals ;
+        sh:disjoint ex:checkNotEqualsTo ;
+    ] ;
+    sh:property [
+        sh:path ex:checkLength ;
+        sh:minLength 3;
+        sh:maxLength 5;
+    ];
+    sh:property [
+        sh:path ex:checkMinMaxExclusive ;
+        sh:minExclusive 5 ;
+        sh:maxExclusive 10 ;
+    ] ;
+    sh:property [
+        sh:path ex:checkMinMaxInclusive ;
+        sh:minInclusive 5 ;
+        sh:maxInclusive 10 ;
+    ] ;
+    sh:property [
+        sh:path ex:checkPattern ;
+        sh:pattern "^\\s"; # start with whitespace
+        sh:flags "i" ;
+    ] ;
+
+    sh:property [
+        sh:path ex:checkIn ;
+        sh:in (ex:Example "example" ) ;
+    ] ;
+
+
+.
+
+ex:NodeConstraintClassShape a sh:Shape ;
+    sh:targetClass ex:NodeConstraintClass ;
+    sh:class ex:Person ;
+    .
+
+ex:NodeConstraintDatatypeShape a sh:Shape ;
+    sh:targetObjectsOf ex:booleanValues ;
+    sh:datatype xsd:boolean ;
+    .
+
+ex:MyHasValueShape
+	a sh:Shape ;
+	sh:targetClass ex:HasValueShape ;
+    sh:property [
+        sh:path ex:checkHasValue ;
+        sh:hasValue "100"^^xsd:int ;
+    ] ;
+    .
+
+ex:MyCardShapeMin
+	a sh:Shape ;
+	sh:targetClass ex:CardCheckMin ;
+
+#    sh:property [
+#        sh:path ex:checkMinCount0 ;
+#        sh:minCount "0"^^xsd:int ;
+#    ] ;
+
+    sh:property [
+        sh:path ex:checkMinCount1 ;
+        sh:minCount "1"^^xsd:int ;
+    ] ;
+
+    sh:property [
+        sh:path ex:checkMinCount3 ;
+        sh:minCount "3"^^xsd:int ;
+    ] ;
+.
+ex:MyCardShapeMax
+	a sh:Shape ;
+	sh:targetClass ex:CardCheckMax ;
+
+    sh:property [
+        sh:path ex:checkMaxCount0 ;
+        sh:maxCount "0"^^xsd:int ;
+    ] ;
+
+    sh:property [
+        sh:path ex:checkMaxCount1 ;
+        sh:maxCount "1"^^xsd:int ;
+    ] ;
+
+    sh:property [
+        sh:path ex:checkMaxCount3 ;
+        sh:maxCount "3"^^xsd:int ;
+    ] ;
+    .
+
+ex:MyUniqueLangShape
+	a sh:Shape ;
+	sh:targetClass ex:UniqueLangShape ;
+
+    sh:property [
+        sh:path ex:checkUniqueLang ;
+        sh:uniqueLang "true"^^xsd:boolean;
+    ] ;
+.
+
+ex:MyLanguageInShape
+	a sh:Shape ;
+	sh:targetClass ex:LanguageInShape ;
+
+    sh:property [
+        sh:path ex:checkLanguageIn ;
+        sh:languageIn ("en" "el") ;
+    ] ;
+.
+
+ex:NodeExampleShape
+	a sh:Shape ;
+	sh:targetClass ex:NodeClass;
+	sh:property [
+		sh:path ex:someProperty ;
+		sh:node ex:NodeNested1 ;
+	] .
+
+ex:NodeNested1
+    a sh:Shape ;
+    sh:property [
+        sh:path ex:nestedProperty ;
+        sh:minCount 2 ;
+        sh:node ex:NodeNested2;
+    ].
+
+ex:NodeNested2
+    a sh:Shape ;
+    sh:property [
+        sh:path ex:nestedProperty2 ;
+        sh:datatype xsd:int;
+    ].
+

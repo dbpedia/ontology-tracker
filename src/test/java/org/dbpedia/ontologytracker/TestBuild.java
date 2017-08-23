@@ -1,59 +1,63 @@
 package org.dbpedia.ontologytracker;
 
 import org.aksw.rdfunit.enums.TestCaseExecutionType;
+import org.aksw.rdfunit.io.reader.RdfDereferenceReader;
+import org.aksw.rdfunit.io.reader.RdfReader;
+import org.aksw.rdfunit.io.reader.RdfReaderException;
+import org.aksw.rdfunit.io.reader.RdfReaderFactory;
 import org.aksw.rdfunit.model.interfaces.TestCase;
-import org.aksw.rdfunit.model.interfaces.results.TestCaseResult;
+import org.aksw.rdfunit.model.interfaces.TestSuite;
 import org.aksw.rdfunit.model.interfaces.results.TestExecution;
+import org.aksw.rdfunit.sources.TestSource;
+import org.aksw.rdfunit.sources.TestSourceFactory;
+import org.aksw.rdfunit.utils.TestUtils;
 import org.aksw.rdfunit.validate.wrappers.RDFUnitStaticValidator;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.apache.jena.rdf.model.Model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
-
-@RunWith(Parameterized.class)
 public class TestBuild {
 
 //    private final OntModel model;
-    TestCaseResult tcr;
+    private static final String DBO_MANUAL_TESTS = "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbo.tests.Manual.ttl";
+    private static final String DBPEDIA_ONTOLOGY = "http://rawgit.com/gcpdev/ontology-tracker/master/ontology/dbpedia_2016-10.owl";
 
-
-    public TestBuild(TestCaseResult tcr) {
-        this.tcr = tcr;
+    private RdfReader getDBpediaReader() {
+        RdfReader readRDF = new RdfDereferenceReader(DBPEDIA_ONTOLOGY);
+        return readRDF;
     }
 
-    @Parameterized.Parameters
-    public static List<TestCaseResult> testNumbers() {
-        OntModel model = ModelFactory.createOntologyModel();
+    private TestSource getDBOSource() {
+        return TestSourceFactory.createDumpTestSource("dbo", "http://dbpedia.org", getDBpediaReader(), new ArrayList<>());
 
+    }
 
+    private static TestSuite getDBpMappingsTestSuite() throws RdfReaderException {
+        Collection<TestCase> tests = null;
         try {
-            RDFDataMgr.read(model, "", "", Lang.TURTLE);
+            tests = TestUtils.instantiateTestsFromModel(
+                    (Model) TestUtils.instantiateTestsFromModel(RdfReaderFactory.createResourceReader(DBO_MANUAL_TESTS).read()));
         } catch (Exception e) {
-            e.printStackTrace();
+            fail("Cannot read resource: " + DBO_MANUAL_TESTS + ": " +
+                    e.getCause());
         }
 
-        //TODO
-        TestExecution te = RDFUnitStaticValidator.validate(null, null, "");
-
-        List<TestCaseResult> tcrs = new ArrayList<>();
-        tcrs.addAll( te.getTestCaseResults());
-        return tcrs;
+        return new TestSuite(tests);
     }
 
-    @Test
-    public void checkIssuesForError() {
-           assertNotEquals(tcr.getMessage(),tcr.getSeverity().name(),"ERROR");
+    /**
+     * <p>validateAllMappings.</p>
+     *
+     * @return a {@link org.apache.jena.rdf.model.Model} object.
+     * @throws RdfReaderException if any.
+     */
+    public TestExecution validateAllMappings() throws RdfReaderException {
+        return RDFUnitStaticValidator.validate(TestCaseExecutionType.aggregatedTestCaseResult, getDBOSource(), getDBpMappingsTestSuite());
     }
+
+
 
 }

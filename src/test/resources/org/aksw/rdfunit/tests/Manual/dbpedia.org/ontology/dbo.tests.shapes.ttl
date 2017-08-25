@@ -7,26 +7,49 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 
-
-owl:ClassShape
-  a sh:Shape;
-#  dcterms:description "";
+dbo:CheckClassesLabelsShape
+  a sh:Shape ;
   sh:targetClass owl:Class ;
-
-  sh:property [
-      sh:path rdfs:label ;
-      sh:datatype xsd:string ;
-      sh:minCount 1 ;
+    sh:sparql [
+        sh:message "Each owl:Class should have at least one rdfs:label" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT DISTINCT $this ?v1
+            WHERE  {
+              $this a owl:Class .
+              FILTER NOT EXISTS {$this rdfs:label ?v1 }
+            }""" ;
     ] .
 
-
-#    sh:sparql [
-#        sh:message "Each owl:Class should have at least one rdfs:label" ;
-#        sh:severity sh:Warning ;
-#        sh:select """
-#            SELECT DISTINCT $this ?v1
-#            WHERE  {
-#              $this a owl:Class .
-#              FILTER NOT EXISTS {?this rdfs:label ?v1 }
-#            }""" ;
-#    ] .
+dbo:restrictTopClassesShape
+  a sh:Shape ;
+  sh:targetClass owl:Class ;
+    sh:sparql [
+        sh:message "DBpedia Ontology only allows 9 top level classes, any new top level classes need to be discussed here -link missing-" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT DISTINCT $this ?otherClass
+            WHERE  {
+                    $this rdfs:subClassOf owl:Thing  .
+                    FILTER NOT EXISTS {
+                      $this rdfs:subClassOf ?otherClass .
+                      FILTER(?otherClass != owl:Thing) .
+                      FILTER(?otherClass != $this) .
+                    }
+                    FILTER($this NOT IN (
+                        <http://dbpedia.org/ontology/Activity>,
+                        <http://dbpedia.org/ontology/Agent>,
+                        <http://dbpedia.org/ontology/Concept>,
+                        <http://dbpedia.org/ontology/CommunicationSystem>,
+                        <http://dbpedia.org/ontology/Condition>,
+                        <http://dbpedia.org/ontology/Event>,
+                        <http://dbpedia.org/ontology/PhysicalThing>,
+                        <http://dbpedia.org/ontology/Place>,
+                        <http://dbpedia.org/ontology/TimePeriod>)
+                    ).
+            } """ ;
+    ] .

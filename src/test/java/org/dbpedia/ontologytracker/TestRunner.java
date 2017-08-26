@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(RdfUnitJunitRunner.class)
 @Schema(uri = "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbo.tests.shapes.ttl")
-//@Schema(uri = "http://mappings.dbpedia.org/server/ontology/dbpedia.owl")
 public class TestRunner {
 
     @TestInput

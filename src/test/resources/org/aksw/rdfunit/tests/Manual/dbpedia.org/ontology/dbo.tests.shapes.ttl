@@ -3,6 +3,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dbo-shape: <http://dbpedia.org/dbo-shape#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 dbo-shape:
   rdfs:label "SHACL for DBpedia Ontology"@en ;
@@ -58,18 +59,24 @@ dbo-shape:restrictTopClassesShape
 dbo-shape:CheckClassesLabelsShape
   a sh:Shape ;
   sh:targetClass owl:Class ;
-    sh:sparql [
-        sh:message "Each owl:Class should have at least one rdfs:label" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT $this ?v1
-            WHERE  {
-              $this a owl:Class .
-              FILTER NOT EXISTS {$this rdfs:label ?v1 }
-            }""" ;
-] .
+  sh:property [
+    sh:message "Each owl:Class should have at least one rdfs:label" ;
+    sh:path rdfs:label ;
+    sh:minCount 1;
+    sh:dataType rdf:langString;
+].
+#    sh:sparql [
+#        sh:message "Each owl:Class should have at least one rdfs:label" ;
+#        sh:severity sh:Warning ;
+#        sh:select """
+#            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+#            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+#            SELECT DISTINCT $this ?v1
+#            WHERE  {
+#              $this a owl:Class .
+#              FILTER NOT EXISTS {$this rdfs:label ?v1 }
+#            }""" ;
+#] .
 
 dbo-shape:CheckClassesLabels2Shape
   a sh:Shape ;

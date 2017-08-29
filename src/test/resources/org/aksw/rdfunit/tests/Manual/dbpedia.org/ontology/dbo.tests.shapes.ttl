@@ -179,7 +179,10 @@ dbo-shape:CheckPropertiesLabels2Shape
 
 dbo-shape:CheckPropertiesCommentsShape
   a sh:Shape ;
-  sh:targetClass owl:Class ;
+  #sh:targetSubjectsOf rdfs:comment ;
+  sh:targetClass rdf:Property ;
+  sh:targetClass owl:DatatypeProperty ;
+  sh:targerClass owl:ObjectProperty  ;
     sh:sparql [
         sh:message "Each property should have at least one rdfs:comment" ;
         sh:severity sh:Warning ;
@@ -187,10 +190,10 @@ dbo-shape:CheckPropertiesCommentsShape
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            SELECT DISTINCT $this ?v1
+            SELECT DISTINCT $this
             WHERE {
                   $this rdf:type ?property .
-                  FILTER NOT EXISTS {$this rdfs:comment ?v1 }
+                  FILTER NOT EXISTS {$this rdfs:comment ?v1 } .
                   filter(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
             }""" ;
 ] .

@@ -8,7 +8,7 @@ import org.aksw.rdfunit.junit.RdfUnitJunitRunner;
 import org.aksw.rdfunit.junit.Schema;
 import org.aksw.rdfunit.junit.TestInput;
 import org.junit.runner.RunWith;
-import org.aksw.rdfunit.utils.UriToPathUtils;
+import org.aksw.rdfunit.commons.*;
 
 
 @RunWith(RdfUnitJunitRunner.class)
@@ -17,6 +17,7 @@ public class TestRunner {
 
     @TestInput
     public RdfReader getInputData() throws RdfReaderException {
+
         return new RdfModelReader(
                 RdfReaderFactory.createResourceReader(
                         //"http://rawgit.com/gcpdev/ontology-tracker/master/ontology/dbpedia_2016-10.owl").read());

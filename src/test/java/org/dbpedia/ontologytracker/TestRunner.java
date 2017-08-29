@@ -8,6 +8,7 @@ import org.aksw.rdfunit.junit.RdfUnitJunitRunner;
 import org.aksw.rdfunit.junit.Schema;
 import org.aksw.rdfunit.junit.TestInput;
 import org.junit.runner.RunWith;
+import org.aksw.rdfunit.utils.UriToPathUtils;
 
 
 @RunWith(RdfUnitJunitRunner.class)

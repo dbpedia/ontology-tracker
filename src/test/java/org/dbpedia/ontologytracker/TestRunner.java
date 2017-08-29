@@ -18,6 +18,7 @@ public class TestRunner {
     public RdfReader getInputData() throws RdfReaderException {
         return new RdfModelReader(
                 RdfReaderFactory.createResourceReader(
+                        //"http://rawgit.com/gcpdev/ontology-tracker/master/ontology/dbpedia_2016-10.owl").read());
                         "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbpedia_2016-10.owl").read());
     }
     ;

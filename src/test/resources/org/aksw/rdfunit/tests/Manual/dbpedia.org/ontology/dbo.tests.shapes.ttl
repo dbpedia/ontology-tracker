@@ -100,18 +100,24 @@ dbo-shape:CheckClassesLabels2Shape
 dbo-shape:CheckClassesCommentsShape
   a sh:Shape ;
   sh:targetClass owl:Class ;
-    sh:sparql [
-        sh:message "Each owl:Class should have at least one rdfs:comment" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT $this ?v1
-            WHERE  {
-              $this a owl:Class .
-              FILTER NOT EXISTS {$this rdfs:comment ?v1 }
-            }""" ;
-] .
+  sh:property [
+    sh:message "Each owl:Class should have at least one rdfs:comment" ;
+    sh:path rdfs:comment ;
+    sh:minCount 1;
+    sh:dataType rdf:langString;
+].
+#    sh:sparql [
+#        sh:message "Each owl:Class should have at least one rdfs:comment" ;
+#        sh:severity sh:Warning ;
+#        sh:select """
+#            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+#            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+#            SELECT DISTINCT $this ?v1
+#            WHERE  {
+#              $this a owl:Class .
+#              FILTER NOT EXISTS {$this rdfs:comment ?v1 }
+#            }""" ;
+#] .
 
 dbo-shape:CheckClassesComments2Shape
   a sh:Shape ;
@@ -135,19 +141,30 @@ dbo-shape:CheckClassesComments2Shape
 dbo-shape:CheckPropertiesLabelsShape
   a sh:Shape ;
   sh:targetClass owl:Class ;
-    sh:sparql [
-        sh:message "Each property should have at least one rdfs:label" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            SELECT DISTINCT $this ?property
-            WHERE {
-                  $this rdf:type ?property .
-                  FILTER NOT EXISTS {$this rdfs:label ?v1 . } .
-                  FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
-            }""" ;
+# this would be a simpler way, but it generates three different tests
+#   sh:targetClass rdf:Property;
+#   sh:targetClass owl:DatatypeProperty;
+#   sh:targetClass owl:ObjectProperty;
+#   sh:property [
+#     sh:message "Each property should have at least one rdfs:label" ;
+#     sh:severity sh:Warning ;
+#     sh:path rdfs:label ;
+#     sh:minCount 1;
+#     sh:dataType rdf:langString;
+# ].
+   sh:sparql [
+       sh:message "Each property should have at least one rdfs:label" ;
+       sh:severity sh:Warning ;
+       sh:select """
+           PREFIX owl: <http://www.w3.org/2002/07/owl#>
+           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+           SELECT DISTINCT $this ?property
+           WHERE {
+                 $this rdf:type ?property .
+                 FILTER NOT EXISTS {$this rdfs:label ?v1 . } .
+                 FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
+           }""" ;
 ] .
 
 dbo-shape:CheckPropertiesLabels2Shape
@@ -173,6 +190,17 @@ dbo-shape:CheckPropertiesLabels2Shape
 
 dbo-shape:CheckPropertiesCommentsShape
   a sh:Shape ;
+# this would be a simpler way, but it generates three different tests
+#   sh:targetClass rdf:Property;
+#   sh:targetClass owl:DatatypeProperty;
+#   sh:targetClass owl:ObjectProperty;
+#   sh:property [
+#     sh:message "Each property should have at least one rdfs:comment" ;
+#     sh:severity sh:Warning ;
+#     sh:path rdfs:comment ;
+#     sh:minCount 1;
+#     sh:dataType rdf:langString;
+# ].
   sh:targetClass owl:Class ;
     sh:sparql [
         sh:message "Each property should have at least one rdfs:comment" ;
@@ -279,7 +307,7 @@ dbo-shape:CheckDomainRangeShape
   a sh:Shape ;
   sh:targetObjectsOf rdfs:domain ;
     sh:sparql [
-        sh:message "Each property should have exactly one rdfs:domain and rdfs:range" ;
+        sh:message "Each resource should have exactly one rdfs:domain and rdfs:range" ;
         sh:severity sh:Warning ;
         sh:select """
             PREFIX owl: <http://www.w3.org/2002/07/owl#>

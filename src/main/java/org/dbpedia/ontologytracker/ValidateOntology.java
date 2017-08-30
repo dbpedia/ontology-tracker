@@ -43,12 +43,13 @@ public class ValidateOntology {
 
     }
 
-    private static void runTests(RDFUnitValidate rval) {
+    private static Collection<TestCaseResult> runTests(RDFUnitValidate rval) {
 
         TestExecution te = rval.checkModelWithRdfUnit(model);
         Collection<TestCaseResult> tcrs = te.getTestCaseResults();
         tcrs.forEach(tcr ->
                 issues.add(Issue.create(tcr.getSeverity().name(), tcr.getMessage()+" "+((ShaclTestCaseResult)tcr).getFailingResource(),L,null)));
+        return tcrs;
     }
 
     public static void main(String[] args) throws IOException {
@@ -56,14 +57,16 @@ public class ValidateOntology {
         RDFUnitValidate rval = new RDFUnitValidate();
         File file = new File(DBPEDIA_ONTOLOGY);
         readOntology(file);
-        runTests(rval);
+        Collection<TestCaseResult> tcrs = runTests(rval);
 
         issues.stream().forEach((org.dbpedia.ontologytracker.Issue i) -> {
             i.prepareJSON(model);
         });
 
         FileWriter fw = new FileWriter(outdir + File.separator + "data.json");
-        new Gson().toJson(issues, fw);
+        //new Gson().toJson(issues, fw);
+        new Gson().toJson(tcrs, fw);
+
         fw.close();
         L.info("wrote json to " + outdir + File.separator + "data.json");
 

@@ -1,5 +1,6 @@
 package org.dbpedia.ontologytracker;
 
+import org.aksw.rdfunit.model.helper.PropertyValuePair;
 import org.aksw.rdfunit.model.interfaces.results.ShaclTestCaseResult;
 
 import java.util.HashSet;
@@ -10,7 +11,19 @@ public class DBpediaTest {
     public String message;
     public String testcaseuri;
     public String failingresource;
-    public Set<String> propertyValuepairs = new HashSet<>();
+    public Set<PV> propertyValuePairs = new HashSet<>();
+
+    public class PV {
+        public String property;
+        public Set<String> values = new HashSet<>();
+
+        public PV(PropertyValuePair p) {
+            this.property = p.getProperty().toString();
+            p.getValues().forEach(v -> {
+                this.values.add(v.toString());
+            });
+        }
+    }
 
     public DBpediaTest(ShaclTestCaseResult stcr) {
         level = stcr.getSeverity().name();
@@ -19,7 +32,7 @@ public class DBpediaTest {
         testcaseuri = stcr.getTestCaseUri();
         level = stcr.getResultAnnotations().toString();
         stcr.getResultAnnotations().forEach(p -> {
-            propertyValuepairs.add(p.toString());
+            propertyValuePairs.add(new PV(p));
         });
     }
 }

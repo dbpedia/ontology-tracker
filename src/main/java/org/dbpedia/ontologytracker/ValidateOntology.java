@@ -71,7 +71,7 @@ public class ValidateOntology {
             tests.add(new DBpediaTest(t));
 
         });
-        
+
 
         FileWriter fw = new FileWriter(outdir + File.separator + "data.json");
         new Gson().toJson(tests, fw);

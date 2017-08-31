@@ -30,9 +30,11 @@ public class ValidateOntology {
     private static String outdir = "result";
 
 
-    private static OntModel readDBpediaOntology() throws IOException {
+    private static Model readDBpediaOntology() throws IOException {
 
-        OntModel model = ModelFactory.createOntologyModel();
+        //OntModel model = ModelFactory.createOntologyModel();
+        Model model = ModelFactory.createDefaultModel();
+
         try {
             RDFDataMgr.read(model, DBPEDIA_ONTOLOGY.toURI().toString(), baseUri, Lang.TURTLE);
         } catch (Exception e) {
@@ -58,7 +60,7 @@ public class ValidateOntology {
 
         new File(outdir).mkdirs();
 
-        OntModel model = readDBpediaOntology();
+        Model model = readDBpediaOntology();
         L.debug("Read model: " + model.size() + " triples");
 
         Collection<ShaclTestCaseResult> tcrs = runTests(model);

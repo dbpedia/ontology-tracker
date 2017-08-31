@@ -12,11 +12,13 @@ import org.aksw.rdfunit.sources.SchemaSourceFactory;
 import org.aksw.rdfunit.tests.generators.ShaclTestGenerator;
 import org.aksw.rdfunit.validate.wrappers.RDFUnitStaticValidator;
 import org.apache.jena.rdf.model.Model;
+import org.apache.log4j.Logger;
 
 public class RDFUnitValidate {
 
     TestSuite ts = null;
     static String defaultSchema = "/dbo.tests.shapes.ttl";
+    private static Logger L = Logger.getLogger(RDFUnitValidate.class);
 
     public RDFUnitValidate() {
         this(defaultSchema);
@@ -31,15 +33,11 @@ public class RDFUnitValidate {
         }
         SchemaSource ontologyShaclSource = SchemaSourceFactory.createSchemaSourceSimple("tests", "http://rdfunit.aksw.org", ontologyShaclReader);
         this.ts = new TestSuite(new ShaclTestGenerator().generate(ontologyShaclSource));
-
+        L.debug("Generated "+ts.getTestCases().size() + " test cases");
     }
 
-
     public TestExecution checkModelWithRdfUnit(Model model) {
-
         return RDFUnitStaticValidator.validate(TestCaseExecutionType.shaclFullTestCaseResult, model, this.ts);
-
-
     }
 
 

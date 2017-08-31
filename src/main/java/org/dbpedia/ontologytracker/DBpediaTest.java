@@ -8,12 +8,12 @@ import org.apache.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 
-public class Issue {
+public class DBpediaTest {
     public String level;
     public String message;
     static JsonElement modelasjson;
 
-    private Issue(String level, String message) {
+    private DBpediaTest(String level, String message) {
         this.level = level;
         this.message = message;
     }
@@ -24,10 +24,10 @@ public class Issue {
      * @param message
      * @return
      */
-    public static Issue create(String level, String message ){
+    public static DBpediaTest create(String level, String message ){
         level = level.toUpperCase();
 
-        return new Issue(level,message);
+        return new DBpediaTest(level,message);
     }
 
     /**
@@ -40,7 +40,7 @@ public class Issue {
      * @return
      */
 
-    public static Issue create(String level, String message, Logger L, Exception e  ){
+    public static DBpediaTest create(String level, String message, Logger L, Exception e  ){
         level = level.toUpperCase();
         String issueMessage = (e==null)? message : message+"- Error: "+e.toString() ;
         if (level.equals("WARN")) {
@@ -52,7 +52,7 @@ public class Issue {
         }else{
             L.error("Level "+level+" not implemented in org.dbpedia.ontologytracker.Issue");
         }
-        return new Issue(level,issueMessage);
+        return new DBpediaTest(level,issueMessage);
     }
 
     public void prepareJSON(org.apache.jena.ontology.OntModel model) {

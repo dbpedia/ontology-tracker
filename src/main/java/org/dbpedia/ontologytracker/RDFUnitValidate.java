@@ -25,6 +25,7 @@ public class RDFUnitValidate {
     }
 
     public RDFUnitValidate(String schemaSource) {
+        long startTime = System.nanoTime();
         RdfReader ontologyShaclReader = null;
         try {
             ontologyShaclReader = new RdfModelReader(RdfReaderFactory.createResourceReader(schemaSource).read());
@@ -33,7 +34,8 @@ public class RDFUnitValidate {
         }
         SchemaSource ontologyShaclSource = SchemaSourceFactory.createSchemaSourceSimple("tests", "http://rdfunit.aksw.org", ontologyShaclReader);
         this.ts = new TestSuite(new ShaclTestGenerator().generate(ontologyShaclSource));
-        L.debug("Generated "+ts.getTestCases().size() + " test cases");
+        long endTime = System.nanoTime();
+        L.debug("Generated "+ts.getTestCases().size() + " test cases in " + (endTime - startTime) / 1000000 + " ms");
     }
 
     public TestExecution checkModelWithRdfUnit(Model model) {

@@ -8,20 +8,18 @@ import org.aksw.rdfunit.junit.RdfUnitJunitRunner;
 import org.aksw.rdfunit.junit.Schema;
 import org.aksw.rdfunit.junit.TestInput;
 import org.junit.runner.RunWith;
-import org.aksw.rdfunit.commons.*;
 
 
 @RunWith(RdfUnitJunitRunner.class)
-@Schema(uri = "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbo.tests.shapes.ttl")
+@Schema(uri = "/dbo.tests.shapes.ttl")
 public class TestRunner {
 
     @TestInput
     public RdfReader getInputData() throws RdfReaderException {
-
         return new RdfModelReader(
                 RdfReaderFactory.createResourceReader(
                         //"http://rawgit.com/gcpdev/ontology-tracker/master/ontology/dbpedia_2016-10.owl").read());
-                        "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbpedia_2016-10.owl").read());
+                        "/dbpedia_2016-10.ttl").read());
     }
     ;
 

@@ -68,7 +68,7 @@ public class ValidateOntology {
         List<DBpediaTest> tests = new ArrayList<>();
         tcrs.stream().forEach(t -> {
             //logging
-            L.info(t.getSeverity().name() + " " + t.getMessage() + " " + t.getFailingResource());
+            //L.info(t.getSeverity().name() + " " + t.getMessage() + " " + t.getFailingResource());
             tests.add(new DBpediaTest(t));
 
         });

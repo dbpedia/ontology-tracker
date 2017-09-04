@@ -24,7 +24,7 @@ public class ValidateOntology {
 
 
     //private static final String DBO_MANUAL_TESTS = "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbo.tests.Manual.ttl";
-    private static final File DBPEDIA_ONTOLOGY = new File("ontology/dbpedia_2016-10.ttl");
+    private static final File DBPEDIA_ONTOLOGY = new File("src/main/resources/dbpedia_2016-10.ttl");
     private static final String baseUri = "http://dbpedia.org/ontology/";
     private static String outdir = "result";
 

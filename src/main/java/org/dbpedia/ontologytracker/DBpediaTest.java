@@ -28,10 +28,15 @@ public class DBpediaTest {
     public DBpediaTest(ShaclTestCaseResult stcr) {
         level = stcr.getSeverity().name();
         message = stcr.getMessage();
-        failingresource = stcr.getFailingResource();
+        //failingresource = stcr.getFailingResource();
         testcaseuri = stcr.getTestCaseUri();
+        //level = stcr.getSeverity().toString(); // this does not work, as it only returns RLOG = ERROR
         level = stcr.getResultAnnotations().toString();
         stcr.getResultAnnotations().forEach(p -> {
+            if(p.getProperty().toString().compareTo("http://www.w3.org/ns/shacl#focusNode") == 0)
+                p.getValues().forEach(v -> {
+                    failingresource = v.toString();
+                });
             propertyValuePairs.add(new PV(p));
         });
     }

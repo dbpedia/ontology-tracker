@@ -65,38 +65,9 @@ dbo-shape:CheckClassesLabelsShape
     sh:path rdfs:label ;
     sh:minCount 1;
     sh:dataType rdf:langString;
-].
-#    sh:sparql [
-#        sh:message "Each owl:Class should have at least one rdfs:label" ;
-#        sh:severity sh:Warning ;
-#        sh:select """
-#            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-#            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-#            SELECT DISTINCT $this ?v1
-#            WHERE  {
-#              $this a owl:Class .
-#              FILTER NOT EXISTS {$this rdfs:label ?v1 }
-#            }""" ;
-#] .
+    sh:uniqueLang true ;
+  ].
 
-dbo-shape:CheckClassesLabels2Shape
-  a sh:Shape ;
-  sh:targetClass owl:Class ;
-    sh:sparql [
-        sh:message "Each owl:Class should not have more than one rdfs:label with the same language" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT $this ?v1 ?v2
-            WHERE {
-                  $this a owl:Class.
-                  $this rdfs:label ?v1 .
-                  $this rdfs:label ?v2 .
-                  FILTER (str(?v1) != str(?v2) ) .
-                  FILTER (lang(?v1) = lang(?v2)) .
-            }""" ;
-] .
 
 dbo-shape:CheckClassesCommentsShape
   a sh:Shape ;
@@ -107,82 +78,41 @@ dbo-shape:CheckClassesCommentsShape
     sh:path rdfs:comment ;
     sh:minCount 1;
     sh:dataType rdf:langString;
-].
-#    sh:sparql [
-#        sh:message "Each owl:Class should have at least one rdfs:comment" ;
-#        sh:severity sh:Warning ;
-#        sh:select """
-#            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-#            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-#            SELECT DISTINCT $this ?v1
-#            WHERE  {
-#              $this a owl:Class .
-#              FILTER NOT EXISTS {$this rdfs:comment ?v1 }
-#            }""" ;
-#] .
+    sh:uniqueLang true ;
+  ].
 
-dbo-shape:CheckClassesComments2Shape
-  a sh:Shape ;
-  sh:targetClass owl:Class ;
-    sh:sparql [
-        sh:message "Each owl:Class should not have more than one rdfs:comment with the same language" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT $this ?v1
-            WHERE {
-                  $this a owl:Class.
-                  $this rdfs:comment ?v1 .
-                  $this rdfs:comment ?v2 .
-                  FILTER (?v1 != ?v2 ) .
-                  FILTER (lang(?v1) = lang(?v2)) .
-            }""" ;
-] .
 
 dbo-shape:CheckPropertiesLabelsShape
   a sh:Shape ;
   sh:targetClass rdf:Property ;
   sh:targetClass owl:DatatypeProperty ;
   sh:targetClass owl:ObjectProperty ;
-   sh:sparql [
-       sh:message "Each property should have at least one rdfs:label" ;
-       sh:severity sh:Warning ;
-       sh:select """
-           PREFIX owl: <http://www.w3.org/2002/07/owl#>
-           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-           SELECT DISTINCT $this ?property
-           WHERE {
-                 $this rdf:type ?property .
-                 FILTER NOT EXISTS {$this rdfs:label ?v1 . } .
-                 FILTER(STRSTARTS(STR($this), "http://dbpedia.org/")) .
-                 FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
-           }""" ;
-] .
+  sh:property [
+    sh:message "Each property should have at least one rdfs:label" ;
+    sh:path rdfs:label ;
+    sh:minCount 1;
+    sh:dataType rdf:langString;
+    sh:uniqueLang true ;
+  ].
+  sh:property [
+    sh:message "Each property should have at least one rdfs:comment" ;
+    sh:path rdfs:comment ;
+    sh:minCount 1;
+    sh:dataType rdf:langString;
+    sh:uniqueLang true ;
+  ].
 
-dbo-shape:CheckPropertiesLabels2Shape
-  a sh:Shape ;
-  sh:targetClass rdf:Property ;
-  sh:targetClass owl:DatatypeProperty ;
-  sh:targetClass owl:ObjectProperty ;
-    sh:sparql [
-        sh:message "Each property should not have more than one rdfs:label with the same language" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            SELECT DISTINCT $this ?v1
-            WHERE {
-                  $this rdf:type ?property .
-                  $this rdfs:label ?v1 .
-                  $this rdfs:label ?v2 .
-                  FILTER (?v1 != ?v2 ) .
-                  FILTER (lang(?v1) = lang(?v2)) .
-                  filter(?property IN (rdf:Property, owl:DatatypeProperty, owl:FunctionalProperty)) .
-            }""" ;
-] .
+  sh:property [
+    sh:message "Each property should have at most one rdfs:domain" ;
+    sh:path rdfs:domain ;
+    sh:maxCount 1;
+  ].
+
+  sh:property [
+    sh:message "Each property should have at most one rdfs:range" ;
+    sh:path rdfs:range ;
+    sh:maxCount 1;
+  ].
 
 #TODO not-working properly
 #  dbo-shape:CheckPropertiesCommentsShape
@@ -297,26 +227,5 @@ dbo-shape:NoDualSuperPropertyShape
                   FILTER(STRSTARTS(STR($this), "http://dbpedia.org/")) .
                   filter(?v1 != ?v2) .
                   filter(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
-            }""" ;
-] .
-
-#TODO not-working - no results
-dbo-shape:CheckDomainRangeShape
-  a sh:Shape ;
-  sh:targetObjectsOf rdfs:domain ;
-  sh:targetObjectsOf rdfs:schema ;
-    sh:sparql [
-        sh:message "Each resource should have exactly one rdfs:domain and rdfs:range" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            SELECT DISTINCT $this
-            WHERE {
-                  $this rdfs:domain ?v1 .
-                  $this rdfs:range ?v2 .
-                  FILTER (NOT EXISTS { $this rdfs:domain ?v1 } || NOT EXISTS { $this rdfs:range ?v2 } ) .
-                  #filter(?v1 != '') .
-                  #filter(?v2 != '') .
             }""" ;
 ] .

@@ -114,53 +114,6 @@ dbo-shape:CheckPropertiesLabelsShape
     sh:maxCount 1;
   ].
 
-#TODO not-working properly
-#  dbo-shape:CheckPropertiesCommentsShape
-#    a sh:Shape ;
-#    sh:targetClass rdf:Property ;
-#    sh:targetClass owl:DatatypeProperty ;
-#    sh:targetClass owl:ObjectProperty  ;
-#    #sh:targetSubjectsOf rdfs:comment ;
-#      sh:sparql [
-#          sh:message "Each property should have at least one rdfs:comment" ;
-#          sh:severity sh:Warning ;
-#          sh:select """
-#              PREFIX owl: <http://www.w3.org/2002/07/owl#>
-#              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-#              PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-#              SELECT DISTINCT $this
-#              WHERE {
-#                    $this rdf:type ?property .
-#                    FILTER NOT EXISTS {$this rdfs:comment ?v1 } .
-#                    FILTER(STRSTARTS(STR($this), "http://dbpedia.org/")) .
-#                    filter(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
-#              }""" ;
-# ] .
-
-dbo-shape:CheckPropertiesComments2Shape
-  a sh:Shape ;
-  sh:targetClass rdf:Property ;
-  sh:targetClass owl:DatatypeProperty ;
-  sh:targetClass owl:ObjectProperty ;
-    sh:sparql [
-        sh:message "Each property should not have more than one rdfs:comment with the same language" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            SELECT DISTINCT $this
-            WHERE {
-                  $this rdf:type ?property .
-                  $this rdfs:comment ?v1 .
-                  $this rdfs:comment ?v2 .
-                  FILTER(STRSTARTS(STR($this), "http://dbpedia.org/")) .
-                  FILTER (?v1 != ?v2 ) .
-                  FILTER (lang(?v1) = lang(?v2)) .
-                  filter(?property IN (rdf:Property, owl:DatatypeProperty, owl:FunctionalProperty)) .
-            }""" ;
-] .
-
 dbo-shape:NoPersonSubclassesShape
   a sh:Shape ;
   sh:targetClass owl:Class ;

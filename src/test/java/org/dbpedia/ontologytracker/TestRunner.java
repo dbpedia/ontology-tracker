@@ -11,15 +11,14 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(RdfUnitJunitRunner.class)
-@Schema(uri = "/dbo.tests.shapes.ttl")
+@Schema(uri = "guidelines/dbo.tests.shapes.ttl")
 public class TestRunner {
 
     @TestInput
     public RdfReader getInputData() throws RdfReaderException {
         return new RdfModelReader(
-                RdfReaderFactory.createResourceReader(
-                        //"http://rawgit.com/gcpdev/ontology-tracker/master/ontology/dbpedia_2016-10.owl").read());
-                        "/dbpedia_2016-10.ttl").read());
+                RdfReaderFactory.createFileOrResourceReader(
+                        "ontology/dbpedia_ontology.ttl", "").read());
     }
     ;
 

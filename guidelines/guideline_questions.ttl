@@ -1,3 +1,32 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix og-shape: <http://dbpedia.org/ontology-guidelines#shape> .
+@prefix og: <http://www.dbpedia.org/ontology-guidelines#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+og-shape:
+  rdfs:label "Ontology Guidelines provided by DBpedia"@en ;
+  rdfs:comment "This shapes graph is used to create guidelines for developing ontologies. "@en ;
+  sh:declare [
+	  sh:prefix "rdfs" ;
+	  sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+  ] ;
+  sh:declare [
+  	sh:prefix "owl" ;
+  	sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+  ] ;
+  sh:declare [
+  	sh:prefix "rdf" ;
+  	sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+  ] ;
+  sh:declare [
+  	sh:prefix "dbo" ;
+  	sh:namespace "http://dbpedia.org/ontology/"^^xsd:anyURI ;
+] .
+
+
 og:classes-have-instances
    a og:Guideline ;
 # subclasses provide a grouping of guidelines
@@ -11,8 +40,9 @@ og:chi1
         a og:Option ;
         og:answer "yes" ;
         og:shacl [
-          og-shape:NoEmptyClasses
-            a sh:Shape ;
+            #the following need to be declared in the full shacl testcase, not here
+            #og-shape:NoEmptyClasses
+            #rdf:type sh:Shape ;
             sh:targetClass owl:Class ;
               sh:sparql [
                   sh:message "All classes should have instances." ;
@@ -24,7 +54,7 @@ og:chi1
                       WHERE {
 
                       }""" ;
-          ] .
+          ]
         ] .
 
 og:chi2
@@ -50,7 +80,8 @@ og:top-level-classes
    og:tlc2
            a og:Option ;
            og:answer og:textbox;
-           og:shacl [<this SHACL test should use the value of og:textbox>] .
+           # this SHACL test should use the value of og:textbox
+           og:shacl [] .
 
 og:classes-without-subclasses
   a og:Guideline ;
@@ -69,7 +100,8 @@ og:classes-without-subclasses
   og:cws2
           a og:Option ;
           og:answer og:textbox;
-          og:shacl [<this SHACL test should use the value of og:textbox>] .
+          # this SHACL test should use the value of og:textbox
+          og:shacl [] .
 
 og:poly-hierarchical-classes
   a og:Guideline ;
@@ -84,8 +116,8 @@ og:poly-hierarchical-classes
           a og:Option ;
           og:answer "yes" ;
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
+              #og-shape:ClassShape
+              #frdf:type sh:Shape ;
               sh:targetClass owl:Class ;
               sh:targetSubjectsOf rdfs:subClassOf ;
               sh:severity sh:Error ;
@@ -93,7 +125,7 @@ og:poly-hierarchical-classes
                 sh:message "Each owl:Class should have at most one superclass" ;
                 sh:path rdfs:subClassOf ;
                 sh:maxCount 1;
-              ] .
+              ]
           ] .
 
   og:phc2
@@ -135,8 +167,6 @@ og:poly-hierarchical-properties
           a og:Option ;
           og:answer "yes" ;
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
               sh:targetClass rdf:Property ;
               sh:targetClass owl:DatatypeProperty ;
               sh:targetClass owl:ObjectProperty ;
@@ -145,7 +175,7 @@ og:poly-hierarchical-properties
                 sh:message "Each property should have at most one super property" ;
                 sh:path rdfs:subPropertyOf ;
                 sh:maxCount 1;
-              ] .
+              ]
           ] .
 
   og:phc2
@@ -166,8 +196,6 @@ og:restrict-complex-properties
           a og:Option ;
           og:answer "yes" ;
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
               sh:targetClass rdf:Property ;
               sh:targetClass owl:DatatypeProperty ;
               sh:targetClass owl:ObjectProperty ;
@@ -204,8 +232,6 @@ og:require-domain-range
           a og:Option ;
           og:answer "should" ;
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
               sh:severity sh:Warning ;
               sh:targetClass rdf:Property ;
               sh:targetClass owl:DatatypeProperty ;
@@ -227,8 +253,6 @@ og:require-domain-range
           a og:Option ;
           og:answer "must";
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
               sh:severity sh:Error ;
               sh:targetClass rdf:Property ;
               sh:targetClass owl:DatatypeProperty ;
@@ -250,7 +274,7 @@ og:require-domain-range
 og:require-label-comment
   a og:Guideline ;
 # subclasses provide a grouping of guidelines
-  a og:LabelCommentAndMultilanguageyGuideline;
+  a og:LabelAndCommentPolicyAndMultilingualityGuideline;
   og:exclusiveoption "true" ;
   og:question "Should/must each class and property have at least one English label and comment?" ;
   og:option og:rlc1 ;
@@ -260,8 +284,6 @@ og:require-label-comment
           a og:Option ;
           og:answer "should" ;
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
               sh:severity sh:Warning ;
               sh:targetClass rdf:Property ;
               sh:targetClass owl:DatatypeProperty ;
@@ -283,8 +305,6 @@ og:require-label-comment
           a og:Option ;
           og:answer "must";
           og:shacl [
-            dbo-shape:ClassShape
-              a sh:Shape ;
               sh:severity sh:Error ;
               sh:targetClass rdf:Property ;
               sh:targetClass owl:DatatypeProperty ;
@@ -300,4 +320,63 @@ og:require-label-comment
                 sh:path rdfs:range ;
                 sh:class owl:Class;
               ] ;
+          ] .
+
+
+og:several-skos-label
+  a og:Guideline ;
+# subclasses provide a grouping of guidelines
+  a og:LabelAndCommentPolicyAndMultilingualityGuideline;
+  og:exclusiveoption "true";
+  og:question "Should several rdfs:label for the same language be allowed or should skos:prefLabel/altLabel be used for alternatives?" ;
+  og:option og:ssl1 ;
+  og:option og:ssl2 .
+
+  og:ssl1
+          a og:Option ;
+          og:answer "several" ;
+          og:shacl [
+              sh:severity sh:Warning ;
+              sh:targetClass rdf:Property ;
+              sh:targetClass owl:DatatypeProperty ;
+              sh:targetClass owl:ObjectProperty ;
+              sh:targetSubjectsOf rdfs:subPropertyOf ;
+              sh:sparql [ ] ;
+          ] .
+
+  og:ssl2
+          a og:Option ;
+          og:answer "skos";
+          og:shacl [
+              sh:severity sh:Error ;
+              sh:targetClass rdf:Property ;
+              sh:targetClass owl:DatatypeProperty ;
+              sh:targetClass owl:ObjectProperty ;
+              sh:targetSubjectsOf rdfs:subPropertyOf ;
+              sh:property [
+                sh:message "Each property must have unique rdfs:label per language; use skos:prefLabel/altLabel for alternatives" ;
+                sh:path rdfs:label ;
+                sh:dataType rdf:langString;
+                sh:uniqueLang true ;
+              ] ;
+          ] .
+
+
+og:human-readable-property
+  a og:Guideline ;
+# subclasses provide a grouping of guidelines
+  a og:LabelAndCommentPolicyAndMultilingualityGuideline;
+  og:question "Which property is used to give a human readable definition (definitory property)?" ;
+  og:option og:hrp1 .
+
+  og:hrp1
+          a og:Option ;
+          og:answer og:textbox;
+          og:shacl [
+              sh:severity sh:Warning ;
+              sh:targetClass rdf:Property ;
+              sh:targetClass owl:DatatypeProperty ;
+              sh:targetClass owl:ObjectProperty ;
+              sh:targetSubjectsOf rdfs:subPropertyOf ;
+              sh:sparql [ ] ;
           ] .

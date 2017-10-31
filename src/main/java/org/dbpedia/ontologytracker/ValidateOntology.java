@@ -4,15 +4,12 @@ import com.google.gson.Gson;
 import org.aksw.rdfunit.model.interfaces.results.ShaclTestCaseResult;
 import org.aksw.rdfunit.model.interfaces.results.TestCaseResult;
 import org.aksw.rdfunit.model.interfaces.results.TestExecution;
+import org.aksw.rdfunit.model.writers.results.TestExecutionWriter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,20 +26,20 @@ public class ValidateOntology {
     private static String outdir = "result";
 
 
-    private static Model readDBpediaOntology() throws IOException {
+    public static Model readOntology(InputStream is) throws IOException {
 
         //OntModel model = ModelFactory.createOntologyModel();
         Model model = ModelFactory.createDefaultModel();
 
         try {
-            RDFDataMgr.read(model, DBPEDIA_ONTOLOGY.toURI().toString(), baseUri, Lang.TURTLE);
+            model.read(is, baseUri, "TTL");
         } catch (Exception e) {
             L.error(e.getMessage());
         }
         return model;
     }
 
-    private static Collection<ShaclTestCaseResult> runTests(Model model) {
+    public static Collection<ShaclTestCaseResult> runShaclTests(Model model) {
         RDFUnitValidate rval = new RDFUnitValidate();
         TestExecution te = rval.checkModelWithRdfUnit(model);
 
@@ -55,21 +52,69 @@ public class ValidateOntology {
         return stcrs;
     }
 
+    //This method is used by the WebService, providing parametrized output formats
+    public static String runTests(Model model, String format) {
+
+        RDFUnitValidate rval = new RDFUnitValidate();
+        TestExecution te = rval.checkModelWithRdfUnit(model);
+        String out = "";
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            Model resultModel = ModelFactory.createDefaultModel();
+            TestExecutionWriter.create(te).write(resultModel);
+            resultModel.write(baos, format);
+
+            out = baos.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            out = "An error occurred while writing tests output.";
+        }
+
+        return out;
+
+    }
+
+    //This method is used by the WebService, providing parametrized output formats
+    public static String runTests(Model model, String format, String test) {
+
+        RDFUnitValidate rval = new RDFUnitValidate(test);
+        TestExecution te = rval.checkModelWithRdfUnit(model);
+        String out = "";
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            Model resultModel = ModelFactory.createDefaultModel();
+            TestExecutionWriter.create(te).write(resultModel);
+            resultModel.write(baos, format);
+
+            out = baos.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            out = "An error occurred while writing tests output.";
+        }
+
+        return out;
+
+    }
+
     public static void main(String[] args) throws IOException {
 
         new File(outdir).mkdirs();
 
-        Model model = readDBpediaOntology();
+        InputStream is = new FileInputStream(DBPEDIA_ONTOLOGY);
+
+        Model model = readOntology(is); // reads DBpedia Ontology
         L.debug("Read model: " + model.size() + " triples");
 
-        Collection<ShaclTestCaseResult> tcrs = runTests(model);
+        Collection<ShaclTestCaseResult> tcrs = runShaclTests(model);
         L.debug("Tests finished");
 
-        List<DBpediaTest> tests = new ArrayList<>();
+        List<DBpediaTestResult> tests = new ArrayList<>();
         tcrs.stream().forEach(t -> {
             //logging
             //L.info(t.getSeverity().name() + " " + t.getMessage() + " " + t.getFailingResource());
-            tests.add(new DBpediaTest(t));
+            tests.add(new DBpediaTestResult(t));
 
         });
 

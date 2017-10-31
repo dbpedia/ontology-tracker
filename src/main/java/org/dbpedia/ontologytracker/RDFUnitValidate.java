@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public class RDFUnitValidate {
 
     TestSuite ts = null;
-    static String defaultSchema = "/dbo.tests.shapes.ttl";
+    static String defaultSchema = "ontology/dbo.tests.shapes.ttl";
     private static Logger L = Logger.getLogger(RDFUnitValidate.class);
 
     public RDFUnitValidate() {
@@ -28,7 +28,10 @@ public class RDFUnitValidate {
         long startTime = System.nanoTime();
         RdfReader ontologyShaclReader = null;
         try {
-            ontologyShaclReader = new RdfModelReader(RdfReaderFactory.createResourceReader(schemaSource).read());
+            if(schemaSource != defaultSchema)
+                ontologyShaclReader = new RdfModelReader(RdfReaderFactory.createReaderFromText(schemaSource, "TTL").read());
+            else
+                ontologyShaclReader = new RdfModelReader(RdfReaderFactory.createFileOrResourceReader(schemaSource, "").read());
         } catch (RdfReaderException e) {
             throw new IllegalArgumentException(e);
         }

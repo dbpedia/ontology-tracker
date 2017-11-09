@@ -76,7 +76,7 @@ function prevTab(elem) {
 
 jQuery(function($) {
     var loadedForm;
-    $.getJSON("../guideline_form.json", function(loadedForm) {
+    $.getJSON("guideline_form.json", function(loadedForm) {
         console.log(loadedForm); // this will show the info it in firebug console
         var fbTemplate = document.getElementById('fb-template');
         $('.fb-render').formRender({

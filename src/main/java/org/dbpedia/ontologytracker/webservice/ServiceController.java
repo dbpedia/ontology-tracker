@@ -1,4 +1,5 @@
 package org.dbpedia.ontologytracker.webservice;
+
 import java.io.*;
 
 import org.aksw.rdfunit.io.reader.RdfReaderException;
@@ -116,7 +117,7 @@ public class ServiceController extends Exception {
      * @throws IOException
      * @throws RdfReaderException
      */
-    @PostMapping(value = {"/testOntology"}, consumes = {"text/plain","text/turtle","application/x-turtle"},
+    @PostMapping(value = {"/users/testOntology"}, consumes = {"text/plain","text/turtle","application/x-turtle"},
             produces = {
                     "text/plain", //for returning errors strings
                     "text/turtle",

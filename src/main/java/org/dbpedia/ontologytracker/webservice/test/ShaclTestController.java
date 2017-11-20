@@ -17,7 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tests/{username}")
+@RequestMapping("/ws/users/{username}/tests")
 public class ShaclTestController {
 
     @Autowired

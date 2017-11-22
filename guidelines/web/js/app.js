@@ -1,8 +1,10 @@
 $(document).ready(function () {
     //Initialize tooltips
+    //$('[data-toggle="popover"]').popover();
+    $("body").popover({ selector: '[data-toggle=popover]' });
     $('.nav-tabs > li a[title]').tooltip();
     $('.col-xs-2 > a[title]').tooltip();
-    
+
     //Wizard
     $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 
@@ -128,14 +130,38 @@ function prevTab(elem) {
 }(jQuery);
 
 jQuery(function($) {
-    var loadedForm;
-    $.getJSON("guideline_form.json", function(loadedForm) {
-        console.log(loadedForm); // this will show the info it in firebug console
-        var fbTemplate = document.getElementById('fb-template');
-        $('.fb-render').formRender({
-          dataType: 'json',
-          formData: loadedForm
+    //var loadedQuestions;
+    $.getJSON("guideline_form.json", function(loadedJson) {
+        console.log(loadedJson); // debug: output json to console
+        var questions = $.parseJSON(JSON.stringify(loadedJson));
+        $.each(questions, function() {
+            var question = '';
+            var type = this['type'];
+            switch(type) {
+                case "toggle":
+                    question = "<div><div class=\"ui toggle checkbox\">\n" +
+                               "  <input name=\"" + this['name'] + "\" type=\"checkbox\">\n" +
+                               "  <label><div>" + this['label'] + "</div></label>" +
+                               "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
+                    $( "#questionnaire" ).append(question);
+                    break;
+                case "toggle-textbox":
+                    question = "<div><div class=\"ui toggle checkbox\">\n" +
+                               "  <input name=\"" + this['name'] + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;\">" +
+                               "  <label style='white-space: nowrap;display:inline'><div style='white-space: nowrap;display:inline'>"+ this['label'] + "</div></label>" +
+                               "  <input type='text' id='"+this['name']+"-textbox' style='white-space: nowrap;display:inline' disabled>"  +
+                               "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\" class=\"textbox-popover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
+                    $( "#questionnaire" ).append(question);s
+                    /*var name = this['name'];
+                    console.log("name is "+name);
+                    window.onload = function(){
+                        document.getElementById(name).addEventListener("click", function(){
+                            document.getElementById(this['name']+"-textbox").disabled=!this.checked;
+                        });
+                    };*/
+                    break;
+            }
         });
     });    
-    
+
   });

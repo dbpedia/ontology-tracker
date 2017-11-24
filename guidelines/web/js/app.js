@@ -1,7 +1,7 @@
 $(document).ready(function () {
     //Initialize tooltips
     //$('[data-toggle="popover"]').popover();
-    $("body").popover({ selector: '[data-toggle=popover]' });
+    $("body").popover({selector: '[data-toggle=popover]'});
     $('.nav-tabs > li a[title]').tooltip();
     $('.col-xs-2 > a[title]').tooltip();
 
@@ -9,7 +9,7 @@ $(document).ready(function () {
     $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 
         var $target = $(e.target);
-    
+
         if ($target.parent().hasClass('disabled')) {
             return false;
         }
@@ -33,11 +33,12 @@ $(document).ready(function () {
 function nextTab(elem) {
     $(elem).next().find('a[data-toggle="tab"]').click();
 }
+
 function prevTab(elem) {
     $(elem).prev().find('a[data-toggle="tab"]').click();
 }
 
-+ function($) {
++function ($) {
     'use strict';
 
     // UPLOAD CLASS DEFINITION
@@ -46,20 +47,20 @@ function prevTab(elem) {
     var dropZone = document.getElementById('drop-zone');
     var uploadForm = document.getElementById('js-upload-form');
 
-    var startUpload = function(file) {
+    var startUpload = function (file) {
         $("#upload-progress").show("slow");
         //var file = files[0];
         var formData = new FormData();
         formData.append("file1", file);
 
-        $.ajax({url: 'http://localhost:8080/ws/ontology',
+        $.ajax({
+                url: 'http://localhost:8080/ws/ontology',
                 method: 'POST',
                 type: 'POST',
                 data: formData,
                 contentType: 'text/turtle',
                 processData: false,
-                xhr: function()
-                {
+                xhr: function () {
                     var xhr = new window.XMLHttpRequest();
                     xhr.upload.addEventListener("progress",
                         uploadProgressHandler,
@@ -78,23 +79,20 @@ function prevTab(elem) {
         console.log(file)
     };
 
-    function loadHandler()
-    {
+    function loadHandler() {
         $("#upload-info").addClass("list-group-item-success");
         $("#upload-info").append("<span class='badge alert-success pull-right'>Success", "</span>");
         $(".js-upload-finished").show("slow");
     }
 
-    function errorHandler()
-    {
+    function errorHandler() {
         $("#upload-info").addClass("list-group-item-danger");
         $("#upload-info").append("<span class='badge alert-danger pull-right'>Failed", "</span>");
         $(".js-upload-finished").show("slow");
     }
 
 
-    function uploadProgressHandler(event)
-    {
+    function uploadProgressHandler(event) {
         //$(".progress-bar").html("Uploaded "+event.loaded+" bytes of "+event.total);
         var percent = (event.loaded / event.total) * 100;
         var progress = Math.round(percent);
@@ -103,37 +101,38 @@ function prevTab(elem) {
         $(".sr-only").html(progress + "% Complete");
     }
 
-    uploadForm.addEventListener('submit', function(e) {
+    uploadForm.addEventListener('submit', function (e) {
         var uploadFile = document.getElementById('js-upload-files').files[0];
         e.preventDefault()
 
         startUpload(uploadFile)
     });
 
-    dropZone.ondrop = function(e) {
+    dropZone.ondrop = function (e) {
         e.preventDefault();
         this.className = 'upload-drop-zone';
 
         startUpload(e.dataTransfer.file)
     };
 
-    dropZone.ondragover = function() {
+    dropZone.ondragover = function () {
         this.className = 'upload-drop-zone drop';
         return false;
     };
 
-    dropZone.ondragleave = function() {
+    dropZone.ondragleave = function () {
         this.className = 'upload-drop-zone';
         return false;
     };
 
 }(jQuery);
 
-jQuery(function($) {
-    $.getJSON("guideline_form.json", function(loadedJson) {
+//the following function generates the questionnaire HTML from JSON
+jQuery(function ($) {
+    $.getJSON("guideline_form.json", function (loadedJson) {
         console.log(loadedJson); // debug: output json to console
         var questions = $.parseJSON(JSON.stringify(loadedJson));
-        $.each(questions, function() {
+        $.each(questions, function () {
             var question = '';
             var placeholder;
             if (this['placeholder']) {
@@ -142,24 +141,47 @@ jQuery(function($) {
             else {
                 placeholder = '';
             }
-            switch(this['questionType']) {
+            switch (this['questionType']) {
                 case "toggle":
                     question = "<div><div class=\"ui toggle checkbox\">\n" +
-                               "  <input name=\"" + this['name'] + "\" type=\"checkbox\">\n" +
-                               "  <label><div>" + this['label'] + "</div></label>" +
-                               "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
-                    $( "#questionnaire" ).append(question);
+                        "  <input name=\"" + this['name'] + "\" type=\"checkbox\">\n" +
+                        "  <label><div>" + this['label'] + "</div></label>" +
+                        "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
+                    $("#questionnaire").append(question);
                     break;
                 case "toggle-textbox":
                     question = "<div><div class=\"ui toggle checkbox\">\n" +
-                               "  <input name=\"" + this['name'] + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;\">" +
-                               "  <label style='white-space: nowrap;display:inline'><div style='white-space: nowrap;display:inline'>"+ this['label'] + "</div></label>" +
-                               "  <input type='text' id='"+this['name']+"-textbox' style='white-space: nowrap;display:inline' disabled placeholder='"+ placeholder  +"'>"  +
-                               "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\" class=\"textbox-popover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
-                    $( "#questionnaire" ).append(question);
+                        "  <input name=\"" + this['name'] + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;\">" +
+                        "  <label style='white-space: nowrap;display:inline'><div style='white-space: nowrap;display:inline'>" + this['label'] + "</div></label>" +
+                        "  <input type='text' id='" + this['name'] + "-textbox' style='white-space: nowrap;display:inline' disabled placeholder='" + placeholder + "'>" +
+                        "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\" class=\"textbox-popover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
+                    $("#questionnaire").append(question);
                     break;
             }
         });
-    });    
+    });
 
-  });
+});
+
+//the following function generates the tests based on the user's answers
+//returns: a string containing the SHACL tests
+function generateTests() {
+    $.getJSON("guideline_form.json", function (loadedJson) {
+
+    });
+}
+
+//this function run tests in an ontology.
+//parameters: ontology (text data read from uploaded turtle), tests (text data from shacls to be run)
+//returns: test results
+function runTests(ontology, tests) {
+    var validator = new SHACLValidator();
+    validator.validate(ontology, "text/turtle", tests, "text/turtle", function (e, report) {
+        console.log("Conforms? " + report.conforms());
+        if (report.conforms() === false) {
+            report.results().forEach(function(result) {
+                console.log(" - Severity: " + result.severity() + " for " + result.sourceConstraintComponent());
+            });
+        }
+    });
+}

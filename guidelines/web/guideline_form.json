@@ -1,74 +1,196 @@
 [
   {
-    "id": 1,
-    "questionType": "toggle",
-    "name": "classes-have-instances",
-    "label": "All classes must have instances",
-    "description": "Select this test if your ontology does not accept non-instantiated classes, i.e., classes that works as roles."
-  },
-  {
-    "id": 2,
-    "questionType": "toggle-textbox",
-    "name": "top-level-classes",
-    "label": "Fixed top-level classes",
-    "description": "Select this test if users are prohibited to change the first level of the classes hierarchy. In this case, provide the list of the full URI of first-level classes (comma-separated).",
-    "placeholder": "Enter class list...",
-    "shacl": "sh:sparql",
-    "test": [
-      "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
-      "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-      "SELECT DISTINCT $this ",
-      "WHERE {",
-      "  $this rdfs:subClassOf owl:Thing  .",
-      "  FILTER($this NOT IN (",
-      "   <$input$>,",
-      "  ))."
-     ]
-  },
-  {
-    "id": 3,
-    "questionType": "toggle",
-    "name": "label-every-class",
-    "label": "Every class must have a label",
-    "description": "Each <code>owl:Class</code> must have at least one <code>rdfs:label</code>, which must be unique for each language.",
-    "shacl": "sh:property",
-    "sh:targetClass": "owl:Class",
-    "sh:targetSubjectsOf": "rdfs:subClassOf",
-    "test": [
-      "sh:path rdfs:label;",
-      "sh:minCount 1;",
-      "sh:dataType rdf:langString;",
-      "sh:uniqueLang true;"
-    ]
-  },
-  {
-    "id": 4,
-    "questionType": "toggle",
-    "name": "comment-every-class",
-    "label": "Every class must have a comment",
-    "description": "Each <code>owl:Class</code> must have at least one <code>rdfs:comment</code>, which must be unique for each language.",
-    "shacl": "sh:property",
-    "sh:targetClass": "owl:Class",
-    "sh:targetSubjectsOf": "rdfs:subClassOf",
-    "test": [
-      "sh:path rdfs:comment;",
-      "sh:minCount 1;",
-      "sh:dataType rdf:langString;",
-      "sh:uniqueLang true;"
-    ]
-  },
-  {
-    "id": 5,
-    "questionType": "toggle",
-    "name": "max-one-superclass",
-    "label": "Every class must have at most one superclass",
-    "description": "Each <code>owl:Class</code> must have at most one superclass.",
-    "shacl": "sh:property",
-    "sh:targetClass": "owl:Class",
-    "sh:targetSubjectsOf": "rdfs:subClassOf",
-    "test": [
-      "sh:path rdfs:subClassOf;",
-      "sh:maxCount: 1;"
-    ]
+    "Classes": {
+      "shape": "ClassShape",
+      "sh:targetClass": "owl:Class",
+      "sh:targetSubjectsOf": "rdfs:subClassOf",
+      "questions": [
+        {
+          "id": 1,
+          "type": "toggle",
+          "name": "classes-have-instances",
+          "label": "All classes must have instances",
+          "description": "Select this test if your ontology does not accept non-instantiated classes, i.e., classes that works as roles."
+        },
+        {
+          "id": 2,
+          "type": "toggle-textbox",
+          "name": "top-level-classes",
+          "label": "Fixed top-level classes",
+          "description": "Select this test if users are prohibited to change the first level of the classes hierarchy. In this case, provide the list of the full URI of first-level classes (comma-separated).",
+          "placeholder": "Enter class list...",
+          "shacl": "sh:sparql",
+          "test": [
+            "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+            "SELECT DISTINCT $this ",
+            "WHERE {",
+            "  $this rdfs:subClassOf owl:Thing  .",
+            "  FILTER($this NOT IN (",
+            "   <$input$>,",
+            "  ))."
+          ]
+        },
+        {
+          "id": 3,
+          "type": "toggle",
+          "name": "label-every-class",
+          "label": "Every class must have a label",
+          "description": "Each <code>owl:Class</code> must have at least one <code>rdfs:label</code>, which must be unique for each language.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:label;",
+            "sh:minCount 1;",
+            "sh:dataType rdf:langString;",
+            "sh:uniqueLang true;"
+          ]
+        },
+        {
+          "id": 4,
+          "type": "toggle",
+          "name": "comment-every-class",
+          "label": "Every class must have a comment",
+          "description": "Each <code>owl:Class</code> must have at least one <code>rdfs:comment</code>, which must be unique for each language.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:comment;",
+            "sh:minCount 1;",
+            "sh:dataType rdf:langString;",
+            "sh:uniqueLang true;"
+          ]
+        },
+        {
+          "id": 5,
+          "type": "toggle",
+          "name": "no-multiple-superclass",
+          "label": "Every class must have at most one superclass",
+          "description": "Each <code>owl:Class</code> must have at most one superclass.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:subClassOf;",
+            "sh:maxCount: 1;"
+          ]
+        },
+        {
+          "id": 6,
+          "type": "toggle-textbox",
+          "name": "class-without-subclass",
+          "label": "Some classes does not allow subclasses",
+          "description": "Select this test if no <code>rdfs:subClassOf</code> of any given <code>owl:Class</code> are allowed. In this case, provide the list of the full URI of all classes that does not allow subclasses (comma-separated).",
+          "placeholder": "Enter class list...",
+          "shacl": "sh:sparql",
+          "test": [
+            "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+            "SELECT DISTINCT $this",
+            "WHERE {",
+            "  $this rdfs:subClassOf <$input$> .",
+            "  FILTER ($this !=<$input$>) .",
+            "}"
+          ]
+        }
+      ]
+    },
+    "Properties": {
+      "shape": "PropertyShape",
+      "sh:targetClass": [
+        "rdf:Property;",
+        "owl:DatatypeProperty;",
+        "owl:ObjectProperty;"
+      ],
+      "sh:targetSubjectsOf": "rdfs:subPropertyOf;",
+      "questions": [
+        {
+          "id": 7,
+          "type": "toggle",
+          "name": "label-every-property",
+          "label": "Every property must have a label",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at least one <code>rdfs:label</code>, which must be unique for each language.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:label;",
+            "sh:minCount 1;",
+            "sh:dataType rdf:langString;",
+            "sh:uniqueLang true;"
+          ]
+        },
+        {
+          "id": 8,
+          "type": "toggle",
+          "name": "comment-every-property",
+          "label": "Every property must have a comment",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at least one <code>rdfs:comment</code>, which must be unique for each language.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:comment;",
+            "sh:minCount 1;",
+            "sh:dataType rdf:langString;",
+            "sh:uniqueLang true;"
+          ]
+        },
+        {
+          "id": 9,
+          "type": "toggle",
+          "name": "no-multiple-domain",
+          "label": "Every property must have at most one domain",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at most one <code>rdfs:domain</code>.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:domain;",
+            "sh:maxCount 1;"
+          ]
+        },
+        {
+          "id": 10,
+          "type": "toggle",
+          "name": "must-have-domain",
+          "label": "Every property must have at least one domain, which is a class",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at least one <code>rdfs:domain</code>  that is defined as an <code>owl:Class.</code>",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:domain;",
+            "sh:minCount 1;",
+            "sh:class owl:Class;"
+          ]
+        },
+        {
+          "id": 11,
+          "type": "toggle",
+          "name": "no-multiple-range",
+          "label": "Every property must have at most one range",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at most one <code>rdfs:range</code>.",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:range;",
+            "sh:maxCount 1;"
+          ]
+        },
+        {
+          "id": 12,
+          "type": "toggle",
+          "name": "must-have-range",
+          "label": "Every property must have at least one range, which is a class",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at least one <code>rdfs:range</code>  that is defined as an <code>owl:Class.</code>",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:range;",
+            "sh:minCount 1;",
+            "sh:class owl:Class;"
+          ]
+        },
+        {
+          "id": 13,
+          "type": "toggle",
+          "name": "no-multiple-superproperty",
+          "label": "Every property must have at most one superproperty",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at most one superproperty",
+          "shacl": "sh:property",
+          "test": [
+            "sh:path rdfs:subPropertyOf;",
+            "sh:maxCount 1;"
+          ]
+        }
+      ]
+    }
   }
 ]

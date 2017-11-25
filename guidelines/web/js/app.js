@@ -131,36 +131,50 @@ function prevTab(elem) {
 jQuery(function ($) {
     $.getJSON("guideline_form.json", function (loadedJson) {
         console.log(loadedJson); // debug: output json to console
-        var questions = $.parseJSON(JSON.stringify(loadedJson));
-        $.each(questions, function () {
-            var question = '';
-            var placeholder;
-            if (this['placeholder']) {
-                placeholder = this['placeholder'];
-            }
-            else {
-                placeholder = '';
-            }
-            switch (this['questionType']) {
-                case "toggle":
-                    question = "<div><div class=\"ui toggle checkbox\">\n" +
-                        "  <input name=\"" + this['name'] + "\" type=\"checkbox\">\n" +
-                        "  <label><div>" + this['label'] + "</div></label>" +
-                        "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
-                    $("#questionnaire").append(question);
-                    break;
-                case "toggle-textbox":
-                    question = "<div><div class=\"ui toggle checkbox\">\n" +
-                        "  <input name=\"" + this['name'] + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;\">" +
-                        "  <label style='white-space: nowrap;display:inline'><div style='white-space: nowrap;display:inline'>" + this['label'] + "</div></label>" +
-                        "  <input type='text' id='" + this['name'] + "-textbox' style='white-space: nowrap;display:inline' disabled placeholder='" + placeholder + "'>" +
-                        "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + this['label'] + "\" data-content=\"" + this['description'] + "\" data-trigger=\"hover\" class=\"textbox-popover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
-                    $("#questionnaire").append(question);
-                    break;
-            }
-        });
-    });
+        var groups = $.parseJSON(JSON.stringify(loadedJson[0]));
+        $.each(groups, function (index, group) {
+            //console.log(index);
+            //console.log(group);
 
+            var renderGroup = '';
+            renderGroup += "<div class=\"panel panel-info\">" +
+                "<div class=\"panel-heading\">" +
+                "<h3 class=\"panel-title\">" + index + "</h3>" +
+                "</div>" +
+                "<div class=\"panel-body\">";
+            var questions = group['questions'];
+            $.each(questions, function (subIndex, questionLoaded) {
+                var questionRendered = '';
+                var placeholder;
+                if (questionLoaded['placeholder']) {
+                    placeholder = questionLoaded['placeholder'];
+                }
+                else {
+                    placeholder = '';
+                }
+                switch (questionLoaded['type']) {
+                    case "toggle":
+                        questionRendered = "<div><div class=\"ui toggle checkbox\">\n" +
+                            "  <input name=\"" + questionLoaded['name'] + "\" type=\"checkbox\">\n" +
+                            "  <label><div>" + questionLoaded['label'] + "</div></label>" +
+                            "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + questionLoaded['label'] + "\" data-content=\"" + questionLoaded['description'] + "\" data-trigger=\"hover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
+                        renderGroup += questionRendered;
+                        break;
+                    case "toggle-textbox":
+                        questionRendered = "<div><div class=\"ui toggle checkbox\">\n" +
+                            "  <input name=\"" + questionLoaded['name'] + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;\">" +
+                            "  <label style='white-space: nowrap;display:inline'><div style='white-space: nowrap;display:inline'>" + questionLoaded['label'] + "</div></label>" +
+                            "  <input type='text' id='" + questionLoaded['name'] + "-textbox' style='white-space: nowrap;display:inline' disabled placeholder='" + placeholder + "'>" +
+                            "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + questionLoaded['label'] + "\" data-content=\"" + questionLoaded['description'] + "\" data-trigger=\"hover\" class=\"textbox-popover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
+                        renderGroup += questionRendered;
+                        break;
+                }
+            });
+            renderGroup += "</div></div>";
+            $("#questionnaire").append(renderGroup);
+        });
+
+    });
 });
 
 //the following function generates the tests based on the user's answers
@@ -179,7 +193,7 @@ function runTests(ontology, tests) {
     validator.validate(ontology, "text/turtle", tests, "text/turtle", function (e, report) {
         console.log("Conforms? " + report.conforms());
         if (report.conforms() === false) {
-            report.results().forEach(function(result) {
+            report.results().forEach(function (result) {
                 console.log(" - Severity: " + result.severity() + " for " + result.sourceConstraintComponent());
             });
         }

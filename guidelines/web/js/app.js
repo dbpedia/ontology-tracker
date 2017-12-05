@@ -4,6 +4,15 @@
 
 var $ = jQuery;
 
+/* TO-DOs
+* Generate full SHACL file when form is submitted
+* handle ontologies inputs (uploaded and remote)
+* integration with webservice (ontology and SHACL upload, loading animation after form submission
+    while waiting WS response, then retrieve and list test results)
+* handle textbox inputs (explode comma-separated list into several lines to substitute <$input$> in SPARQL tests)
+*/ 
+
+
 $(document).ready(function () {
     //Initialize popover
     $("body").popover({

@@ -1,10 +1,13 @@
 package org.dbpedia.ontologytracker;
 
+import java.io.InputStream;
+
 import org.aksw.rdfunit.enums.TestCaseExecutionType;
 import org.aksw.rdfunit.io.reader.RdfModelReader;
 import org.aksw.rdfunit.io.reader.RdfReader;
 import org.aksw.rdfunit.io.reader.RdfReaderException;
 import org.aksw.rdfunit.io.reader.RdfReaderFactory;
+import org.aksw.rdfunit.io.reader.RdfStreamReader;
 import org.aksw.rdfunit.model.interfaces.TestSuite;
 import org.aksw.rdfunit.model.interfaces.results.TestExecution;
 import org.aksw.rdfunit.sources.SchemaSource;
@@ -23,7 +26,7 @@ public class RDFUnitValidate {
     public RDFUnitValidate() {
         this(defaultSchema);
     }
-
+    
     public RDFUnitValidate(String schemaSource) {
         long startTime = System.nanoTime();
         RdfReader ontologyShaclReader = null;
@@ -41,6 +44,21 @@ public class RDFUnitValidate {
         L.debug("Generated "+ts.getTestCases().size() + " test cases in " + (endTime - startTime) / 1000000 + " ms");
     }
 
+    public RDFUnitValidate(InputStream file) {
+        long startTime = System.nanoTime();
+        RdfReader ontologyShaclReader = null;
+        try {
+          	ontologyShaclReader = new RdfModelReader(new RdfStreamReader(file, "TURTLE").read());
+            
+        } catch (RdfReaderException e) {
+            throw new IllegalArgumentException(e);
+        }
+        SchemaSource ontologyShaclSource = SchemaSourceFactory.createSchemaSourceSimple("tests", "http://rdfunit.aksw.org", ontologyShaclReader);
+        this.ts = new TestSuite(new ShaclTestGenerator().generate(ontologyShaclSource));
+        long endTime = System.nanoTime();
+        L.debug("Generated "+ts.getTestCases().size() + " test cases in " + (endTime - startTime) / 1000000 + " ms");
+    }
+    
     public TestExecution checkModelWithRdfUnit(Model model) {
         return RDFUnitStaticValidator.validate(TestCaseExecutionType.shaclFullTestCaseResult, model, this.ts);
     }

@@ -3,6 +3,9 @@ package org.dbpedia.ontologytracker.webservice.user;
 import org.springframework.data.annotation.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+
+import java.math.BigInteger;
+
 import javax.persistence.Entity;
 
 @Entity
@@ -10,7 +13,7 @@ public class WebServiceUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private BigInteger id;
 
     private String username;
 
@@ -18,11 +21,11 @@ public class WebServiceUser {
 
     private String token;
 
-    public long getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 

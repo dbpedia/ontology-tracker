@@ -52,27 +52,58 @@ $(document).ready(function () {
         //inserts or removes the test from SHACL_selected
         if (SHACL_selected_class.has(this.name)) {
             SHACL_selected_class.delete(this.name);
-            
-        } 
-        else if (SHACL_selected_prop.has(this.name)) {
+
+        } else if (SHACL_selected_prop.has(this.name)) {
             SHACL_selected_prop.delete(this.name);
-        }
-        else {
-            if(SHACL_questions_class.get(Number(this.name))) {
+        } else {
+            if (SHACL_questions_class.get(Number(this.name))) {
                 SHACL_selected_class.set(this.name, SHACL_questions_class.get(Number(this.name)));
-            }
-            else {
-                SHACL_selected_prop.set(this.name, SHACL_questions_prop.get(Number(this.name)));                
+            } else {
+                SHACL_selected_prop.set(this.name, SHACL_questions_prop.get(Number(this.name)));
             }
             //enable submitting after selecting at least one test
             if (document.getElementById('js-upload-submit').disabled) document.getElementById('js-upload-submit').disabled = false;
         }
         //prevent submitting without selecting tests
-        let SHACL_selected = new Map(function*() { yield* SHACL_selected_class; yield* SHACL_selected_prop; }());
+        let SHACL_selected = new Map(function* () {
+            yield* SHACL_selected_class;
+            yield* SHACL_selected_prop;
+        }());
         if (SHACL_selected.size === 0) document.getElementById('js-upload-submit').disabled = true;
         console.log(SHACL_selected);
     });
-    // }
+
+    $('form').on('change, focusout', 'input[id$="-textbox"]', function (event) {
+        let id = event.target.id.replace('-textbox', '');
+        let query = SHACL_selected_class.get(id);
+        let textInput = String(event.target.value);
+        let inputArray = textInput.split(",");
+        let lines = [];
+        let pos = query.lastIndexOf("<$input$>");
+        //finding the lines containing the placeholder <$input$>
+        while (pos != -1) {
+            let startLine = query.lastIndexOf("\n", pos);
+            let endLine = query.indexOf("\n", pos);
+            lines.push(query.substr(startLine, Number(endLine) - Number(startLine)));
+            pos = query.lastIndexOf("<$input$>", startLine);
+        }
+
+        for (let [k, v] of lines.entries()) {
+            v = v.repeat(inputArray.length);
+            lines[k] = v;
+            for (let j of inputArray) {
+                lines[k] = lines[k].replace("<$input$>", j.trim());
+            }
+        }
+        let replaceString = replaceLast(lines.join("\n"), ",", "");
+        let regex = /^.*(<\$input\$>).*$/m;
+        query = query.replace(regex, replaceString);
+        regex = /^.*(<\$input\$>).*$/gm;
+        query = query.replace(regex, "");
+        
+        //for(query.indexOf("<$input$>"))
+        console.log(query);
+    });
 
 });
 
@@ -90,15 +121,14 @@ function prevTab(elem) {
  * y - string to replace
  * z - string that will replace
  */
-function replaceLast(x, y, z){
+function replaceLast(x, y, z) {
     var a = x.split("");
     var length = y.length;
-    if(x.lastIndexOf(y) != -1) {
-        for(var i = x.lastIndexOf(y); i < x.lastIndexOf(y) + length; i++) {
-            if(i == x.lastIndexOf(y)) {
+    if (x.lastIndexOf(y) != -1) {
+        for (var i = x.lastIndexOf(y); i < x.lastIndexOf(y) + length; i++) {
+            if (i == x.lastIndexOf(y)) {
                 a[i] = z;
-            }
-            else {
+            } else {
                 delete a[i];
             }
         }
@@ -107,15 +137,14 @@ function replaceLast(x, y, z){
     return a.join("");
 }
 
-let ontoFile; 
+let ontoFile;
 let shaclFile = `
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix gdl-shape: <http://dbpedia.org/gdl-shape#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .`;
-+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .`; +
 function ($) {
     // UPLOAD CLASS DEFINITION
     // ======================
@@ -129,16 +158,16 @@ function ($) {
     uploadForm.addEventListener('click', function (e) {
 
         //let SHACL_selected = new Map(function*() { yield* SHACL_selected_class; yield* SHACL_selected_prop; }());
-        
+
         //if at least one class test was selected, then insert the class shape prefixes
-        if(SHACL_selected_class.size > 0) shaclFile += SHACL_prefix_class;
+        if (SHACL_selected_class.size > 0) shaclFile += SHACL_prefix_class;
         //insert classes tests
         for (let [k, v] of SHACL_selected_class) {
             shaclFile += v;
         }
         shaclFile = replaceLast(shaclFile, ";", ".");
         //if at least one property test was selected, then insert the property shape prefixes
-        if(SHACL_selected_prop.size > 0) shaclFile += SHACL_prefix_prop;
+        if (SHACL_selected_prop.size > 0) shaclFile += SHACL_prefix_prop;
         //insert properties tests
         for (let [k, v] of SHACL_selected_prop) {
             shaclFile += v;
@@ -318,7 +347,7 @@ jQuery(function ($) {
                         break;
                     case "toggle-textbox":
                         questionRendered = "<div><div class=\"ui toggle checkbox\">\n" +
-                            "  <input name=\"" + questions[i].id + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;\">" +
+                            "  <input name=\"" + questions[i].id + "\" type=\"checkbox\" onclick=\"document.getElementById(this['name']+'-textbox').disabled=!this.checked;document.getElementById(this['name']+'-textbox').value='';\">" +
                             "  <label style='white-space: nowrap;display:inline'><div style='white-space: nowrap;display:inline'>" + questions[i].label + "</div></label>" +
                             "  <input type='text' id='" + questions[i].id + "-textbox' style='white-space: nowrap;display:inline' disabled placeholder='" + placeholder + "'>" +
                             "</div><a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-html=\"true\" title=\"" + questions[i].label + "\" data-content=\"" + questions[i].description + "\" data-trigger=\"hover\" class=\"textbox-popover\"><i class=\"glyphicon glyphicon-info-sign\"></i></a></div>";
@@ -334,7 +363,7 @@ jQuery(function ($) {
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            ${questions[i].test}
+            ${questions[i].test.join('\n')}
             """;
       ];
       
@@ -348,10 +377,10 @@ jQuery(function ($) {
                             `;
                         break;
                 }
-                switch(index) {
+                switch (index) {
                     case "Classes":
                         SHACL_questions_class.set(questions[i].id, thisSHACL);
-                        SHACL_prefix_class= SHACL_tests_group;
+                        SHACL_prefix_class = SHACL_tests_group;
                         break;
                     case "Properties":
                         SHACL_questions_prop.set(questions[i].id, thisSHACL);
@@ -366,7 +395,7 @@ jQuery(function ($) {
             $("#questionnaire").append(renderGroup);
             //});
             //SHACL_tests += SHACL_tests_group;
-            
+
         }
         //console.log(SHACL_questions);
 

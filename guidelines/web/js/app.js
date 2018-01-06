@@ -187,19 +187,22 @@ function ($) {
     });
 
     let startUpload = function (ontology, shacl) {
-        $("#upload-progress").show("slow");
+        //$("#upload-progress").show("slow");
         //let file = files[0];
         let formData = new FormData();
         formData.append("ontology", ontology);
         formData.append("shacltest", shacl);
+        formData.append("format", "text/turtle");
 
         $.ajax({
             url: 'http://localhost:8080/ws/users/ontologyUpload',
             method: 'POST',
             type: 'POST',
             data: formData,
-            contentType: 'text/turtle',
+            accepts: { "*": "text/turtle" },
+            contentType: false,
             processData: false,
+            cache: false,
             xhr: function () {
                 let xhr = new window.XMLHttpRequest();
                 xhr.upload.addEventListener("progress",
@@ -281,7 +284,7 @@ jQuery(function ($) {
 
             SHACL_tests_group = `
             
-            gdl-shape: ${groups[index].shape}
+            gdl-shape:${groups[index].shape}
                 a sh:Shape;
                 `;
 

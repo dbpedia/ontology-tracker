@@ -8,4 +8,5 @@ public class SecurityConstants {
     public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_UP_URL = "/ws/users/sign-up";
     public static final String PUBLIC_ONTOLOGY = "/ws/ontology";
+    public static final String ONTOLOGY_UPLOAD = "/ws/users/ontologyUpload";
 }

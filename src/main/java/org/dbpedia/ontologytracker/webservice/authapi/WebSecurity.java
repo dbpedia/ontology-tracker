@@ -13,6 +13,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 
+import static org.dbpedia.ontologytracker.webservice.authapi.SecurityConstants.ONTOLOGY_UPLOAD;
 import static org.dbpedia.ontologytracker.webservice.authapi.SecurityConstants.PUBLIC_ONTOLOGY;
 import static org.dbpedia.ontologytracker.webservice.authapi.SecurityConstants.SIGN_UP_URL;
 
@@ -32,6 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, PUBLIC_ONTOLOGY).permitAll()
+                .antMatchers(HttpMethod.POST, ONTOLOGY_UPLOAD).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

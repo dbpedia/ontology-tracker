@@ -5,9 +5,9 @@
 var $ = jQuery;
 
 /* TO-DOs
-* handle ontology remote input
-* integration with webservice (list test results)
-*/
+ * handle ontology remote input
+ * integration with webservice (list test results)
+ */
 
 
 $(document).ready(function () {
@@ -18,6 +18,16 @@ $(document).ready(function () {
     //Initialize tooltips
     $('.nav-tabs > li a[title]').tooltip();
     $('.col-xs-2 > a[title]').tooltip();
+
+    $('#list-success').collapse({
+        toggle: false
+    });
+    $('#list-warning').collapse({
+        toggle: false
+    });
+    $('#list-error').collapse({
+        toggle: false
+    });
 
     //Initialize wizard navigation bar
     $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
@@ -43,7 +53,7 @@ $(document).ready(function () {
 
     });
 
-    $('#complete-step-1').prop("disabled",true);
+    $('#complete-step-1').prop("disabled", true);
 
     $('form').on('change', ':checkbox', function () {
         //console.log('checkbox ' + this.name + ' toggled');
@@ -100,7 +110,7 @@ $(document).ready(function () {
         query = query.replace(regex, replaceString);
         regex = /^.*(<\$input\$>).*$/gm;
         query = query.replace(regex, "");
-        
+
         //console.log(query);
     });
 
@@ -219,19 +229,22 @@ function ($) {
             url: 'http://localhost:8080/ws/users/ontologyUpload',
             method: 'POST',
             type: 'POST',
-            accepts: { "*": "text/turtle" },
+            accepts: {
+                "*": "text/turtle"
+            },
             contentType: false,
             processData: false,
             cache: false,
             async: false,
             success: function (r) {
-                console.log(r);
+                var response = JSON.parse(r);
+                console.log(response);
             },
             xhr: function () {
                 let xhr = new window.XMLHttpRequest();
                 return xhr;
             }
-        }).complete(function() { 
+        }).complete(function () {
             $(".lds-spinner").hide();
         });
     };
@@ -249,7 +262,7 @@ function ($) {
 }(jQuery);
 
 //arrays for storing the SHACL tests for actual selected questions
-let SHACL_selected_class = new Map(); 
+let SHACL_selected_class = new Map();
 let SHACL_selected_prop = new Map();
 //arrays for storing the SHACL tests for all questions
 let SHACL_questions_class = new Map();
@@ -271,7 +284,7 @@ jQuery(function ($) {
     $.getJSON("guideline_form.json", function (loadedJson) {
         //console.log(loadedJson); // debug: output json to console
         let groups = $.parseJSON(JSON.stringify(loadedJson[0]));
-        
+
         for (let [index, group] of entries(groups)) {
             //console.log(index);
             //console.log(group);
@@ -292,7 +305,7 @@ jQuery(function ($) {
                     `;
                 }
             }
-            
+
             //check whether there is a single or multiple targetSubjectsOf 
             if (typeof groups[index].targetSubjectsOf === 'string') {
                 SHACL_tests_group += `sh:targetSubjectsOf ${groups[index].targetSubjectsOf};
@@ -312,7 +325,7 @@ jQuery(function ($) {
                 "<div class=\"panel-body\">";
 
             let questions = groups[index].questions;
-            
+
             for (var i in questions) {
                 let questionRendered = '';
                 let placeholder;
@@ -375,7 +388,7 @@ jQuery(function ($) {
             }
             renderGroup += "</div></div>";
             $("#questionnaire").append(renderGroup);
-            
+
         }
         //console.log(SHACL_questions);
 

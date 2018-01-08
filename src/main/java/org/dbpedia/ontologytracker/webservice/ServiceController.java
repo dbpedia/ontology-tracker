@@ -344,7 +344,9 @@ public class ServiceController extends Exception {
             InputStream isshacl = shacltest.getInputStream();
             
             Model model = ValidateOntology.readOntology(isontol);
-            RDFUnitValidate rval = new RDFUnitValidate(isshacl);
+
+            out = ValidateOntology.runShaclTests(model, inputStreamToString(isshacl));
+            /*RDFUnitValidate rval = new RDFUnitValidate(isshacl);
             
             TestExecution te = rval.checkModelWithRdfUnit(model);
 
@@ -358,13 +360,36 @@ public class ServiceController extends Exception {
             } catch (IOException e) {
                 e.printStackTrace();
                 out = "An error occurred while writing tests output.";
-            }
+            }*/
+
+
         } 
         
         catch (Exception e) {
-            L.debug("An error occurred while uploading ontology and shacl tests files" + e.getMessage());
+            L.info("An error occurred while uploading ontology and shacl tests files: " + e.getMessage());
         }
-        
+        L.info(out);
         return out;
+    }
+
+    private String inputStreamToString(InputStream inputStream) {
+        String output = "";
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        try {
+            while ((length = inputStream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            output = result.toString("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return output;
     }
 }

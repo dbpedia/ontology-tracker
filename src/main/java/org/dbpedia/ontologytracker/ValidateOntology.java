@@ -1,6 +1,7 @@
 package org.dbpedia.ontologytracker;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.aksw.rdfunit.model.interfaces.results.ShaclTestCaseResult;
 import org.aksw.rdfunit.model.interfaces.results.TestCaseResult;
 import org.aksw.rdfunit.model.interfaces.results.TestExecution;
@@ -50,6 +51,31 @@ public class ValidateOntology {
             stcrs.add((ShaclTestCaseResult) tcr);
         });
         return stcrs;
+    }
+
+    //This method is used by the WebService, running  custom tests with json output
+    public static String runShaclTests(Model model, String test) {
+        RDFUnitValidate rval = new RDFUnitValidate(test);
+        TestExecution te = rval.checkModelWithRdfUnit(model);
+
+        Collection<TestCaseResult> tcrs = te.getTestCaseResults();
+        Collection<ShaclTestCaseResult> stcrs = new ArrayList<>();
+
+        tcrs.forEach(tcr -> {
+            stcrs.add((ShaclTestCaseResult) tcr);
+        });
+
+        List<DBpediaTestResult> tests = new ArrayList<>();
+        stcrs.stream().forEach(t -> {
+            //logging
+            //L.info(t.getSeverity().name() + " " + t.getMessage() + " " + t.getFailingResource());
+            tests.add(new DBpediaTestResult(t));
+
+        });
+
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+        return gson.toJson(tests).replace("\\\\", "\\");
     }
 
     //This method is used by the WebService, providing parametrized output formats

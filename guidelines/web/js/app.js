@@ -5,11 +5,8 @@
 var $ = jQuery;
 
 /* TO-DOs
-* Generate full SHACL file when form is submitted
-* handle ontologies inputs (uploaded and remote)
-* integration with webservice (ontology and SHACL upload, loading animation after form submission
-    while waiting WS response, then retrieve and list test results)
-* handle textbox inputs (explode comma-separated list into several lines to substitute <$input$> in SPARQL tests)
+* handle ontology remote input
+* integration with webservice (list test results)
 */
 
 
@@ -46,8 +43,11 @@ $(document).ready(function () {
 
     });
 
+    $('#complete-step-1').prop("disabled",true);
+
     $('form').on('change', ':checkbox', function () {
-        console.log('checkbox ' + this.name + ' toggled');
+        //console.log('checkbox ' + this.name + ' toggled');
+
         //checks whether the checkbox was activated or deactivated and 
         //inserts or removes the test from SHACL_selected
         if (SHACL_selected_class.has(this.name)) {
@@ -70,7 +70,7 @@ $(document).ready(function () {
             yield* SHACL_selected_prop;
         }());
         if (SHACL_selected.size === 0) document.getElementById('js-upload-submit').disabled = true;
-        console.log(SHACL_selected);
+        //console.log(SHACL_selected);
     });
 
     $('form').on('change, focusout', 'input[id$="-textbox"]', function (event) {
@@ -101,8 +101,7 @@ $(document).ready(function () {
         regex = /^.*(<\$input\$>).*$/gm;
         query = query.replace(regex, "");
         
-        //for(query.indexOf("<$input$>"))
-        console.log(query);
+        //console.log(query);
     });
 
 });
@@ -138,8 +137,7 @@ function replaceLast(x, y, z) {
 }
 
 let ontoFile;
-let shaclFile = `
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+let shaclFile = `@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -157,7 +155,31 @@ function ($) {
     //when the form is submitted, mount the SHACL tests file (shaclFile)
     uploadForm.addEventListener('click', function (e) {
 
-        //let SHACL_selected = new Map(function*() { yield* SHACL_selected_class; yield* SHACL_selected_prop; }());
+
+        $(".lds-spinner").show();
+
+        shaclFile += `
+        gdl-shape:
+          rdfs:label "SHACL for Ontology Guidelines"@en ;
+          rdfs:comment "This graph is used to validate ontologies against pre-selected tests. "@en ;
+          sh:declare [
+              sh:prefix "rdfs" ;
+              sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+          ] ;
+          sh:declare [
+              sh:prefix "owl" ;
+              sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+          ] ;
+          sh:declare [
+              sh:prefix "rdf" ;
+              sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+          ] ;
+          sh:declare [
+              sh:prefix "gdl" ;
+              sh:namespace "http://dbpedia.org/ontology-guidelines/"^^xsd:anyURI ;
+        ] .
+        
+        `;
 
         //if at least one class test was selected, then insert the class shape prefixes
         if (SHACL_selected_class.size > 0) shaclFile += SHACL_prefix_class;
@@ -165,17 +187,17 @@ function ($) {
         for (let [k, v] of SHACL_selected_class) {
             shaclFile += v;
         }
-        shaclFile = replaceLast(shaclFile, ";", ".");
+        shaclFile = replaceLast(shaclFile, ";", " .");
         //if at least one property test was selected, then insert the property shape prefixes
         if (SHACL_selected_prop.size > 0) shaclFile += SHACL_prefix_prop;
         //insert properties tests
         for (let [k, v] of SHACL_selected_prop) {
             shaclFile += v;
         }
-        shaclFile = replaceLast(shaclFile, ";", ".");
+        shaclFile = replaceLast(shaclFile, ";", " .");
 
         shaclFile = shaclFile.replace('\"', '"');
-        console.log(shaclFile);
+        //console.log(shaclFile);
 
         e.preventDefault();
 
@@ -187,58 +209,32 @@ function ($) {
     });
 
     let startUpload = function (ontology, shacl) {
-        //$("#upload-progress").show("slow");
-        //let file = files[0];
         let formData = new FormData();
         formData.append("ontology", ontology);
         formData.append("shacltest", shacl);
         formData.append("format", "text/turtle");
 
         $.ajax({
+            data: formData,
             url: 'http://localhost:8080/ws/users/ontologyUpload',
             method: 'POST',
             type: 'POST',
-            data: formData,
             accepts: { "*": "text/turtle" },
             contentType: false,
             processData: false,
             cache: false,
+            async: false,
+            success: function (r) {
+                console.log(r);
+            },
             xhr: function () {
                 let xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener("progress",
-                    uploadProgressHandler,
-                    false
-                );
-                xhr.addEventListener("load", loadHandler, false);
-                xhr.addEventListener("error", errorHandler, false);
-                //xhr.addEventListener("abort", abortHandler, false);
-
                 return xhr;
             }
+        }).complete(function() { 
+            $(".lds-spinner").hide();
         });
     };
-
-    function loadHandler() {
-        $("#upload-info").addClass("list-group-item-success");
-        $("#upload-info").append("<span class='badge alert-success pull-right'>Success", "</span>");
-        $(".js-upload-finished").show("slow");
-    }
-
-    function errorHandler() {
-        $("#upload-info").addClass("list-group-item-danger");
-        $("#upload-info").append("<span class='badge alert-danger pull-right'>Failed", "</span>");
-        $(".js-upload-finished").show("slow");
-    }
-
-
-    function uploadProgressHandler(event) {
-        //$(".progress-bar").html("Uploaded "+event.loaded+" bytes of "+event.total);
-        let percent = (event.loaded / event.total) * 100;
-        let progress = Math.round(percent);
-        $(".progress-bar").attr('aria-value-now', progress.toString());
-        $(".progress-bar").attr('style', 'width: ' + progress.toString() + '%');
-        $(".sr-only").html(progress + "% Complete");
-    }
 
     uploadOntology.addEventListener('click', function (e) {
         ontoFile = document.getElementById('js-upload-files').files[0];
@@ -252,11 +248,10 @@ function ($) {
 
 }(jQuery);
 
-//array for storing the SHACL tests for actual selected questions
-let SHACL_selected_class = new Map(); //SHACL_selected_class and SHACL_selected_prop
+//arrays for storing the SHACL tests for actual selected questions
+let SHACL_selected_class = new Map(); 
 let SHACL_selected_prop = new Map();
-//array for storing the SHACL tests for all questions (for the sake of reading JSON just once)
-//let SHACL_questions = new Map();
+//arrays for storing the SHACL tests for all questions
 let SHACL_questions_class = new Map();
 let SHACL_questions_prop = new Map();
 let SHACL_prefix_class;
@@ -276,11 +271,10 @@ jQuery(function ($) {
     $.getJSON("guideline_form.json", function (loadedJson) {
         //console.log(loadedJson); // debug: output json to console
         let groups = $.parseJSON(JSON.stringify(loadedJson[0]));
-        //let groups = new Map(loadedJson[0]);
-        //$.each(groups, function (index, group) {
+        
         for (let [index, group] of entries(groups)) {
-            console.log(index);
-            console.log(group);
+            //console.log(index);
+            //console.log(group);
 
             SHACL_tests_group = `
             
@@ -288,40 +282,27 @@ jQuery(function ($) {
                 a sh:Shape;
                 `;
 
-            //$.each(group.targetClass, function (i, shapeTargetClass) {
-            //for (let shapeTargetClass in groups[index].targetClass) {
-            //SHACL_tests += `sh:targetClass: ${shapeTargetClass};`;
-
-            //check whether there is a single targetClass or multiple
+            //check whether there is a single or multiple targetClass
             if (typeof groups[index].targetClass === 'string') {
-                SHACL_tests_group += `sh:targetClass: ${groups[index].targetClass};
+                SHACL_tests_group += `sh:targetClass ${groups[index].targetClass};
                 `;
             } else {
                 for (let i in groups[index].targetClass) {
-                    SHACL_tests_group += `sh:targetClass: ${groups[index].targetClass[i]};
+                    SHACL_tests_group += `sh:targetClass ${groups[index].targetClass[i]};
                     `;
                 }
             }
-            //}
-            //});
-            /*$.each(group.targetSubjectsOf, function (i, shapeTargetSubjectsOf) {
-            for (let shapeTargetSubjectsOf of groups[index].targetSubjectsOf) {
-                SHACL_tests += `
-    sh:targetSubjectsOf: ${shapeTargetSubjectsOf};`;
-            }*/
-            //check whether there is a single tarSubjectsOf or multiple
+            
+            //check whether there is a single or multiple targetSubjectsOf 
             if (typeof groups[index].targetSubjectsOf === 'string') {
-                SHACL_tests_group += `sh:targetSubjectsOf: ${groups[index].targetSubjectsOf};
+                SHACL_tests_group += `sh:targetSubjectsOf ${groups[index].targetSubjectsOf};
                 `;
             } else {
                 for (let i in groups[index].targetSubjectsOf) {
-                    SHACL_tests_group += `sh:targetSubjectsOf: ${groups[index].targetSubjectsOf[i]};
+                    SHACL_tests_group += `sh:targetSubjectsOf ${groups[index].targetSubjectsOf[i]};
                     `;
                 }
             }
-            //});
-
-
 
             let renderGroup = '';
             renderGroup += "<div class=\"panel panel-info\">" +
@@ -329,9 +310,9 @@ jQuery(function ($) {
                 "<h3 class=\"panel-title\">" + index + "</h3>" +
                 "</div>" +
                 "<div class=\"panel-body\">";
+
             let questions = groups[index].questions;
-            // $.each(questions, function (subIndex, questionLoaded) {
-            //for(var questionLoaded in questions) {
+            
             for (var i in questions) {
                 let questionRendered = '';
                 let placeholder;
@@ -391,14 +372,10 @@ jQuery(function ($) {
                         break;
                 }
 
-
-                //});
             }
             renderGroup += "</div></div>";
             $("#questionnaire").append(renderGroup);
-            //});
-            //SHACL_tests += SHACL_tests_group;
-
+            
         }
         //console.log(SHACL_questions);
 
@@ -406,35 +383,4 @@ jQuery(function ($) {
     });
 
 
-
-    /*uploadForm.addEventListener('onclick', function (e) {
-        let uploadFile = document.getElementById('js-upload-files').files[0];
-        e.preventDefault()
-
-        startUpload(uploadFile)
-    });*/
 });
-
-
-/*the following function generates the tests based on the user's answers
-//returns: a string containing the SHACL tests
-function generateTests() {
-    $.getJSON("guideline_form.json", function (loadedJson) {
-
-    });
-}
-
-//this function run tests in an ontology.
-//parameters: ontology (text data read from uploaded turtle), tests (text data from shacls to be run)
-//returns: test results
-function runTests(ontology, tests) {
-    let validator = new SHACLValidator();
-    validator.validate(ontology, "text/turtle", tests, "text/turtle", function (e, report) {
-        console.log("Conforms? " + report.conforms());
-        if (report.conforms() === false) {
-            report.results().forEach(function (result) {
-                console.log(" - Severity: " + result.severity() + " for " + result.sourceConstraintComponent());
-            });
-        }
-    });
-}*/

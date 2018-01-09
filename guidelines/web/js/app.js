@@ -56,7 +56,7 @@ $(document).ready(function () {
     $('#complete-step-1').prop("disabled", true);
 
     $('form').on('change', ':checkbox', function () {
-        //console.log('checkbox ' + this.name + ' toggled');
+        console.log('checkbox ' + this.name + ' toggled');
 
         //checks whether the checkbox was activated or deactivated and 
         //inserts or removes the test from SHACL_selected
@@ -80,7 +80,7 @@ $(document).ready(function () {
             yield* SHACL_selected_prop;
         }());
         if (SHACL_selected.size === 0) document.getElementById('js-upload-submit').disabled = true;
-        //console.log(SHACL_selected);
+        console.log(SHACL_selected);
     });
 
     $('form').on('change, focusout', 'input[id$="-textbox"]', function (event) {
@@ -111,7 +111,8 @@ $(document).ready(function () {
         regex = /^.*(<\$input\$>).*$/gm;
         query = query.replace(regex, "");
 
-        //console.log(query);
+        console.log(query);
+        SHACL_selected_class.set(id, query);
     });
 
 });
@@ -122,6 +123,57 @@ function nextTab(elem) {
 
 function prevTab(elem) {
     $(elem).prev().find('a[data-toggle="tab"]').click();
+}
+
+let error = [];
+let error2 = new Map();
+
+function listTestResults(res) {
+
+    let sev, msg, resource; //severity, message and resource
+    for (let i of res) {
+        let testResults = [];
+        let test1 = [];
+        msg = i.message.trim();
+        resource = i.failingresource.trim();
+        if (!error2.has(msg)) {
+            test1.push(resource);
+            error2.set(msg, test1);
+        } else {
+            test1 = error2.get(msg);
+            test1.push(resource);
+            error2.set(msg, test1);
+        }
+        for (let k of i.propertyValuePairs) {
+            if (k.property == "http://www.w3.org/ns/shacl#resultSeverity") {
+                sev = k.values[0];
+                break;
+            } else continue;
+        }
+        testResults.push(msg);
+        testResults.push(sev);
+        testResults.push(resource);
+        if (sev == "http://www.w3.org/ns/shacl#Violation") error.push(testResults);
+        else if (sev == "http://www.w3.org/ns/shacl#Warning") warning.push(testResults);
+        else info.push(testResults);
+    }
+    //$("#num-success").html(info.length + " tests passed");
+    //$("#num-warning").html(warning.length + " tests has warnings");
+    $("#num-error").html(error2.size + " tests failed, " + error.length + " violations");
+
+    let errorHtml = `<ul>
+    `;
+    for (let i of error) {
+        errorHtml += `<div class="list-group-item list-group-item-danger">
+            <div class="col-sm-8">` + i[0].replace("<", "").replace(">", "").replace("\\", "") + `</div>
+            <div class="col-sm-4"><a href="` + i[2] + `">` + i[2] + `</a></div>
+        </div>
+        `;
+
+    }
+    errorHtml += `
+    </ul>`;
+    $("#list-error").html(errorHtml);
 }
 
 /**
@@ -192,22 +244,26 @@ function ($) {
         `;
 
         //if at least one class test was selected, then insert the class shape prefixes
-        if (SHACL_selected_class.size > 0) shaclFile += SHACL_prefix_class;
-        //insert classes tests
-        for (let [k, v] of SHACL_selected_class) {
-            shaclFile += v;
+        if (SHACL_selected_class.size > 0) {
+            shaclFile += SHACL_prefix_class;
+            //insert classes tests
+            for (let [k, v] of SHACL_selected_class) {
+                shaclFile += v;
+            }
+            shaclFile = replaceLast(shaclFile, ";", " .");
         }
-        shaclFile = replaceLast(shaclFile, ";", " .");
         //if at least one property test was selected, then insert the property shape prefixes
-        if (SHACL_selected_prop.size > 0) shaclFile += SHACL_prefix_prop;
-        //insert properties tests
-        for (let [k, v] of SHACL_selected_prop) {
-            shaclFile += v;
+        if (SHACL_selected_prop.size > 0) {
+            shaclFile += SHACL_prefix_prop;
+            //insert properties tests
+            for (let [k, v] of SHACL_selected_prop) {
+                shaclFile += v;
+            }
+            shaclFile = replaceLast(shaclFile, ";", " .");
         }
-        shaclFile = replaceLast(shaclFile, ";", " .");
 
         shaclFile = shaclFile.replace('\"', '"');
-        //console.log(shaclFile);
+        console.log(shaclFile);
 
         e.preventDefault();
 
@@ -237,8 +293,15 @@ function ($) {
             cache: false,
             async: false,
             success: function (r) {
-                var response = JSON.parse(r);
-                console.log(response);
+                // console.dir(r);
+                //$("#results").append(r);
+                if (r) {
+                    var response = JSON.parse(r);
+                    console.log(response);
+                    listTestResults(response);
+                } else {
+                    $("#num-error").html("0 tests failed, 0 violations");
+                }
             },
             xhr: function () {
                 let xhr = new window.XMLHttpRequest();
@@ -270,6 +333,8 @@ let SHACL_questions_prop = new Map();
 let SHACL_prefix_class;
 let SHACL_prefix_prop;
 
+
+
 //the following function generates the questionnaire HTML from JSON
 jQuery(function ($) {
 
@@ -282,12 +347,12 @@ jQuery(function ($) {
     let SHACL_tests_group = '';
 
     $.getJSON("guideline_form.json", function (loadedJson) {
-        //console.log(loadedJson); // debug: output json to console
+        console.log(loadedJson); // debug: output json to console
         let groups = $.parseJSON(JSON.stringify(loadedJson[0]));
 
         for (let [index, group] of entries(groups)) {
-            //console.log(index);
-            //console.log(group);
+            console.log(index);
+            console.log(group);
 
             SHACL_tests_group = `
             
@@ -352,7 +417,7 @@ jQuery(function ($) {
                         break;
                 }
                 let thisSHACL = `${questions[i].shacl} [
-        sh:message: "${questions[i].label}";
+        sh:message "${questions[i].label}";
         `;
                 switch (questions[i].shacl) {
                     case "sh:sparql":
@@ -368,8 +433,8 @@ jQuery(function ($) {
                         break;
                     case "sh:property":
                         let prop = questions[i].test.join('\n');
-                        thisSHACL += `${prop}
-                            ];
+                        thisSHACL += replaceLast(prop, '.', ';');
+                        thisSHACL += ` ];
                             
                             `;
                         break;
@@ -390,8 +455,6 @@ jQuery(function ($) {
             $("#questionnaire").append(renderGroup);
 
         }
-        //console.log(SHACL_questions);
-
 
     });
 

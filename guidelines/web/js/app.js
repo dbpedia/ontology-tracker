@@ -154,8 +154,9 @@ function listTestResults(res) {
         testResults.push(sev);
         testResults.push(resource);
         if (sev == "http://www.w3.org/ns/shacl#Violation") error.push(testResults);
-        else if (sev == "http://www.w3.org/ns/shacl#Warning") warning.push(testResults);
-        else info.push(testResults);
+        //else if (sev == "http://www.w3.org/ns/shacl#Warning") warning.push(testResults);
+        //else info.push(testResults);
+        // ps: at the moment, RDFUnit has only "Violation" results
     }
     //$("#num-success").html(info.length + " tests passed");
     //$("#num-warning").html(warning.length + " tests has warnings");
@@ -282,7 +283,7 @@ function ($) {
 
         $.ajax({
             data: formData,
-            url: 'http://localhost:8080/ws/users/ontologyUpload',
+            url: 'http://localhost:8081/ws/users/ontologyUpload',
             method: 'POST',
             type: 'POST',
             accepts: {
@@ -310,6 +311,9 @@ function ($) {
         }).complete(function () {
             $(".lds-spinner").hide();
         });
+        /*request.fail(function(jqXHR, textStatus) {
+            console.log( "Request failed: " + textStatus );
+        });*/
     };
 
     uploadOntology.addEventListener('click', function (e) {

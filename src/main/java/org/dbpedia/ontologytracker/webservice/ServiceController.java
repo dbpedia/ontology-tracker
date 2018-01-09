@@ -342,6 +342,15 @@ public class ServiceController extends Exception {
         	
             InputStream isontol = ontology.getInputStream();
             InputStream isshacl = shacltest.getInputStream();
+
+            /*if(inputStreamToString(isontol).isEmpty()){
+                L.error("Error: ontology file is empty");
+                //return "Error: ontology file is empty";
+            }
+            if(inputStreamToString(isshacl).isEmpty()){
+                L.error("Error: SHACL file is empty");
+                //return "Error: SHACL file is empty";
+            }*/
             
             Model model = ValidateOntology.readOntology(isontol);
 
@@ -364,7 +373,7 @@ public class ServiceController extends Exception {
 
 
         } 
-        
+
         catch (Exception e) {
             L.info("An error occurred while uploading ontology and shacl tests files: " + e.getMessage());
         }

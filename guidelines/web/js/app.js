@@ -2,15 +2,50 @@
 
 "use strict";
 
-var $ = jQuery;
+let $ = jQuery;
 
 /* TO-DOs
  * handle ontology remote input
- * integration with webservice (list test results)
  */
+let editor;
 
+let customTest = false;
 
 $(document).ready(function () {
+
+
+    document.getElementById('js-upload-submit').disabled = true;
+
+    editor = CodeMirror.fromTextArea(document.getElementById("customInput"), {
+        lineNumbers: true,
+        mode: "turtle",
+        matchBrackets: true,
+        fixedGutter: true,
+        autoRefresh: true,
+        autoFocus: true
+    });
+
+    $('a[href$="custom"]').click(function (e) {
+        e.preventDefault();
+        editor.setValue('');
+        $(this).tab('show');
+        document.getElementById('js-upload-submit').disabled = false;
+        customTest = true;
+    });
+
+    $('a[href$="void(0)"]').click(function (e) {
+        e.preventDefault();
+        $('#modal-custom').modal('show');
+    });
+
+    $('#js-discard-custom').click(function (e) {
+        $('a[href$="void(0)"]').tab('show');
+        $('#custom').removeClass('active');
+        $('#selection').addClass('active');
+        $('#selection').removeClass('fade');
+        customTest = false;
+    });
+
     //Initialize popover
     $("body").popover({
         selector: '[data-toggle=popover]'
@@ -30,7 +65,7 @@ $(document).ready(function () {
     });
 
     //Initialize wizard navigation bar
-    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    $('.wizard-inner a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 
         let $target = $(e.target);
 
@@ -41,19 +76,20 @@ $(document).ready(function () {
 
     $(".next-step").click(function (e) {
 
-        let $active = $('.wizard .nav-tabs li.active');
+        let $active = $('.wizard-inner .nav-tabs li.active');
         $active.next().removeClass('disabled');
         nextTab($active);
 
     });
     $(".prev-step").click(function (e) {
 
-        let $active = $('.wizard .nav-tabs li.active');
+        let $active = $('.wizard-inner .nav-tabs li.active');
         prevTab($active);
 
     });
 
-    $('#complete-step-1').prop("disabled", true);
+    $('#complete-step-1').prop('disabled', true);
+
 
     $('form').on('change', ':checkbox', function () {
         console.log('checkbox ' + this.name + ' toggled');
@@ -79,7 +115,9 @@ $(document).ready(function () {
             yield* SHACL_selected_class;
             yield* SHACL_selected_prop;
         }());
-        if (SHACL_selected.size === 0) document.getElementById('js-upload-submit').disabled = true;
+        if (SHACL_selected.size === 0) {
+            document.getElementById('js-upload-submit').disabled = true;
+        }
         console.log(SHACL_selected);
     });
 
@@ -195,8 +233,11 @@ function replaceLast(x, y, z) {
             }
         }
     }
-
     return a.join("");
+}
+
+function isEmpty(str) {
+    return (!str || 0 === str.length);
 }
 
 let ontoFile;
@@ -221,7 +262,11 @@ function ($) {
 
         $(".lds-spinner").show();
 
-        shaclFile += `
+        if (customTest) {
+            shaclFile = editor.getValue();
+        } 
+        else {
+            shaclFile += `
         gdl-shape:
           rdfs:label "SHACL for Ontology Guidelines"@en ;
           rdfs:comment "This graph is used to validate ontologies against pre-selected tests. "@en ;
@@ -244,26 +289,27 @@ function ($) {
         
         `;
 
-        //if at least one class test was selected, then insert the class shape prefixes
-        if (SHACL_selected_class.size > 0) {
-            shaclFile += SHACL_prefix_class;
-            //insert classes tests
-            for (let [k, v] of SHACL_selected_class) {
-                shaclFile += v;
+            //if at least one class test was selected, then insert the class shape prefixes
+            if (SHACL_selected_class.size > 0) {
+                shaclFile += SHACL_prefix_class;
+                //insert classes tests
+                for (let [k, v] of SHACL_selected_class) {
+                    shaclFile += v;
+                }
+                shaclFile = replaceLast(shaclFile, ";", " .");
             }
-            shaclFile = replaceLast(shaclFile, ";", " .");
-        }
-        //if at least one property test was selected, then insert the property shape prefixes
-        if (SHACL_selected_prop.size > 0) {
-            shaclFile += SHACL_prefix_prop;
-            //insert properties tests
-            for (let [k, v] of SHACL_selected_prop) {
-                shaclFile += v;
+            //if at least one property test was selected, then insert the property shape prefixes
+            if (SHACL_selected_prop.size > 0) {
+                shaclFile += SHACL_prefix_prop;
+                //insert properties tests
+                for (let [k, v] of SHACL_selected_prop) {
+                    shaclFile += v;
+                }
+                shaclFile = replaceLast(shaclFile, ";", " .");
             }
-            shaclFile = replaceLast(shaclFile, ";", " .");
-        }
 
-        shaclFile = shaclFile.replace('\"', '"');
+            shaclFile = shaclFile.replace('\"', '"');
+        }
         console.log(shaclFile);
 
         e.preventDefault();
@@ -339,7 +385,7 @@ let SHACL_prefix_prop;
 
 
 
-//the following function generates the questionnaire HTML from JSON
+//the following function generates the selection HTML from JSON
 jQuery(function ($) {
 
     function* entries(obj) {
@@ -456,7 +502,7 @@ jQuery(function ($) {
 
             }
             renderGroup += "</div></div>";
-            $("#questionnaire").append(renderGroup);
+            $("#selection").append(renderGroup);
 
         }
 

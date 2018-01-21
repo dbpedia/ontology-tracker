@@ -9,9 +9,15 @@ let $ = jQuery;
  */
 let editor;
 
-let customTest = false;
+let isCustomTest = false;
+let isRemoteOntology = false;
 
 $(document).ready(function () {
+
+    // Refresh CodeMirror
+    $('.CodeMirror').each(function(i, el){
+        el.CodeMirror.refresh();
+    })
 
 
     document.getElementById('js-upload-submit').disabled = true;
@@ -27,23 +33,23 @@ $(document).ready(function () {
 
     $('a[href$="custom"]').click(function (e) {
         e.preventDefault();
-        editor.setValue('');
         $(this).tab('show');
         document.getElementById('js-upload-submit').disabled = false;
-        customTest = true;
+        isCustomTest = true;
     });
 
     $('a[href$="void(0)"]').click(function (e) {
         e.preventDefault();
-        $('#modal-custom').modal('show');
+        if($('#custom').hasClass('active')) $('#modal-custom').modal('show');
     });
 
     $('#js-discard-custom').click(function (e) {
+        editor.setValue('');
         $('a[href$="void(0)"]').tab('show');
         $('#custom').removeClass('active');
         $('#selection').addClass('active');
         $('#selection').removeClass('fade');
-        customTest = false;
+        isCustomTest = false;
     });
 
     //Initialize popover
@@ -262,7 +268,7 @@ function ($) {
 
         $(".lds-spinner").show();
 
-        if (customTest) {
+        if (isCustomTest) {
             shaclFile = editor.getValue();
         } 
         else {
@@ -322,14 +328,18 @@ function ($) {
     });
 
     let startUpload = function (ontology, shacl) {
+        let serviceURL = '';
         let formData = new FormData();
         formData.append("ontology", ontology);
         formData.append("shacltest", shacl);
         formData.append("format", "text/turtle");
 
+        if(isRemoteOntology) serviceURL = 'http://localhost:8081/ws/users/ontologyURL';
+        else serviceURL = 'http://localhost:8081/ws/users/ontologyUpload';
+
         $.ajax({
             data: formData,
-            url: 'http://localhost:8081/ws/users/ontologyUpload',
+            url: serviceURL,
             method: 'POST',
             type: 'POST',
             accepts: {
@@ -370,6 +380,7 @@ function ($) {
     remoteOntology.addEventListener('click', function (e) {
         ontoFile = document.getElementById('remote-url').value;
         document.getElementById('complete-step-1').disabled = false;
+        isRemoteOntology = true;
     });
 
 }(jQuery);

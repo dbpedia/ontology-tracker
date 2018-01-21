@@ -235,7 +235,7 @@ public class ServiceController extends Exception {
                     "application/rdfthrift" })
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String ontologyURL(@RequestBody String url, @RequestHeader(value="Accept") String format) throws IOException, RdfReaderException {
+    public String ontologyURL(@RequestBody String url, @RequestPart(value="shacltest") MultipartFile shacltest, @RequestHeader(value="Accept") String format) throws IOException, RdfReaderException {
 
         switch(format) {
             case "text/turtle":
@@ -279,9 +279,11 @@ public class ServiceController extends Exception {
                 format = "TURTLE";
         }
     	    Resource resource = applicationContext.getResource(url);
-        try (InputStream is = resource.getInputStream()) {        	
+        InputStream isshacl = shacltest.getInputStream();
+        try (InputStream is = resource.getInputStream()) {
             Model model = ValidateOntology.readOntology(is);
-            return ValidateOntology.runTests(model, format);
+            //return ValidateOntology.runTests(model, format);
+            return ValidateOntology.runShaclTests(model, inputStreamToString(isshacl));
         }
     }
     

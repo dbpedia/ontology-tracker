@@ -20,26 +20,50 @@ public class ValidateOntology {
 
     private static Logger L = Logger.getLogger(ValidateOntology.class);
 
-
-    //private static final String DBO_MANUAL_TESTS = "/org/aksw/rdfunit/tests/Manual/dbpedia.org/ontology/dbo.tests.Manual.ttl";
     private static final File DBPEDIA_ONTOLOGY = new File("ontology/dbpedia_ontology.ttl");
     private static final String baseUri = "http://dbpedia.org/ontology/";
     private static String outdir = "result";
 
-
+    /**
+     * @param is The InputStream of the ontology file
+     *
+     * @return The ontology read as a jena Model
+     */
     public static Model readOntology(InputStream is) throws IOException {
 
-        //OntModel model = ModelFactory.createOntologyModel();
         Model model = ModelFactory.createDefaultModel();
 
         try {
             model.read(is, baseUri, "TTL");
         } catch (Exception e) {
-            L.error(e.getMessage());
+            L.error("Error processing file: " + e.getMessage());
         }
         return model;
     }
 
+    /**
+     * @param is The InputStream of the ontology file
+     * @param format String with the input format of the ontology file ("TTL", "RDF/XML", etc.)
+     *
+     * @return The ontology read as a jena Model
+     */
+    public static Model readOntology(InputStream is, String format) throws IOException {
+
+        Model model = ModelFactory.createDefaultModel();
+
+        try {
+            model.read(is, format);
+        } catch (Exception e) {
+            L.error("Error processing file: " + e.getMessage());
+        }
+        return model;
+    }
+
+    /**
+     * @param model The jena Model of the ontology file
+     *
+     * @return A Collection of ShaclTestCaseResult
+     */
     public static Collection<ShaclTestCaseResult> runShaclTests(Model model) {
         RDFUnitValidate rval = new RDFUnitValidate();
         TestExecution te = rval.checkModelWithRdfUnit(model);
@@ -53,7 +77,12 @@ public class ValidateOntology {
         return stcrs;
     }
 
-    //This method is used by the WebService, running  custom tests with json output
+    /**
+     * @param model The jena Model of the ontology file
+     * @param test String with custom SHACL test to be run against the Model
+     *
+     * @return The test results as a JSON string
+     */
     public static String runShaclTests(Model model, String test) {
         RDFUnitValidate rval = new RDFUnitValidate(test);
         TestExecution te = rval.checkModelWithRdfUnit(model);
@@ -78,7 +107,12 @@ public class ValidateOntology {
         return gson.toJson(tests).replace("\\\\", "\\");
     }
 
-    //This method is used by the WebService, providing parametrized output formats
+    /**
+     * @param model The jena Model of the ontology file
+     * @param format String with the expected output format
+     *
+     * @return The test results as a string in the specified format
+     */
     public static String runTests(Model model, String format) {
 
         RDFUnitValidate rval = new RDFUnitValidate();
@@ -101,7 +135,13 @@ public class ValidateOntology {
 
     }
 
-    //This method is used by the WebService, providing parametrized output formats
+    /**
+     * @param model The jena Model of the ontology file
+     * @param format String with the expected output format
+     * @param test String with custom SHACL test to be run against the Model
+     *
+     * @return The test results as a string in the specified format
+     */
     public static String runTests(Model model, String format, String test) {
 
         RDFUnitValidate rval = new RDFUnitValidate(test);
@@ -119,6 +159,7 @@ public class ValidateOntology {
             e.printStackTrace();
             out = "An error occurred while writing tests output.";
         }
+
 
         return out;
 

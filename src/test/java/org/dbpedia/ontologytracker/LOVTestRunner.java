@@ -32,6 +32,9 @@ public class LOVTestRunner {
         streamAndRunTests(ontologiesURLs);
     }
 
+    /**
+     * Parses the JSON file
+     */
     public static void parse() {
         try {
             JSONTokener tokener = new JSONTokener(new URL(repositoryAddress).openStream());

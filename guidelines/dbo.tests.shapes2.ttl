@@ -1,0 +1,67 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dbo-shape: <http://dbpedia.org/dbo-shape#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+dbo-shape:
+  rdfs:label "SHACL for DBpedia Ontology"@en ;
+  rdfs:comment "This shapes graph is used to validate the DBpedia ontology commits. "@en ;
+  sh:declare [
+	  sh:prefix "rdfs" ;
+	  sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+  ] ;
+  sh:declare [
+  	sh:prefix "owl" ;
+  	sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+  ] ;
+  sh:declare [
+  	sh:prefix "rdf" ;
+  	sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+  ] ;
+  sh:declare [
+  	sh:prefix "dbo" ;
+  	sh:namespace "http://dbpedia.org/ontology/"^^xsd:anyURI ;
+] .
+
+dbo-shape:ClassShape
+  a sh:Shape ;
+  sh:targetClass owl:Class ;
+  sh:targetSubjectsOf rdfs:subClassOf ;
+  sh:severity sh:Error ;
+  sh:sparql [
+    sh:message "Classes names must not start with a lowercase letter" ;
+    sh:severity sh:Warning ;
+    sh:select """
+      PREFIX owl: <http://www.w3.org/2002/07/owl#>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT $this WHERE
+      {
+        $this a owl:Class .
+        FILTER REGEX($this, "/([a-z]\\b*)$") .
+      } """ ;
+  ]
+  .
+
+dbo-shape:PropertyShape
+  a sh:Shape ;
+  sh:targetClass rdf:Property ;
+  sh:targetClass owl:DatatypeProperty ;
+  sh:targetClass owl:ObjectProperty ;
+  sh:targetSubjectsOf rdfs:subPropertyOf ;
+  sh:sparql [
+  sh:message "Properties names must not start with a capital letter" ;
+  sh:severity sh:Warning ;
+  sh:select """
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    SELECT $this WHERE
+    {
+      $this a ?property .
+      FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
+      FILTER REGEX($this, '/([A-Z]\\b*)$') .
+    } """ ;
+  ] ;
+  .

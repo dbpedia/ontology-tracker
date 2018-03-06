@@ -60,16 +60,26 @@ dbo-shape:ClassShape
       WHERE {
         $this rdfs:subClassOf owl:Thing  .
         FILTER($this NOT IN (
-          <http://dbpedia.org/ontology/Activity>,
-          <http://dbpedia.org/ontology/Agent>,
-          <http://dbpedia.org/ontology/Concept>,
-          <http://dbpedia.org/ontology/CommunicationSystem>,
-          <http://dbpedia.org/ontology/Condition>,
-          <http://dbpedia.org/ontology/Event>,
-          <http://dbpedia.org/ontology/PhysicalThing>,
+          <http://dbpedia.org/ontology/Change>,
+          <http://dbpedia.org/ontology/PrimeOver>,
           <http://dbpedia.org/ontology/Place>,
-          <http://dbpedia.org/ontology/TimePeriod>)
+          <http://dbpedia.org/ontology/Time>,
+          <http://dbpedia.org/ontology/Communication>,
+          <http://dbpedia.org/ontology/Condition>,
+          <http://dbpedia.org/ontology/Matter>)
         ).
+      } """ ;
+  ] ;
+  sh:sparql [
+    sh:message "Classes names must not start with a lowercase letter" ;
+    sh:severity sh:Warning ;
+    sh:select """
+      PREFIX owl: <http://www.w3.org/2002/07/owl#>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT $this WHERE
+      {
+        $this a owl:Class .
+        FILTER REGEX($this, "/([a-z]\\W*)$") .
       } """ ;
   ]
   .
@@ -119,6 +129,20 @@ dbo-shape:PropertyShape
     sh:path rdfs:subPropertyOf ;
     sh:maxCount 1;
   ] ;
+  sh:sparql [
+  sh:message "Properties names must not start with a capital letter" ;
+  sh:severity sh:Warning ;
+  sh:select """
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    SELECT $this WHERE
+    {
+      $this a ?property .
+      FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
+      FILTER REGEX($this, '/([A-Z]\\W*)$') .
+    } """ ;
+  ]
   .
 
 dbo-shape:NoPersonSubclassesShape
@@ -136,4 +160,3 @@ dbo-shape:NoPersonSubclassesShape
                   FILTER ($this !=<http://dbpedia.org/ontology/Person>) .
             }""" ;
 ] .
-

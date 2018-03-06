@@ -1,6 +1,5 @@
 package org.dbpedia.ontologytracker;
 
-import jdk.internal.util.xml.impl.Input;
 import org.apache.jena.rdf.model.Model;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,8 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.*;
-
-import org.dbpedia.ontologytracker.ValidateOntology;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -156,7 +153,7 @@ public class LOVTestRunner {
 
             logger.info("Streaming " + url);
 
-            try (InputStream ontology = getStream(url, "RDF/XML");) {
+            try (InputStream ontology = getStream(url);) {
                 if (ontology != null) {
                     logger.info(url + " successfully read");
 

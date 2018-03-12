@@ -6,7 +6,7 @@
       "targetSubjectsOf": "rdfs:subClassOf",
       "questions": [
         {
-          "id": 2,
+          "id": 1,
           "type": "toggle-textbox",
           "name": "top-level-classes",
           "label": "Fixed top-level classes",
@@ -24,7 +24,7 @@
           ]
         },
         {
-          "id": 3,
+          "id": 2,
           "type": "toggle",
           "name": "label-every-class",
           "label": "Classes must have a label",
@@ -38,7 +38,7 @@
           ]
         },
         {
-          "id": 4,
+          "id": 3,
           "type": "toggle",
           "name": "comment-every-class",
           "label": "Classes must have a comment",
@@ -52,7 +52,7 @@
           ]
         },
         {
-          "id": 5,
+          "id": 4,
           "type": "toggle",
           "name": "no-multiple-superclass",
           "label": "Classes must have at most one superclass",
@@ -64,7 +64,7 @@
           ]
         },
         {
-          "id": 6,
+          "id": 5,
           "type": "toggle-textbox",
           "name": "class-without-subclass",
           "label": "Some classes does not allow subclasses",
@@ -80,16 +80,88 @@
           ]
         },
         {
-          "id": 14,
+          "id": 6,
           "type": "toggle",
           "name": "no-lowercase-classes",
-          "description": "",
+          "label": "Classes names must not start with a lowercase letter",
+          "description": "For naming conventions, each <code>owl:Class</code> name must not start with a lowercase letter",
           "shacl": "sh:sparql",
           "test": [
-            "SELECT $this "
+            "SELECT $this ",
             "WHERE { ",
             "  $this a owl:Class .",
-            "  FILTER REGEX($this, '/([a-z]\\W*)$') .",
+            "  BIND(REPLACE(STR($this), '/([a-z][1]?[A-z0-9]*)$', '' ) as ?str1) .",
+            "  FILTER(STR($this) != STR(?str1)) .",
+            "}"
+          ]
+        },
+        {
+          "id": 7,
+          "type": "toggle",
+          "name": "no-empty-classes",
+          "label": "Classes must have instances",
+          "description": "No <code>owl:Class</code> without instances is allowed, i.e., classes can not be roles",
+          "shacl": "sh:sparql",
+          "test": [
+            "SELECT DISTINCT ?value $this ",
+            "WHERE { ",
+            "  $this a owl:Class .",
+            "  OPTIONAL { ?value a $this } .",
+            "}",
+            "GROUP BY $this ?value",
+            "HAVING (COUNT(?value) = 0 )"
+          ]
+        },
+        {
+          "id": 8,
+          "type": "toggle",
+          "name": "detect-synonym-classes",
+          "label": "Detect synonyms created as classes",
+          "description": "No <code>owl:equivalentClass</code> relationship is allowed between two <code>owl:Class</code> within the same namespace",
+          "shacl": "sh:sparql",
+          "test": [
+            "SELECT $this ",
+            "WHERE { ",
+            "  $this a owl:Class .",
+            "  $this owl:equivalentClass ?other",
+            "  BIND(REPLACE(STR($this), '(#|/)[^#/]*$', '$1' ) as ?ns1) .",
+            "  BIND(REPLACE(STR(?other), '(#|/)[^#/]*$', '$1' ) as ?ns2) .",
+            "  FILTER(?ns1 = ?ns2) .",
+            "}"
+          ]
+        },
+        {
+          "id": 9,
+          "type": "toggle",
+          "name": "detect-unconnected-classes",
+          "label": "Detect unconnected classes",
+          "description": "Check wheter a <code>owl:Class</code><br/> (a) is not part of any hierarchy (using <code>rdfs:subClassOf</code>)<br/>(b) does not have any definition axiom (using <code>rdfs:subClassOf</code> or <code>owl:equivalentClass</code> and a class restriction expression)<br/>(c) does not appear in any other class definition axiom (using <code>rdfs:subClassOf</code> or <code>owl:equivalentClass</code> and a class restriction expression)<br/>(d) does not appear in any  <code>rdfs:domain</code> or <code>rdfs:range</code>",
+          "shacl": "sh:sparql",
+          "test": [
+            "SELECT $this WHERE",
+            "{",
+            "  $this a owl:Class .",
+            "  FILTER NOT EXISTS {$this rdfs:subClassOf ?any1} .",
+            "  FILTER NOT EXISTS {?any2 owl:equivalentClass $this} .",
+            "  FILTER NOT EXISTS {$this owl:equivalentClass ?any3} .",
+            "  FILTER NOT EXISTS {?any4 rdfs:subClassOf $this} .",
+            "  FILTER NOT EXISTS {?any5 rdfs:range $this} .",
+            "  FILTER NOT EXISTS {?any6 rdfs:domain $this} .",
+            "}"
+          ]
+        },
+        {
+          "id": 10,
+          "type": "toggle",
+          "name": "no-cycling-classes",
+          "label": "Detect cycles in the class hierarchy",
+          "description": "No <code>owl:Class</code> can be <code>rdfs:subClassOf</code> itself in any level",
+          "shacl": "sh:sparql",
+          "test": [
+            "SELECT $this WHERE",
+            "{",
+            "  $this a owl:Class .",
+            "  $this rdfs:subClassOf+ $this .",
             "}"
           ]
         }
@@ -105,7 +177,7 @@
       "targetSubjectsOf": "rdfs:subPropertyOf",
       "questions": [
         {
-          "id": 7,
+          "id": 11,
           "type": "toggle",
           "name": "label-every-property",
           "label": "Properties must have a label",
@@ -119,7 +191,7 @@
           ]
         },
         {
-          "id": 8,
+          "id": 12,
           "type": "toggle",
           "name": "comment-every-property",
           "label": "Properties must have a comment",
@@ -133,7 +205,7 @@
           ]
         },
         {
-          "id": 9,
+          "id": 13,
           "type": "toggle",
           "name": "no-multiple-domain",
           "label": "Properties must have at most one domain",
@@ -145,7 +217,7 @@
           ]
         },
         {
-          "id": 10,
+          "id": 14,
           "type": "toggle",
           "name": "must-have-domain",
           "label": "Properties must have at least one domain, which is a class",
@@ -158,7 +230,7 @@
           ]
         },
         {
-          "id": 11,
+          "id": 15,
           "type": "toggle",
           "name": "no-multiple-range",
           "label": "Properties must have at most one range",
@@ -170,7 +242,7 @@
           ]
         },
         {
-          "id": 12,
+          "id": 16,
           "type": "toggle",
           "name": "must-have-range",
           "label": "Properties must have at least one range, which is a class",
@@ -183,7 +255,7 @@
           ]
         },
         {
-          "id": 13,
+          "id": 17,
           "type": "toggle",
           "name": "no-multiple-superproperty",
           "label": "Properties must have at most one superproperty",
@@ -195,17 +267,53 @@
           ]
         },
         {
-          "id": 15,
+          "id": 18,
           "type": "toggle",
           "name": "no-capital-properties",
-          "description": "",
+          "label": "Properties names must not start with a capital letter",
+          "description": "For naming conventions, each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> name must not start with a capital letter",
           "shacl": "sh:sparql",
           "test": [
-            "SELECT $this "
+            "SELECT $this ",
             "WHERE { ",
-            "  $this a owl:Class .",
+            "  $this a ?property .",
             "  FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .",
-            "  FILTER REGEX($this, '/([A-Z]\\w*)$') .",
+            "  BIND(REPLACE(STR($this), '/[A-Z][A-z0-9]*$', '' ) as ?str1) .",
+            "  FILTER(STR($this) != STR(?str1)) .",
+            "}"
+          ]
+        },
+        {
+          "id": 19,
+          "type": "toggle",
+          "name": "detect-self-inverse",
+          "label": "Detect relationships inverse to themselves",
+          "description": "Check if any <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> is <code>owl:inverseOf</code> of itself.",
+          "shacl": "sh:sparql",
+          "test": [
+            "SELECT $this ",
+            "WHERE { ",
+            "  $this a ?property .",
+            "  $this owl:inverseOf $this .",
+            "  FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .",
+            "}"
+          ]
+        },
+        {
+          "id": 20,
+          "type": "toggle",
+          "name": "detect-relationship-is",
+          "label": "Detect wrongly defined relationship 'is'",
+          "description": "Check if any <code>owl:ObjectProperty</code> name is formed by the verb form 'is' with or without the indefinite article 'a' possibly linked to the verb by a separator (e.g. “-”, “_”).",
+          "shacl": "sh:sparql",
+          "test": [
+            "SELECT $this ",
+            "WHERE { ",
+            "  $this a owl:ObjectProperty .",
+            "  BIND(REPLACE(STR($this), 'isA', '' ) as ?str1) .",
+            "  BIND(REPLACE(STR($this), 'is-a', '' ,'i') as ?str2) .",
+            "  BIND(REPLACE(STR($this), 'is_a', '' ,'i') as ?str3) .",
+            "  FILTER(STR($this) != STR(?str1) || STR($this) != STR(?str2) || STR($this) != STR(?str3)) .",
             "}"
           ]
         }

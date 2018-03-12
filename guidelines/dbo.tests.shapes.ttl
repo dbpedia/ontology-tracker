@@ -79,8 +79,72 @@ dbo-shape:ClassShape
       SELECT $this WHERE
       {
         $this a owl:Class .
-        FILTER REGEX($this, "/([a-z]\\W*)$") .
+        FILTER REGEX($this, '/([a-z][1]?[A-z0-9]*])$') .
       } """ ;
+  ] ;
+  sh:sparql [
+  sh:message "Classes must have instances" ;
+  sh:severity sh:Warning ;
+  sh:select """
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  SELECT $this WHERE
+  {
+    $this a owl:Class .
+    FILTER NOT EXISTS { ?s a $this .} .
+  } """ ;
+  ] ;
+  # Checks whether a class has an owl:equivalentClass that has the same namespace
+  # equivalent to OOPS P02
+  sh:sparql [
+  sh:message "Detect synonyms created as classes" ;
+  sh:severity sh:Warning ;
+  sh:select """
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  SELECT $this WHERE
+  {
+    $this a owl:Class .
+    $this owl:equivalentClass ?other
+    BIND(REPLACE(STR($this), "(#|/)[^#/]*$", "$1" ) as ?ns1) .
+    BIND(REPLACE(STR(?other), "(#|/)[^#/]*$", "$1" ) as ?ns2) .
+    FILTER(?ns1 = ?ns2) .
+  } """ ;
+  ] ;
+  # For each class, the method checks whether the class:
+  # (a) is not part of any hierarchy (using rdfs:subClassOf )
+  # (b) does not have any definition axiom (using rdfs:subClassOf or owl:equivalentClass and a class restriction expression)
+  # (c) does not appear in any other class definition axiom (using rdfs:subClassOf or owl:equivalentClass and a class restriction expression)
+  # (d) does not appear in any property domain ( rdfs:domain ) or range ( rdfs:range )
+  # equivalent to OOPS P04
+  sh:sparql [
+  sh:message "Detect unconnected classes" ;
+  sh:severity sh:Warning;
+  sh:select """
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  SELECT $this WHERE
+  {
+    $this a owl:Class .
+    FILTER NOT EXISTS {$this rdfs:subClassOf ?any1} .
+    FILTER NOT EXISTS {?any2 owl:equivalentClass $this} .
+    FILTER NOT EXISTS {$this owl:equivalentClass ?any3} .
+    FILTER NOT EXISTS {?any4 rdfs:subClassOf $this} .
+    FILTER NOT EXISTS {?any5 rdfs:range $this} .
+    FILTER NOT EXISTS {?any6 rdfs:domain $this} .
+  } """;
+  ];
+  # A class can not be rdfs:subClassOf itself in any level
+  # equivalent to OOPS P06
+  sh:sparql [
+  sh:message "No class can be subclass of itself in any level" ;
+  sh:severity sh:Warning;
+  sh:select """
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  SELECT $this WHERE
+  {
+    $this a owl:Class .
+    $this rdfs:subClassOf+ $this .
+  } """;
   ]
   .
 
@@ -90,13 +154,15 @@ dbo-shape:PropertyShape
   sh:targetClass owl:DatatypeProperty ;
   sh:targetClass owl:ObjectProperty ;
   sh:targetSubjectsOf rdfs:subPropertyOf ;
+  # similar to OOPS P08
   sh:property [
     sh:message "Each property should have at least one rdfs:label" ;
     sh:path rdfs:label ;
-    sh:minCount 1;
-    sh:dataType rdf:langString;
+    sh:nCount 1;
+    sh:daType rdf:langString;
     sh:uniqueLang true ;
   ] ;
+  # similar to OOPS P08
   sh:property [
     sh:message "Each property should have at least one rdfs:comment" ;
     sh:path rdfs:comment ;
@@ -104,6 +170,7 @@ dbo-shape:PropertyShape
     sh:dataType rdf:langString;
     sh:uniqueLang true ;
   ] ;
+  # similar to OOPS P19
   sh:property [
     sh:message "Each property should have at most one rdfs:domain" ;
     sh:path rdfs:domain ;
@@ -114,6 +181,7 @@ dbo-shape:PropertyShape
     sh:path rdfs:domain ;
     sh:class owl:Class;
   ] ;
+  # similar to OOPS P19
   sh:property [
     sh:message "Each property should have at most one rdfs:range" ;
     sh:path rdfs:range ;
@@ -129,6 +197,7 @@ dbo-shape:PropertyShape
     sh:path rdfs:subPropertyOf ;
     sh:maxCount 1;
   ] ;
+  # similar to OOPS P22
   sh:sparql [
   sh:message "Properties names must not start with a capital letter" ;
   sh:severity sh:Warning ;
@@ -140,8 +209,41 @@ dbo-shape:PropertyShape
     {
       $this a ?property .
       FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
-      FILTER REGEX($this, '/([A-Z]\\W*)$') .
+      BIND(REPLACE(STR($this), '/([A-Z][1]?[A-z0-9]*)$', '' ) as ?str1) .
+      FILTER(STR($this) != STR(?str1)) .
     } """ ;
+  ] ;
+  # Do not allow 'is' relation as owl:ObjectProperty
+  # equivalent to OOPS P03
+  sh:sparql [
+  sh:message "Detect the relationship 'is'" ;
+  sh:severity sh:Warning ;
+  sh:select """
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  SELECT $this WHERE
+  {
+    $this a owl:ObjectProperty .
+    BIND(REPLACE(STR($this), "isA", "" ) as ?str1) .
+    BIND(REPLACE(STR($this), "is-a", "" ,"i") as ?str2) .
+    BIND(REPLACE(STR($this), "is_a", "" ,"i") as ?str3) .
+    FILTER(STR($this) != STR(?str1) || STR($this) != STR(?str2) || STR($this) != STR(?str3)) .
+  } """
+  ] ;
+  # Do not allow a property to be owl:inverseOf itself
+  # similar to OOPS P25
+  sh:sparql [
+  sh:message "Detect relationships inverse to themselves" ;
+  sh:severity sh:Warning ;
+  sh:select """
+  PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  SELECT $this WHERE
+  {
+    $this a ?property .
+    $this owl:inverseOf $this .
+    FILTER(?property IN (rdf:Property, owl:DatatypeProperty, owl:ObjectProperty)) .
+  } """
   ]
   .
 

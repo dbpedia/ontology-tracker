@@ -57,10 +57,21 @@
           "name": "no-multiple-superclass",
           "label": "Classes must have at most one superclass",
           "description": "Each <code>owl:Class</code> must have at most one superclass.",
-          "shacl": "sh:property",
+          "shacl": "sh:sparql",
           "test": [
-            "sh:path rdfs:subClassOf;",
-            "sh:maxCount: 1;"
+            "SELECT DISTINCT $this",
+            "WHERE {",
+            "  $this rdf:type owl:Class .",
+            "  $this rdfs:subClassOf ?v1 .",
+            "  $this rdfs:subClassOf ?v2 .",
+            "  FILTER NOT EXISTS {?v1 rdfs:subClassOf ?v2 }.",
+            "  FILTER NOT EXISTS {?v2 rdfs:subClassOf ?v1 }.",
+            "  FILTER(?v1 != ?v2) .",
+            "  FILTER(?v1 != owl:Thing) .",
+            "  FILTER(?v2 != owl:Thing) .",
+            "  FILTER($this != ?v1) .",
+            "  FILTER($this != ?v2) .",
+            "}"
           ]
         },
         {
@@ -246,7 +257,7 @@
           "type": "toggle",
           "name": "must-have-range",
           "label": "Properties must have at least one range, which is a class",
-          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at least one <code>rdfs:range</code>  that is defined as an <code>owl:Class.</code>",
+          "description": "Each <code>rdf:Property</code>, <code>owl:DatatypeProperty</code> or <code>owl:ObjectProperty</code> must have at least one <code>rdfs:range</code>  that is defined as an <code>owl:Class</code>",
           "shacl": "sh:property",
           "test": [
             "sh:path rdfs:range;",

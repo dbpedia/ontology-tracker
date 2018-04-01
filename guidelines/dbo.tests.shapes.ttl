@@ -47,8 +47,25 @@ dbo-shape:ClassShape
   ] ;
   sh:property [
     sh:message "Each owl:Class should have at most one superclass" ;
-    sh:path rdfs:subClassOf ;
-    sh:maxCount 1;
+    sh:severity sh:Warning ;
+    sh:select """
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    SELECT DISTINCT $this
+    WHERE {
+          $this rdf:type owl:Class .
+          $this rdfs:subClassOf ?v1 .
+          $this rdfs:subClassOf ?v2 .
+          FILTER NOT EXISTS {?v1 rdfs:subClassOf ?v2 }.
+          FILTER NOT EXISTS {?v2 rdfs:subClassOf ?v1 }.
+          FILTER(?v1 != ?v2) .
+          FILTER(?v1 != owl:Thing) .
+          FILTER(?v2 != owl:Thing) .
+          FILTER($this != ?v1) .
+          FILTER($this != ?v2) .
+    }
+    """ ;
   ] ;
   sh:sparql [
     sh:message "DBpedia Ontology only allows 9 top level classes, any new top level classes need to be discussed here -link missing-" ;

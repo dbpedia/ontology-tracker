@@ -109,6 +109,34 @@ public class ValidateOntology {
 
     /**
      * @param model The jena Model of the ontology file
+     * @param test String with custom SHACL test to be run against the Model
+     *
+     * @return The test results as a JSON string
+     */
+    public static List<DBpediaTestResult> returnShaclTests(Model model, String test) {
+        RDFUnitValidate rval = new RDFUnitValidate(test);
+        TestExecution te = rval.checkModelWithRdfUnit(model);
+
+        Collection<TestCaseResult> tcrs = te.getTestCaseResults();
+        Collection<ShaclTestCaseResult> stcrs = new ArrayList<>();
+
+        tcrs.forEach(tcr -> {
+            stcrs.add((ShaclTestCaseResult) tcr);
+        });
+
+        List<DBpediaTestResult> tests = new ArrayList<>();
+        stcrs.stream().forEach(t -> {
+            //logging
+            //L.info(t.getSeverity().name() + " " + t.getMessage() + " " + t.getFailingResource());
+            tests.add(new DBpediaTestResult(t));
+
+        });
+
+        return tests;
+    }
+
+    /**
+     * @param model The jena Model of the ontology file
      * @param format String with the expected output format
      *
      * @return The test results as a string in the specified format

@@ -1,0 +1,679 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix sit: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix : <http://purl.org/spar/cito/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix discourse-relationships: <http://purl.org/swan/2.0/discourse-relationships/> .
+@prefix cito: <http://purl.org/spar/cito/cito:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/spar/cito/> a owl:Ontology ;
+	owl:versionInfo "2.6.1"^^xsd:string ;
+	dc:date "2013-06-27"^^xsd:string ;
+	dc:description """CiTO, the Citation Typing Ontology, is an ontology written in OWL 2 DL to enable characterization of the nature or type of citations, both factually and rhetorically, and to permit these descriptions to be published on the Web.  
+
+The citations characterized may be either direct and explicit (as in the reference list of a journal article), indirect (e.g. a citation to a more recent paper by the same research group on the same topic), or implicit (e.g. as in artistic quotations or parodies, or in cases of plagiarism).
+
+CiTO contains the object property cito:cites and its sub-properties, and its inverse property cito:isCitedBy, from the original Citation Typing Ontology, CiTO v1.6.  Upon the creation of version 2.0 of CiTO, a number of new sub-properties of cito:cites were added, and the inverse properties of all the sub-properties of cito:cites were created, all of which are sub-properties of cito:isCitedBy.  The ontology has also been integrated with the SWAN Discourse Relationships Ontology by making cito:cites a sub-property of http://purl.org/swan/2.0/discourse-relationships/refersTo.
+
+Restrictions of domain and range present in the previous version of CiTO were removed from the object properties when creating CiTO v 2.0, permitting its independent use in other contexts, in addition to conventional bibliographic citations.  
+
+So that they can be used independently, other entities that were previously included in CiTO v1.6 have now been made components of other SPAR ontologies: FaBiO, the FRBR-aligned Bibliographic Ontology; C4O, the Citation Counting and Context Characterization Ontology; and PSO, the Publication Status Ontology. 
+
+The addition of two new properties:cito:usesConclusionsFrom and its inverse cito:providesConclusionsFor on 09Dec2011 led to a version number increment from v2.0 to v2.1.
+
+The addition of two additional properties, cito:compiles and cito:isCompiledBy, previously in the deprecated CiTO4Data ontology, on 03 July 2012 led to a version increment from v2.1 to v2.2.
+
+Subsequent expansions include:
+
+in versions 2.3 and 2.4 the addition of the object properties cito:citesAsPotentialSolution, cito:citesAsRecommended, cito:repliesTo, cito:retracts, cito:speculates on, and their inverse properties;
+
+in v2.5 the addition of cito:CitationAct, cito:hasCitationEvent, cito:hasCitedEntity and cito:hasCitingEntity;
+
+in v 2.6: 
+renaming cito:hasCitationEvent to become cito:hasCitationCharacterization;
+improving definitions of cito:CitationAct, cito:hasCitationCharacterization, cito:hasCitedEntity and cito:hasCitingEntity;
+revising the definition of cito:isCompiledBy to correct it and bring it into line with the DataCite Metadata Kernel v2.2 definition;
+changing the definition of cito:sharesAuthorsWith from 'An object property indicating that the citing entity has at least one author in common with the cited entity.' to 'An object property between two entities indicating that they have at least one author in common.' so that it can be used when one entity does not actually cite the other;
+adding the object properties cito:hasRelatedEntity, cito:sharesFundingAgencyWith and cito:sharesAuthorInstitutionWith;
+and adding the text 'An object property indicating that . . .' at the beginning of the textual definition (rdfs:comment) for each CiTO object property.
+
+in v 2.6.1:
+Removed text 'An object property indicating that . . .' added in v 2.6 at the beginning of the textual definition (rdfs:comment) for each CiTO object property, so that each definition is just a direct statement of the relationship.  
+Removed the property cito:hasRelatedEntity (in favour of using dcterms:relation).
+Renamed cito:hasReply to become cito:hasReplyFrom.
+Improved the textual definitions of cito:derides and its inverse property."""^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string ;
+	dc:contributor "Paolo Ciccarese"^^xsd:string ;
+	dc:creator "Silvio Peroni"^^xsd:string ;
+	dc:contributor "Tim Clark"^^xsd:string ;
+	owl:priorVersion "http://imageweb.zoo.ox.ac.uk/pub/2009/citobase/cito-20100528-1.6/cito-content/cito.owl"^^xsd:anyURI , "https://svn.code.sf.net/p/sempublishing/code/CiTO/2013-05-07-cito-2_5_1.owl"^^xsd:anyURI ;
+	dc:title "CiTO, the Citation Typing Ontology"@en ;
+	rdfs:comment "CiTO, the Citation Typing Ontology, is an ontology for the characterization of citations, both factually and rhetorically.  It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies.  Other SPAR ontologies are described at http://purl.org/spar/."@en , "This ontology is available at http://purl.org/spar/cito/, and uses the namespace prefix cito."@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://www.ontologydesignpatterns.org/cp/owl/situation.owl> .
+
+dc:creator a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+owl:priorVersion a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+:agreesWith a owl:ObjectProperty ;
+	rdfs:label "agrees with"@en ;
+	rdfs:comment "The citing entity agrees with statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:cites a owl:ObjectProperty ;
+	rdfs:label "cites"@en ;
+	rdfs:comment "The citing entity cites the cited entity, either directly and explicitly (as in the reference list of a journal article), indirectly (e.g. by citing a more recent paper by the same group on the same topic), or implicitly (e.g. as in artistic quotations or parodies, or in cases of plagiarism)."@en ;
+	owl:inverseOf :isCitedBy ;
+	rdfs:subPropertyOf discourse-relationships:refersTo .
+
+:citesAsAuthority a owl:ObjectProperty ;
+	rdfs:label "cites as authority"@en ;
+	rdfs:comment "The citing entity cites the cited entity as one that provides an authoritative description or definition of the subject under discussion."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsDataSource a owl:ObjectProperty ;
+	rdfs:label "cites as data source"@en ;
+	rdfs:comment "The citing entity cites the cited entity as source of data."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsEvidence a owl:ObjectProperty ;
+	rdfs:label "cites as evidence"@en ;
+	rdfs:comment "The citing entity cites the cited entity as source of factual evidence for statements it contains."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsMetadataDocument a owl:ObjectProperty ;
+	rdfs:label "cites as metadata document"@en ;
+	rdfs:comment "The citing entity cites the cited entity as being the container of metadata describing the citing entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsPotentialSolution a owl:ObjectProperty ;
+	rdfs:label "cites as potential solution"@en ;
+	rdfs:comment "The citing entity cites the cited entity as providing or containing a possible solution to the issues being discussed."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsRecommendedReading a owl:ObjectProperty ;
+	rdfs:label "cites as recommended reading"@en ;
+	rdfs:comment "The citing entity cites the cited entity as an item of recommended reading.  This property can be used, for example, to describe references in a lecture reading list, where the cited references are relevant to the general topic of the lecture, but might not be individually cited within the text of the lecture.  Similarly, it could be used to describe items in a 'Suggested further reading' list at the end of a book chapter."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsRelated a owl:ObjectProperty ;
+	rdfs:label "cites as related"@en ;
+	rdfs:comment "The citing entity cites the cited entity as one that is related."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesAsSourceDocument a owl:ObjectProperty ;
+	rdfs:label "cites as source document"@en ;
+	rdfs:comment "The citing entity cites the cited entity as being the entity from which the citing entity is derived, or about which the citing entity contains metadata."@en ;
+	rdfs:subPropertyOf :cites .
+
+:citesForInformation a owl:ObjectProperty ;
+	rdfs:label "cites for information"@en ;
+	rdfs:comment "The citing entity cites the cited entity as a source of information on the subject under discussion."@en ;
+	rdfs:subPropertyOf :cites .
+
+:cito:sharesAuthorInstitutionWith a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "shares author institution with"@en ;
+	rdfs:comment "Each entity has at least one author that shares a common institutional affiliation with an author of the other entity."@en .
+
+:compiles a owl:ObjectProperty ;
+	rdfs:label "compiles"@en ;
+	dc:description "Note: This property has been imported from the CiTO4Data ontology, usage of which has been deprecated."@en ;
+	rdfs:comment "The citing entity is used to create or compile the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:confirms a owl:ObjectProperty ;
+	rdfs:label "confirms"@en ;
+	rdfs:comment "The citing entity confirms facts, ideas or statements presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:containsAssertionFrom a owl:ObjectProperty ;
+	rdfs:label "contains assertion from"@en ;
+	rdfs:comment "The citing entity contains a statement of fact or a logical assertion (or a collection of such facts and/or assertions) originally present in the cited entity.   This object property is designed to be used to relate a separate abstract, summary or nanopublication to the cited entity upon which it is based."@en ;
+	rdfs:subPropertyOf :cites .
+
+:corrects a owl:ObjectProperty ;
+	rdfs:label "corrects"@en ;
+	rdfs:comment "The citing entity corrects statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:credits a owl:ObjectProperty ;
+	rdfs:label "credits"@en ;
+	rdfs:comment "The citing entity acknowledges contributions made by the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:critiques a owl:ObjectProperty ;
+	rdfs:label "critiques"@en ;
+	rdfs:comment "The citing entity critiques statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:derides a owl:ObjectProperty ;
+	rdfs:label "derides"@en ;
+	rdfs:comment "The citing entity express derision for the cited entity, or for ideas or conclusions contained within it."@en ;
+	rdfs:subPropertyOf :cites .
+
+:describes a owl:ObjectProperty ;
+	rdfs:label "describes"@en ;
+	rdfs:comment "The citing entity describes the cited entity."@en ;
+	rdfs:subPropertyOf :cites ;
+	owl:inverseOf :isDescribedBy .
+
+:disagreesWith a owl:ObjectProperty ;
+	rdfs:label "disagrees with"@en ;
+	rdfs:comment "The citing entity disagrees with statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:discusses a owl:ObjectProperty ;
+	rdfs:label "discusses"@en ;
+	rdfs:comment "The citing entity discusses statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:disputes a owl:ObjectProperty ;
+	rdfs:label "disputes"@en ;
+	rdfs:comment "The citing entity disputes statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:documents a owl:ObjectProperty ;
+	rdfs:label "documents"@en ;
+	rdfs:comment "The citing entity documents information about the cited entity." ;
+	rdfs:subPropertyOf :cites .
+
+:extends a owl:ObjectProperty ;
+	rdfs:label "extends"@en ;
+	rdfs:comment "The citing entity extends facts, ideas or understandings presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:givesBackgroundTo a owl:ObjectProperty ;
+	rdfs:label "gives background to"@en ;
+	rdfs:comment "The cited entity provides background information for the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :obtainsBackgroundFrom .
+
+:givesSupportTo a owl:ObjectProperty ;
+	rdfs:label "gives support to"@en ;
+	rdfs:comment "The cited entity provides intellectual or factual support for the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :obtainsSupportFrom .
+
+:hasCitationCharacterization a owl:ObjectProperty ;
+	rdfs:label "has citation characterization"@en ;
+	rdfs:comment """A property that links a cito:CitationAct to its characterization made by using a CiTO citation characterization property such as cito:confirms.
+
+This usage involved OWL2 punning, such that the object property cito:confirms is used as the object of the triple
+
+     :thisCitation cito:hasCitationCharacterization cito:confirms .
+
+as a member of a virtual class cito:CitationCharacterization."""@en ;
+	rdfs:subPropertyOf sit:isSettingFor .
+
+:hasCitedEntity a owl:ObjectProperty ;
+	rdfs:label "has cited entity"@en ;
+	rdfs:comment "The citation act relates to the entity that is the target of that citation."@en ;
+	rdfs:subPropertyOf sit:isSettingFor .
+
+:hasCitingEntity a owl:ObjectProperty ;
+	rdfs:label "has citing entity"@en ;
+	rdfs:comment "The citation act relates to the entity containing that citation."@en ;
+	rdfs:subPropertyOf sit:isSettingFor .
+
+:hasReplyFrom a owl:ObjectProperty ;
+	rdfs:label "has reply"@en ;
+	rdfs:comment "The cited entity evokes a reply from the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:includesExcerptFrom a owl:ObjectProperty ;
+	rdfs:label "includes excerpt from"@en ;
+	dc:description """An excerpt is more general than a quotation. It is generally used to indicate a re-published extract from a book, instruction manual, film, radio programme, etc, that need not be what someone said.  For example:
+
+Oxford 01865
+Oxshott 01372
+Oxted 01883
+Oxton 01578
+
+is an excerpt from the UK Dialling Codes section of the Oxford Telephone Directory."""@en ;
+	rdfs:comment "The citing entity includes one or more excerpts from the cited entity."@en ;
+	rdfs:subPropertyOf :cites ;
+	owl:inverseOf :providesExcerptFor .
+
+:includesQuotationFrom a owl:ObjectProperty ;
+	rdfs:label "includes quotation from"@en ;
+	dc:description """A quotation is a repetition of what someone has said, and is presented \"within quotation marks\", for example:
+
+On June 4th 1940, Winston Churchill made a speech on the radio that has since become famous, that included the words: \" . . . we shall fight on the beaches, we shall fight on the landing grounds, we shall fight in the fields and in the streets, we shall fight in the hills; we shall never surrender . . .\""""@en ;
+	rdfs:comment "The citing entity includes one or more quotations from the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:isAgreedWithBy a owl:ObjectProperty ;
+	rdfs:label "is agreed with by"@en ;
+	rdfs:comment "The cited entity contains statements, ideas or conclusions with which the citing entity agrees."@en ;
+	owl:inverseOf :agreesWith ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsAuthorityBy a owl:ObjectProperty ;
+	rdfs:label "is cited as authority by"@en ;
+	rdfs:comment "The cited entity is cited as providing an authoritative description or definition of the subject under discussion in the citing entity."@en ;
+	owl:inverseOf :citesAsAuthority ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsDataSourceBy a owl:ObjectProperty ;
+	rdfs:label "is cited as data source by"@en ;
+	rdfs:comment "The cited entity is cited as a data source by the citing entity."@en ;
+	owl:inverseOf :citesAsDataSource ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsEvidenceBy a owl:ObjectProperty ;
+	rdfs:label "is cited as evidence by"@en ;
+	rdfs:comment "The cited entity is cited for providing factual evidence to the citing entity."@en ;
+	owl:inverseOf :citesAsEvidence ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsMetadataDocumentBy a owl:ObjectProperty ;
+	rdfs:label "is cited as metadata document by"@en ;
+	rdfs:comment "The cited entity is cited as being the container of metadata relating to the citing entity."@en ;
+	owl:inverseOf :citesAsMetadataDocument ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsPontentialSolutionBy a owl:ObjectProperty ;
+	rdfs:label "is cited as potential solution by"@en ;
+	rdfs:comment "The cited entity is cited as providing or containing a possible solution to the issues being discussed in the citing entity."@en ;
+	owl:inverseOf :citesAsPotentialSolution ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsRecommendedReading a owl:ObjectProperty ;
+	rdfs:label "is cited as recommended reading"@en ;
+	rdfs:comment "The cited entity is cited by the citing entity as an item of recommended reading.  This property can be used, for example, to describe references in a lecture reading list, where the cited references are relevant to the general topic of the lecture, but might not be individually cited within the text of the lecture.  Similarly, it could be used to describe items in a 'Suggested further reading' list at the end of a book chapter."@en ;
+	owl:inverseOf :citesAsRecommendedReading ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsRelatedBy a owl:ObjectProperty ;
+	rdfs:label "is cited as related by"@en ;
+	rdfs:comment "The cited entity is cited as being related to the citing entity."@en ;
+	owl:inverseOf :citesAsRelated ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedAsSourceDocumentBy a owl:ObjectProperty ;
+	rdfs:label "is cited as source document by"@en ;
+	rdfs:comment "The cited entity is cited as being the entity from which the citing entity is derived, or about which the citing entity contains metadata."@en ;
+	owl:inverseOf :citesAsSourceDocument ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCitedBy a owl:ObjectProperty ;
+	rdfs:label "is cited by"@en ;
+	rdfs:comment "The cited entity (the subject of the RDF triple) is cited by the citing entity (the object of the triple)."@en .
+
+:isCitedForInformationBy a owl:ObjectProperty ;
+	rdfs:label "is cited for information by"@en ;
+	rdfs:comment "The cited entity is cited as a source of information on the subject under discussion in the citing entity."@en ;
+	owl:inverseOf :citesForInformation ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCompiledBy a owl:ObjectProperty ;
+	rdfs:label "is compiled by"@en ;
+	dc:description "Note: This property has been imported from the CiTO4Data ontology, usage of which has been deprecated."@en ;
+	rdfs:comment "The cited entity is the result of a compile or creation event using the citing entity."@en ;
+	owl:inverseOf :compiles ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isConfirmedBy a owl:ObjectProperty ;
+	rdfs:label "is confirmed by"@en ;
+	rdfs:comment "The cited entity presents facts, ideas or statements that are confirmed by the citing entity."@en ;
+	owl:inverseOf :confirms ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCorrectedBy a owl:ObjectProperty ;
+	rdfs:label "is corrected by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are corrected by the citing entity."@en ;
+	owl:inverseOf :corrects ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCreditedBy a owl:ObjectProperty ;
+	rdfs:label "is credited by"@en ;
+	rdfs:comment "The cited entity makes contributions that are acknowledged by the citing entity."@en ;
+	owl:inverseOf :credits ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isCritiquedBy a owl:ObjectProperty ;
+	rdfs:label "is critiqued by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are critiqued by the citing entity."@en ;
+	owl:inverseOf :critiques ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isDeridedBy a owl:ObjectProperty ;
+	rdfs:label "is derided by"@en ;
+	rdfs:comment "The cited entity contains ideas or conclusions for which the citing entity express derision."@en ;
+	owl:inverseOf :derides ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isDescribedBy a owl:ObjectProperty ;
+	rdfs:label "is described by"@en ;
+	rdfs:comment "The cited entity is described by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isDisagreedWithBy a owl:ObjectProperty ;
+	rdfs:label "is disagreed with by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are disagreed with by the citing entity."@en ;
+	owl:inverseOf :disagreesWith ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isDiscussedBy a owl:ObjectProperty ;
+	rdfs:label "is discussed by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are discussed by the citing entity."@en ;
+	owl:inverseOf :discusses ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isDisputedBy a owl:ObjectProperty ;
+	rdfs:label "is disputed by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are disputed by the citing entity."@en ;
+	owl:inverseOf :disputes ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isDocumentedBy a owl:ObjectProperty ;
+	rdfs:label "is documented by"@en ;
+	rdfs:comment "Information about the cited entity is documented by the citing entity."@en ;
+	owl:inverseOf :documents ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isExtendedBy a owl:ObjectProperty ;
+	rdfs:label "is extended by"@en ;
+	rdfs:comment "The cited entity presents facts, ideas or understandings that are extended by the citing entity."@en ;
+	owl:inverseOf :extends ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:isParodiedBy a owl:ObjectProperty ;
+	rdfs:label "is parodied by"@en ;
+	rdfs:comment "The characteristic style or content of the cited entity is imitated by the citing entity for comic effect, usually without explicit citation."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :parodies .
+
+:isPlagiarizedBy a owl:ObjectProperty ;
+	rdfs:label "is plagiarized by"@en ;
+	rdfs:comment "The cited entity is plagiarized by the author of the citing entity, who includes within the citing entity textual or other elements from the cited entity without formal acknowledgement of their source. The cited entity is thus not explicitly cited from within the citing entity, according to the norms of scholarly practice, but is cited implicitly."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :plagiarizes .
+
+:isQualifiedBy a owl:ObjectProperty ;
+	rdfs:label "is qualified by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are qualified or have conditions placed upon them by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :qualifies .
+
+:isRefutedBy a owl:ObjectProperty ;
+	rdfs:label "is refuted by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are refuted by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :refutes .
+
+:isRetractedBy a owl:ObjectProperty ;
+	rdfs:label "is retracted by"@en ;
+	rdfs:comment "The cited entity is formally retracted by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :retracts .
+
+:isReviewedBy a owl:ObjectProperty ;
+	rdfs:label "is reviewed by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas or conclusions that are reviewed by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :reviews .
+
+:isRidiculedBy a owl:ObjectProperty ;
+	rdfs:label "is ridiculed by"@en ;
+	rdfs:comment "The cited entity or aspects of its contents are ridiculed by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :ridicules .
+
+:isSpeculatedOnBy a owl:ObjectProperty ;
+	rdfs:label "is speculated on by"@en ;
+	rdfs:comment "The cited entity is cited because the citing article contains speculations on its content or ideas."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :speculatesOn .
+
+:isSupportedBy a owl:ObjectProperty ;
+	rdfs:label "is supported by"@en ;
+	rdfs:comment "The cited entity receives intellectual or factual support from the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :supports .
+
+:isUpdatedBy a owl:ObjectProperty ;
+	rdfs:label "is updated by"@en ;
+	rdfs:comment "The cited entity presents statements, ideas, hypotheses or understanding that are updated by the cited entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :updates .
+
+:likes a owl:ObjectProperty ;
+	rdfs:label "likes"@en ;
+	rdfs:comment "A property that permits you to express appreciation of or interest in something that is the object of the RDF triple, or to express that it is worth thinking about even if you do not agree with its content, enabling social media 'likes' statements to be encoded in RDF.  Use of this property does NOT imply the existence of a formal citation of the entity that is 'liked'."@en .
+
+:obtainsBackgroundFrom a owl:ObjectProperty ;
+	rdfs:label "obtains background from"@en ;
+	rdfs:comment "The citing entity obtains background information from the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:obtainsSupportFrom a owl:ObjectProperty ;
+	rdfs:label "obtains support from"@en ;
+	rdfs:comment "The citing entity obtains intellectual or factual support from the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:parodies a owl:ObjectProperty ;
+	rdfs:label "parodies"@en ;
+	rdfs:comment "The citing entity imitates the characteristic style or content of the cited entity for comic effect, usually without explicit citation."@en ;
+	rdfs:subPropertyOf :cites .
+
+:plagiarizes a owl:ObjectProperty ;
+	rdfs:label "plagiarizes"@en ;
+	rdfs:comment "A property indicating that the author of the citing entity plagiarizes the cited entity, by including textual or other elements from the cited entity without formal acknowledgement of their source.  The citing entity thus contains no explicit citation of the cited entity, according to the norms of scholarly practice, but cites it implicitly."@en ;
+	rdfs:subPropertyOf :cites .
+
+:providesAssertionFor a owl:ObjectProperty ;
+	rdfs:label "provides assertion for"@en ;
+	rdfs:comment "The cited entity contains and is the original source of a statement of fact or a logical assertion (or a collection of such facts and/or assertions) that is to be found in the citing entity.   This inverse object property is designed to be used to relate a cited entity to a separate abstract, summary or nanopublication based upon it."@en ;
+	owl:inverseOf :containsAssertionFrom ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:providesConclusionsFor a owl:ObjectProperty ;
+	rdfs:label "provides conclusions for"@en ;
+	rdfs:comment "The cited entity presents conclusions that are used in work described in the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:providesDataFor a owl:ObjectProperty ;
+	rdfs:label "provides data for"@en ;
+	rdfs:comment "The cited entity presents data that are used in work described in the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :usesDataFrom .
+
+:providesExcerptFor a owl:ObjectProperty ;
+	rdfs:label "provides excerpt for"@en ;
+	rdfs:comment "The cited entity contains information, usually of a textual nature, that is excerpted by (used as an excerpt within) the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:providesMethodFor a owl:ObjectProperty ;
+	rdfs:label "provides method for"@en ;
+	rdfs:comment "The cited entity details a method that is used in work described by the citing entity."@en ;
+	rdfs:subPropertyOf :isCitedBy ;
+	owl:inverseOf :usesMethodIn .
+
+:providesQuotationFor a owl:ObjectProperty ;
+	rdfs:label "provides quotation for"@en ;
+	rdfs:comment "The cited entity contains information, usually of a textual nature, that is quoted by (used as a quotation within) the citing entity."@en ;
+	owl:inverseOf :includesQuotationFrom ;
+	rdfs:subPropertyOf :isCitedBy .
+
+:qualifies a owl:ObjectProperty ;
+	rdfs:label "qualifies"@en ;
+	rdfs:comment "The citing entity qualifies or places conditions or restrictions upon statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:refutes a owl:ObjectProperty ;
+	rdfs:label "refutes"@en ;
+	rdfs:comment "The citing entity refutes statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:repliesTo a owl:ObjectProperty ;
+	rdfs:label "replies to"@en ;
+	rdfs:comment "The citing entity replies to statements, ideas or criticisms presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites ;
+	owl:inverseOf :hasReplyFrom .
+
+:retracts a owl:ObjectProperty ;
+	rdfs:label "retracts"@en ;
+	rdfs:comment "The citing entity constitutes a formal retraction of the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:reviews a owl:ObjectProperty ;
+	rdfs:label "reviews"@en ;
+	rdfs:comment "The citing entity reviews statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:ridicules a owl:ObjectProperty ;
+	rdfs:label "ridicules"@en ;
+	rdfs:comment "The citing entity ridicules the cited entity or aspects of its contents."@en ;
+	rdfs:subPropertyOf :cites .
+
+:sharesAuthorsWith a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "shares authors with"@en ;
+	rdfs:comment "Each entity has at least one author in common with the other entity."@en ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:sharesFundingAgencyWith a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "shares funding agency with"@en ;
+	rdfs:comment "The two entities result from activities that have been funded by the same funding agency."@en .
+
+:speculatesOn a owl:ObjectProperty ;
+	rdfs:label "speculates on"@en ;
+	rdfs:comment "The citing entity speculates on something within or related to the cited entity, without firm evidence."@en ;
+	rdfs:subPropertyOf :cites .
+
+:supports a owl:ObjectProperty ;
+	rdfs:label "supports"@en ;
+	rdfs:comment "The citing entity provides intellectual or factual support for statements, ideas or conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:updates a owl:ObjectProperty ;
+	rdfs:label "updates"@en ;
+	rdfs:comment "The citing entity updates statements, ideas, hypotheses or understanding presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:usesConclusionsFrom a owl:ObjectProperty ;
+	rdfs:label "uses conclusions from"@en ;
+	rdfs:comment "The citing entity describes work that uses conclusions presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites ;
+	owl:inverseOf :providesConclusionsFor .
+
+:usesDataFrom a owl:ObjectProperty ;
+	rdfs:label "uses data from"@en ;
+	rdfs:comment "The citing entity describes work that uses data presented in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+:usesMethodIn a owl:ObjectProperty ;
+	rdfs:label "uses method in"@en ;
+	rdfs:comment "The citing entity describes work that uses a method detailed in the cited entity."@en ;
+	rdfs:subPropertyOf :cites .
+
+discourse-relationships:refersTo a owl:ObjectProperty .
+
+owl:topObjectProperty a owl:ObjectProperty .
+
+:CitationAct a owl:Class ;
+	rdfs:label "citation act"@en ;
+	owl:equivalentClass _:node17ue89i66x1 .
+
+_:node17ue89i66x1 a owl:Class ;
+	owl:intersectionOf _:node17ue89i66x2 .
+
+_:node17ue89i66x2 rdf:first sit:Situation ;
+	rdf:rest _:node17ue89i66x4 .
+
+_:node17ue89i66x4 rdf:first _:node17ue89i66x3 .
+
+_:node17ue89i66x3 a owl:Restriction ;
+	owl:onProperty :hasCitationCharacterization ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17ue89i66x4 rdf:rest _:node17ue89i66x6 .
+
+_:node17ue89i66x6 rdf:first _:node17ue89i66x5 .
+
+_:node17ue89i66x5 a owl:Restriction ;
+	owl:onProperty :hasCitedEntity ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17ue89i66x6 rdf:rest _:node17ue89i66x8 .
+
+_:node17ue89i66x8 rdf:first _:node17ue89i66x7 .
+
+_:node17ue89i66x7 a owl:Restriction ;
+	owl:onProperty :hasCitingEntity ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17ue89i66x8 rdf:rest rdf:nil .
+
+:CitationAct rdfs:comment """A citation act is a performative act of making a citation from a citing entity to a cited entity, typically instantiated by the inclusion of a bibliographic reference or a data reference in the reference list of the citing entity.
+
+This class is particularly useful to reify a citation statement built using a CiTO citation characterization data property. 
+
+Using this class, the following statement
+
+:paper1 cito:confirms :paper2
+
+can be alternatively described as
+
+:thisCitation a cito:CitationAct ; 
+     cito:hasCitingEntity :paper1 ;
+     cito:hasCitationCharacterization cito:confirms ;
+     cito:hasCitedEntity :paper2 .
+
+This usage involved OWL2 punning, such that the object property cito:confirms is used as the object of the triple
+
+     :thisCitation cito:hasCitationCharacterization cito:confirms .
+
+as a member of a virtual class cito:CitationCharacterization.
+
+Such reification can be very useful, since it permits one to combine CiTO properties with other vocabularies, or to handle scenario in which none of the citation characterizations available  in CiTO are applicable, necessitating the creation of a user-defined citation characterization, for example by using the Open Annotation Data Model, as explained at http://semanticpublishing.wordpress.com/2013/06/24/cito_and_open-annotation/."""@en ;
+	owl:equivalentClass _:node17ue89i66x9 .
+
+_:node17ue89i66x9 a owl:Class ;
+	owl:intersectionOf _:node17ue89i66x10 .
+
+_:node17ue89i66x10 rdf:first sit:Situation ;
+	rdf:rest _:node17ue89i66x12 .
+
+_:node17ue89i66x12 rdf:first _:node17ue89i66x11 .
+
+_:node17ue89i66x11 a owl:Restriction ;
+	owl:onProperty :hasCitationCharacterization ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17ue89i66x12 rdf:rest _:node17ue89i66x14 .
+
+_:node17ue89i66x14 rdf:first _:node17ue89i66x13 .
+
+_:node17ue89i66x13 a owl:Restriction ;
+	owl:onProperty :hasCitedEntity ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17ue89i66x14 rdf:rest _:node17ue89i66x16 .
+
+_:node17ue89i66x16 rdf:first _:node17ue89i66x15 .
+
+_:node17ue89i66x15 a owl:Restriction ;
+	owl:onProperty :hasCitingEntity ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17ue89i66x16 rdf:rest rdf:nil .

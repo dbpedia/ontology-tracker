@@ -1,0 +1,331 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix coo: <http://purl.org/coo/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+dc:title a owl:AnnotationProperty .
+
+dc:subject a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+dcterms:license a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+coo:hasID a owl:AnnotationProperty ;
+	rdfs:label "hasID (0..1)"@en ;
+	rdfs:comment "An annotation property that can be used to attach element identifiers from XML schemas for the corresponding XML data or schema."@en ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+<http://purl.org/coo/ns#> a owl:Ontology ;
+	owl:imports <http://purl.org/goodrelations/v1> ;
+	dc:title "COO: The Car Options Ontology for Semantic Web-based E-Commerce"@en ;
+	rdfs:label "Car Options Ontology"@en ;
+	dc:subject "E-Commerce, E-Business, GoodRelations, Ontology, Cars, Automobiles"@en ;
+	dc:creator "Martin Hepp, Hepp Research GmbH"@en ;
+	rdfs:comment """COO: The Car Options Ontology
+    
+The COO provides a vocabulary for exposing available configuration options for car models. It allows indicating choices that can be made as well as compatibility, dependency, and inclusion information. 
+
+The ontology imports and extends the GoodRelations ontology for e-commerce, which provides an abstract framework for product model information via gr:ProductOrServiceModel and ist associated properies.
+
+The main difference between COO and the default patterns for model data in GoodRelations is that GoodRelations requires the materialization of all choices for features, which can quickly lead to very large amounts of data if features can be combines rather freely, due to the combinatorial effects.
+
+Vocabulary:    http://purl.org/coo/ns
+Namespace:     http://purl.org/coo/ns#
+
+The Car Options Ontology is designed to be used in combination with GoodRelations, a standard vocabulary for the commercial aspects of offers for sale or rental, and the Vehicle Sales Ontology.
+
+See http://purl.org/goodrelations/  and http://purl.org/vso/ns for more information."""@en ;
+	owl:versionInfo "V 1.1, Release 2010-10-12" ;
+	dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
+	dc:rights """The Car Options Ontology is available under the Creative Commons Attribution 3.0 Unported license; see http://creativecommons.org/licenses/by/3.0/. 
+In a nutshell, you are free to copy, distribute and transmit the work; to remix/adapt the work (e.g. to import the ontology and create specializations of its elements), 
+as long as you attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work)."""@en ;
+	rdfs:seeAlso <http://purl.org/goodrelations/> ;
+	dc:contributor "Charles Sandeman-Craik, Tribal DDB; Chris Jenkins, Tribal DDB; Tim Redding, Tribal DDB; Yago Otero, Tribal DDB; William Greenly, Tribal DDB; Robin Dingle, Volkswagen UK;"@en .
+
+coo:BaseModel a owl:Class ;
+	rdfs:subClassOf gr:ProductOrServiceModel ;
+	rdfs:label "BaseModel"@en ;
+	rdfs:comment """A Base Model is an abstract entity specifying the basic features of a group of vehicles.
+
+Examples: VW Golf, VW Polo, VW Passat"""@en ;
+	owl:disjointWith coo:Trim .
+
+coo:Trim a owl:Class ;
+	rdfs:subClassOf gr:ProductOrServiceModel ;
+	rdfs:label "Trim"@en ;
+	rdfs:comment """A Trim is an abstract entity specifying (1) the basic features plus (2) a set of configuration choices (mostly non-functional) of a group of vehicles. 
+A Trim should be linked to its Base Model via gr:isVariantOf, if available.
+
+Examples: VW Golf S, VW Polo Match, VW Passat SE"""@en ;
+	owl:disjointWith coo:BaseModel , coo:Derivative , coo:CompleteCarModel , coo:SpecItemCollection , coo:ChoiceOrComponent , coo:PropertySpecification , coo:ConfigurationInfo , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:Derivative .
+
+coo:Derivative a owl:Class ;
+	rdfs:subClassOf gr:ProductOrServiceModel ;
+	rdfs:label "Derivative"@en ;
+	rdfs:comment """A Derivative is an abstract entity specifying (1) the basic features plus (2) a set of functional (e.g. engine type) and non-functional configuration (e.g. upholstery) choices of a group of vehicles.
+A Derivative has often a number of remaining configuration choices (coo:SpecItemCollection attached via coo:hasSpecItems), which will determine the actual properties of the resulting vehicle.		 
+A Derivative should be linked to its Trim via gr:isVariantOf, if available.
+
+Examples: VW Golf S 1.6 TDI 3door Manual"""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:CompleteCarModel , coo:SpecItemCollection , coo:ChoiceOrComponent , coo:PropertySpecification , coo:ConfigurationInfo , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:CompleteCarModel .
+
+coo:CompleteCarModel a owl:Class ;
+	rdfs:subClassOf gr:ProductOrServiceModel ;
+	rdfs:label "CompleteCarModel"@en ;
+	rdfs:comment """A Complete Car Model is an abstract entity specifying all features and configuration choices needed for actually producing a vehicle. In other words, it is the gr:ProductOrServiceModel (\"datasheet\") for a completely configured vehicle.
+While a Complete Car Model can be defined indepently of a Base Model, Trim, or Derivative, it is usually based on a Derivative plus choices for all mandatory configurational options (coo:SpecItemCollection) of that Derivative.
+A Complete Car Model should be linked to its Derivative via gr:isVariantOf, if available.
+
+Example: VW Golf S 1.6 TDI 3door Manual in ocean blue with air-conditioning, CD player, trailer hitch, power steering, and power windows
+
+Note: A coo:CompleteCarModel is NOT an actual car, but a complete feature description of one or multiple actual cars."""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:Derivative , coo:SpecItemCollection , coo:ChoiceOrComponent , coo:PropertySpecification , coo:ConfigurationInfo , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:SpecItemCollection .
+
+coo:SpecItemCollection a owl:Class ;
+	rdfs:label "SpecItemCollection"@en ;
+	rdfs:comment """A Spec Item Collection is an entity collating multiple coo:ChoiceOrComponent options for a given coo:Derivative, i.e. the available configurational choices. 
+The default choice can be indicated using a coo:default link. All other choices are attached using coo:availableChoice. The number of coo:ChoiceOrComponent items that can / must be selected for a valid configuration are indicated via coo:min and coo:max."""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:Derivative , coo:CompleteCarModel , coo:ChoiceOrComponent , coo:PropertySpecification , coo:ConfigurationInfo , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:ChoiceOrComponent .
+
+coo:ChoiceOrComponent a owl:Class ;
+	rdfs:subClassOf gr:ProductOrServiceModel ;
+	rdfs:label "ChoiceOrComponent"@en ;
+	rdfs:comment """A Choice or Component is a component (e.g. engine), add-on, feature (color \"ocean blue\"), or service that can be chosen to be part of a final vehicle configuration.
+	
+Example: Engine 1.6 l TDI, color ocean blue, trailer hitch"""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:Derivative , coo:CompleteCarModel , coo:SpecItemCollection , coo:PropertySpecification , coo:ConfigurationInfo , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:PropertySpecification .
+
+coo:PropertySpecification a owl:Class ;
+	rdfs:subClassOf gr:ProductOrServiceModel ;
+	rdfs:label "PropertySpeciﬁcation"@en ;
+	rdfs:comment """A Property Specification is an abstract entity specifying a set of properties for a vehicle that results from a single choice or the combination of two or more choices and that override the individual properties of the resulting vehicle.
+
+Example 1: Power steering and Air conditioning in combination reduce the available engine power from 90 kW to 89 kW.
+Example 2: Choosing the color option \"blue\" changes the color of the car to \"blue\"."""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:Derivative , coo:CompleteCarModel , coo:SpecItemCollection , coo:ChoiceOrComponent , coo:ConfigurationInfo , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:ConfigurationInfo .
+
+coo:ConfigurationInfo a owl:Class ;
+	rdfs:label "ConfigurationInfo"@en ;
+	rdfs:comment """A Configuration Info is an abstract entity that gives information on whether a set of Choices Or Components results in a valid configuration. 
+Using coo:compatible, it is possible to indicate either compatibility (true) and incompatibility (false) so that modeling remains efficient, no matter whether most combinations are valid or whether most configurations are invalid.
+If no such statement is found, the validity of a configuration is unknown.
+
+Note: The two properties coo:includes and coo:dependsOn, attached to coo:ChoiceOrComponent, may contain additional information on the validity of configuration."""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:Derivative , coo:CompleteCarModel , coo:SpecItemCollection , coo:ChoiceOrComponent , coo:PropertySpecification , coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel owl:disjointWith coo:RelativePriceSpecification .
+
+coo:RelativePriceSpecification a owl:Class ;
+	rdfs:subClassOf gr:PriceSpecification ;
+	rdfs:label "RelativePriceSpeciﬁcation"@en ;
+	rdfs:comment """A shortcut for indicating the effect of a choice or set of choices on the unit price. Use positive values for a surcharge and negative values for a deduction.
+
+Note: Price information should in general be attached to a gr:Offering node, not to a Base Model, Trim, Derivative, or Complete Car Model. Use this shortcut with care."""@en ;
+	owl:disjointWith coo:BaseModel , coo:Trim , coo:Derivative , coo:CompleteCarModel , coo:SpecItemCollection , coo:ChoiceOrComponent , coo:PropertySpecification , coo:ConfigurationInfo ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:BaseModel rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:min a owl:DatatypeProperty ;
+	rdfs:label "min (0..1)"@en ;
+	rdfs:comment "The minimum number of coo:ChoiceOrComponent entities that must be selected for a valid configuration"@en ;
+	rdfs:domain coo:SpecItemCollection ;
+	rdfs:range xsd:int ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:max a owl:DatatypeProperty ;
+	rdfs:label "max (0..1)"@en ;
+	rdfs:comment "The maximum number of coo:ChoiceOrComponent entities that can be selected for a valid configuration"@en ;
+	rdfs:domain coo:SpecItemCollection ;
+	rdfs:range xsd:int ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:displayPos a owl:DatatypeProperty ;
+	rdfs:label "displayPos (0..1)"@en ;
+	rdfs:comment """The position at which the option or element should be listed in a menu or user dialog, lower numbers come first.
+The main usage of this property are coo:SpecItemCollection and coo:ChoiceOrComponent, but it is possible to apply it to any owl:Class.
+
+Note: It is recommended to rely on this property only for data originating from a single RDF graph; otherwise, unpredictable results are possible."""@en ;
+	rdfs:domain owl:Class ;
+	rdfs:range xsd:int ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:valid a owl:DatatypeProperty ;
+	rdfs:label "valid (1..1)"@en ;
+	rdfs:comment "Indicates whether the attached set of choices is a valid (true) or invalid (false) configuration for the Derivative"@en ;
+	rdfs:domain coo:ConfigurationInfo ;
+	rdfs:range xsd:boolean ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:hasTrim a owl:ObjectProperty ;
+	rdfs:label "hasTrim (0..*)"@en ;
+	rdfs:comment "Links a Trim to Base Model"@en ;
+	rdfs:domain coo:BaseModel ;
+	rdfs:range coo:Trim ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:hasDerivative a owl:ObjectProperty ;
+	rdfs:label "hasDerivative (0..*)"@en ;
+	rdfs:comment "Links a Derivative to a Trim"@en ;
+	rdfs:domain coo:Trim ;
+	rdfs:range coo:Derivative ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:hasSpecItems a owl:ObjectProperty ;
+	rdfs:label "hasSpecItems (0..*)"@en ;
+	rdfs:comment "This property links available Spec Items to a Derivative."@en ;
+	rdfs:domain coo:Derivative ;
+	rdfs:range coo:SpecItemCollection ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:default a owl:ObjectProperty ;
+	rdfs:subPropertyOf coo:availableChoice .
+
+coo:availableChoice a owl:ObjectProperty ;
+	rdfs:label "availableChoice (1..*)"@en ;
+	rdfs:comment "This property links available Choices or Components to a Spec Item."@en ;
+	rdfs:domain coo:SpecItemCollection ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:default rdfs:label "default (0..1)"@en ;
+	rdfs:comment """This property links the default Choice or Component to a Spec Item. 
+Since it is defined a sub-property of coo:availableChoice, the default choice is automatically part of the available choices."""@en ;
+	rdfs:domain coo:SpecItemCollection ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:compatibility a owl:ObjectProperty ;
+	rdfs:label "compatibility (0..*)"@en ;
+	rdfs:comment "Links from a Derivative to information on whether a particular configuration is valid (true) or invalid (false)"@en ;
+	rdfs:domain coo:Derivative ;
+	rdfs:range coo:ConfigurationInfo ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:includesChoices a owl:ObjectProperty ;
+	rdfs:label "includesChoices (1..*)"@en ;
+	rdfs:comment """Indicates the set of Choices Or Components to which the Configuration Info node refers
+
+Note 1: Complementing compatibility information can be attached to the components directly via coo:compatibleWith, coo:incompatibleWith, coo:dependsOn, and coo:includes.
+Note 2: The coo:ConfigurationInfo node makes only a valid statement for a configuration that includes ALL of the Choices or Components attached via this property. 
+Note 3: If you want to know whether further components can be added, check that there are no coo:incompatibleWith relationships with any Choice or Component. This check must also be extended to all Choices or Components implicitly included via coo:includes.
+Note 4: If you want to know whether some components may be omitted without invalidating the configuration, check that there are no coo:dependsOn relationships with any Choice or Component. This check must also be extended to all Choices Or Components implicitly included via coo:includes.
+Note 5: Under an Open World Assumption (OWA), only an explicit compatibility statement for your configuration is really reliable. A weaker guarantee may be sufficient for your application, though."""@en ;
+	rdfs:domain coo:ConfigurationInfo ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:featureOverride a owl:ObjectProperty ;
+	rdfs:label "featureOverride (0..*)"@en ;
+	rdfs:comment "Links a coo:ConfigurationInfo node to information on how a choice or component or the combination of multiple choices will override the regular properties of the resulting vehicle"@en ;
+	rdfs:domain _:node17168lqfdx7 .
+
+_:node17168lqfdx7 a owl:Class ;
+	owl:unionOf _:node17168lqfdx8 .
+
+_:node17168lqfdx8 rdf:first coo:ConfigurationInfo ;
+	rdf:rest _:node17168lqfdx9 .
+
+_:node17168lqfdx9 rdf:first coo:ChoiceOrComponent ;
+	rdf:rest rdf:nil .
+
+coo:featureOverride rdfs:range coo:PropertySpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:priceModifier a owl:ObjectProperty ;
+	rdfs:label "priceModiﬁer (0..1)"@en ;
+	rdfs:comment """Links a coo:ConfigurationInfo node to information on a choice or component or the combination of multiple choices will affect the regular pricing of the resulting vehicle
+
+Note: The use of gr:addOn is in general a better way of modeling surcharges"""@en ;
+	rdfs:domain _:node17168lqfdx10 .
+
+_:node17168lqfdx10 a owl:Class ;
+	owl:unionOf _:node17168lqfdx11 .
+
+_:node17168lqfdx11 rdf:first coo:ConfigurationInfo ;
+	rdf:rest _:node17168lqfdx12 .
+
+_:node17168lqfdx12 rdf:first coo:ChoiceOrComponent ;
+	rdf:rest rdf:nil .
+
+coo:priceModifier rdfs:range coo:RelativePriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:includes a owl:TransitiveProperty ;
+	rdfs:label "includes (0..*)"@en ;
+	rdfs:comment """Links a Choice or Component to one or multiple other Choices Or Components implicity contained
+
+Note: This property is transitive, i.e., if B is included in A and C and D are included in B, then C and D are also included in A."""@en ;
+	rdfs:domain coo:ChoiceOrComponent ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:dependsOn a owl:TransitiveProperty ;
+	rdfs:label "dependsOn (0..*)"@en ;
+	rdfs:comment """Links a Choice or Component to one or multiple other Choices Or Components required for that choice  
+
+Note: This property is transitive, i.e., if B is required by A and C and D are required by B, then C and D are also required by A."""@en ;
+	rdfs:domain coo:ChoiceOrComponent ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:incompatibleWith a owl:SymmetricProperty ;
+	rdfs:label "incompatibleWith (0..*)"@en ;
+	rdfs:comment """Indicates that two Choices or Components are incompatible with each other, independent from other choices.
+
+Note: This property is symmetric, i.e., if A is incompatible with B, then B is also incompatible with A."""@en ;
+	rdfs:domain coo:ChoiceOrComponent ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:compatibleWith a owl:SymmetricProperty ;
+	rdfs:label "compatibleWith (0..*)"@en ;
+	rdfs:comment """Indicates that two Choices or Components are compatible with each other.
+
+Note: This property is symmetric, i.e., if A is compatible with B, then B is also compatible with A."""@en ;
+	rdfs:domain coo:ChoiceOrComponent ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:hasSpecItemChoice a owl:ObjectProperty ;
+	rdfs:label "hasSpecItemChoice (0..*)"@en ;
+	rdfs:comment "Links a Complete Car Model to the choices for configurational options"@en ;
+	rdfs:domain coo:CompleteCarModel ;
+	rdfs:range coo:ChoiceOrComponent ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .
+
+coo:hasCompleteCarModel a owl:ObjectProperty ;
+	rdfs:label "hasCompleteCarModel (0..*)"@en ;
+	rdfs:comment "Links one or multiple Complete Car Models to the underlying Derivative"@en ;
+	rdfs:domain coo:Derivative ;
+	rdfs:range coo:CompleteCarModel ;
+	rdfs:isDefinedBy <http://purl.org/coo/ns#> .

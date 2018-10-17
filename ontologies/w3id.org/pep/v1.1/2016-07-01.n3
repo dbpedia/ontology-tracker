@@ -1,0 +1,128 @@
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ssn:   <http://purl.oclc.org/NET/ssnx/ssn#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix vs:    <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdfp:  <https://w3id.org/rdfp/> .
+@prefix pep:   <https://w3id.org/pep/> .
+@prefix dul:   <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+pep:processExecutionContainer
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "Links a Process Executor to a Web container of Process Execution ressources, where one may operate HTTP POST requests to execute the process."@en ;
+        rdfs:domain       pep:ProcessExecutor ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "process execution container" ;
+        rdfs:range        pep:ProcessExecutionContainer ;
+        vs:term_status    "stable" .
+
+pep:implements  a               owl:ObjectProperty ;
+        rdfs:comment            "A relation between an Process Executor and a method it implements. This concept generalizes `ssn:implements`, which in the first version of the SSN ontology is a subproperty of `dul:isDescribedBy`.\n\n`dul:isDescribedBy` is the relation between an Entity and a Description. A Description gives a unity to a Collection of parts (the components), or constituents, by assigning a Role to each of them in the context of a whole Object (the system)."@en ;
+        rdfs:domain             pep:ProcessExecutor ;
+        rdfs:isDefinedBy        pep: ;
+        rdfs:label              "implements" ;
+        rdfs:range              pep:Process ;
+        owl:propertyChainAxiom  ( pep:processExecutionContainer pep:forProcess ) ;
+        owl:propertyChainAxiom  ( pep:executed pep:methodUsed ) ;
+        vs:term_status          "stable" .
+
+pep:executor  a           owl:ObjectProperty ;
+        rdfs:comment      "Relationship between a process execution container and the process executor that controls it."@en ;
+        rdfs:domain       pep:ProcessExecutionContainer ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "executor" ;
+        rdfs:range        pep:ProcessExecutor ;
+        vs:term_status    "stable" .
+
+pep:hasInput  a           owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a process, process executor, or process execution, to some description of their input.\n\nIntuitively:\n\n- the input description of some process executor specializes the input description of the process it implements;\n- the input description of some process execution specializes both the input description of the process executor that executed it, and of the process  method used.\n\n"@en ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "has input" ;
+        vs:term_status    "stable" .
+
+pep:ProcessExecutionContainer
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "The class of Process Executor Containers. They are Web container of Process Execution ressources, where one may operate HTTP POST requests to execute a given process."@en ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "Process Execution Container" ;
+        vs:term_status    "stable" .
+
+pep:hasOutput  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a process, process executor, or process execution, to some description of their output.\n\nIntuitively:\n\n- the output description of some process executor specializes the output description of the process it implements;\n- the output description of some process execution specializes both the output description of the process executor that executed it, and of the process  method used.\n\n"@en ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "has output" ;
+        vs:term_status    "stable" .
+
+pep:    a                              owl:Ontology , voaf:Vocabulary , foaf:Document ;
+        cc:license                     <https://www.apache.org/licenses/LICENSE-2.0> ;
+        dc:creator                     <http://www.maxime-lefrancois.info/me#> ;
+        dc:description                 "The process execution ontology is a proposal for a simple extension of both the [W3C Semantic Sensor Network](https://www.w3.org/TR/vocab-ssn/) and the [Semantic Actuator Network](https://www.irit.fr/recherches/MELODI/ontologies/SAN.owl) ontology cores. \n\nSSN describe `ssn:Sensor`s that implement `ssn:Sensing` methods and generate `ssn:Observation`s, which are (soon to be) activities.\n\nIn parallel to this, SAN describes `san:Actuator`s that implement `san:Acting` methods and generate `ssn:Actuation` activities.\n\nIn this ontology, we want to generalize these two parallel conceptual models, and account for a third use case: *Web services exposed on the web may trigger the execution of some processes*. \n\nWe hence propose the following core concepts for the Process Execution ontology:\n\n> `pep:ProcessExecutor`s implement `pep:Process` methods, and generate `pep:ProcessExecution`s activities.\n\n_Note: we call for comments and suggestions about the naming of these concepts [in this project open issue](https://github.com/thesmartenergy/pep/issues/1)_\n\nAs sensing and acting methods in SSN and SAN, processes may describe the necessary inputs and outputs. This is represented using properties `pep:hasInput` and `pep:hasOutput`. These properties may also be used to describe the actual input and output of a specific process execution.\n\nFigure below overviews the PEP ontology, and illustrates it with an example.\n\n[![Overview of the PEP Ontology](https://w3id.org/pep/pep.png)](https://w3id.org/pep/pep.png).\n\nAdditional documents describe alignments with other existing ontologies:\n\n- [the Semantic Sensor Network ontology](https://w3id.org/pep/SSNAlignment);\n- [the RDF Presentation ontology](https://w3id.org/pep/RDFPAlignment).\n\n## Process Execution Platform\n\n[Process execution platforms](https://w3id.org/pep/platform.html) expose process executors on the Web in a RESTful way.\n\n"@en ;
+        dc:issued                      "2016-07-01"^^xsd:date ;
+        dc:modified                    "2016-09-12"^^xsd:date ;
+        dc:title                       "Process Execution ontology."@en ;
+        vann:preferredNamespacePrefix  "pep" ;
+        vann:preferredNamespaceUri     pep: ;
+        owl:versionIRI                 pep:pep-1.0 ;
+        owl:versionInfo                "v1.0" .
+
+pep:ProcessExecution  a   owl:Class ;
+        rdfs:comment      "A process execution is the execution activity that is led by the Process Executor. This concept generalizes ssn:Observation, which describes an activity in the newest versoin of the SSN ontology and is hence now aligned with the O&M concept of Observation.\n\nA process execution links to:\n\n- the process executor it is associated to;\n- the process method used;\n- the input and the output of the process execution.\n"@en ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "Process Execution" ;
+        owl:disjointWith  pep:ProcessExecutor , pep:Process ;
+        vs:term_status    "stable" .
+
+pep:executed  a           owl:ObjectProperty ;
+        rdfs:comment      "Relationship between a process executor and an execution it was assigned to."@en ;
+        rdfs:domain       pep:ProcessExecutor ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "executed" ;
+        rdfs:range        pep:ProcessExecution ;
+        owl:inverseOf     pep:executedBy ;
+        vs:term_status    "stable" .
+
+pep:forProcess  a         owl:ObjectProperty ;
+        rdfs:comment      "Links a Process Execution Container to the Process that is executed when one operate a create operation request to it."@en ;
+        rdfs:domain       pep:ProcessExecutionContainer ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "for process" ;
+        rdfs:range        pep:Process ;
+        vs:term_status    "stable" .
+
+pep:Process  a            owl:Class ;
+        rdfs:comment      "The description of a process. A process generalizes the concept of `ssn:Sensing` in the SSN ontology, and of `san:Acting` in the SAN ontology. Examples of processes include sensing, acting, planning, or forecasting.\n\nIn the first version of the SSN ontology, `ssn:Process` was a subclass of `dul:Method`.\n\nA `dul:Method` is a Description that defines or uses concepts in order to guide carrying out actions aimed at a solution with respect to a problem. It is different from a Plan, because plans could be carried out in order to follow a method, but a method can be followed by executing alternative plans."@en ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "Process"@en ;
+        vs:term_status    "stable" .
+
+pep:executedBy  a         owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Relationship between an execution and the agent that made it. This concept generalizes `ssn:observedBy`, which in the first version of the SSN ontology is a sub property of `dul:includesObject`. \n\n`dul:includesObject` is a relation between situations and objects, e.g. 'this morning I've prepared my coffee and had my fingers burnt' (i.e.: the preparation of my coffee this morning included me)."@en ;
+        rdfs:domain       pep:ProcessExecution ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "executed by" ;
+        rdfs:range        pep:ProcessExecutor ;
+        owl:inverseOf     pep:executed ;
+        vs:term_status    "stable" .
+
+pep:ProcessExecutor  a    owl:Class ;
+        rdfs:comment      "A Process Executor can execute (implement) processes. A Process Executor may be a physical device, a computational method, a web service, a laboratory setup with a person following a method, or any other thing that can follow a Process. This concept generalizes ssn:Sensor, which in the latest version of the SSN ontology is a subclass of dul:Object. A dul:Object is any physical, social, or mental object, or a substance.\n\nPrototypical process executors are Sensor, Actuator, Estimator.\n\nLinks to ProcessExecution describe the Executions made.\n\nLinks to Processes define how the executor can make Executions (it may implement several Processes). A Process Executor implements each of the methods used by the Executions it made. \n\nOther metadata may detail geolocation, vendor, operator, consumed power, etc."@en ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "Process Executor" ;
+        rdfs:subClassOf   ssn:FeatureOfInterest ;
+        owl:disjointWith  pep:Process ;
+        vs:term_status    "stable" .
+
+pep:methodUsed  a         owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Relation between a ProcessExecution and the Process it executes. This concept generalizes `ssn:sensingMethodUsed`, which in the first version of the SSN ontology is a sub property of `dul:satisfies`. \n\n  `dul:satisfies` is a relation between a Situation and a Description, e.g. the execution of a Plan satisfies that plan."@en ;
+        rdfs:domain       pep:ProcessExecution ;
+        rdfs:isDefinedBy  pep: ;
+        rdfs:label        "method used" ;
+        rdfs:range        pep:Process ;
+        vs:term_status    "stable" .

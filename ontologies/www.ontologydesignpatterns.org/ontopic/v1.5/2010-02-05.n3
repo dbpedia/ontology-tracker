@@ -1,0 +1,384 @@
+@prefix : <http://www.ontologydesignpatterns.org/ont/dul/ontopic.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix IOLite: <http://www.ontologydesignpatterns.org/ont/dul/IOLite.owl#> .
+@prefix DUL: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix LMM_L1: <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.ontologydesignpatterns.org/ont/dul/ontopic.owl> a owl:Ontology ;
+	rdfs:label "Ontopic ontology"^^xsd:string ;
+	owl:versionInfo "1.5"^^xsd:string ;
+	rdfs:comment """An ontology of topics as used in thesauri, subject directories, etc.
+Topic is classified as a subclass of Collection, since its extensional semantics can be intended as a set of social objects (e.g. texts, concepts, other collections, relational meanings, etc.). Its intensional semantics is intended as an area of knowledge (or culture).
+
+The ontology is partly based on Chris Welty's formal ontology of subjects (DKE, 1999). Subtopic, near, and far relations are pretty similar to the ones defined there. The main differences are:
+- topics are intended here as collections of social objects, not as regions; there is anyway a morphism to the mereo-topological notion of Welty's, since for each topic as a collection we can define a topic space (a subclass of dul:Region) that corresponds to Welty's topics;
+- subjects in Welty's ontology, which are points in a topic region, are intended here in two ways:
+(1) as a dul:SocialObject that hasTopic a Topic. A dul:SocialObject in this case contains references to any entity that (in Welty's terms) 'is about' a topic
+(2) as a Subject, which is characterized here as a subclass of Topic, which isTopicOf exactly 1 dul:SocialObject
+
+For example, in Welty's theory, given a football event, there can be a subject for that event that is a point in the space of a topic, e.g. 'football'. In this ontology, this is represented as a dul:Event (the actual football event) that dul:isReferenceOf some dul:InformationObject (e.g. a report or article about the football event); such information object hasTopic a Topic (e.g. football). 
+Therefore, this solution has specific counterparts to Welty's theory, although the intuition is very different: Welty's topics correspond here to Topic(s), Welty's subjects correspond here to parts of Topic(s), and Welty's individual entities in a domain ontology correspond here to any Entity that dul:isReferenceOf a dul:InformationObject that dul:expresses a dul:SocialObject that hasTopic a Topic.
+
+On the other hand, a geometrical conception of topics, for example the one assumed by LSA (Latent Semantic Analysis), might take advantage from the addition of topic spaces into the ontology, because one could use dimensional space operators, as well as take input and produce outputs into an ontology by reasoning over topic spaces.
+For this reason, in this version of the ontopic ontology, we also provide the classes TopicSpace and SubjectSpace, and link them to Topic(s) through the relation dul:isRegionFor; the advantage is that we have a dual encoding of topics, which get either a commonsensical semantics as collections of documents, notions, or any other dul:SocialObject, or a mereotopological semantics as dul:Region(s). The second semantics can be used jointly with LSA geometrical semantics."""^^xsd:string , "TODO: remove LMM imports from within the ontology."^^xsd:string ;
+	owl:versionInfo """Version 1.2
+Changes in 1.1: added a dimensional space to topics that follows Welty's theory: the new classes are TopicSpace and Subject.
+Changes in 1.2: added English labels. Added abstract topic spaces and subjects as from Welty's formal ontology of subject.
+Added in 1.3: difference between Subject and SubjectSpace, which reflects that between Topic and TopicSpace.
+Added in 1.4: the notion of TopicalSignature, which refers to the set of lmm1:Expression(s) that can populate a Topic. E.g. the entries from Roget's, Moby, SenseCorpus, etc. are signatures for a Topic.
+Changes in 1.5: changed domain of hasTopic property to dul:Entity, added subproperty axioms for topic-oriented properties"""^^xsd:string ;
+	owl:imports <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl> , <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L2.owl> .
+
+DUL:characterizes a owl:ObjectProperty .
+
+DUL:farFrom a owl:ObjectProperty .
+
+DUL:hasComponent a owl:ObjectProperty .
+
+DUL:hasPart a owl:ObjectProperty .
+
+DUL:includesAgent a owl:ObjectProperty .
+
+DUL:includesObject a owl:ObjectProperty .
+
+DUL:isCharacterizedBy a owl:ObjectProperty .
+
+DUL:isExpressedBy a owl:ObjectProperty .
+
+DUL:isObjectIncludedIn a owl:ObjectProperty .
+
+DUL:isPartOf a owl:ObjectProperty .
+
+DUL:isRegionFor a owl:ObjectProperty .
+
+DUL:isSettingFor a owl:ObjectProperty .
+
+DUL:nearTo a owl:ObjectProperty .
+
+DUL:overlaps a owl:ObjectProperty .
+
+IOLite:hasSchema a owl:ObjectProperty .
+
+:farTopicFrom a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "far topic from"@en , "è un argomento lontano da"@it ;
+	rdfs:comment """The opposite to vicinity relation between two topics, e.g. 'star system' (as a Topic) is farTopicFrom 'geology' (as a Topic).
+Distance is typically established with reference to a threshold on the number of dul:SocialObject(s) that are common to the two topics. Alternatively, it can be established with reference to the a geometrical semantics applied to the TopicSpace(s) that are regions for the Topic(s)"""^^xsd:string ;
+	rdfs:subPropertyOf DUL:farFrom ;
+	rdfs:range :Topic ;
+	rdfs:domain :Topic ;
+	owl:inverseOf :farTopicFrom ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:hasCoreConcept a owl:ObjectProperty ;
+	rdfs:label "ha concetto centrale {@it}"^^xsd:string , "has core concept"@en ;
+	rdfs:range DUL:Concept ;
+	rdfs:subPropertyOf DUL:isCharacterizedBy ;
+	rdfs:domain :Topic ;
+	owl:inverseOf :isCoreConceptFor ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:hasSubTopic a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "ha argomento più specifico {it}"^^xsd:string , "has subtopic"@en ;
+	rdfs:comment """The relation between two instances of a Topic, in terms of their cultural coverage. For example, Sport hasSubTopic Football. 
+It can be used widely to talk about document annotations, subject directories, etc.
+The counterpart of this relation for TopicSpace(s) is simply dul:hasPart"""^^xsd:string ;
+	rdfs:subPropertyOf DUL:hasPart ;
+	rdfs:range :Topic ;
+	rdfs:domain :Topic ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:hasTopic a owl:ObjectProperty ;
+	rdfs:label "ha argomento {it}"^^xsd:string , "has topic"@en , "ha argomento"@it ;
+	rdfs:comment """The relation between ay Entity - but usually any dul:SocialObject (usually a document) - and a Topic (subject, argument, domain, theme, subject area, etc.). It can be used widely to talk about document annotations, subject directories, etc.
+The range is here relaxed to any SocialObject, in order to allow alignment of deviant uses of topic or subject relations for 'concepts' (e.g. in thesauri), and other things that are mixed up with the notion of Topic.
+This move makes the hasTopic relation very general, and introduces a particular semiotic relation, different from dul:expresses, lmm1:denotes, and lmm1:isInterpretationOf: this is a relation between any two social objects, in which the first is (or is related to) some lmm1:Meaning that dul:isMemberOf a dul:Collection (a Topic). The second social object can even be another member of that Topic. Hence, in the general case, we could expect a relation between two social objects that are associated because they are members of a common Topic.
+For example, consider the following cases:
+(1) A biography of Brigitte Bardot (dul:InformationObject) ontopic:hasTopic 'star system' (Topic)
+(2) The concept of 'starlet' (dul:Concept) hasTopic 'cinema' (Topic)
+(3) A biography of Claude Chabrol (dul:InformationObject) ontopic:hasTopic 'Nouvelle Vague' (Topic)"""^^xsd:string ;
+	rdfs:domain DUL:Entity ;
+	rdfs:range DUL:SocialObject ;
+	owl:inverseOf :isTopicOf ;
+	rdfs:subPropertyOf LMM_L1:hasInterpretation .
+
+:hasTopicSignature a owl:ObjectProperty ;
+	rdfs:range DUL:InformationEntity ;
+	rdfs:domain :TopicSignature ;
+	rdfs:subPropertyOf :isTopicOf ;
+	owl:inverseOf :isTopicSignatureOf ;
+	rdfs:subPropertyOf LMM_L1:isInterpretantFor .
+
+:includesTopic a owl:ObjectProperty ;
+	rdfs:label "includes topic"@en , "include l'argomento"@it ;
+	rdfs:comment "A relation between topic assignments and topics."^^xsd:string ;
+	rdfs:subPropertyOf DUL:includesObject ;
+	rdfs:range :Topic ;
+	rdfs:domain :TopicAssignment .
+
+:isCoreConceptFor a owl:ObjectProperty ;
+	rdfs:label "è concetto centrale di {it}"^^xsd:string , "is core concept for"@en ;
+	rdfs:comment """A Concept is a core concept for a Topic when it classifies a set of entities that are references of some relevant information objects that have that Topic.
+For example, Saxophone (as a Concept) isCoreConceptFor Saxophones (as a Topic)."""^^xsd:string ;
+	rdfs:domain DUL:Concept ;
+	rdfs:subPropertyOf DUL:characterizes ;
+	rdfs:range :Topic ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:isSubTopicOf a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "è argomento più specifico di {it}"^^xsd:string , "is sub topic of"@en ;
+	rdfs:comment """The relation between two Topic(s), in terms of their cultural coverage. For example, Football isSubTopicOf Sport. 
+It can be used widely to talk about document annotations, subject directories, etc.
+The counterpart of this relation for TopicSpace(s) is simply dul:isPartOf"""^^xsd:string ;
+	rdfs:subPropertyOf DUL:isPartOf ;
+	rdfs:range :Topic ;
+	rdfs:domain :Topic ;
+	owl:inverseOf :hasSubTopic ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:isTopicIncludedIn a owl:ObjectProperty ;
+	rdfs:label "is topic included in"@en ;
+	rdfs:subPropertyOf DUL:isObjectIncludedIn ;
+	rdfs:domain :Topic ;
+	rdfs:range :TopicAssignment ;
+	owl:inverseOf :includesTopic .
+
+:isTopicOf a owl:ObjectProperty ;
+	rdfs:label "is topic of"@en , "è argomento di"@it ;
+	rdfs:comment """The relation between any Entity, and a Topic (subject, argument, domain, theme, subject area, etc.). It can be used widely to talk about document annotations, subject directories, etc.
+The range is here relaxed to any SocialObject, in order to allow alignment of deviant uses of topic or subject relations for 'concepts' (e.g. in thesauri), and other things that are mixed up with the notion of Topic."""^^xsd:string ;
+	rdfs:domain DUL:Entity ;
+	rdfs:range DUL:SocialObject ;
+	rdfs:subPropertyOf LMM_L1:isInterpretationOf .
+
+:isTopicSignatureOf a owl:ObjectProperty ;
+	rdfs:domain DUL:InformationEntity ;
+	rdfs:range :TopicSignature ;
+	rdfs:subPropertyOf :hasTopic , LMM_L1:hasInterpretant .
+
+:nearTopicTo a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "near topic to"@en , "è un argomento vicino a"@it ;
+	rdfs:comment """The vicinity relation between two topics, e.g. 'star system' (as a Topic) is nearTopicTo 'cinema' (as a Topic).
+Vicinity is typically established with reference to a threshold on the number of dul:SocialObject(s) that are common to the two Topic(s), or based on a geometrical semantics applied to the TopicSpace(s) that are regions for the two Topic(s)."""^^xsd:string ;
+	rdfs:subPropertyOf DUL:nearTo ;
+	rdfs:range :Topic ;
+	rdfs:domain :Topic ;
+	owl:inverseOf :nearTopicTo ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:overlappingTopic a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:subPropertyOf DUL:overlaps ;
+	rdfs:range :Topic ;
+	rdfs:domain :Topic ;
+	owl:inverseOf :overlappingTopic , LMM_L1:relatedMeaning .
+
+LMM_L1:hasInterpretant a owl:ObjectProperty .
+
+LMM_L1:hasInterpretation a owl:ObjectProperty .
+
+LMM_L1:isInterpretantFor a owl:ObjectProperty .
+
+LMM_L1:isInterpretationOf a owl:ObjectProperty .
+
+LMM_L1:relatedMeaning a owl:ObjectProperty .
+
+DUL:Agent a owl:Class .
+
+DUL:Amount a owl:Class ;
+	owl:disjointWith :SubjectSpace , :TopicSpace .
+
+DUL:Collection a owl:Class .
+
+DUL:Concept a owl:Class .
+
+DUL:Entity a owl:Class .
+
+DUL:InformationEntity a owl:Class .
+
+DUL:PhysicalAttribute a owl:Class ;
+	owl:disjointWith :SubjectSpace , :TopicSpace .
+
+DUL:Region a owl:Class .
+
+DUL:SocialObject a owl:Class .
+
+DUL:TimeInterval a owl:Class ;
+	owl:disjointWith :SubjectSpace , :TopicSpace .
+
+IOLite:KOS a owl:Class .
+
+IOLite:LinguisticAct a owl:Class .
+
+IOLite:Term a owl:Class .
+
+:Subject a owl:Class ;
+	rdfs:label "Subject"@en ;
+	rdfs:subClassOf :Topic , _:node17168ludlx21 .
+
+_:node17168ludlx21 a owl:Restriction ;
+	owl:onProperty :isTopicOf ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:Subject rdfs:comment "Specific Topic(s) for e.g. a conversation, an article, a document, etc. E.g. wikipedia article names can be considered Subject(s)."^^xsd:string .
+
+:SubjectDirectory a owl:Class ;
+	rdfs:label "Subject directory"@en , "Catalogo di argomenti"@it ;
+	rdfs:subClassOf IOLite:KOS , _:node17168ludlx22 .
+
+_:node17168ludlx22 a owl:Restriction ;
+	owl:onProperty DUL:hasComponent ;
+	owl:allValuesFrom :Topic .
+
+:SubjectDirectory rdfs:comment "A collection of tags or metadata that have no formal semantics, and are typically used sparsely to annotate texts, images, bookmarks, etc."^^xsd:string .
+
+:SubjectSpace a owl:Class ;
+	rdfs:label "Subject space"@en , "Soggetto"@it ;
+	rdfs:subClassOf DUL:Region , _:node17168ludlx23 .
+
+_:node17168ludlx23 a owl:Restriction ;
+	owl:onProperty DUL:isPartOf ;
+	owl:someValuesFrom :TopicSpace .
+
+:SubjectSpace rdfs:subClassOf _:node17168ludlx24 .
+
+_:node17168ludlx24 a owl:Restriction ;
+	owl:onProperty DUL:isRegionFor ;
+	owl:someValuesFrom DUL:SocialObject .
+
+:SubjectSpace rdfs:comment """Any atomic Region in a TopicSpace that is used to localize a dul:SocialObject that hasTopic a Topic that dul:hasRegion that TopicSpace.
+In Welty's formal ontology of subjects, it is assumed as a point. The reason why we do not assume subjects as points is the relativity of atomicity: although the intuition goes to atomicity, one cannot exclude that subjects can have other subjects as parts; for example, consider the subject of an article on a football match: we might conceive a subject of a paragraph within that article that is about a penalty occurred during the football match."""^^xsd:string .
+
+:Topic a owl:Class ;
+	rdfs:label "Topic"@en , "Argomento"@it ;
+	owl:equivalentClass _:node17168ludlx25 .
+
+_:node17168ludlx25 a owl:Restriction ;
+	owl:onProperty :isTopicOf ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:Topic rdfs:subClassOf DUL:Collection , _:node17168ludlx26 .
+
+_:node17168ludlx26 a owl:Restriction ;
+	owl:onProperty IOLite:hasSchema ;
+	owl:someValuesFrom :SubjectDirectory .
+
+:Topic rdfs:subClassOf _:node17168ludlx27 .
+
+_:node17168ludlx27 a owl:Restriction ;
+	owl:onProperty DUL:overlaps ;
+	owl:allValuesFrom :Topic .
+
+:Topic rdfs:subClassOf _:node17168ludlx28 .
+
+_:node17168ludlx28 a owl:Restriction ;
+	owl:onProperty :hasSubTopic ;
+	owl:allValuesFrom :Topic .
+
+:Topic rdfs:subClassOf _:node17168ludlx29 .
+
+_:node17168ludlx29 a owl:Restriction ;
+	owl:onProperty :isSubTopicOf ;
+	owl:allValuesFrom :Topic .
+
+:Topic rdfs:subClassOf _:node17168ludlx30 .
+
+_:node17168ludlx30 a owl:Restriction ;
+	owl:onProperty DUL:isExpressedBy ;
+	owl:someValuesFrom IOLite:Term .
+
+:Topic rdfs:subClassOf _:node17168ludlx31 .
+
+_:node17168ludlx31 a owl:Restriction ;
+	owl:onProperty :isTopicOf ;
+	owl:allValuesFrom DUL:SocialObject .
+
+:Topic rdfs:comment """A topic, or subject, argument, domain, theme, subject area, etc.
+Topics have a controversial intuition across common sense, document management systems, knowledge organization systems, etc.
+Here we conceptualise a semiotic notion of iol:Topic as 'a (usually potential) dul:Collection of dul:SocialObject(s). 
+For example, 'music' is a topic constituted by the set of social objects that are associated with music-related entities. Such social objects can be information objects (texts, documents, words, images) about music-related entities, concepts classifying music-related entities, descriptions of musical theories and systems, etc.
+The relation between social objects and topics is called here 'hasTopic', and is a rdfs:subPropertyOf dul:isMemberOf
+Specific topics for e.g. a conversation or an article (therefore, closer to the notion of 'title' or 'entry') are called Subject(s).
+
+There is an interesting duality of topics: they are commonly interpreted as areas of shared knowledge within a Community (therefore as collections of social objects). On the other hand, existing directories and thesauri use 'topic' (or 'subject') more restrictively, as a relation between a document and a concept. 
+There is a sense of 'meaning' that can be reduced to the one given here to Topic (cf. the comment at the property dul:expresses), but in general there seems to be enough room to distinguish carefully between concepts and topics. 
+For example, thesauri do not usually distinguish when their 'concepts' (cf. skos:Concept) are actually intended as concepts (in the sense of dul:Concept) and when they are intended as topics. The distinction is clear when you compare these two sample sentences: 'the football topic is part of the sport topic' vs. 'the concept of football is part of the concept of sport'. 
+While the first is perfectly acceptable, the second is counterintuitive and even possibly wrong. This effect is due to the fact that concepts are 'intensional' notions and are not intended as areas of knowledge, document spaces, etc., which are 'extensional' notions.
+Accordingly to these basic observations, in this ontology dul:Concept and Topic result to be disjoint, and an appropriate representation should be in place in order to model thesauri. E.g. skos:Concept should be mapped to the union of dul:Concept and Topic."""^^xsd:string .
+
+:TopicAssignment a owl:Class ;
+	rdfs:label "Topic assignment"@en ;
+	rdfs:subClassOf IOLite:LinguisticAct , _:node17168ludlx32 .
+
+_:node17168ludlx32 a owl:Restriction ;
+	owl:onProperty DUL:isSettingFor ;
+	owl:someValuesFrom DUL:SocialObject .
+
+:TopicAssignment rdfs:subClassOf _:node17168ludlx33 .
+
+_:node17168ludlx33 a owl:Restriction ;
+	owl:onProperty DUL:includesObject ;
+	owl:someValuesFrom :SubjectDirectory .
+
+:TopicAssignment rdfs:subClassOf _:node17168ludlx34 .
+
+_:node17168ludlx34 a owl:Restriction ;
+	owl:onProperty :includesTopic ;
+	owl:allValuesFrom :Topic .
+
+:TopicAssignment rdfs:subClassOf _:node17168ludlx35 .
+
+_:node17168ludlx35 a owl:Restriction ;
+	owl:onProperty :includesTopic ;
+	owl:someValuesFrom :Topic .
+
+:TopicAssignment rdfs:subClassOf _:node17168ludlx36 .
+
+_:node17168ludlx36 a owl:Restriction ;
+	owl:onProperty DUL:includesAgent ;
+	owl:someValuesFrom DUL:Agent .
+
+:TopicAssignment rdfs:comment """A topic assignment is a iol:LinguisticAct in which an dul:Agent assigns a Topic to a document, or in general to any dul:SocialObject.
+What is the semiotic act involved in such an assignment? Differently from tagging, which 'selects' one of the references of a document, a topic actually points to an 'area of knowledge', which can be represented as a dul:Collection of dul:SocialObject(s) (e.g. of documents, concepts, meanings, etc.). 
+A Topic is necessarily expressed by a iol:LinguisticObject.
+Topics have a typical topology, by which they can be distant, close, overlapping, etc., and a mereology, by which they can be part of others. This also means that 'areas of knowledge' can be part of others, can overlap, etc., so originating clusters of areas and terms that denote them.
+The subcollection of terms populating a Topic is called here TopicSignature"""^^xsd:string .
+
+:TopicSignature a owl:Class ;
+	rdfs:label "Topic signature"@en ;
+	rdfs:subClassOf :Topic , _:node17168ludlx37 .
+
+_:node17168ludlx37 a owl:Restriction ;
+	owl:onProperty :isTopicOf ;
+	owl:someValuesFrom LMM_L1:Expression .
+
+:TopicSignature rdfs:subClassOf _:node17168ludlx38 .
+
+_:node17168ludlx38 a owl:Restriction ;
+	owl:onProperty DUL:isPartOf ;
+	owl:someValuesFrom :Topic .
+
+:TopicSignature rdfs:subClassOf _:node17168ludlx39 .
+
+_:node17168ludlx39 a owl:Restriction ;
+	owl:onProperty :isTopicOf ;
+	owl:allValuesFrom LMM_L1:Expression .
+
+:TopicSignature rdfs:comment "The collection of lmm1:Expression(s) that are in a Topic; for example, the topic signatures from sensecorpus, the entries from Roget's, etc."^^xsd:string .
+
+:TopicSpace a owl:Class ;
+	rdfs:label "Topic space"@en , "Spazio di argomenti"@it ;
+	rdfs:subClassOf DUL:Region , _:node17168ludlx40 .
+
+_:node17168ludlx40 a owl:Restriction ;
+	owl:onProperty DUL:isRegionFor ;
+	owl:someValuesFrom :Topic .
+
+:TopicSpace rdfs:comment """Any Region in a dimensional space that is used to localize a Topic. Its atomic parts are called Subject(s). Mereotopological relations: dul:hasPart, dul:overlaps, can be simply reused within and between TopicSpace(s).
+This class is mostly similar to the Topic class in Welty's formal ontology of subjects."""^^xsd:string .
+
+LMM_L1:Expression a owl:Class .
+
+owl:Thing a owl:Class .

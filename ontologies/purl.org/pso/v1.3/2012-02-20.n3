@@ -1,0 +1,353 @@
+@prefix : <http://purl.org/spar/pso/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix tint: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sit: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/Image> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix tisit: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix core: <http://purl.org/vocab/frbr/core#> .
+@prefix part: <http://www.ontologydesignpatterns.org/cp/owl/participation.owl#> .
+
+<http://purl.org/spar/pso> a owl:Ontology ;
+	owl:versionInfo "1.3"^^xsd:string ;
+	dc:date "2012-02-20"^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:title "PSO, the Publishing Status Ontology"@en ;
+	rdfs:comment "PSO, the Publishing Status Ontology, is an ontology for describing the status held by a bibliographic document or other publication entity at each of the various stages in the publishing process.  It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies.  Other SPAR ontologies are described at http://purl.org/spar/."@en ;
+	dc:description """PSO, the Publishing Status Ontology, is an ontology written in OWL 2 DL for characterizing the publication status of a document or other publication entity at each of the various stages in the publishing process (e.g.  draft, submitted, under review, rejected, accepted for publication, proof, published, Version of Record, catalogued, archived).
+
+Because it is based on the Time-indexed situation ontology pattern (http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl), it is easy to extends the set of specified statuses, simply by adding new individual to the class pso:Status."""@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://purl.org/swan/2.0/foaf-essential/> , <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> , <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> .
+
+dc:creator a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+rdfs:seeAlso a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+:holdsStatusInTime a owl:ObjectProperty ;
+	rdfs:label "holds status in time"@en ;
+	rdfs:comment "A property relating a document or dataset to a publishing status that it holds at a specific time."@en ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:isAcquiredAsConsequenceOf a owl:ObjectProperty ;
+	rdfs:label "is acquired as consequence of"@en ;
+	rdfs:comment "The property relating a particular publishing status to the event that causes its acquisition."@en ;
+	rdfs:domain :StatusInTime ;
+	rdfs:range part:Event ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+:isLostAsConsequenceOf a owl:ObjectProperty ;
+	rdfs:label "is lost as consequence of"@en ;
+	rdfs:comment "The property relating a particular publishing status to the event that causes its loss."@en ;
+	rdfs:domain :StatusInTime ;
+	rdfs:range part:Event ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+:isStatusHeldBy a owl:ObjectProperty ;
+	rdfs:label "is status held by"@en ;
+	rdfs:comment "A property relating a publishing status held at a specific time to the document or dataset holding that status."@en ;
+	rdfs:domain :StatusInTime ;
+	owl:inverseOf :holdsStatusInTime ;
+	rdfs:subPropertyOf tisit:forEntity ;
+	rdfs:range foaf:Document .
+
+:isStatusIn a owl:ObjectProperty ;
+	rdfs:label "is status in"@en ;
+	rdfs:comment "The property relating the definition of a specific publishing status to the situation of the document or dataset holding that status at a specific time."@en ;
+	owl:inverseOf :withStatus ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:resultsInAcquiring a owl:ObjectProperty ;
+	rdfs:label "results in acquiring"@en ;
+	rdfs:comment "The property relating an event to the consequential acquisition of a particular publishing status."@en ;
+	owl:inverseOf :isAcquiredAsConsequenceOf ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:resultsInLosing a owl:ObjectProperty ;
+	rdfs:label "results in losing"@en ;
+	rdfs:comment "The property relating an event to the consequential loss of a particular publishing status."@en ;
+	owl:inverseOf :isLostAsConsequenceOf ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:withStatus a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "with status"@en ;
+	rdfs:comment "The property relating the holding of a publication status by a document or dataset at a specific time to the definition of that status."@en ;
+	rdfs:range :Status ;
+	rdfs:domain :StatusInTime ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+tisit:atTime a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "at time"@en ;
+	rdfs:comment "A time interval during which a status is held by a document."@en .
+
+tisit:forEntity a owl:ObjectProperty .
+
+tisit:hasTimeIndexedSetting a owl:ObjectProperty .
+
+tint:hasIntervalDate a owl:DatatypeProperty .
+
+tint:hasIntervalEndDate a owl:DatatypeProperty .
+
+tint:hasIntervalStartDate a owl:DatatypeProperty .
+
+:Agent a owl:Class ;
+	rdfs:label "agent"@en ;
+	rdfs:subClassOf part:Object , foaf:Agent ;
+	rdfs:comment "An entity, such as a person, a group, an organization or a software agent, involved in one or more events."@en .
+
+:Status a owl:Class ;
+	rdfs:label "status"@en ;
+	rdfs:comment "A state or condition that a document may have."@en .
+
+:StatusInTime a owl:Class ;
+	rdfs:label "status in time"@en ;
+	rdfs:subClassOf tisit:TimeIndexedSituation , _:node171hort25x1 .
+
+_:node171hort25x1 a owl:Restriction ;
+	owl:onProperty :isStatusHeldBy ;
+	owl:onClass foaf:Document ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x2 .
+
+_:node171hort25x2 a owl:Restriction ;
+	owl:onProperty :withStatus ;
+	owl:someValuesFrom :Status .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x3 .
+
+_:node171hort25x3 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:someValuesFrom tint:TimeInterval .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x4 .
+
+_:node171hort25x4 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:allValuesFrom _:node171hort25x5 .
+
+_:node171hort25x5 a owl:Class ;
+	owl:intersectionOf _:node171hort25x6 .
+
+_:node171hort25x6 rdf:first tint:TimeInterval ;
+	rdf:rest _:node171hort25x8 .
+
+_:node171hort25x8 rdf:first _:node171hort25x7 .
+
+_:node171hort25x7 a owl:Restriction ;
+	owl:onProperty tint:hasIntervalDate ;
+	owl:allValuesFrom xsd:dateTime .
+
+_:node171hort25x8 rdf:rest rdf:nil .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x9 .
+
+_:node171hort25x9 a owl:Restriction ;
+	owl:onProperty :isAcquiredAsConsequenceOf ;
+	owl:someValuesFrom part:Event .
+
+:StatusInTime rdfs:comment "A particular situation that describe a state or condition some documents may have at a particular time as consequence of one or more events."@en ;
+	dc:description """A status in time describes always:
+- a particular status S
+- a particular document D holding S
+- a particular time interval T in which D holds S
+- a particular event that causes the acquisition of S by D"""@en .
+
+part:Event a owl:Class ;
+	rdfs:label "event"@en ;
+	rdfs:comment "A thing that may happen during a publishing process, such as writing a draft, sending a preprint, publishing a paper, etc."@en .
+
+part:Object a owl:Class .
+
+tisit:TimeIndexedSituation a owl:Class .
+
+tint:TimeInterval a owl:Class ;
+	rdfs:label "time interval"@en ;
+	rdfs:comment "Two (starting and ending) points in time that define a particular period of time."@en .
+
+foaf:Agent a owl:Class .
+
+foaf:Document a owl:Class ;
+	rdfs:label "document"@en ;
+	rdfs:comment "An abstract class defining any kinds of publishing work."@en .
+
+:accepted-for-publication a owl:NamedIndividual , :Status ;
+	rdfs:label "accepted for publication"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) once it has been accepted for publication by a publisher or data repository."@en .
+
+:anonymized a owl:NamedIndividual , :Status ;
+	rdfs:label "anonymized"@en ;
+	rdfs:comment "The status of a document or dataset that has been subjected to anonymization, so that individual persons, for example the authors and/or people that are the subjects described in the document or dataset, cannot be identified."@en .
+
+:archived a owl:NamedIndividual , :Status ;
+	rdfs:label "archived"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) that has been saved for long-term preservation in a physical or electronic archive."@en .
+
+:catalogued a owl:NamedIndividual , :Status ;
+	rdfs:label "catalogued"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) concerning which metadata has been stored in a physical or electronic catalogue."@en .
+
+:confidential a owl:NamedIndividual , :Status ;
+	rdfs:label "confidential"@en ;
+	rdfs:comment "The status of a document containing information that should be kept private for specific reasons."@en .
+
+:copy-edited a owl:NamedIndividual , :Status ;
+	rdfs:label "copy-edited"@en ;
+	rdfs:comment "The status of a document that has been subjected to copy editing, i.e. alterations to the text undertaken by someone other than the author that are designed to improve the formatting, style and accuracy of text, or to bring the text into the house style of the publisher (e.g. Americanization of British spelling), but that are not designed to alter the substance or meaning of the text."@en .
+
+:corrected a owl:NamedIndividual , :Status ;
+	rdfs:label "corrected"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) in which errors, that may have introduced by the author, by a publisher, or by some automated process, have been corrected."@en .
+
+:draft a owl:NamedIndividual , :Status ;
+	rdfs:label "draft"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) prior to completion and publication."@en .
+
+:embargoed a owl:NamedIndividual , :Status ;
+	rdfs:label "embargoed"@en ;
+	rdfs:comment "The status of material that is subjected to a publication embargo, which means that the material should not be published, or in the case of a press release that it should not be reported on, until a particular date known as the embargo date." .
+
+:enhanced a owl:NamedIndividual , :Status ;
+	rdfs:label "enhanced"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) that has been updated or enhanced, for example by the provision of additional or supplementary material."@en .
+
+:final-draft a owl:NamedIndividual , :Status ;
+	rdfs:label "final draft"@en ;
+	rdfs:comment "The status of pre-publication material (for example a document or a dataset) when in the authors' opinion it has been brought to a stage of development that renders it suitable for publication."@en .
+
+:in-press a owl:NamedIndividual , :Status ;
+	rdfs:label "in press"@en ;
+	rdfs:comment "The status of a document after it has been accepted for publication and prior to its formal publication in print.  (Note that for many journal articles that are published electronically, this status rarely exists, since there is commonly no delay between acceptance and publication.)"@en .
+
+:initial-draft a owl:NamedIndividual , :Status ;
+	rdfs:label "initial draft"@en ;
+	rdfs:comment "The status of pre-publication material (for example a document or a dataset) when in its initial stage of development."@en .
+
+:intermediate-draft a owl:NamedIndividual , :Status ;
+	rdfs:label "intermediate draft"@en ;
+	rdfs:comment "The status of pre-publication material (for example a document or a dataset) part-way through its development."@en .
+
+:open-access a owl:NamedIndividual , :Status ;
+	rdfs:label "open access"@en ;
+	rdfs:comment "The status of published material (typically a scholarly publication or a dataset) that is freely available via the Internet for third parties to download and read without payment of access or subscription fees, and (in the case of material published under a full open access license) that is freely available for them to reuse for any purposes including commercial ones, including modification of the original material, its integration with other material, and its re-publication, subject typically to a requirement that the original authors and the source of the original material are acknowledged in compliance with scholarly citation norms."@en .
+
+:peer-reviewed a owl:NamedIndividual , :Status ;
+	rdfs:label "peer reviewed"@en ;
+	rdfs:comment "The status of a publication, typically a scholarly journal article, that has been peer reviewed, i.e. subjected to review by two or more independent reviewers (also know as referees) who are academic peers of the author(s), and judged by them to be of sufficient quality to merit publication, usually after further revision by the author to incorporate the reviewers' suggested modifications and improvements."@en ;
+	rdfs:seeAlso :reviewed .
+
+:proof a owl:NamedIndividual , :Status ;
+	rdfs:label "proof"@en ;
+	rdfs:comment "The status of a pre-publication document late in the publication process, once it has been accepted for publication by a publisher, after the inclusion of any author corrections required by the editor following peer-review, following copy editing and formatting to bring the manuscript into the house style, and prior to final checking by the editor, proof-reader and author to detect and eliminate any errors prior to publication."@en ;
+	rdfs:seeAlso :corrected .
+
+:published a owl:NamedIndividual , :Status ;
+	rdfs:label "published"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) that has been published, i.e. made available for people to access, read or use, either freely or for a purchase price or an access fee."@en .
+
+:rejected-for-publication a owl:NamedIndividual , :Status ;
+	rdfs:label "rejected for publication"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) after it has been rejected for publication by a publisher or data repository."@en .
+
+:republished a owl:NamedIndividual , :Status ;
+	rdfs:label "republished"@en ;
+	rdfs:comment "The status of a publication (for example a book) that has been republished in a different edition or in translation, or of material (for example a journal article or a poem) that is republished as part of a collection or an anthology, or of material (for example a figure from an existing publication) that is republished as part of quite different publication.  Where the publisher of the new work is different from the original publisher, such republication typically includes an acknowledgement of the source and copyright of the original material, and is undertaken after obtaining permission of the original copyright holder."@en .
+
+:retracted-from-publication a owl:NamedIndividual , :Status ;
+	rdfs:label "retracted from publication"@en ;
+	rdfs:comment "The status of a publication that has been subsequently retracted by the publisher, for example because it was subsequently found to contain erroneous or fraudulent information."@en .
+
+:reviewed a owl:NamedIndividual , :Status ;
+	rdfs:label "reviewed"@en ;
+	rdfs:comment "The status of a publication, for example a book, that has been subjected to a written review and critical analysis of its content, scope and quality."@en ;
+	rdfs:seeAlso :peer-reviewed .
+
+:revised a owl:NamedIndividual , :Status ;
+	rdfs:label "revised"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) that has been altered or improved, typically by the original author."@en .
+
+:submitted a owl:NamedIndividual , :Status ;
+	rdfs:label "submitted"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) that has been submitted for publication by the author to a publisher or data repository, prior to its being accepted or rejected ."@en .
+
+:under-review a owl:NamedIndividual , :Status ;
+	rdfs:label "under review"@en ;
+	rdfs:comment "The status of a document that has been received from the author(s) by an editor or a publisher for potential publication, and then has been sent to independent reviewers for their comments as to its suitability for publication, prior to receipt of such reviews."@en .
+
+:unpublished a owl:NamedIndividual , :Status ;
+	rdfs:label "unpublished"@en ;
+	rdfs:comment "The status of material (for example a document or a dataset) that has not been published by the author, a publisher or a data repository."@en .
+
+:version-of-record a owl:NamedIndividual , :Status ;
+	rdfs:label "version of record"@en ;
+	rdfs:comment "The final version of a document that has been formally published as a peer-reviewed journal article, citable via a permanent identifier, and forming an abiding component of the scholarly record."@en .
+
+:withdrawn-from-submission a owl:NamedIndividual , :Status ;
+	rdfs:label "withdrawn from submission"@en ;
+	rdfs:comment "The status of material (for example a pre-publication document or dataset) that has been voluntarily withdrawn by the author from a previous status of having been submitted for publication, perhaps because the revision demands requested by the peer-reviewers were considered impossible to achieve, or because the author wishes to submit it for publication elsewhere."@en .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x10 .
+
+_:node171hort25x10 a owl:Restriction ;
+	owl:onProperty :isStatusHeldBy ;
+	owl:onClass foaf:Document ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x11 .
+
+_:node171hort25x11 a owl:Restriction ;
+	owl:onProperty :withStatus ;
+	owl:someValuesFrom :Status .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x12 .
+
+_:node171hort25x12 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:someValuesFrom tint:TimeInterval .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x13 .
+
+_:node171hort25x13 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:allValuesFrom _:node171hort25x14 .
+
+_:node171hort25x14 a owl:Class ;
+	owl:intersectionOf _:node171hort25x15 .
+
+_:node171hort25x15 rdf:first tint:TimeInterval ;
+	rdf:rest _:node171hort25x17 .
+
+_:node171hort25x17 rdf:first _:node171hort25x16 .
+
+_:node171hort25x16 a owl:Restriction ;
+	owl:onProperty tint:hasIntervalDate ;
+	owl:allValuesFrom xsd:dateTime .
+
+_:node171hort25x17 rdf:rest rdf:nil .
+
+:StatusInTime rdfs:subClassOf _:node171hort25x18 .
+
+_:node171hort25x18 a owl:Restriction ;
+	owl:onProperty :isAcquiredAsConsequenceOf ;
+	owl:someValuesFrom part:Event .

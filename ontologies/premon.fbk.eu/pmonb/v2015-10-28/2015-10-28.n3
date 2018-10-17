@@ -1,0 +1,138 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix :      <http://premon.fbk.eu/ontology/all#> .
+@prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix lime:  <http://www.w3.org/ns/lemon/lime#> .
+@prefix xml:   <http://www.w3.org/XML/1998/namespace> .
+@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
+@prefix pmo:   <http://premon.fbk.eu/ontology/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
+@prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
+@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+pmonb:Roleset  a         owl:Class ;
+        rdfs:label       "Roleset (NB)"@en ;
+        rdfs:subClassOf  pmo:SemanticClass ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  pmonb:SemanticRole ;
+                           owl:onProperty     pmo:semRole
+                         ] .
+
+pmonb:arg4  a   pmonb:NumberedArgument , owl:NamedIndividual .
+
+pmonb:argm-neg  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:argm-mnr  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:Argument  a            owl:Class ;
+        rdfs:label           "Argument (NB)"@en ;
+        rdfs:subClassOf      skos:Concept ;
+        owl:equivalentClass  [ a            owl:Class ;
+                               owl:unionOf  ( pmonb:Modifier pmonb:NumberedArgument )
+                             ] .
+
+pmonb:tag-ref  a  pmonb:Tag , owl:NamedIndividual .
+
+pmonb:arg3  a   pmonb:NumberedArgument , owl:NamedIndividual .
+
+pmonb:argm-loc  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:SemanticRole  a    owl:Class ;
+        rdfs:label       "Semantic Role (NB)"@en ;
+        rdfs:subClassOf  pmo:SemanticRole ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  pmonb:Roleset ;
+                           owl:onProperty     [ owl:inverseOf  pmo:semRole ]
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      pmonb:argument ;
+                           owl:someValuesFrom  pmonb:Argument
+                         ] .
+
+pmonb:argm-adv  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:core  a         owl:DatatypeProperty , owl:FunctionalProperty ;
+        rdfs:comment  "Set to true if the semantic role explicitly occurs in a frame file"@en ;
+        rdfs:domain   pmonb:SemanticRole ;
+        rdfs:label    "core"@en ;
+        rdfs:range    xsd:boolean .
+
+pmonb:arg2  a   pmonb:NumberedArgument , owl:NamedIndividual .
+
+pmonb:argm-ext  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:argm-dis  a  pmonb:Modifier , owl:NamedIndividual .
+
+<http://premon.fbk.eu/ontology/nb>
+        a                              owl:Ontology ;
+        rdfs:comment                   "The NomBank module of the PreMOn ontology extends the core module for representing concepts specific to NomBank. The modelling is based on the [NomBank Specifications](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en ;
+        rdfs:isDefinedBy               <http://premon.fbk.eu/ontology/nb.ttl> ;
+        dcterms:creator                "Francesco Corcoglioniti" , "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
+        dcterms:description            "The NomBank module of the PreMOn ontology defines [pmonb:Roleset](http://premon.fbk.eu/ontology/nb#Roleset) and [pmonb:SemanticRole](http://premon.fbk.eu/ontology/nb#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively.\n\nEach [pmonb:SemanticRole](http://premon.fbk.eu/ontology/nb#SemanticRole) instance is related (via property [pmonb:argument](http://premon.fbk.eu/ontology/nb#argument)) to exactly one [pmonb:Argument](http://premon.fbk.eu/ontology/nb#Argument), which is defined as the disjoint union of two subclasses: \n\n* [pmonb:NumberedArgument](http://premon.fbk.eu/ontology/nb#NumberedArgument), containing the individuals corresponding to numbered argument (e.g., *Arg0*, *Arg1*); and, \n* [pmonb:Modifier](http://premon.fbk.eu/ontology/nb#Modifier), containing the individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*).\n\nWe also define class [pmonb:Tag](http://premon.fbk.eu/ontology/nb#Tag) to capture (via property [pmonb:tag](http://premon.fbk.eu/ontology/nb#tag)) some specific annotations of markables (e.g., *PRD*, *REF*, *SUPPORT*) in the examples."@en ;
+        dcterms:description            <http://premon.fbk.eu/images/nb.svg> ;
+        dcterms:issued                 "2015-10-28"^^xsd:date ;
+        dcterms:license                <http://creativecommons.org/licenses/by-sa/4.0/> ;
+        dcterms:modified               "2017-05-01"^^xsd:date ;
+        dcterms:publisher              "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+        dcterms:rights                 "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
+        dcterms:title                  "Predicate Model for Ontologies (PreMOn) - NomBank ontology module"@en ;
+        vann:preferredNamespacePrefix  "pmonb" ;
+        vann:preferredNamespaceUri     "http://premon.fbk.eu/ontology/nb#" ;
+        owl:imports                    <http://premon.fbk.eu/ontology/core> , <http://www.w3.org/ns/lemon/ontolex> ;
+        owl:versionInfo                "2017a" .
+
+pmonb:tag  a        owl:ObjectProperty ;
+        rdfs:label  "tag"@en ;
+        rdfs:range  pmonb:Tag .
+
+pmonb:arg1  a   pmonb:NumberedArgument , owl:NamedIndividual .
+
+pmonb:NumberedArgument
+        a                owl:Class ;
+        rdfs:label       "Numbered Argument (NB)"@en ;
+        rdfs:subClassOf  pmonb:Argument ;
+        rdfs:subClassOf  [ a          owl:Class ;
+                           owl:oneOf  ( pmonb:arg5 pmonb:arg4 pmonb:arg3 pmonb:arg2 pmonb:arg1 pmonb:arg0 )
+                         ] .
+
+pmonb:argm-pnc  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:argm-prd  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:argm-tmp  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:tag-support  a  pmonb:Tag , owl:NamedIndividual .
+
+pmonb:Modifier  a         owl:Class ;
+        rdfs:label        "Modifier (NB)"@en ;
+        rdfs:subClassOf   pmonb:Argument ;
+        rdfs:subClassOf   [ a          owl:Class ;
+                            owl:oneOf  ( pmonb:argm-cau pmonb:argm-tmp pmonb:argm-dis pmonb:argm-dir pmonb:argm-prd pmonb:argm-ext pmonb:argm-mnr pmonb:argm-loc pmonb:argm-neg pmonb:argm-pnc pmonb:argm-adv )
+                          ] ;
+        owl:disjointWith  pmonb:NumberedArgument .
+
+pmonb:argm-dir  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:tag-prd  a  pmonb:Tag , owl:NamedIndividual .
+
+pmonb:Tag  a        owl:Class ;
+        rdfs:label  "Tag"@en .
+
+pmonb:arg0  a   pmonb:NumberedArgument , owl:NamedIndividual .
+
+pmonb:argm-cau  a  pmonb:Modifier , owl:NamedIndividual .
+
+pmonb:argument  a    owl:ObjectProperty , owl:FunctionalProperty ;
+        rdfs:domain  pmonb:SemanticRole ;
+        rdfs:label   "argument"@en ;
+        rdfs:range   pmonb:Argument .
+
+pmonb:arg5  a   pmonb:NumberedArgument , owl:NamedIndividual .

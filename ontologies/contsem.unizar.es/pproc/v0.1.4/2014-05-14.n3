@@ -1,0 +1,1746 @@
+@prefix : <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix pcd: <http://purl.org/procurement/public-contracts-datatypes#> .
+@prefix cpv: <http://purl.org/cpv/2008/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix s: <http://schema.org/> .
+@prefix pproc: <http://contsem.unizar.es/def/sector-publico/pproc#> .
+@prefix pc: <http://purl.org/procurement/public-contracts#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://contsem.unizar.es/def/sector-publico/pproc> a :Ontology ;
+	rdfs:label "PPROC ontology"@en , "ontología PPROC"@es ;
+	:versionInfo "0.1.4" , """Cambios de la versión 0.1.3 a la versión 0.1.4:
+
+- El prefijo de la ontología recomendado pasa de \"contsem\" a \"pproc\"
+- Las entidades relacionadas con la establecimiento de un acuerdo marco o un sistema dinámico de contratación pasan de utilizar el término \"Declaration\" (declaración) a utilizar \"Conclusion\" (establecimiento)
+- El dominio de <contractAdditionalObligations> es ahora <ContractProcedureSpecifications>
+- <item>, cuyo dominio era <Contract> y <pc:Tender>, se divide ahora en <provision> e <item>, cada una de ellas con un único dominio respectivamente
+- La clase <ContractAbandonment> es ahora <ProcedureResignation>
+- La clase <ContractWaive> es ahora <ProcedureWaive>
+- La clase <VoidProcedure> es ahora <ProcedureVoid>
+- La clase <ContractCompensation> es ahora <ContractObject>
+- La clase <ContractProcedures> es ahora <ContractActivities>
+- La propiedad <isPriceReviewed> es ahora <priceReviewAllowable>
+- La propiedad <priceRevisionFormulaDescription> es ahora <priceReviewIndex>
+- La propiedad <requiredFinancialCapability> es ahora <requiredEconomicAndFinancialStanding>
+- La propiedad <requiredTechnicalCapability> es ahora <requiredTechnicalAndProfessionalAbility>
+- La propiedad <disposableMeansAppointment> es ahora <compulsoryMeansForExecution>
+- La propiedad <requiredCapability> es ahora <otherAbilityRequisites>
+- La propiedad <tenderCommitteePosition> es ahora <tenderCommitteeRole>
+- La clase <PublicPrivateCooperationContract> es ahora <PublicPrivatePartnershipContract>
+- La propiedad <estimatedPrice> es ahora <estimatedValue>
+- La propiedad <lotCount> es ahora <numberOfLots>"""@es ;
+	dcterms:creator "J.F. Muñoz; G. Esteban; M.A. Bernal; F.J. Serón" ;
+	rdfs:comment """Ontología creada con objeto de publicar datos sobre contratación publica española en RDF. Se ha desarrollado durante el transcurso del proyecto \"Optimización de la contratación pública mediante la utilización de técnicas semánticas\" (CONTSEM), en el que participan la empresa iASoft (OESIA), la Universidad de Zaragoza y, como administraciones usuarias, el Gobierno de Aragón, la Diputación Provincial de Huesca y los ayuntamientos de Zaragoza y Huesca.
+
+Financiado por la Acción Estratégica de Telecomunicaciones y Sociedad de la Información. Año 2012. Ministerio de Industria, Comercio y Turismo (TSI-020606-2012-4), y desarrollado entre noviembre de 2012 y diciembre de 2014."""@es .
+
+xsd:date a rdfs:Datatype .
+
+xsd:duration a rdfs:Datatype .
+
+pproc:additionalDocumentReference a :ObjectProperty ;
+	rdfs:label "Additional document reference"@en , "Documentación adicional"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:subPropertyOf pproc:documentReference .
+
+pproc:alternateMember a :ObjectProperty ;
+	rdfs:label "Alternate member"@en , "Miembro suplente"@es ;
+	rdfs:comment "Points to an alternate member of a committee."@en , "Miembro suplente en una mesa de contratación."@es ;
+	rdfs:domain pproc:Committee ;
+	rdfs:range pproc:CommitteeMember ;
+	rdfs:subPropertyOf foaf:member .
+
+pproc:awardAgreement a :ObjectProperty ;
+	rdfs:label "Award agreement"@en , "Acuerdo de adjudicación"@es ;
+	rdfs:comment "Points to the body agreement where a tender has been awarded."@en , "Indica el acuerdo del órgano de contratación donde se ha adjudicado el contrato a un licitador."@es ;
+	rdfs:range pproc:ContractingBodyAgreement ;
+	rdfs:domain pc:Tender .
+
+pproc:briefing a :ObjectProperty ;
+	rdfs:label "Briefing"@en , "Reunión informativa"@es ;
+	rdfs:range pproc:Briefing ;
+	rdfs:domain pproc:ContractProcedureSpecifications .
+
+pproc:budgetPrice a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract budget price"@en , "Presupuesto del contrato"@es ;
+	rdfs:range pproc:BundlePriceSpecification ;
+	rdfs:domain pproc:ContractEconomicConditions ;
+	rdfs:subPropertyOf pproc:price .
+
+pproc:committee a :ObjectProperty ;
+	rdfs:label "Committee"@en , "Comité"@es ;
+	rdfs:range pproc:Committee ;
+	rdfs:domain pproc:ContractBodies .
+
+pproc:complementaryContract a :ObjectProperty ;
+	rdfs:label "Complementary contract"@en , "Contrato complementario"@es ;
+	rdfs:comment "Relates a contract with a complementary contract."@en , "Relaciona un contrato con otro contrato complementario."@es ;
+	rdfs:range pproc:Contract ;
+	rdfs:domain pproc:Contract .
+
+pproc:contractActivites a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract activities"@en , "Trámites del contrato"@es ;
+	rdfs:range pproc:ContractActivities ;
+	rdfs:domain pproc:ContractProcedureSpecifications .
+
+pproc:contractAdditionalObligations a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract additional obligations"@en , "Obligaciones accesorias del contrato"@es ;
+	rdfs:range pproc:ContractAdditionalObligations ;
+	rdfs:domain pproc:ContractProcedureSpecifications .
+
+pproc:contractBodies a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract bodies"@en , "Órganos del contrato"@es ;
+	rdfs:range pproc:ContractBodies ;
+	rdfs:domain pproc:ContractProcedureSpecifications .
+
+pproc:contractEconomicConditions a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract economic conditions"@en , "Condiciones económicas del contrato"@es ;
+	rdfs:range pproc:ContractEconomicConditions ;
+	rdfs:domain pproc:ContractObject .
+
+pproc:contractExecutionConditions a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract execution conditions"@en , "Condiciones de ejecución del contrato"@es ;
+	rdfs:range pproc:ContractExecutionConditions ;
+	rdfs:domain pproc:ContractObject .
+
+pproc:contractModification a :ObjectProperty ;
+	rdfs:label "Contract modification"@en , "Modificación de contrato"@es ;
+	rdfs:comment "Points to contract modifications being made."@en , "Indica la modificación efectuada en un contrato."@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:ContractModification .
+
+pproc:contractModificationConditions a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract modification conditions"@en , "Condiciones para la modificación del contrato"@es ;
+	rdfs:range pproc:ContractModificationConditions ;
+	rdfs:domain pproc:ContractObject .
+
+pproc:contractObject a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Object of the contract"@en , "Objeto del contrato"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:ContractObject .
+
+pproc:contractOrProcedureExtinction a :ObjectProperty ;
+	rdfs:label "Contract or procedure extinction"@en , "Extinción de contrato o de procedimiento"@es ;
+	rdfs:comment "Abstract property pointing to extinction of contract or procedure. Use any of its subclasses."@en , """Propiedad abstracta que indica la extinción de un contrato por resolución, renuncia o abandono. O bien la extinción del procedimiento al ser declarado desierto.
+
+Utilizar una de sus subclases."""@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:ContractOrProcedureExtinction .
+
+pproc:contractProcedureSpecifications a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract procedure specifications"@en , "Especificaciones del procedimiento del contrato"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:ContractProcedureSpecifications .
+
+pproc:contractResolution a :ObjectProperty ;
+	rdfs:label "Contract resolution"@en , "Resolución de contrato"@es ;
+	rdfs:range pproc:ContractResolution ;
+	rdfs:subPropertyOf pproc:contractOrProcedureExtinction .
+
+pproc:contractTemporalConditions a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contract temporal conditions"@en , "Condiciones temporales del contrato"@es ;
+	rdfs:domain pproc:ContractObject ;
+	rdfs:range pproc:ContractTemporalConditions .
+
+pproc:contractingBody a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Contracting body"@en , "Órgano de contratación"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range org:Organization .
+
+pproc:contractingBodyAgreement a :ObjectProperty ;
+	rdfs:label "Contracting body agreement"@en , "Acuerdo del órgano de contratación"@es ;
+	rdfs:range pproc:ContractingBodyAgreement ;
+	rdfs:domain _:node191dka7vix1 .
+
+_:node191dka7vix1 a :Class ;
+	:unionOf _:node191dka7vix2 .
+
+_:node191dka7vix2 rdf:first pproc:ContractModification ;
+	rdf:rest _:node191dka7vix3 .
+
+_:node191dka7vix3 rdf:first pproc:ContractOrProcedureExtinction ;
+	rdf:rest _:node191dka7vix4 .
+
+_:node191dka7vix4 rdf:first pproc:ContractProcedureSpecifications ;
+	rdf:rest rdf:nil .
+
+pproc:criterion a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Criterion"@en , "Criterio"@es ;
+	rdfs:domain pproc:CriterionScore ;
+	rdfs:range pc:AwardCriteriaCombination .
+
+pproc:criterionScore a :ObjectProperty ;
+	rdfs:label "Criterion score"@en , "Valoración de criterio"@es ;
+	rdfs:comment "Property that points to an unique criterion and its score."@en , "Especifica la valoración de un único criterio, por lo que se utilizará una vez por cada criterio de adjudicación presente en el contrato."@es ;
+	rdfs:range pproc:CriterionScore ;
+	rdfs:domain pc:Tender .
+
+pproc:delegatingAuthority a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Delegating authority"@en , "Entidad delegante"@es ;
+	rdfs:comment "Points to the authority that is delegating the contract."@en , "Indica la entidad que delega la licitación de este contrato."@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range org:Organization .
+
+pproc:documentReference a :ObjectProperty ;
+	rdfs:label "Document reference"@en , "Documentación"@es ;
+	rdfs:comment "Links to external documents."@en , """Enlace a documentación.
+
+Propiedad similar a pc:attachment, pero sin dominio fijo, pues esta misma propiedad puede utilizarse con múltiples clases (e.g. pc:Contract ó contsem:TenderMeeting)"""@es ;
+	rdfs:seeAlso pc:attachment ;
+	rdfs:range foaf:Document .
+
+pproc:electronicAuction a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Electronic auction"@en , "Subasta electrónica"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range pproc:ElectronicAuction .
+
+pproc:electronicAuctionPhase a :ObjectProperty ;
+	rdfs:label "Electronic auction phase"@en , "Fase de subasta electrónica"@es ;
+	rdfs:domain pproc:ElectronicAuction ;
+	rdfs:range pproc:ElectronicAuctionPhase .
+
+pproc:electronicAuctionWeb a :ObjectProperty ;
+	rdfs:label "Electronic auction web"@en , "Web de la subasta electrónica"@es ;
+	rdfs:comment "Property that indicated where the electronic auction is made or where we can look for more information about the auction."@en , "Apunta a la web donde puede se realiza la subasta electrónica, o en su defecto, donde se pueda encontrar más información acerca de la subasta electrónica."@es ;
+	rdfs:domain pproc:ElectronicAuction ;
+	rdfs:range foaf:Document .
+
+pproc:estimatedValue a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Estimated value of the contract"@en , "Valor estimado del contrato"@es ;
+	rdfs:range pproc:BundlePriceSpecification ;
+	rdfs:domain pproc:ContractEconomicConditions ;
+	rdfs:subPropertyOf pproc:price ;
+	:backwardCompatibleWith pc:estimatedPrice .
+
+pproc:feePrice a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Fee"@en , "Canon"@es ;
+	rdfs:range pproc:BundlePriceSpecification ;
+	rdfs:domain pproc:ContractEconomicConditions ;
+	rdfs:subPropertyOf pproc:price .
+
+pproc:frameworkAgreement a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Framework agreement"@en , "Acuerdo marco o sistema dinámico de contratación"@es ;
+	rdfs:comment """Property that indicates the framework agreement in which the contract consists.
+
+This property is used when the actual contract consist in the declaration of a framework agreement or a dynamic purchasing system."""@en , """Señala al acuerdo marco o sistema dinámico de contratación en el cual consiste el contrato.
+
+Esta propiedad se utiliza cuando el actual contrato consista en la declaración de un acuerdo marco o un sistema dinámico de contratación."""@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:FrameworkAgreement .
+
+pproc:frameworkAgreementDerivativeContract a :ObjectProperty , :InverseFunctionalProperty ;
+	rdfs:label "Framework agreement derivative contract"@en , "Contrato derivado de un acuerdo marco"@es ;
+	rdfs:domain pproc:ConclusionContract ;
+	rdfs:range pproc:DerivativeContract .
+
+pproc:fullMember a :ObjectProperty ;
+	rdfs:label "Full member"@en , "Miembro titular"@es ;
+	rdfs:comment "Points to a full member of a committee."@en , "Miembro titular en una mesa de contratación."@es ;
+	rdfs:domain pproc:Committee ;
+	rdfs:range pproc:CommitteeMember ;
+	rdfs:subPropertyOf foaf:member .
+
+pproc:informationKind a :ObjectProperty ;
+	rdfs:label "Information kind"@en , "Tipo de información"@es ;
+	rdfs:comment "Property pointing to the type of the information is provided."@en , """Indica el tipo de información que suministra un proveedor de información.
+
+Es posible utilizar esta propiedad numerosas veces para indicar diversos tipos de información."""@es ;
+	rdfs:seeAlso pproc:InformationKindScheme ;
+	rdfs:domain pproc:InformationProvider ;
+	rdfs:range skos:Concept , _:node191dka7vix5 .
+
+_:node191dka7vix5 a :Restriction ;
+	:onProperty skos:inScheme ;
+	:hasValue pproc:InformationKindScheme .
+
+pproc:item a :ObjectProperty ;
+	rdfs:label "Item"@en , "Artículo"@es ;
+	rdfs:comment "Property for attachment of an item to a tender."@en ;
+	rdfs:range gr:Offering ;
+	rdfs:domain pc:Tender ;
+	:backwardCompatibleWith pc:item .
+
+pproc:legalDocumentReference a :ObjectProperty ;
+	rdfs:label "Legal document reference"@en , "Pliego de cláusulas administrativas"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:subPropertyOf pproc:documentReference .
+
+pproc:location a :ObjectProperty ;
+	rdfs:label "Place of contract's realization"@en , "Lugar de realización del contrato"@es ;
+	rdfs:domain pproc:ContractObject ;
+	:backwardCompatibleWith pc:location ;
+	rdfs:range s:Place .
+
+pproc:lot a :ObjectProperty ;
+	rdfs:label "Lot"@en , "Lote" ;
+	rdfs:domain pproc:ContractWithLots ;
+	rdfs:range pproc:Lot ;
+	rdfs:subPropertyOf pc:lot .
+
+pproc:mainObject a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Main object of contract"@en , "Principal objeto del contrato"@es ;
+	rdfs:domain pproc:ContractObject ;
+	:backwardCompatibleWith pc:mainObject ;
+	rdfs:range skos:Concept .
+
+pproc:managingDepartment a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Managing department"@en , "Servicio gestor"@es ;
+	rdfs:comment "Property that indicates the managing departament responsible of the contract."@en , "Servicio perteneciente a la entidad contratante que se encarga de la publicación y administración de este contrato."@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range org:Organization .
+
+pproc:minutesDocumentReference a :ObjectProperty ;
+	rdfs:label "Minutes document reference"@en , "Acta"@es ;
+	rdfs:domain pproc:TenderMeeting ;
+	rdfs:subPropertyOf pproc:documentReference .
+
+pproc:notice a :ObjectProperty ;
+	rdfs:label "Notice"@en , "Anuncio"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range pproc:Notice .
+
+pproc:noticeWeb a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Notice web"@en , "Web del anuncio"@es ;
+	rdfs:domain pproc:Notice ;
+	rdfs:range foaf:Document .
+
+pproc:object a :ObjectProperty ;
+	rdfs:label "Object"@en , "Objeto"@es ;
+	rdfs:comment """Property that points to the concept of the CPV code of an object.
+
+The concept used should be a valid representation of a CPV code, as it is in http://cpv.data.ac.uk/."""@en , """Representación CPV del objeto de un contrato.
+
+Debe apuntar a un concepto de objeto siguiendo la clasificación CPV de algún esquema de conceptos SKOS, como http://cpv.data.ac.uk/."""@es ;
+	rdfs:domain gr:Offering ;
+	rdfs:range skos:Concept .
+
+pproc:price a :ObjectProperty ;
+	rdfs:label "Price"@en , "Precio"@es ;
+	rdfs:range gr:PriceSpecification .
+
+pproc:procedureResignation a :ObjectProperty ;
+	rdfs:label "Procedure resignation"@en , "Desistimiento del procedimiento"@es ;
+	rdfs:range pproc:ProcedureResignation ;
+	rdfs:subPropertyOf pproc:contractOrProcedureExtinction .
+
+pproc:procedureType a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Procedure type"@en , "Tipo de procedimiento"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:seeAlso pproc:ProcedureTypeScheme ;
+	rdfs:range skos:Concept , _:node191dka7vix6 .
+
+_:node191dka7vix6 a :Restriction ;
+	:onProperty skos:inScheme ;
+	:hasValue pproc:ProcedureTypeScheme .
+
+pproc:procedureVoid a :ObjectProperty ;
+	rdfs:label "Procedure void"@en , "Procedimiento desierto"@es ;
+	rdfs:range pproc:ProcedureVoid ;
+	rdfs:subPropertyOf pproc:contractOrProcedureExtinction .
+
+pproc:procedureWaive a :ObjectProperty ;
+	rdfs:label "Procedure waive"@en , "Renuncia del procedimiento"@es ;
+	rdfs:range pproc:ProcedureWaive ;
+	rdfs:subPropertyOf pproc:contractOrProcedureExtinction .
+
+pproc:provision a :ObjectProperty ;
+	rdfs:label "Provision"@en , "Prestación"@es ;
+	rdfs:domain pproc:ContractObject ;
+	rdfs:range gr:Offering ;
+	:backwardCompatibleWith pc:item .
+
+pproc:remedy a :ObjectProperty ;
+	rdfs:label "Remedy"@en , "Recurso"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:Remedy .
+
+pproc:resolutionDocumentReference a :ObjectProperty ;
+	rdfs:label "Resolution document reference"@en , "Resolución"@es ;
+	rdfs:domain pproc:ContractingBodyAgreement ;
+	rdfs:subPropertyOf pproc:documentReference ;
+	rdfs:seeAlso pc:agreement .
+
+pproc:technicalDocumentReference a :ObjectProperty ;
+	rdfs:label "Technical document reference"@en , "Pliego de prescripciones técnicas"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:subPropertyOf pproc:documentReference .
+
+pproc:tenderAdmissionMeeting a :ObjectProperty ;
+	rdfs:label "Tender admission meeting"@en , "Reunión sobre admisión de licitadores"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range pproc:TenderMeeting .
+
+pproc:tenderBriefing a :ObjectProperty ;
+	rdfs:label "Tender briefing"@en , "Reunión informativa"@es ;
+	rdfs:range pproc:Briefing ;
+	rdfs:domain pproc:Contract .
+
+pproc:tenderInformationProvider a :ObjectProperty ;
+	rdfs:label "Tender information provider"@en , "Proveedor de información sobre la licitación"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range pproc:InformationProvider .
+
+pproc:tenderMeeting a :ObjectProperty ;
+	rdfs:label "Tender meeting"@en , "Reunión de la mesa de contratación"@es ;
+	rdfs:range pproc:TenderMeeting ;
+	rdfs:domain _:node191dka7vix7 .
+
+_:node191dka7vix7 a :Class ;
+	:unionOf _:node191dka7vix8 .
+
+_:node191dka7vix8 rdf:first pproc:Committee ;
+	rdf:rest _:node191dka7vix9 .
+
+_:node191dka7vix9 rdf:first pproc:ContractActivities ;
+	rdf:rest rdf:nil .
+
+pproc:tenderRequirements a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Tender requirements"@en , "Requisitos para las ofertas"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:TenderRequirements .
+
+pproc:tenderSubmissionLocation a :ObjectProperty ;
+	rdfs:label "Tender submission location"@en , "Sede de presentación de las ofertas"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range s:Place .
+
+pproc:tenderersRequirements a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Tenderers requirements"@en , "Requisitos de los licitadores"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range pproc:TenderersRequirements .
+
+pproc:urgencyType a :ObjectProperty , :FunctionalProperty ;
+	rdfs:label "Urgency type"@en , "Tipo de tramitación"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:seeAlso pproc:UrgencyTypeScheme ;
+	rdfs:range skos:Concept , _:node191dka7vix10 .
+
+_:node191dka7vix10 a :Restriction ;
+	:onProperty skos:inScheme ;
+	:hasValue pproc:UrgencyTypeScheme .
+
+pproc:websiteWithInformation a :ObjectProperty ;
+	rdfs:label "Website with information"@en , "Web con información"@es ;
+	rdfs:domain pproc:InformationProvider ;
+	rdfs:range foaf:Document .
+
+gr:hasPriceSpecification a :ObjectProperty ;
+	rdfs:label "Price specification"@en , "Especificación del precio"@es ;
+	rdfs:isDefinedBy <http://purl.org/goodrelations/v1#> .
+
+pc:actualPrice a :ObjectProperty ;
+	rdfs:label "Actual price"@en , "Precio final"@es ;
+	rdfs:subPropertyOf pproc:price ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:awardCriteriaCombination a :ObjectProperty ;
+	rdfs:label "Award criteria combination"@en , "Combinación de criterios para la adjudicación"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:awardCriterion a :ObjectProperty ;
+	rdfs:label "Award criterion"@en , "Criterio de adjudicación"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:contractingAuthority a :ObjectProperty ;
+	rdfs:label "Contracting authority"@en , "Entidad contratante"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:lot a :ObjectProperty ;
+	rdfs:label "Lot"@en , "Lote"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:offeredPrice a :ObjectProperty ;
+	rdfs:label "Offered price"@en , "Precio ofrecido"@es ;
+	rdfs:subPropertyOf gr:hasPriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:onBehalfOf a :ObjectProperty ;
+	rdfs:label "On behalf of"@en , "En nombre de"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:supplier a :ObjectProperty ;
+	rdfs:label "Supplier"@en , "Proveedor"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:tender a :ObjectProperty ;
+	rdfs:label "Submitted tender"@en , "Oferta presentada"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+s:location a :ObjectProperty ;
+	rdfs:label "Location"@en , "Lugar"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+skos:broader a :ObjectProperty ;
+	rdfs:label "Broader"@en , "Más amplio"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core#> .
+
+skos:inScheme a :ObjectProperty ;
+	rdfs:label "In scheme"@en , "En esquema"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core#> .
+
+skos:narrower a :ObjectProperty ;
+	rdfs:label "Narrower"@en , "Más concreto"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core#> .
+
+skos:topConceptOf a :ObjectProperty ;
+	rdfs:label "Top concept of"@en , "Concepto superior"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core#> .
+
+foaf:member a :ObjectProperty ;
+	rdfs:label "Member"@en , "Miembro"@es ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+pproc:actualDuration a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Actual duration"@en , "Duración final"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:subPropertyOf pproc:duration .
+
+pproc:advertisementAmount a :DatatypeProperty ;
+	rdfs:label "Advertisement amount"@en , "Gastos de publicidad"@es ;
+	rdfs:domain pproc:ContractAdditionalObligations ;
+	rdfs:range xsd:string .
+
+pproc:assumptionProtectingProcedureType a :DatatypeProperty ;
+	rdfs:label "Assumption protecting the chosen procedure type"@en , "Supuesto que ampara el uso del procedimiento elegido"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range xsd:string .
+
+pproc:awardDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Date of award"@en , "Fecha de adjudicación"@es ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:domain pc:Tender ;
+	:backwardCompatibleWith pc:awardDate ;
+	rdfs:range xsd:date .
+
+pproc:compulsoryMeansForExecution a :DatatypeProperty ;
+	rdfs:label "Compulsory means for execution"@en , "Adscripción de medios"@es ;
+	rdfs:domain pproc:TenderersRequirements ;
+	rdfs:range xsd:string .
+
+pproc:constructionSubsidies a :DatatypeProperty ;
+	rdfs:label "Construction subsidies"@en , "Aportaciones públicas"@es ;
+	rdfs:comment "Description of the public subsidies to construction works contracts."@en , "Descripción de las aportaciones públicas a la construcción."@es ;
+	rdfs:domain pproc:ContractEconomicConditions ;
+	rdfs:range xsd:string .
+
+pproc:criterionEvaluationMode a :DatatypeProperty ;
+	rdfs:label "Criterion evaluation mode"@en , "Forma de evaluación del criterio"@es ;
+	rdfs:comment "Property textually describing the criterion evaluarion mode."@en , "Propiedad para describir la forma de valoración del criterio."@es ;
+	rdfs:domain pc:AwardCriterion ;
+	rdfs:range xsd:string .
+
+pproc:criterionMaxAndMinScores a :DatatypeProperty ;
+	rdfs:label "Criteron maximum and minimum score"@en , "Puntuación máxima y mínima del criterio"@es ;
+	rdfs:domain pc:AwardCriterion ;
+	rdfs:range xsd:string .
+
+pproc:duration a :DatatypeProperty ;
+	rdfs:label "Duration"@en , "Duración"@es ;
+	rdfs:range xsd:duration .
+
+pproc:durationChange a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Duration change"@en , "Variación del plazo"@es ;
+	rdfs:domain pproc:ContractModification ;
+	rdfs:range xsd:string .
+
+pproc:earlyTramitation a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Early tramitation"@en , "Tramitación anticipada"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range xsd:boolean .
+
+pproc:estimatedDuration a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Estimated duration"@en , "Duración estimada"@es ;
+	rdfs:subPropertyOf pproc:duration ;
+	rdfs:domain _:node191dka7vix11 .
+
+_:node191dka7vix11 a :Class ;
+	:unionOf _:node191dka7vix12 .
+
+_:node191dka7vix12 rdf:first pproc:ContractTemporalConditions ;
+	rdf:rest _:node191dka7vix13 .
+
+_:node191dka7vix13 rdf:first pproc:FrameworkAgreement ;
+	rdf:rest _:node191dka7vix14 .
+
+_:node191dka7vix14 rdf:first gr:Offering ;
+	rdf:rest rdf:nil .
+
+pproc:estimatedEndDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Estimated end date"@en , "Fecha estimada de finalización"@es ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date ;
+	rdfs:domain _:node191dka7vix15 .
+
+_:node191dka7vix15 a :Class ;
+	:unionOf _:node191dka7vix16 .
+
+_:node191dka7vix16 rdf:first pproc:ContractTemporalConditions ;
+	rdf:rest _:node191dka7vix17 .
+
+_:node191dka7vix17 rdf:first pproc:FrameworkAgreement ;
+	rdf:rest _:node191dka7vix18 .
+
+_:node191dka7vix18 rdf:first pproc:InformationProvider ;
+	rdf:rest _:node191dka7vix19 .
+
+_:node191dka7vix19 rdf:first gr:Offering ;
+	rdf:rest rdf:nil .
+
+pproc:executionRequeriments a :DatatypeProperty ;
+	rdfs:label "Execution requeriments"@en , "Condiciones de ejecución"@es ;
+	rdfs:comment "Property to define alternative execution requirements (e.g. legal form to be adopted by tenderers)."@en , "Campo para definir las condiciones de ejecución del contrato si las hubiera (e.g. forma jurídica a adoptar por la agrupación de contratistas)"@es ;
+	rdfs:domain pproc:ContractExecutionConditions ;
+	rdfs:range xsd:string .
+
+pproc:expectedCauseModification a :DatatypeProperty ;
+	rdfs:label "Expected cause modification"@en , "Causas previstas de modificación"@es ;
+	rdfs:domain pproc:ContractModificationConditions ;
+	rdfs:range xsd:string .
+
+pproc:extinctionCause a :DatatypeProperty ;
+	rdfs:label "Extinction cause"@en , "Causa de extinctión"@es ;
+	rdfs:domain pproc:ContractOrProcedureExtinction ;
+	rdfs:range xsd:string .
+
+pproc:finalFinancialGuarantee a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Final financial guarantee"@en , "Garantía definitiva"@es ;
+	rdfs:comment "The range of this property must be a percentage (i.e. float between 0.0 and 100.0)"@en , "El rango en esta propiedad indica un porcentaje, por lo que el rango del número real a utilizar debe estar comprendido entre 0.0 y 100.0."@es ;
+	rdfs:domain pproc:ContractAdditionalObligations ;
+	rdfs:range xsd:float .
+
+pproc:finalFinancialGuaranteeDuration a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Final financial guarantee duration"@en , "Plazo de la garantía definitiva"@es ;
+	rdfs:domain pproc:ContractAdditionalObligations ;
+	rdfs:subPropertyOf pproc:duration .
+
+pproc:formalizedDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Formalized date"@en , "Fecha de formalización"@es ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:domain pc:Tender ;
+	rdfs:range xsd:date .
+
+pproc:isNegotiable a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Is negotiable"@en , "Es negociable"@es ;
+	rdfs:domain pc:AwardCriterion ;
+	rdfs:range xsd:boolean .
+
+pproc:lodgedRemedyDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Lodged remedy date"@en , "Fecha de interposición del recurso"@es ;
+	rdfs:comment "Date where a remedy is lodged."@en , "Fecha en la cual se ha interpuesto el recurso ante el órgano oficial."@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+pproc:maxBudgetChange a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Maximum budget change"@en , "Modificación máxima de presupuesto"@es ;
+	rdfs:comment "The range of this property must be a percentage (i.e. float between 0.0 and 100.0)"@en , "El rango en esta propiedad indica un porcentaje, por lo que el rango del número real a utilizar debe estar comprendido entre 0.0 y 100.0."@es ;
+	rdfs:domain pproc:ContractModificationConditions ;
+	rdfs:range xsd:float .
+
+pproc:maxFinalPriceChange a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Maximum final price change"@en , "Modificación máxima sobre precio final"@es ;
+	rdfs:comment "The range of this property must be a percentage (i.e. float between 0.0 and 100.0)"@en , "El rango en esta propiedad indica un porcentaje, por lo que el rango del número real a utilizar debe estar comprendido entre 0.0 y 100.0."@es ;
+	rdfs:domain pproc:ContractModificationConditions ;
+	rdfs:range xsd:float .
+
+pproc:maxInvitations a :DatatypeProperty ;
+	rdfs:label "Maximum number of invitations"@en , "Número máximo de invitaciones"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range xsd:string .
+
+pproc:maxNumberOfOperators a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Maximum number of operators"@en , "Número máximo de participantes"@es ;
+	rdfs:domain pproc:FrameworkAgreement ;
+	rdfs:range xsd:nonNegativeInteger .
+
+pproc:maxSubcontracting a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Maximum subcontracting"@en , "Subcontratación máxima"@es ;
+	rdfs:comment "The range of this property must be a percentage (i.e. float between 0.0 and 100.0)"@en , "El rango en esta propiedad indica un porcentaje, por lo que el rango del número real a utilizar debe estar comprendido entre 0.0 y 100.0."@es ;
+	rdfs:domain pproc:ContractExecutionConditions ;
+	rdfs:range xsd:float .
+
+pproc:minInvitations a :DatatypeProperty ;
+	rdfs:label "Minimum number of invitations"@en , "Número mínimo de invitaciones"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range xsd:string .
+
+pproc:minNumberOfOperators a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Minimum number of operators"@en , "Número mínimo de participantes"@es ;
+	rdfs:domain pproc:FrameworkAgreement ;
+	rdfs:range xsd:nonNegativeInteger .
+
+pproc:minSubcontracting a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Minimum subcontracting"@en , "Subcontratación mínima"@es ;
+	rdfs:comment "The range of this property must be a percentage (i.e. float between 0.0 and 100.0)"@en , "El rango en esta propiedad indica un porcentaje, por lo que el rango del número real a utilizar debe estar comprendido entre 0.0 y 100.0."@es ;
+	rdfs:domain pproc:ContractExecutionConditions ;
+	rdfs:range xsd:float .
+
+pproc:modificationReason a :DatatypeProperty ;
+	rdfs:label "Modification reason"@en , "Justificación de la modificación"@es ;
+	rdfs:domain pproc:ContractModification ;
+	rdfs:range xsd:string .
+
+pproc:modificationScope a :DatatypeProperty ;
+	rdfs:label "Modification scope"@en , "Alcance de la modificación"@es ;
+	rdfs:domain pproc:ContractModification ;
+	rdfs:range xsd:string .
+
+pproc:noticeDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Date of notice publication"@en , "Fecha de publicación del anuncio"@es ;
+	rdfs:domain pproc:Notice ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+pproc:noticeSentDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Notice sent date"@en , "Fecha de envio del anuncio"@es ;
+	rdfs:domain pproc:Notice ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+pproc:noticeSite a :DatatypeProperty ;
+	rdfs:label "Notice site"@en , "Medio de publicación del anuncio"@es ;
+	rdfs:comment "Property that indicates the sire where the notice is published. Normally it would be an official source, like the Official Jounral of the European Union, but it can be anywhere else, like press."@en , "Esta propiedad se refiere al medio donde ha publicado el anuncio. Habitualmente este será un boletín o diario oficial, por ejemplo, el DOUE, BOE o boletín autonómico correspondiente, pero puede ser que sea publicado en prensa u otros medios."@es ;
+	rdfs:domain pproc:Notice ;
+	rdfs:range xsd:string .
+
+pproc:numberOfLots a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Number of lots"@en , "Número de lotes"@es ;
+	rdfs:domain pproc:Contract ;
+	rdfs:range xsd:nonNegativeInteger .
+
+pproc:offeredDuration a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Offered duration"@en , "Plazo de ejecución ofertado"@es ;
+	rdfs:subPropertyOf pproc:duration ;
+	rdfs:domain pc:Tender .
+
+pproc:offeredEndDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Offered end date"@en , "Fecha de finalización ofertada"@es ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:domain pc:Tender ;
+	rdfs:range xsd:date .
+
+pproc:otherAbilityRequisites a :DatatypeProperty ;
+	rdfs:label "Other ability requisites"@en , "Otros requisitos"@es ;
+	rdfs:domain pproc:TenderersRequirements ;
+	rdfs:range xsd:string .
+
+pproc:otherAwardTerms a :DatatypeProperty ;
+	rdfs:label "Other award terms"@en , "Otras condiciones de la adjudicación"@es ;
+	rdfs:domain pc:Tender ;
+	rdfs:range xsd:string .
+
+pproc:otherGuarantee a :DatatypeProperty ;
+	rdfs:label "Other guarantee"@en , "Otras garantías"@es ;
+	rdfs:domain pproc:ContractAdditionalObligations ;
+	rdfs:range xsd:string .
+
+pproc:pricePercentageChange a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Price percentage change"@en , "Porcentaje de variación sobre el precio"@es ;
+	rdfs:comment "The range of this property must be a percentage (i.e. float between 0.0 and 100.0)"@en , "El rango en esta propiedad indica un porcentaje, por lo que el rango del número real a utilizar debe estar comprendido entre 0.0 y 100.0."@es ;
+	rdfs:domain pproc:ContractModification ;
+	rdfs:range xsd:float .
+
+pproc:priceReviewAllowable a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Price review allowable"@en , "Revisión de precios permitida"@es ;
+	rdfs:domain pproc:ContractEconomicConditions ;
+	rdfs:range xsd:boolean .
+
+pproc:priceReviewIndex a :DatatypeProperty ;
+	rdfs:label "Price Review Index"@en , "Fórmula de revisión de precios"@es ;
+	rdfs:domain pproc:ContractEconomicConditions ;
+	rdfs:range xsd:string .
+
+pproc:prorogationsExpected a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Prorogation number expected"@en , "Prórrogas previstas"@es ;
+	rdfs:domain pproc:ContractTemporalConditions ;
+	rdfs:range xsd:nonNegativeInteger .
+
+pproc:provisionalFinancialGuarantee a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Provisional financial guarantee"@en , "Garantía provisional"@es ;
+	rdfs:domain pproc:ContractAdditionalObligations ;
+	rdfs:range xsd:string .
+
+pproc:recurrentRemedy a :DatatypeProperty ;
+	rdfs:label "Recurrent remedy"@en , "Recurso recurrente"@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:range xsd:string .
+
+pproc:remedyInterposedTo a :DatatypeProperty ;
+	rdfs:label "Remedy interposed to"@en , "Recurso interpuesto a"@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:range xsd:string .
+
+pproc:remedyReason a :DatatypeProperty ;
+	rdfs:label "Remedy reason"@en , "Causa del recurso"@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:range xsd:string .
+
+pproc:remedyResolution a :DatatypeProperty ;
+	rdfs:label "Remedy resolution"@en , "Resolución del recurso"@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:range xsd:string .
+
+pproc:remedyResolutionDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Remedy resolution date"@en , "Fecha de resolución del recurso"@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+pproc:remedyResult a :DatatypeProperty ;
+	rdfs:label "Remedy result"@en , "Resultado del recurso"@es ;
+	rdfs:comment "Contains the result of a lodged remedy. Normally it would contains values like \"Estimated\", \"Rejected\" or \"Partially estimated\"."@en , "Contiene el resultado del recurso interpuesto en un contrato. Normalmente el valor de esta propiedad incluirá valores como \"Estimado\", \"Estimado parcialmente\" o \"Desestimado\"."@es ;
+	rdfs:domain pproc:Remedy ;
+	rdfs:range xsd:string .
+
+pproc:requiredClassification a :DatatypeProperty ;
+	rdfs:label "Required classification"@en , "Clasificación requerida"@es ;
+	rdfs:domain pproc:TenderersRequirements ;
+	rdfs:range xsd:string .
+
+pproc:requiredEconomicAndFinancialStanding a :DatatypeProperty ;
+	rdfs:label "Required economic and financial standing"@en , "Solvencia económica y financiera requerida"@es ;
+	rdfs:domain pproc:TenderersRequirements ;
+	rdfs:range xsd:string .
+
+pproc:requiredTechnicalAndProfessionalAbility a :DatatypeProperty ;
+	rdfs:label "Required technical and professional ability"@en , "Solvencia técnica y profesional requerida"@es ;
+	rdfs:domain pproc:TenderersRequirements ;
+	rdfs:range xsd:string .
+
+pproc:reservedContractRestrictions a :DatatypeProperty ;
+	rdfs:label "Reserved contract restrictions"@en , "Contratos reservados"@es ;
+	rdfs:domain pproc:TenderersRequirements ;
+	rdfs:range xsd:string .
+
+pproc:score a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Score"@en , "Puntuación"@es , "Valoración"@es ;
+	rdfs:comment "Indica la puntuación que ha recibido un criterio."@es ;
+	rdfs:domain pproc:CriterionScore ;
+	rdfs:range xsd:float .
+
+pproc:tenderCommitteeAppointmentDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Tender committee appointment date"@en , "Fecha de nombramiento"@es ;
+	rdfs:domain pproc:Committee ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+pproc:tenderCommitteeRole a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Tender committee role"@en , "Cargo en el comité de contratación"@es ;
+	rdfs:comment "Indicated the role of a person inside the committee."@en , "Indica el cargo que una persona ostenta dentro del comité del contratación."@es ;
+	rdfs:domain pproc:CommitteeMember ;
+	rdfs:range xsd:string .
+
+pproc:tenderDeadline a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Time-limit for submission of tenders or requests to participate"@en , "Fecha límite para la presentación de ofertas o de peticiones a participar"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+pproc:tenderDocumentNeeds a :DatatypeProperty ;
+	rdfs:label "Tender document needs"@en , "Documentación a presentar"@es ;
+	rdfs:comment "Defines the necessary documentation a tender must include."@en , "Define la documentación necesaria a presentar en las ofertas."@es ;
+	rdfs:domain pproc:TenderRequirements ;
+	rdfs:range xsd:string .
+
+pproc:tenderDossierStartDate a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Start date of the tender dossier"@en , "Fecha de la resolución del inicio del expediente de contratación"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+pproc:tenderManteinanceDuration a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Tender manteinance duration"@en , "Plazo de vigencia de las ofertas"@es ;
+	rdfs:domain pproc:TenderRequirements ;
+	rdfs:subPropertyOf pproc:duration .
+
+pproc:tenderPurpose a :DatatypeProperty ;
+	rdfs:label "Tender purpose"@en , "Propósito de la reunión"@es ;
+	rdfs:comment "Indicates the purpose of the meeting (e.g. opening of first envelope)."@en , "Indica, de manera textual, el propósito de la reunión de contratación (e.g. apertura de sobre A)"@es ;
+	rdfs:domain pproc:TenderMeeting ;
+	rdfs:range xsd:string .
+
+pproc:tenderSubmissionMode a :DatatypeProperty ;
+	rdfs:label "Tender submission mode"@en , "Modalidad de presentación"@es ;
+	rdfs:domain pproc:ContractProcedureSpecifications ;
+	rdfs:range xsd:string .
+
+pproc:tenderSubmissionSupportedLanguage a :DatatypeProperty ;
+	rdfs:label "Tender submission supported language"@en , "Idioma admitido en la presentación de oferta"@es ;
+	rdfs:domain pproc:TenderRequirements ;
+	rdfs:range xsd:string .
+
+pproc:variantAdmission a :DatatypeProperty , :FunctionalProperty ;
+	rdfs:label "Variant admission"@en , "Admisión de variantes"@es ;
+	rdfs:domain pproc:ContractObject ;
+	rdfs:range xsd:boolean .
+
+pproc:variantDescription a :DatatypeProperty ;
+	rdfs:label "Variant description"@en , "Descripción de las variantes"@es ;
+	rdfs:comment "Property to describe the allowed variantes when submitting a variant of a contract."@en , "Campo para incluir la descripción, alcance, plazo u otros aspectos que están permitidos al presentar variantes en un contrato."@es ;
+	rdfs:domain pproc:ContractObject ;
+	rdfs:range xsd:string .
+
+dcterms:date a :DatatypeProperty ;
+	rdfs:label "Date"@en , "Fecha"@es ;
+	rdfs:isDefinedBy <http://purl.org/dc/terms/> .
+
+dcterms:description a :DatatypeProperty ;
+	rdfs:label "Description"@en , "Descripción"@es ;
+	rdfs:isDefinedBy <http://purl.org/dc/terms/> .
+
+dcterms:title a :DatatypeProperty ;
+	rdfs:label "Title"@en , "Título"@es ;
+	rdfs:isDefinedBy <http://purl.org/dc/terms/> .
+
+pc:actualEndDate a :DatatypeProperty ;
+	rdfs:label "Actual end date"@en , "Fecha de finalización final"@es ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:criterionWeight a :DatatypeProperty ;
+	rdfs:label "Criterion weight"@en , "Peso del criterio"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:criteronName a :DatatypeProperty ;
+	rdfs:label "Criterion name"@en , "Nombre del criterio"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+s:address a :DatatypeProperty ;
+	rdfs:label "Address"@en , "Dirección"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:addressCountry a :DatatypeProperty ;
+	rdfs:label "Address country"@en , "País"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:addressLocality a :DatatypeProperty ;
+	rdfs:label "Address locality"@en , "Localidad"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:name a :DatatypeProperty ;
+	rdfs:label "Name"@en , "Nombre"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:postalAddress a :DatatypeProperty ;
+	rdfs:label "Postal address"@en , "Dirección postal"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:startDate a :DatatypeProperty ;
+	rdfs:label "Start date"@en , "Fecha de inicio"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:streetAddress a :DatatypeProperty ;
+	rdfs:label "Street address"@en , "Calle"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+pproc:AcceptedTender a :Class ;
+	rdfs:label "Accepted tender"@en , "Oferta admitida"@es ;
+	rdfs:subClassOf pc:Tender ;
+	:disjointWith pproc:ExcludedTender ;
+	rdfs:comment "Class describing the tenders accepted in the procurement public contract."@en , "Clase para definir las ofertas que se han admitido a licitación."@es .
+
+pproc:AdditionalInformationNotice a :Class ;
+	rdfs:label "Additional information notice"@en , "Anuncio de información adicional"@es ;
+	rdfs:subClassOf pproc:Notice .
+
+pproc:AgreementContract a :Class ;
+	rdfs:label "Agreement contract"@en , "Concierto"@es ;
+	rdfs:subClassOf pproc:PublicServicesManagementContract ;
+	rdfs:comment "Class describing the contract concerts with natural or legal person performing similar services at the public service in question."@en , "Contrato de los conciertos con persona natural o jurídica que venga realizando prestaciones análogas a las que constituyen el servicio público de que se trate."@es .
+
+pproc:AwardedTender a :Class ;
+	rdfs:label "Awarded tender"@en , "Oferta adjudicada"@es ;
+	rdfs:subClassOf pc:Tender ;
+	rdfs:comment "Class describing the awarded tenders."@en , "Clase para definir las oferta que han sido adjudicadas."@es ;
+	:backwardCompatibleWith pc:awardedTender .
+
+pproc:Briefing a :Class ;
+	rdfs:label "Briefing"@en , "Reunión informativa"@es ;
+	rdfs:subClassOf s:Event ;
+	rdfs:comment "Informative meeting about the public procurement contract."@en , "Reunión informativa sobre la licitación del contrato."@es .
+
+pproc:BundlePriceSpecification a :Class ;
+	rdfs:label "Bundle price"@en , "Precio de paquete"@es ;
+	rdfs:subClassOf gr:PriceSpecification ;
+	rdfs:comment """Class used to describe the price a set of objets.
+
+Can be used to define the total price of an gr:Offering. Its value must be equal to the gr:UnitPriceSpecification multiplied by the number of items."""@en , """Clase que representa el precio de conjuntos de objetos o un paquete determinado.
+
+Se utiliza para especificar el precio de la clase gr:Offering cuando este precio se refiere al del conjunto de los objetos (y no a su precio unitario)."""@es .
+
+pproc:BuyContract a :Class ;
+	rdfs:label "Buy contract"@en , "Contrato de compra"@es ;
+	rdfs:subClassOf pproc:SuppliesContract ;
+	rdfs:comment "Class to describe the supplies contracts aimed to buy supplies."@en , "Clase de los contratos de suministros cuyo objeto es la compra de bienes."@es .
+
+pproc:Committee a :Class ;
+	rdfs:label "Tender committee"@en , "Comité de contratación"@es ;
+	rdfs:comment "Abstract class describing a set of persons in committee and its roles."@en , "Clase abstracta que representa un conjunto de personas en comité y sus roles dentro del esta agrupación."@es .
+
+pproc:CommitteeMember a :Class ;
+	rdfs:label "Committee member"@en , "Miembro del comité"@es ;
+	rdfs:subClassOf foaf:Person ;
+	rdfs:comment "Class that describes the member a committee."@en , "Miembro perteneciente a un comité de contratación concreto."@es .
+
+pproc:ConcessionContract a :Class ;
+	rdfs:label "Concession contract"@en , "Concesión"@es ;
+	rdfs:subClassOf pproc:PublicServicesManagementContract ;
+	rdfs:comment "Class of the contracts in which the awarded tenderer manage the public service themselves."@en , "Clase de los contratos en los que el empresario gestionará el servicio a su propio riesgo y ventura."@es .
+
+pproc:ConclusionContract a :Class ;
+	rdfs:label "Conclusion contract"@en , "Contrato de establecimiento"@es ;
+	rdfs:subClassOf pproc:Contract , _:node191dka7vix20 .
+
+_:node191dka7vix20 a :Restriction ;
+	:onProperty pproc:frameworkAgreement ;
+	:someValuesFrom pproc:FrameworkAgreement .
+
+pproc:ConclusionContract :disjointWith pproc:DerivativeContract ;
+	rdfs:comment "Class describing the contracts consisting in the conclusion of a framework agreement or a dynamic purchasing system."@en , "Clase de los contratos que consisten en el establecimiento de un acuerdo marco o un sistema dinámico de contratación."@es .
+
+pproc:Contract a :Class ;
+	rdfs:label "Public contract"@en , "Contrato público"@es ;
+	rdfs:subClassOf pc:Contract .
+
+pproc:ContractActivities a :Class ;
+	rdfs:label "Contract activites"@en , "Trámites del contrato"@es ;
+	rdfs:comment "Class describing all activities of a contract (e.g. meetings or agreements of the contracting body)."@en , "Clase que engloba todos los trámites de un contrato (e.g. reuniones ó acuerdos del órgano de contratación)."@es .
+
+pproc:ContractAdditionalObligations a :Class ;
+	rdfs:label "Contract additional obligations"@en , "Obligaciones accesorias del contrato"@es ;
+	rdfs:comment "Class describing the additional obligations the contract needs (e.g. guarantees or advertisement costs)"@en , "Clase que define las obligaciones accesorias de un contrato (e.g. garantías ó gastos de publicidad)."@es .
+
+pproc:ContractAwardNotice a :Class ;
+	rdfs:label "Contract award notice"@en , "Anuncio de adjudicación"@es ;
+	rdfs:subClassOf pproc:Notice .
+
+pproc:ContractBodies a :Class ;
+	rdfs:label "Contract bodies"@en , "Órganos del contrato"@es ;
+	rdfs:comment "Class describing the bodies related to the contract."@en , "Clase que engloba los órganos relacionados con un contrato (e.g. mesa de contratación ó comité de expertos)."@es .
+
+pproc:ContractEconomicConditions a :Class ;
+	rdfs:label "Contract economic conditions"@en , "Condiciones económicas del contrato"@es ;
+	rdfs:comment "Class defining the actual economic conditions of the contract (e.g. budget or the formula that describes the revision of its price)."@en , "Clase que define las condiciones económicas del contrato (e.g. presupuesto ó revisión de precios)."@es .
+
+pproc:ContractExecutionConditions a :Class ;
+	rdfs:label "Contract execution conditions"@en , "Condiciones de ejecución del contrato"@es ;
+	rdfs:comment "Class that defines the execution conditions of the contract (e.g. special execution conditions or subcontracting percentage amounts)."@en , "Clase que define las condiciones de ejecución de un contrato (e.g. condiciones especiales ó subcontratación)."@es .
+
+pproc:ContractModification a :Class ;
+	rdfs:label "Contract modification"@en , "Modificación del contrato"@es ;
+	rdfs:comment "During the execution of a contract it could happen that the contract should be modified, to describe these kind of situations we use this class."@en , "Durante un contrato se puede dar también la necesidad de modificarlo una vez iniciada su ejecución, para plasmar este tipo de casos se debe utilizar esta clase."@es .
+
+pproc:ContractModificationConditions a :Class ;
+	rdfs:label "Contract modification conditions"@en , "Condiciones para la modificación del contrato"@es ;
+	rdfs:comment "Class describing the conditions for which a contract can be modified (e.g. maximum percentage of its price or budget)."@en , "Clase que define las condiciones para la modificación de un contrato (e.g. porcentaje máximo de modificación del presupuesto)."@es .
+
+pproc:ContractNotice a :Class ;
+	rdfs:label "Contract notice"@en , "Anuncio de licitación"@es ;
+	rdfs:subClassOf pproc:Notice .
+
+pproc:ContractObject a :Class ;
+	rdfs:label "Contract object"@en , "Objeto del contato"@es ;
+	rdfs:comment "Class that defines the object of the contract and the conditions or modifications the contract can have."@en , "Clase que define el objeto del contrato y las diferentes condiciones, obligaciones y modificaciones de este."@es .
+
+pproc:ContractOrProcedureExtinction a :Class ;
+	rdfs:label "Contract or procedure extinction"@en , "Extinción del contrato o del procedimiento"@es ;
+	rdfs:comment "Abstract class. There are some circumstances resulting in the extinction of the procedure of the contract or the contract itself. To describe that situations we may use one of its subclasses."@en , "Clase abstracta. Existe una serie de circunstancias que derivan en la extinctión del contrato o procedimiento. Para describir estas situaciones se hace uso de una de sus subclases."@es .
+
+pproc:ContractProcedureSpecifications a :Class ;
+	rdfs:label "Contract procedure"@en , "Procedimiento del contrato"@es ;
+	rdfs:comment "Class that specifies the procedure of a contract (e.g. type of procedure or its urgency)."@en , "Clase que define las especificaciones del procedimiento de un contrato (e.g. tipo de procedimiento o de tramitación)."@es .
+
+pproc:ContractResolution a :Class ;
+	rdfs:label "Contract resolution"@en , "Resolución del contrato"@es ;
+	rdfs:subClassOf pproc:ContractOrProcedureExtinction .
+
+pproc:ContractTemporalConditions a :Class ;
+	rdfs:label "Contract temporal conditions"@en , "Condiciones temporales del contrato"@es ;
+	rdfs:comment "Class that describes the temporal conditions of the contract."@en , "Clase que define las condiciones temporales de un contrato (e.g. plazo ó prórrogas)."@es .
+
+pproc:ContractWithLots a :Class ;
+	rdfs:label "Contract with lots"@en , "Contrato con lotes"@es ;
+	rdfs:subClassOf pproc:Contract , _:node191dka7vix21 .
+
+_:node191dka7vix21 a :Restriction ;
+	:onProperty pproc:lot ;
+	:someValuesFrom pproc:Lot .
+
+pproc:ContractWithLots rdfs:comment "Class of the contract that have lots."@en , """Clase de los contratos dividos en lotes.
+
+Cuando un contrato de muy grande, este puede ser dividido en diversos lotes por la entidad contratante. Las empresas presentan las ofertas a estos lotes separadamente (y no al contrato \"raíz\"), realizándose la adjudicación de la misma manera."""@es .
+
+pproc:ContractWithoutLots a :Class ;
+	rdfs:label "Contract without lots"@en , "Contrato sin lotes"@es ;
+	rdfs:subClassOf pproc:Contract , _:node191dka7vix22 .
+
+_:node191dka7vix22 a :Restriction ;
+	:onProperty pproc:lot ;
+	:onClass pproc:Lot ;
+	:maxQualifiedCardinality "0"^^xsd:nonNegativeInteger .
+
+pproc:ContractWithoutLots rdfs:comment "Class to describe the contract not divided into lots."@en , "Clase de los contratos que no están dividos en lotes."@es .
+
+pproc:ContractingBodyAgreement a :Class ;
+	rdfs:label "Contracting body agreement"@en , "Acuerdo del órgano de contratación"@es .
+
+pproc:CorrectionNotice a :Class ;
+	rdfs:label "Correction notice"@en , "Anuncio de corrección"@es ;
+	rdfs:subClassOf pproc:Notice .
+
+pproc:CriterionScore a :Class ;
+	rdfs:label "Criterion score"@en , "Valoración de criterio"@es ;
+	rdfs:comment "Class to describe each award criterion and its score."@en , "Clase para valorar individualmente un criterio de adjudicación. Esta formada por una puntuación (contsem:score) y un criterio (contsem:criterion)."@es .
+
+pproc:DerivativeContract a :Class ;
+	rdfs:label "Derivative contract"@en , "Contrato derivado"@es ;
+	rdfs:subClassOf pproc:Contract ;
+	rdfs:comment "Class describing contracts derived from a framework agreement or a dynamic purchasing system."@en , "Clase de los contratos derivados de un acuerdo marco o un sistema dinámico de contratación."@es .
+
+pproc:DynamicPurchasingSystemConclusionContract a :Class ;
+	rdfs:label "Dynamic purchasing system conclusion contract"@en , "Contrato de establecimiento de un sistema dinámico de contratación"@es ;
+	rdfs:subClassOf pproc:ConclusionContract ;
+	rdfs:comment "Class describing the contracts consisting in the conclusion of a dynamic purchasing system."@en , "Clase de los contratos que consisten en el establecimiento de un sistema dinámico de contratación."@es .
+
+pproc:DynamicPurchasingSystemDerivativeContract a :Class ;
+	rdfs:label "Dynamic purchasing system derivative contract"@en , "Contrato derivado de un sistema dinámico de contratación"@es ;
+	rdfs:subClassOf pproc:DerivativeContract ;
+	rdfs:comment "Class describing contracts derived from a dynamic purchasing system."@en , "Clase de los contratos derivados de un sistema dinámico de contratación"@es .
+
+pproc:ElectronicAuction a :Class ;
+	rdfs:label "Electronic auction"@en , "Subasta electrónica"@es ;
+	rdfs:comment "Class that specifies the existence of an electronic auction of one or more of the award criterions."@en , "Clase para especificar la realización de una subasta electrónica de uno o más criterios de adjudicación."@es .
+
+pproc:ElectronicAuctionPhase a :Class ;
+	rdfs:label "Electronic auction phase"@en , "Fase de subasta electrónica"@es ;
+	rdfs:comment "Class describing a phase of an electronic auction."@en , "Fase de la subasta electrónica de uno o más de los criterios de adjudicación del contrato."@es .
+
+pproc:ExcludedTender a :Class ;
+	rdfs:label "Excluded tender"@en , "Oferta excluída"@es ;
+	rdfs:subClassOf pc:Tender ;
+	rdfs:comment "Class that defines the tenders excluded from the procurement procedure."@en , "Define las ofertas que han sido excluídas del proceso de licitación."@es .
+
+pproc:ExpertCommittee a :Class ;
+	rdfs:label "Expert committee"@en , "Comité de expertos"@es ;
+	rdfs:subClassOf pproc:Committee .
+
+pproc:ExtendableContract a :Class ;
+	rdfs:label "Extendable contract"@en , "Contrato prorrogable"@es ;
+	rdfs:subClassOf pproc:Contract ;
+	rdfs:comment "Class describing contracts whose end date can be extended."@en , "Contratos públicos cuya fecha de ejecución puede ser pospuesta o extendida."@es .
+
+pproc:FormalizationNotice a :Class ;
+	rdfs:label "Formalization notice"@en , "Anuncio de formalización"@es ;
+	rdfs:subClassOf pproc:Notice .
+
+pproc:FormalizedTender a :Class ;
+	rdfs:label "Formalized tender"@en , "Oferta formalizada"@es ;
+	rdfs:subClassOf pc:Tender , _:node191dka7vix23 .
+
+_:node191dka7vix23 a :Restriction ;
+	:onProperty pproc:formalizedDate ;
+	:someValuesFrom xsd:date .
+
+pproc:FormalizedTender rdfs:comment "Class describing tenders being formalized."@en , "Clase para definir la oferta que se ha formalizado."@es .
+
+pproc:FrameworkAgreement a :Class ;
+	rdfs:label "Framework agreement or dynamic purchasing system"@en , "Acuerdo marco o Sistema Dinámico de contratación"@es ;
+	rdfs:comment "Class used to describe a contract that is a declaration of a framework agreement or a dynamic purchasing system."@en , "Clase a utilizar cuando estemos ante un contrato que consiste en la declaración, tanto de un acuerdo marco como de un sistema dinámico de contratación."@es .
+
+pproc:FrameworkConclusionContract a :Class ;
+	rdfs:label "Framework conclusion contract"@en , "Contrato de establecimiento de un acuerdo marco"@es ;
+	rdfs:subClassOf pproc:ConclusionContract ;
+	rdfs:comment "Class describing the contracts consisting in the conclusion of a framework agreement."@en , "Clase de los contratos que consisten en el establecimiento de un acuerdo marco."@es .
+
+pproc:FrameworkDerivativeContract a :Class ;
+	rdfs:label "Framework derivative contract"@en , "Contrato derivado de un acuerdo marco"@es ;
+	rdfs:subClassOf pproc:DerivativeContract ;
+	rdfs:comment "Class describing contracts derived from a framework agreement."@en , "Clase de los contratos derivados de un acuerdo marco"@es .
+
+pproc:HarmonizedContract a :Class ;
+	rdfs:label "Harmonized contract"@en , "Contrato armonizado"@es ;
+	rdfs:subClassOf pproc:Contract ;
+	rdfs:comment "Class to describe harmonized contracts (i.e. contracts that reachs the threshold to be treated as highlighted in the procurement Directives of the European Commision and European Council)."@en , "Clase de los contratos armonizados (i.e. contratos que alcanzan el umbral para actuar conforme a las Directivas del Parlamento Europeo y del Consejo en contratos públicos)"@es .
+
+pproc:InformationProvider a :Class ;
+	rdfs:label "Information provider"@en , "Proveedor de información"@es ;
+	rdfs:comment "Class defining the provider of information about the contract."@en , "Proveedor de información sobre la licitación del contrato."@es .
+
+pproc:LeaseContract a :Class ;
+	rdfs:label "Lease contract"@en , "Arrendamiento financiero"@es ;
+	rdfs:subClassOf pproc:SuppliesContract ;
+	rdfs:comment "Class defining supplies contracts aimed to lease supplies."@en , """Clase de los contratos de suministros cuyo objeto es el arrendamiento financiero de bienes.
+
+Popularmente conocido como 'renting' en España."""@es .
+
+pproc:LegalRemedy a :Class ;
+	rdfs:label "Legal remedy"@en , "Recurso legal"@es ;
+	rdfs:subClassOf pproc:Remedy .
+
+pproc:Lot a :Class ;
+	rdfs:label "Lot"@en , "Lote"@es ;
+	rdfs:subClassOf pproc:Contract ;
+	rdfs:comment "Class describing contracts that are an actual lot of another contract."@en , "Clase de los contratos que representan un lote perteneciente a otro contrato."@es .
+
+pproc:MixedCapitalCompanyContract a :Class ;
+	rdfs:label "Mixed capital company contract"@en , "Contrato de sociedad de economia mixta"@es ;
+	rdfs:subClassOf pproc:PublicServicesManagementContract ;
+	rdfs:comment "Class describing the contracts where the contracting authority participates concurrently with the natural or legal person."@en , "Los contrato de sociedad de economia mixta son aquellos en que la Administración participe, por sí o por medio de una entidad pública, en concurrencia con personas naturales o jurídicas."@es .
+
+pproc:MixedContract a :Class ;
+	rdfs:label "Mixed contract"@en , "Contrato mixto"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:MultiannualContract a :Class ;
+	rdfs:label "Multiannual contract"@en , "Contrato plurianual"@es ;
+	rdfs:subClassOf pproc:Contract ;
+	rdfs:comment "Class describing the multiannual contracts (i.e. contract whose duration extends over more than one financial year)."@en , "Clase de los contrato plurianuales (i.e. contratos cuya duración se extiende durante más de un ejercicio contable)."@es .
+
+pproc:Notice a :Class ;
+	rdfs:label "Notice"@en , "Anuncio"@es .
+
+pproc:ObjectiveAwardCriterion a :Class ;
+	rdfs:label "Objective award criterion"@en , "Criterio de adjudicación objetivo"@es ;
+	rdfs:subClassOf pc:AwardCriterion ;
+	rdfs:comment "Class describing criterioa that depend on a value judgement."@en , "Clase para definir criterios que dependen de un juicio de valor."@es .
+
+pproc:OrdinaryAdministrativeRemedy a :Class ;
+	rdfs:label "Ordinary administrative remedy"@en , "Recurso administrativo ordinario"@es ;
+	rdfs:subClassOf pproc:Remedy .
+
+pproc:PrecomercialProcurement a :Class ;
+	rdfs:label "Precomercial procurement"@en , "Compra pública pre-comercial"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:PriorInformationNotice a :Class ;
+	rdfs:label "Prior information notice"@en , "Anuncio de información previa"@es ;
+	rdfs:subClassOf pproc:Notice .
+
+pproc:PrivateContract a :Class ;
+	rdfs:label "Private contract"@en , "Contrato privado"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:ProcedureResignation a :Class ;
+	rdfs:label "Procedure resignation"@en , "Desistimiento del procedimiento"@es ;
+	rdfs:subClassOf pproc:ContractOrProcedureExtinction .
+
+pproc:ProcedureVoid a :Class ;
+	rdfs:label "Procedure void"@en , "Procedimiento desierto"@es ;
+	rdfs:subClassOf pproc:ContractOrProcedureExtinction .
+
+pproc:ProcedureWaive a :Class ;
+	rdfs:label "Procedure waive"@en , "Renuncia del procedimiento"@es ;
+	rdfs:subClassOf pproc:ContractOrProcedureExtinction .
+
+pproc:PublicPrivatePartnershipContract a :Class ;
+	rdfs:label "Public-private partnership contract"@en , "Contrato de colaboración público-privada"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:PublicServicesManagementContract a :Class ;
+	rdfs:label "Public services management contract"@en , "Contrato de gestión de servicios públicos"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:PublicWorksConcessionContract a :Class ;
+	rdfs:label "Public works concession contract"@en , "Contrato de concesión de obras públicas"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:Remedy a :Class ;
+	rdfs:label "Remedy"@en , "Recurso"@es ;
+	rdfs:comment "Remedy lodged concerning a resolution about the procurement procedure."@en , "Recurso interpuesto sobre alguna de las resoluciones del proceso de licitación."@es .
+
+pproc:RentContract a :Class ;
+	rdfs:label "Rent contract"@en , "Contrato de alquiler"@es ;
+	rdfs:subClassOf pproc:SuppliesContract ;
+	rdfs:comment "Class defining supplies contracts aimed to rent supplies."@en , "Clase de los contratos de suministros cuyo objeto es el alquiler de bienes."@es .
+
+pproc:ServicesContract a :Class ;
+	rdfs:label "Services contract"@en , "Contrato de servicios"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:SharedResultAgreementContract a :Class ;
+	rdfs:label "Shared result agreement contract"@en , "Gestión interesada"@es ;
+	rdfs:subClassOf pproc:PublicServicesManagementContract ;
+	rdfs:comment "Class describing contracts whose operation results are shared among the contracting authority and the tenderer."@en , "Clase de los contrato en cuya virtud la Administración y el empresario participarán en los resultados de la explotación del servicio en la proporción que se establezca en el contrato."@es .
+
+pproc:SpecialAdministrativeContract a :Class ;
+	rdfs:label "Special administrative contract"@en , "Contrato administrativo especial"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+pproc:SpecialAdministrativeRemedy a :Class ;
+	rdfs:label "Special administrative remedy"@en , "Recurso administrativo especial"@es ;
+	rdfs:subClassOf pproc:Remedy .
+
+pproc:SubjectiveAwardCriterion a :Class ;
+	rdfs:label "Subjective award criterion"@en , "Criterio de adjudicación subjetivo"@es ;
+	rdfs:subClassOf pc:AwardCriterion ;
+	rdfs:comment "Class used to describe criteria that depend on a subjetive opinion."@en , "Clase para especificar los criterios que dependen de una opinion subjetiva."@es .
+
+pproc:SuppliesContract a :Class ;
+	rdfs:label "Supplies contract"@en , "Contrato de suministros"@es ;
+	rdfs:subClassOf pproc:Contract ;
+	rdfs:comment "Class describing contracts whose object is the acquisition of supplies."@en , "Clase de los contratos cuyo objeto es la adquisición de suministros. Esta adquisición puede ser bien mediante compra, alquiler o arrendamiento financiero."@es .
+
+pproc:TechnicalCommittee a :Class ;
+	rdfs:label "Technical committee"@en , "Organismo técnico"@es ;
+	rdfs:subClassOf pproc:Committee .
+
+pproc:TenderCommittee a :Class ;
+	rdfs:label "Tender committee"@en , "Mesa de contratación"@es ;
+	rdfs:subClassOf pproc:Committee .
+
+pproc:TenderMeeting a :Class ;
+	rdfs:label "Tender meeting"@en , "Reunión de la mesa de contratación"@es ;
+	rdfs:subClassOf s:Event ;
+	rdfs:comment "Class describing the meetings of tender committee."@en , "Clase para describir las reuniones que la mesa de contratación, comité de expertos u organismos técnicas han realizado."@es .
+
+pproc:TenderRequirements a :Class ;
+	rdfs:label "Tender requirements"@en , "Requisitos para las ofertas"@es ;
+	rdfs:comment "Class to define the tender requirements needed to submit a tender (e.g. tender document needs)."@en , "Clase que define los requisitos exigidos a las ofertas a presentar (e.g. plazo o documentación a presentar)."@es .
+
+pproc:TenderersRequirements a :Class ;
+	rdfs:label "Tenderers requirements"@en , "Requisitos de los licitadores"@es ;
+	rdfs:comment "Class defining the tenderers requirements (e.g. required classification or financial capability)."@en , "Clase que define los requisitos exigidos a los licitadores (e.g. clasificación profesional ó solvencia económica)."@es .
+
+pproc:WorksContract a :Class ;
+	rdfs:label "Works contract"@en , "Contrato de obras"@es ;
+	rdfs:subClassOf pproc:Contract .
+
+gr:Offering a :Class ;
+	rdfs:label "Offering"@en , "Oferta"@es ;
+	rdfs:isDefinedBy <http://purl.org/goodrelations/v1#> .
+
+gr:PriceSpecification a :Class ;
+	rdfs:label "Price specification"@en , "Especificación del precio"@es ;
+	rdfs:isDefinedBy <http://purl.org/goodrelations/v1#> .
+
+pc:AwardCriteriaCombination a :Class ;
+	rdfs:label "Award criteria combination"@en , "Combinación de criterios para la adjudicación"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:AwardCriterion a :Class ;
+	rdfs:label "Award criterion"@en , "Criterio de adjudicación"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:Contract a :Class ;
+	rdfs:label "Contract"@en , "Contrato"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:Tender a :Class ;
+	rdfs:label "Tender"@en , "Oferta de licitación"@es ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+s:Event a :Class ;
+	rdfs:label "Event"@en , "Evento"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:Place a :Class ;
+	rdfs:label "Place"@en , "Lugar"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+s:PostalAddress a :Class ;
+	rdfs:label "Postal address"@en , "Dirección postal"@es ;
+	rdfs:isDefinedBy <http://schema.org/> .
+
+skos:Concept a :Class ;
+	rdfs:label "Concept"@en , "Concepto"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core#> .
+
+skos:ConceptScheme a :Class ;
+	rdfs:label "Concept scheme"@en , "Esquema de conceptos"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core#> .
+
+org:Organization a :Class ;
+	rdfs:label "Organization"@en , "Organización"@es ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/org#> .
+
+foaf:Document a :Class ;
+	rdfs:label "Document"@en , "Documento"@es ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:Person a :Class ;
+	rdfs:label "Person"@en , "Persona"@es ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+<http://contsem.unizar.es/def/sector-publico/contsem> a :NamedIndividual ;
+	dcterms:title "CONTSEM ontology"@en , "ontologia CONTSEM"@es .
+
+pproc:AdministrativeInformation a :NamedIndividual , skos:Concept ;
+	rdfs:label "Administrative information"@en , "Información administrativa"@es ;
+	skos:inScheme pproc:InformationKindScheme ;
+	skos:topConceptOf pproc:InformationKindScheme .
+
+pproc:Emergency a :NamedIndividual , skos:Concept ;
+	rdfs:label "Emergency"@en , "Emergencia"@es ;
+	skos:inScheme pproc:UrgencyTypeScheme ;
+	skos:topConceptOf pproc:UrgencyTypeScheme .
+
+pproc:Express a :NamedIndividual , skos:Concept ;
+	rdfs:label "Express"@en , "Urgente"@es ;
+	skos:inScheme pproc:UrgencyTypeScheme ;
+	skos:topConceptOf pproc:UrgencyTypeScheme .
+
+pproc:InformationKindScheme a :NamedIndividual , skos:ConceptScheme ;
+	rdfs:label "Information kind scheme"@en , "Esquema de tipos de información"@es ;
+	rdfs:comment "Scheme that indicated the type of the information that can be provided."@en .
+
+pproc:Minor a :NamedIndividual , skos:Concept ;
+	rdfs:label "Minor"@en , "Menor"@es ;
+	skos:inScheme pproc:ProcedureTypeScheme ;
+	skos:topConceptOf pproc:ProcedureTypeScheme .
+
+pproc:Negotiated a :NamedIndividual , skos:Concept ;
+	rdfs:label "Negotiated"@en , "Negociado"@es ;
+	rdfs:comment "Abstract concept defining the procedure of the contract as negotiated."@en ;
+	skos:narrower pproc:NegotiatedWithPublicity , pproc:NegotiatedWithoutPublicity ;
+	skos:topConceptOf pproc:ProcedureTypeScheme ;
+	skos:inScheme pproc:ProcedureTypeScheme ;
+	:sameAs pc:Negotiated .
+
+pproc:NegotiatedWithPublicity a :NamedIndividual , skos:Concept ;
+	rdfs:label "Negotiated with publicity"@en , "Negociado con publicidad"@es ;
+	skos:broader pproc:Negotiated ;
+	skos:inScheme pproc:ProcedureTypeScheme .
+
+pproc:NegotiatedWithoutPublicity a :NamedIndividual , skos:Concept ;
+	rdfs:label "Negotiated without publicity"@en , "Negociado sin publicidad"@es ;
+	skos:broader pproc:Negotiated ;
+	skos:inScheme pproc:ProcedureTypeScheme .
+
+pproc:ProcedureTypeScheme a :NamedIndividual , skos:ConceptScheme ;
+	rdfs:label "Procedure type scheme"@en , "Esquema de tipos de procedimiento"@es ;
+	rdfs:comment "Scheme defining the procedure to be followed in a tender."@en .
+
+pproc:Regular a :NamedIndividual , skos:Concept ;
+	rdfs:label "Regular"@en , "Ordinaria"@es ;
+	skos:topConceptOf pproc:UrgencyTypeScheme ;
+	skos:inScheme pproc:UrgencyTypeScheme .
+
+pproc:RegularOpen a :NamedIndividual , skos:Concept ;
+	rdfs:label "Regular open"@en , "Abierto ordinario"@es ;
+	skos:inScheme pproc:ProcedureTypeScheme ;
+	skos:topConceptOf pproc:ProcedureTypeScheme ;
+	:sameAs pc:Open .
+
+pproc:SimpleOpen a :NamedIndividual , skos:Concept ;
+	rdfs:label "Simple open"@en , "Abierto simple"@es ;
+	skos:inScheme pproc:ProcedureTypeScheme ;
+	skos:topConceptOf pproc:ProcedureTypeScheme .
+
+pproc:TechnicalInformation a :NamedIndividual , skos:Concept ;
+	rdfs:label "Technical information"@en , "Información técnica"@es ;
+	skos:topConceptOf pproc:InformationKindScheme ;
+	skos:inScheme pproc:InformationKindScheme .
+
+pproc:UrgencyTypeScheme a :NamedIndividual , skos:ConceptScheme ;
+	rdfs:label "Urgency type scheme"@en , "Esquema de tipos de urgencia"@es ;
+	rdfs:comment "Schema that defines the kinds of urgency a procedure can follow."@en .
+
+pc:CompetitiveDialogue a :NamedIndividual , skos:Concept ;
+	rdfs:label "Competitive dialogue"@en , "Diálogo competitvo"@es ;
+	skos:topConceptOf pproc:ProcedureTypeScheme ;
+	skos:inScheme pproc:ProcedureTypeScheme ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:Negotiated a :NamedIndividual ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:Open a :NamedIndividual ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+pc:Restricted a :NamedIndividual , skos:Concept ;
+	rdfs:label "Restricted"@en , "Restringido"@es ;
+	skos:topConceptOf pproc:ProcedureTypeScheme ;
+	skos:inScheme pproc:ProcedureTypeScheme ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts#> .
+
+_:node191dka7vix24 a :AllDisjointClasses ;
+	:members _:node191dka7vix25 .
+
+_:node191dka7vix25 rdf:first pproc:BuyContract ;
+	rdf:rest _:node191dka7vix26 .
+
+_:node191dka7vix26 rdf:first pproc:LeaseContract ;
+	rdf:rest _:node191dka7vix27 .
+
+_:node191dka7vix27 rdf:first pproc:RentContract ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix28 a :AllDisjointClasses ;
+	:members _:node191dka7vix29 .
+
+_:node191dka7vix29 rdf:first pproc:ContractWithLots ;
+	rdf:rest _:node191dka7vix30 .
+
+_:node191dka7vix30 rdf:first pproc:ContractWithoutLots ;
+	rdf:rest _:node191dka7vix31 .
+
+_:node191dka7vix31 rdf:first pproc:Lot ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix32 a :AllDisjointClasses ;
+	:members _:node191dka7vix33 .
+
+_:node191dka7vix33 rdf:first pproc:AgreementContract ;
+	rdf:rest _:node191dka7vix34 .
+
+_:node191dka7vix34 rdf:first pproc:ConcessionContract ;
+	rdf:rest _:node191dka7vix35 .
+
+_:node191dka7vix35 rdf:first pproc:MixedCapitalCompanyContract ;
+	rdf:rest _:node191dka7vix36 .
+
+_:node191dka7vix36 rdf:first pproc:SharedResultAgreementContract ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix37 a :AllDisjointClasses ;
+	:members _:node191dka7vix38 .
+
+_:node191dka7vix38 rdf:first pproc:AdditionalInformationNotice ;
+	rdf:rest _:node191dka7vix39 .
+
+_:node191dka7vix39 rdf:first pproc:ContractAwardNotice ;
+	rdf:rest _:node191dka7vix40 .
+
+_:node191dka7vix40 rdf:first pproc:ContractNotice ;
+	rdf:rest _:node191dka7vix41 .
+
+_:node191dka7vix41 rdf:first pproc:CorrectionNotice ;
+	rdf:rest _:node191dka7vix42 .
+
+_:node191dka7vix42 rdf:first pproc:FormalizationNotice ;
+	rdf:rest _:node191dka7vix43 .
+
+_:node191dka7vix43 rdf:first pproc:PriorInformationNotice ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix44 a :AllDisjointClasses ;
+	:members _:node191dka7vix45 .
+
+_:node191dka7vix45 rdf:first pproc:MixedContract ;
+	rdf:rest _:node191dka7vix46 .
+
+_:node191dka7vix46 rdf:first pproc:PrecomercialProcurement ;
+	rdf:rest _:node191dka7vix47 .
+
+_:node191dka7vix47 rdf:first pproc:PrivateContract ;
+	rdf:rest _:node191dka7vix48 .
+
+_:node191dka7vix48 rdf:first pproc:PublicPrivatePartnershipContract ;
+	rdf:rest _:node191dka7vix49 .
+
+_:node191dka7vix49 rdf:first pproc:PublicServicesManagementContract ;
+	rdf:rest _:node191dka7vix50 .
+
+_:node191dka7vix50 rdf:first pproc:PublicWorksConcessionContract ;
+	rdf:rest _:node191dka7vix51 .
+
+_:node191dka7vix51 rdf:first pproc:ServicesContract ;
+	rdf:rest _:node191dka7vix52 .
+
+_:node191dka7vix52 rdf:first pproc:SpecialAdministrativeContract ;
+	rdf:rest _:node191dka7vix53 .
+
+_:node191dka7vix53 rdf:first pproc:SuppliesContract ;
+	rdf:rest _:node191dka7vix54 .
+
+_:node191dka7vix54 rdf:first pproc:WorksContract ;
+	rdf:rest rdf:nil .
+
+pproc:contractingBodyAgreement rdfs:domain _:node191dka7vix55 .
+
+_:node191dka7vix55 a :Class ;
+	:unionOf _:node191dka7vix56 .
+
+_:node191dka7vix56 rdf:first pproc:ContractModification ;
+	rdf:rest _:node191dka7vix57 .
+
+_:node191dka7vix57 rdf:first pproc:ContractOrProcedureExtinction ;
+	rdf:rest _:node191dka7vix58 .
+
+_:node191dka7vix58 rdf:first pproc:ContractProcedureSpecifications ;
+	rdf:rest rdf:nil .
+
+pproc:informationKind rdfs:range _:node191dka7vix59 .
+
+_:node191dka7vix59 a :Restriction ;
+	:onProperty skos:inScheme ;
+	:hasValue pproc:InformationKindScheme .
+
+pproc:procedureType rdfs:range _:node191dka7vix60 .
+
+_:node191dka7vix60 a :Restriction ;
+	:onProperty skos:inScheme ;
+	:hasValue pproc:ProcedureTypeScheme .
+
+pproc:tenderMeeting rdfs:domain _:node191dka7vix61 .
+
+_:node191dka7vix61 a :Class ;
+	:unionOf _:node191dka7vix62 .
+
+_:node191dka7vix62 rdf:first pproc:Committee ;
+	rdf:rest _:node191dka7vix63 .
+
+_:node191dka7vix63 rdf:first pproc:ContractActivities ;
+	rdf:rest rdf:nil .
+
+pproc:urgencyType rdfs:range _:node191dka7vix64 .
+
+_:node191dka7vix64 a :Restriction ;
+	:onProperty skos:inScheme ;
+	:hasValue pproc:UrgencyTypeScheme .
+
+pproc:estimatedDuration rdfs:domain _:node191dka7vix65 .
+
+_:node191dka7vix65 a :Class ;
+	:unionOf _:node191dka7vix66 .
+
+_:node191dka7vix66 rdf:first pproc:ContractTemporalConditions ;
+	rdf:rest _:node191dka7vix67 .
+
+_:node191dka7vix67 rdf:first pproc:FrameworkAgreement ;
+	rdf:rest _:node191dka7vix68 .
+
+_:node191dka7vix68 rdf:first gr:Offering ;
+	rdf:rest rdf:nil .
+
+pproc:estimatedEndDate rdfs:domain _:node191dka7vix69 .
+
+_:node191dka7vix69 a :Class ;
+	:unionOf _:node191dka7vix70 .
+
+_:node191dka7vix70 rdf:first pproc:ContractTemporalConditions ;
+	rdf:rest _:node191dka7vix71 .
+
+_:node191dka7vix71 rdf:first pproc:FrameworkAgreement ;
+	rdf:rest _:node191dka7vix72 .
+
+_:node191dka7vix72 rdf:first pproc:InformationProvider ;
+	rdf:rest _:node191dka7vix73 .
+
+_:node191dka7vix73 rdf:first gr:Offering ;
+	rdf:rest rdf:nil .
+
+pproc:ConclusionContract rdfs:subClassOf _:node191dka7vix74 .
+
+_:node191dka7vix74 a :Restriction ;
+	:onProperty pproc:frameworkAgreement ;
+	:someValuesFrom pproc:FrameworkAgreement .
+
+pproc:ContractWithLots rdfs:subClassOf _:node191dka7vix75 .
+
+_:node191dka7vix75 a :Restriction ;
+	:onProperty pproc:lot ;
+	:someValuesFrom pproc:Lot .
+
+pproc:ContractWithoutLots rdfs:subClassOf _:node191dka7vix76 .
+
+_:node191dka7vix76 a :Restriction ;
+	:onProperty pproc:lot ;
+	:onClass pproc:Lot ;
+	:maxQualifiedCardinality "0"^^xsd:nonNegativeInteger .
+
+pproc:FormalizedTender rdfs:subClassOf _:node191dka7vix77 .
+
+_:node191dka7vix77 a :Restriction ;
+	:onProperty pproc:formalizedDate ;
+	:someValuesFrom xsd:date .
+
+_:node191dka7vix78 a :AllDisjointClasses ;
+	:members _:node191dka7vix79 .
+
+_:node191dka7vix79 rdf:first pproc:BuyContract ;
+	rdf:rest _:node191dka7vix80 .
+
+_:node191dka7vix80 rdf:first pproc:LeaseContract ;
+	rdf:rest _:node191dka7vix81 .
+
+_:node191dka7vix81 rdf:first pproc:RentContract ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix82 a :AllDisjointClasses ;
+	:members _:node191dka7vix83 .
+
+_:node191dka7vix83 rdf:first pproc:ContractWithLots ;
+	rdf:rest _:node191dka7vix84 .
+
+_:node191dka7vix84 rdf:first pproc:ContractWithoutLots ;
+	rdf:rest _:node191dka7vix85 .
+
+_:node191dka7vix85 rdf:first pproc:Lot ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix86 a :AllDisjointClasses ;
+	:members _:node191dka7vix87 .
+
+_:node191dka7vix87 rdf:first pproc:AgreementContract ;
+	rdf:rest _:node191dka7vix88 .
+
+_:node191dka7vix88 rdf:first pproc:ConcessionContract ;
+	rdf:rest _:node191dka7vix89 .
+
+_:node191dka7vix89 rdf:first pproc:MixedCapitalCompanyContract ;
+	rdf:rest _:node191dka7vix90 .
+
+_:node191dka7vix90 rdf:first pproc:SharedResultAgreementContract ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix91 a :AllDisjointClasses ;
+	:members _:node191dka7vix92 .
+
+_:node191dka7vix92 rdf:first pproc:AdditionalInformationNotice ;
+	rdf:rest _:node191dka7vix93 .
+
+_:node191dka7vix93 rdf:first pproc:ContractAwardNotice ;
+	rdf:rest _:node191dka7vix94 .
+
+_:node191dka7vix94 rdf:first pproc:ContractNotice ;
+	rdf:rest _:node191dka7vix95 .
+
+_:node191dka7vix95 rdf:first pproc:CorrectionNotice ;
+	rdf:rest _:node191dka7vix96 .
+
+_:node191dka7vix96 rdf:first pproc:FormalizationNotice ;
+	rdf:rest _:node191dka7vix97 .
+
+_:node191dka7vix97 rdf:first pproc:PriorInformationNotice ;
+	rdf:rest rdf:nil .
+
+_:node191dka7vix98 a :AllDisjointClasses ;
+	:members _:node191dka7vix99 .
+
+_:node191dka7vix99 rdf:first pproc:MixedContract ;
+	rdf:rest _:node191dka7vix100 .
+
+_:node191dka7vix100 rdf:first pproc:PrecomercialProcurement ;
+	rdf:rest _:node191dka7vix101 .
+
+_:node191dka7vix101 rdf:first pproc:PrivateContract ;
+	rdf:rest _:node191dka7vix102 .
+
+_:node191dka7vix102 rdf:first pproc:PublicPrivatePartnershipContract ;
+	rdf:rest _:node191dka7vix103 .
+
+_:node191dka7vix103 rdf:first pproc:PublicServicesManagementContract ;
+	rdf:rest _:node191dka7vix104 .
+
+_:node191dka7vix104 rdf:first pproc:PublicWorksConcessionContract ;
+	rdf:rest _:node191dka7vix105 .
+
+_:node191dka7vix105 rdf:first pproc:ServicesContract ;
+	rdf:rest _:node191dka7vix106 .
+
+_:node191dka7vix106 rdf:first pproc:SpecialAdministrativeContract ;
+	rdf:rest _:node191dka7vix107 .
+
+_:node191dka7vix107 rdf:first pproc:SuppliesContract ;
+	rdf:rest _:node191dka7vix108 .
+
+_:node191dka7vix108 rdf:first pproc:WorksContract ;
+	rdf:rest rdf:nil .

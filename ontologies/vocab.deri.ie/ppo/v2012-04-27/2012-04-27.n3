@@ -1,0 +1,225 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ppo: <http://vocab.deri.ie/ppo#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://vocab.deri.ie/ppo> a owl:Ontology , adms:SemanticAsset ;
+	dcterms:title "Privacy Preference Ontology (PPO)" ;
+	dcterms:description "An ontology to create privacy preferences for Linked Data" ;
+	dcterms:modified "2012-04-27"^^xsd:date ;
+	vann:preferredNamespaceUri "http://vocab.deri.ie/ppo#" ;
+	vann:preferredNamespacePrefix "ppo" ;
+	foaf:homepage <http://vocab.deri.ie/ppo.html> ;
+	dcterms:created "2011-02-15"^^xsd:date ;
+	dcterms:publisher "http://vocab.deri.ie/ppo#DERI%2C%20NUI%20Galway" ;
+	dcterms:partOf <http://vocab.deri.ie> ;
+	dcterms:type <http://purl.org/adms/assettype/Ontology> ;
+	dcterms:status <http://purl.org/adms/status/UnderDevelopment> ;
+	dc:creator ppo:alepas , ppo:owesac .
+
+ppo:ttl a adms:SemanticDistribution ;
+	dcterms:FileFormat <http://www.w3.org/1999/02/22-rdf-syntax-ns> ;
+	adms:accessURL "http://vocab.deri.ie/ppo.ttl" ;
+	adms:status <http://purl.org/adms/status/Completed> .
+
+ppo:rdf a adms:SemanticDistribution ;
+	dcterms:FileFormat <http://www.w3.org/1999/02/22-rdf-syntax-ns> ;
+	adms:accessURL "http://vocab.deri.ie/ppo.rdf" ;
+	adms:status <http://purl.org/adms/status/Completed> .
+
+ppo:alepas a foaf:Person ;
+	foaf:name "Alexandre Passant" ;
+	foaf:homepage <http://apassant.net> .
+
+ppo:DERI%2C%20NUI%20Galway a dcterms:Agent ;
+	foaf:member ppo:alepas , ppo:owesac ;
+	foaf:name "DERI, NUI Galway" ;
+	foaf:homepage <http://deri.ie> , <http://www.deri.ie/> .
+
+ppo:owesac a foaf:Person ;
+	foaf:name "Owen Sacco" ;
+	foaf:homepage <http://www.deri.ie/about/team/member/owen_sacco/> .
+
+ppo:AccessSpace a rdfs:Class , owl:Class ;
+	rdfs:label "Access Space" ;
+	rdfs:comment "A space which contains ASK queries that test certain requirements which a requester must have" .
+
+ppo:Condition a rdfs:Class , owl:Class ;
+	rdfs:label "Condition" ;
+	rdfs:comment "A condition contains properties that denote restrictions to the data being protected." .
+
+ppo:PrivacyPreference a rdfs:Class , owl:Class ;
+	rdfs:label "Privacy Preference" ;
+	rdfs:comment "A privacy preference contains statements about restricting RDF data" .
+
+ppo:ConditionOperator a rdfs:Class , owl:Class ;
+	rdfs:label "Condition Operator" ;
+	rdfs:comment "Logical operators for connecting conditions" .
+
+ppo:Operator a rdfs:Class , owl:Class ;
+	rdfs:label "Operator" ;
+	rdfs:comment "The parent logical operator class" .
+
+ppo:And a rdfs:Class , owl:Class ;
+	rdfs:label "And" ;
+	rdfs:comment "Logical conjuction" ;
+	rdfs:subClassOf ppo:Operator .
+
+ppo:Or a rdfs:Class , owl:Class ;
+	rdfs:label "Or" ;
+	rdfs:comment "Logical disjunction" ;
+	rdfs:subClassOf ppo:Operator .
+
+ppo:Not a rdfs:Class , owl:Class ;
+	rdfs:label "Not" ;
+	rdfs:comment "Logical Negation" ;
+	rdfs:subClassOf ppo:Operator .
+
+ppo:Create a rdfs:Class , owl:Class ;
+	rdfs:label "Create" ;
+	rdfs:comment "The Create access control privilege for creating new data elements" .
+
+ppo:Update a rdfs:Class , owl:Class ;
+	rdfs:label "Update" ;
+	rdfs:comment "The Update access control privilege for updating data elements" .
+
+ppo:Delete a rdfs:Class , owl:Class ;
+	rdfs:label "Delete" ;
+	rdfs:comment "The Delete access control privilege for deleting data elements" .
+
+ppo:hasAccessQuery a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "access query" ;
+	rdfs:comment "An ASK query that denotes a pattern which requesters must satisfy" ;
+	rdfs:domain ppo:AccessSpace ;
+	rdfs:range rdfs:Literal .
+
+ppo:appliesToNamedGraph a rdf:Property ;
+	rdfs:label "applies to named graph" ;
+	rdfs:comment "A privacy preference that applies to a trix:Graph. When a privacy preference has this property it means that the privacy conditions apply to a named graph." ;
+	rdfs:domain ppo:PrivacyPreference .
+
+ppo:appliesToResource a rdf:Property ;
+	rdfs:label "applies to resource" ;
+	rdfs:comment "A privacy preference that applies to an rdfs:Resource. When a privacy preference has this property it means that the privacy conditions apply to a resource." ;
+	rdfs:domain ppo:PrivacyPreference ;
+	rdfs:range rdfs:Resource .
+
+ppo:appliesToStatement a rdf:Property ;
+	rdfs:label "applies to statement" ;
+	rdfs:comment "A privacy preference that applies to an rdf:Statement. When a privacy preference has this property it means that the privacy conditions apply to a statement." ;
+	rdfs:domain ppo:PrivacyPreference ;
+	rdfs:range rdf:Statement .
+
+ppo:classAsObject a rdf:Property ;
+	rdfs:label "class as object" ;
+	rdfs:comment "A condition that applies to an instance of a class when it is as an object of a resource." ;
+	rdfs:domain ppo:Condition ;
+	rdfs:range rdfs:Class ;
+	rdfs:subPropertyOf rdf:object .
+
+ppo:classAsSubject a rdf:Property ;
+	rdfs:label "class as subject" ;
+	rdfs:comment "A condition that applies to an instance of a class when it is as a subject of a resource." ;
+	rdfs:domain ppo:Condition ;
+	rdfs:range rdfs:Class ;
+	rdfs:subPropertyOf rdf:subject .
+
+ppo:hasAccess a rdf:Property ;
+	rdfs:label "has access" ;
+	rdfs:comment "The access control privilege which is granted to the user. The access control is described using the Web Access Control vocabulary." ;
+	rdfs:domain ppo:PrivacyPreference .
+
+ppo:hasAccessSpace a rdf:Property ;
+	rdfs:label "has access space" ;
+	rdfs:comment "An access space which a privacy preference has" ;
+	rdfs:domain ppo:PrivacyPreference ;
+	rdfs:range ppo:AccessSpace .
+
+ppo:hasCondition a rdf:Property ;
+	rdfs:label "has condition" ;
+	rdfs:comment "The conditions which a privacy preference has" ;
+	rdfs:domain ppo:PrivacyPreference ;
+	rdfs:range ppo:Condition .
+
+ppo:hasLiteral a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "has literal" ;
+	rdfs:comment "A condition that applies to an rdfs:Literal." ;
+	rdfs:domain ppo:Condition ;
+	rdfs:range rdfs:Literal .
+
+ppo:hasProperty a rdf:Property ;
+	rdfs:label "has property" ;
+	rdfs:comment "A condition that applies to an rdf:Property." ;
+	rdfs:domain ppo:Condition ;
+	rdfs:range rdf:Property .
+
+ppo:resourceAsObject a rdf:Property ;
+	rdfs:label "resource as object" ;
+	rdfs:comment "A condition that applies to a URI when it is an object of an rdfs:Resource." ;
+	rdfs:domain ppo:Condition ;
+	rdfs:range rdfs:Resource ;
+	rdfs:subPropertyOf rdf:object .
+
+ppo:resourceAsSubject a rdf:Property ;
+	rdfs:label "resource as subject" ;
+	rdfs:comment "A condition that applies to a URI when it is a subject of an rdfs:Resource." ;
+	rdfs:domain ppo:Condition ;
+	rdfs:range rdfs:Resource ;
+	rdfs:subPropertyOf rdf:subject .
+
+ppo:hasNoAccess a rdf:Property ;
+	rdfs:label "has no access" ;
+	rdfs:comment "The access control privilege which is not granted to the user. The access control is described using the Web Access Control vocabulary." ;
+	rdfs:domain ppo:PrivacyPreference .
+
+ppo:appliesToDataset a rdf:Property ;
+	rdfs:label "applies to dataset" ;
+	rdfs:comment " A privacy preference that applies to a void:Dataset." ;
+	rdfs:domain ppo:PrivacyPreference .
+
+ppo:appliesToContext a rdf:Property ;
+	rdfs:label "applies to context" ;
+	rdfs:comment "A privacy preference that applies to a context in a quad (as specified by N-Quads http://sw.deri.org/2008/07/n-quads/) " ;
+	rdfs:domain ppo:PrivacyPreference ;
+	rdfs:range rdfs:Resource .
+
+ppo:hasAccessAgent a rdf:Property ;
+	rdfs:label "has access agent" ;
+	rdfs:comment "An agent who is granted or denied the access control privilege(s)" ;
+	rdfs:domain ppo:AccessSpace ;
+	rdfs:range foaf:Agent .
+
+ppo:hasConditionOperator a rdf:Property ;
+	rdfs:label "has condition operator" ;
+	rdfs:comment "A condition operator which a privacy preference has" ;
+	rdfs:domain ppo:PrivacyPreference ;
+	rdfs:range ppo:ConditionOperator .
+
+ppo:conditionOperatorOf a rdf:Property ;
+	rdfs:label "condition operator of" ;
+	rdfs:comment "The condition which a logical operator is applied to" ;
+	rdfs:domain ppo:ConditionOperator ;
+	rdfs:range ppo:Condition .
+
+ppo:hasLogicalOperator a rdf:Property ;
+	rdfs:label "has logical operator" ;
+	rdfs:comment "The logical operator which a Condition Operator has" ;
+	rdfs:domain ppo:ConditionOperator ;
+	rdfs:range ppo:Operator .
+
+ppo:hasChildConditionOperator a rdf:Property ;
+	rdfs:label "has child condition operator" ;
+	rdfs:comment "Nested Condition Operators" ;
+	rdfs:domain ppo:ConditionOperator ;
+	rdfs:range ppo:ConditionOperator .
+
+ppo:hasPriority a rdf:Property ;
+	rdfs:label "has priority" ;
+	rdfs:comment "A weighted value that specifies the priority (rank) of a privacy preference" ;
+	rdfs:domain ppo:PrivacyPreference .

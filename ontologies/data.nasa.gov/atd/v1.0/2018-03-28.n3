@@ -1,0 +1,993 @@
+# baseURI: https://data.nasa.gov/ontologies/atmonto/data
+# imports: https://data.nasa.gov/ontologies/atmonto/ATM
+# prefix: data
+
+@prefix atm: <https://data.nasa.gov/ontologies/atmonto/ATM#> .
+@prefix data: <https://data.nasa.gov/ontologies/atmonto/data#> .
+@prefix doc: <https://data.nasa.gov/ontologies/atmonto/documentation#> .
+@prefix eqp: <https://data.nasa.gov/ontologies/atmonto/equipment#> .
+@prefix gen: <https://data.nasa.gov/ontologies/atmonto/general#> .
+@prefix nas: <https://data.nasa.gov/ontologies/atmonto/NAS#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix spl: <http://spinrdf.org/spl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+atm:AircraftFlowCapacity
+  rdfs:subClassOf data:IntervalData ;
+.
+nas:Airport
+  rdfs:subClassOf data:METARreportingStation ;
+.
+nas:RunwayVisibleRangeMeasurement
+  rdfs:subClassOf data:IntervalData ;
+.
+nas:StandAloneWeatherStation
+  rdfs:subClassOf data:METARreportingStation ;
+.
+<https://data.nasa.gov/ontologies/atmonto/data>
+  rdf:type owl:Ontology ;
+  owl:imports <https://data.nasa.gov/ontologies/atmonto/ATM> ;
+  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+.
+data:ASPMmeteorologicalCondition
+  rdf:type owl:Class ;
+  rdfs:comment "Meteorological conditions reported as part of the ASPM hourly airport data. Includes sky, wind, visibility and weather components."^^xsd:string ;
+  rdfs:label "ASPM meteorological condition"^^xsd:string ;
+  rdfs:subClassOf data:MeteorologicalCondition ;
+.
+data:AirportData
+  rdf:type owl:Class ;
+  rdfs:comment "Represents a collection of airport data for a given time period, as reported by the FAA's ASPM system."^^xsd:string ;
+  rdfs:label "Airport Data"^^xsd:string ;
+  rdfs:subClassOf data:IntervalData ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "I"^^xsd:string
+              "V"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:aspmFlightRules ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:aspmFlightRules ;
+    ] ;
+.
+data:CloudLayer
+  rdf:type owl:Class ;
+  rdfs:comment "Represents a cloud layer, providing its bottom and top altitude, its cloud type, and its degree of coverage."^^xsd:string ;
+  rdfs:label "Cloud layer"^^xsd:string ;
+  rdfs:subClassOf gen:SequencedItem ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "clear"^^xsd:string
+              "few clouds"^^xsd:string
+              "scattered clouds"^^xsd:string
+              "broken clouds"^^xsd:string
+              "overcast"^^xsd:string
+              "vertical visibility layer"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:cloudCover ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "towering cumulus"^^xsd:string
+              "cumulonimbus"^^xsd:string
+              "altocumulus castellanus"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:cloudType ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:cloudCover ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:cloudType ;
+    ] ;
+.
+data:CloudLayerProfile
+  rdf:type owl:Class ;
+  rdfs:comment "A sequence of cloud layers, ordered from the ground upward. Represents cloud conditions."^^xsd:string ;
+  rdfs:label "Cloud layer profile"^^xsd:string ;
+  rdfs:subClassOf gen:Sequence ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom data:CloudLayer ;
+      owl:onProperty gen:hasFirstItem ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom data:CloudLayer ;
+      owl:onProperty gen:hasLastItem ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom data:CloudLayer ;
+      owl:onProperty gen:hasSequencedItem ;
+    ] ;
+.
+data:FixCapacity
+  rdf:type owl:Class ;
+  rdfs:comment "A subclass of interval-based data representing the maximum controllable number of aircraft flowing through a fix per some interval of time, given weather and other air traffic control constraints."^^xsd:string ;
+  rdfs:label "Fix capacity"^^xsd:string ;
+  rdfs:subClassOf atm:AircraftCapacity ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom atm:NavigationFix ;
+      owl:onProperty atm:flowMeasurementRegion ;
+    ] ;
+.
+data:FixFlow
+  rdf:type owl:Class ;
+  rdfs:comment "A subclass of interval-based data representing the number of aircraft flowing through a fix per some interval of time."^^xsd:string ;
+  rdfs:domain data:FixFlow ;
+  rdfs:label "Fix flow"^^xsd:string ;
+  rdfs:subClassOf atm:AircraftFlow ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom atm:NavigationFix ;
+      owl:onProperty atm:flowMeasurementRegion ;
+    ] ;
+.
+data:IntervalData
+  rdf:type owl:Class ;
+  rdfs:comment "State data that has a temporal lifetime: a start and end time."^^xsd:string ;
+  rdfs:label "Interval data"^^xsd:string ;
+.
+data:METARreport
+  rdf:type owl:Class ;
+  rdfs:comment "Meteorological conditions provided in a periodic METAR report. Includes sky, wind, visibility and weather components."^^xsd:string ;
+  rdfs:label "METAR Report"^^xsd:string ;
+  rdfs:subClassOf data:MeteorologicalCondition ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "AUTO"^^xsd:string
+              "COR"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:metarReportModifier ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "METAR"^^xsd:string
+              "SPECI"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:metarReportType ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:metarReportModifier ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:metarReportType ;
+    ] ;
+.
+data:METARreportingStation
+  rdf:type owl:Class ;
+  rdfs:comment "A weather reporting station that provides sensor data for a METAR report. Many airports are also METAR reporting stations."^^xsd:string ;
+  rdfs:label "METARreporting station"^^xsd:string ;
+  rdfs:subClassOf owl:Thing ;
+.
+data:MetCondition
+  rdf:type owl:Class ;
+  rdfs:comment "A superclass over the various types of meteorological conditions."^^xsd:string ;
+  rdfs:label "Meteorological condition"^^xsd:string ;
+.
+data:MeteorologicalCondition
+  rdf:type owl:Class ;
+  rdfs:comment "A representation of the meteorological status for the specified time period, including sky, wind, visibility, and weather subcomponents."^^xsd:string ;
+  rdfs:label "Meteorological condition"^^xsd:string ;
+  rdfs:subClassOf data:IntervalData ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "observed"^^xsd:string
+              "forecast"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:meteorologicalConditionStatus ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:meteorologicalConditionStatus ;
+    ] ;
+.
+data:RunwayReport
+  rdfs:comment "A report on runway conditions during a specified interval of time, focusing on runway status (open vs. closed) and surface friction during winter precipitation."^^xsd:string ;
+.
+data:RunwayStatusData
+  rdf:type owl:Class ;
+  rdfs:comment "This class describes a temporally-dependent set of data about the operating status of a physical runway."^^xsd:string ;
+  rdfs:label "Runway status data"^^xsd:string ;
+  rdfs:subClassOf data:IntervalData ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "open"^^xsd:string
+              "closed"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:runwayStatus ;
+    ] ;
+.
+data:SectorCapacity
+  rdf:type owl:Class ;
+  rdfs:comment "A subclass of interval-based data representing the maximum number of controllable aircraft flowing through a sector during some interval of time."^^xsd:string ;
+  rdfs:label "Sector capacity"^^xsd:string ;
+  rdfs:subClassOf atm:AircraftCapacity ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom nas:Sector ;
+      owl:onProperty atm:flowMeasurementRegion ;
+    ] ;
+.
+data:SectorFlow
+  rdf:type owl:Class ;
+  rdfs:comment "A subclass of interval-based data representing the number of aircraft flowing through a sector during some interval of time."^^xsd:string ;
+  rdfs:label "Sector flow"^^xsd:string ;
+  rdfs:subClassOf atm:AircraftFlow ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom nas:Sector ;
+      owl:onProperty atm:flowMeasurementRegion ;
+    ] ;
+.
+data:SkyCondition
+  rdf:type owl:Class ;
+  rdfs:comment "The current or forecast sky conditions, including the ceiling and information on the cloud layers present."^^xsd:string ;
+  rdfs:label "Sky condition"^^xsd:string ;
+  rdfs:subClassOf data:MetCondition ;
+.
+data:SurfaceWindCondition
+  rdf:type owl:Class ;
+  rdfs:comment "The current or forecast surface wind conditions."^^xsd:string ;
+  rdfs:label "Surface wind condition"^^xsd:string ;
+  rdfs:subClassOf data:MetCondition ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "fixed"^^xsd:string
+              "varyingWithinRange"^^xsd:string
+              "variable"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:surfaceWindDirectionStatus ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:surfaceWindDirectionStatus ;
+    ] ;
+.
+data:TAFmeteorologicalCondition
+  rdf:type owl:Class ;
+  rdfs:comment "Meteorological conditions reported as part of a TAF forecast. Includes sky, wind, visibility and weather components for current and future time periods."^^xsd:string ;
+  rdfs:label "TAF meteorological condition"^^xsd:string ;
+  rdfs:subClassOf data:MeteorologicalCondition ;
+  rdfs:subClassOf gen:SequencedItem ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "rapid"^^xsd:string
+              "gradual"^^xsd:string
+              "transient"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:rapidityOfWeatherChange ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:cardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:rapidityOfWeatherChange ;
+    ] ;
+.
+data:TAFreport
+  rdf:type owl:Class ;
+  rdfs:comment "Meteorological conditions provided in a periodic TAF forecast. Includes sky, wind, visibility and weather components."^^xsd:string ;
+  rdfs:label "TAF report"^^xsd:string ;
+  rdfs:subClassOf data:IntervalData ;
+  rdfs:subClassOf gen:Sequence ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom data:TAFmeteorologicalCondition ;
+      owl:onProperty gen:hasFirstItem ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom data:TAFmeteorologicalCondition ;
+      owl:onProperty gen:hasLastItem ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom data:TAFmeteorologicalCondition ;
+      owl:onProperty gen:hasSequencedItem ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "routine"^^xsd:string
+              "amended"^^xsd:string
+              "corrected"^^xsd:string
+              "delayed"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:tafReportType ;
+    ] ;
+.
+data:VisibilityCondition
+  rdf:type owl:Class ;
+  rdfs:comment "The current or forecast surface visibility conditions at a given airport or other reporting station."^^xsd:string ;
+  rdfs:label "Visibility condition"^^xsd:string ;
+  rdfs:subClassOf data:MetCondition ;
+.
+data:WITIproperty
+  rdf:type owl:Class ;
+  rdfs:comment "A class of different properties relating to WITI (Weather-Impacted Traffic Index)"^^xsd:string ;
+  rdfs:label "WITIproperty"^^xsd:string ;
+  rdfs:subClassOf owl:DatatypeProperty ;
+.
+data:WeatherCondition
+  rdf:type owl:Class ;
+  rdfs:comment "The current or forecast weather conditions at a given airport or other reporting station."^^xsd:string ;
+  rdfs:label "Weather condition"^^xsd:string ;
+  rdfs:subClassOf data:MetCondition ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "drizzle"^^xsd:string
+              "rain"^^xsd:string
+              "snow"^^xsd:string
+              "snow grains"^^xsd:string
+              "ice crystals"^^xsd:string
+              "ice pellets"^^xsd:string
+              "hail"^^xsd:string
+              "small hail and/or snow pellets"^^xsd:string
+              "unknown precipitation"^^xsd:string
+              "mist"^^xsd:string
+              "fog"^^xsd:string
+              "smoke"^^xsd:string
+              "volcanic ash"^^xsd:string
+              "widespread dust"^^xsd:string
+              "sand"^^xsd:string
+              "haze"^^xsd:string
+              "spray"^^xsd:string
+              "well-developed dust/sand whirls"^^xsd:string
+              "squalls"^^xsd:string
+              "funnel cloud"^^xsd:string
+              "tornado/waterspout"^^xsd:string
+              "sandstorm"^^xsd:string
+              "duststorm"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:weatherPhenomenon ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "immediate proximity"^^xsd:string
+              "in vicinity"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:weatherProximity ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "light"^^xsd:string
+              "moderate"^^xsd:string
+              "heavy"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:weatherIntensity ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom [
+          rdf:type rdfs:Datatype ;
+          owl:oneOf (
+              "shallow"^^xsd:string
+              "partial"^^xsd:string
+              "patchy"^^xsd:string
+              "low drifting"^^xsd:string
+              "blowing"^^xsd:string
+              "shower"^^xsd:string
+              "thunderstorm"^^xsd:string
+              "freezing"^^xsd:string
+            ) ;
+        ] ;
+      owl:onProperty data:weatherQualifier ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:maxCardinality "1"^^xsd:int ;
+      owl:onProperty data:weatherIntensity ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+      owl:onProperty data:weatherProximity ;
+    ] ;
+.
+data:airportArrivalRate
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The arrival rate per hour set by the airport during the specified interval. This is the total number of aircraft that can arrive on all runways combined during an hour."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "airport arrival rate"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:airportDepartureRate
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The departure rate per hour set by the airport during the specified interval. This is the total number of aircraft that can depart from all runways combined during an hour."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "airport departure rate"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:arrivalDemand
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The number of aircraft intending to arrive at an airport during the specified time period."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "arrival demand"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:aspmFlightRules
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Indicates what flight rule conditions the airport is operating under during the specified time period (I-instrument, V-Visual)."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "ASPM Flight Rules"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:associatedMETARreportingStation
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links a METAR report to the reporting station where the data were collected."^^xsd:string ;
+  rdfs:domain data:METARreport ;
+  rdfs:label "METAR reporting station"^^xsd:string ;
+  rdfs:range data:METARreportingStation ;
+  owl:inverseOf data:hasMETARreport ;
+.
+data:baseAltitude
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "For a given homogeonous cloud layer, this is the lowest altitude."^^xsd:string ;
+  rdfs:domain data:CloudLayer ;
+  rdfs:label "base altitude"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:ceiling
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The vertical visibility (in feet) measured from the ground to the lowest cloud layer reported as broken or overcast."^^xsd:string ;
+  rdfs:domain data:SkyCondition ;
+  rdfs:label "ceiling"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:cloudCover
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "For a given homogenous cloud layer, the type of cloud cover present: clear, few clouds, scattered clouds, broken clouds, overcast, vertical visibility layer."^^xsd:string ;
+  rdfs:domain data:CloudLayer ;
+  rdfs:label "cloud cover"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:cloudType
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "For a given homogeneous cloud layer, the type of cloud present: towering cumulus, cumulonimbus, altocumulus castellanus."^^xsd:string ;
+  rdfs:domain data:CloudLayer ;
+  rdfs:label "cloud type"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:dataIntervalEndDay
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links temporally-dependent data to the ending day of its period of validity."^^xsd:string ;
+  rdfs:domain data:IntervalData ;
+  rdfs:label "data interval end day"^^xsd:string ;
+  rdfs:range nas:NASday ;
+.
+data:dataIntervalEndTime
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "For temporally-dependent data, the ending time of the data's period of validity."^^xsd:string ;
+  rdfs:domain data:IntervalData ;
+  rdfs:label "data interval end time"^^xsd:string ;
+  rdfs:range xsd:dateTime ;
+.
+data:dataIntervalStartDay
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links temporally-dependent data to the starting day of its period of validity."^^xsd:string ;
+  rdfs:domain data:IntervalData ;
+  rdfs:label "data interval start day"^^xsd:string ;
+  rdfs:range nas:NASday ;
+.
+data:dataIntervalStartTime
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "For temporally-dependent data, the starting time of the data's period of validity."^^xsd:string ;
+  rdfs:domain data:IntervalData ;
+  rdfs:label "data interval start time"^^xsd:string ;
+  rdfs:range xsd:dateTime ;
+.
+data:departureDemand
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The number of aircraft intending to depart during the specified time period."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "departure demand"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:dewpoint
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The dewpoint recorded as part of a meteorological condition report."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "dewpoint"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:edctArrivalHold
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "EDCT (Estimated Departure Clearance Time) hold minutes at other airports arriving this airport."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "EDCT arrival hold"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:edctDepartureHold
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "EDCT (Estimated Departure Clearance Time) hold minutes at other airports departing this airport."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "EDCT departure hold"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:etmsArrivals
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Count of arrivals at airport based on ETMS (Enhanced Traffic Management System) data."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "etms arrivals"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:etmsDepartures
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Count of departures at airport based on ETMS (Enhanced Traffic Management System) data."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "etms arrivals"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:forecastIssueTime
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The time that the TAF (Terminal Area Forecast) report was issued."^^xsd:string ;
+  rdfs:domain data:TAFreport ;
+  rdfs:label "forecast issue time"^^xsd:string ;
+  rdfs:range xsd:dateTime ;
+.
+data:forecastingAirport
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links to the airport for which the TAF (Terminal Area Forecast) report was compiled."^^xsd:string ;
+  rdfs:domain data:TAFreport ;
+  rdfs:label "forecasting airport"^^xsd:string ;
+  rdfs:range nas:Airport ;
+  owl:inverseOf data:hasTAFreport ;
+.
+data:hasASPMmetCondition
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links meteorological information to the collection of temporally-dependent data associated with an airport."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "has ASPMmet condition"^^xsd:string ;
+  rdfs:range data:ASPMmeteorologicalCondition ;
+.
+data:hasAirportData
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links an airport to a collection of temporally-dependent data pertinent to the airport conditions, including a variety of data collected in the ASPM system."^^xsd:string ;
+  rdfs:domain nas:Airport ;
+  rdfs:label "has airport data"^^xsd:string ;
+  rdfs:range data:AirportData ;
+.
+data:hasCloudLayerProfile
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links a sky condition to a representation of the cloud layers present."^^xsd:string ;
+  rdfs:domain data:SkyCondition ;
+  rdfs:label "has cloud layer profile"^^xsd:string ;
+  rdfs:range data:CloudLayerProfile ;
+.
+data:hasMETARreport
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates a METAR reporting station with METAR weather reports generated for that station."^^xsd:string ;
+  rdfs:domain data:METARreportingStation ;
+  rdfs:label "has METARreport"^^xsd:string ;
+  rdfs:range data:METARreport ;
+  owl:inverseOf data:associatedMETARreportingStation ;
+.
+data:hasSkyCondition
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates a meteorological condition with the details of the sky and cloud conditions at the reporting location.."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "has sky condition"^^xsd:string ;
+  rdfs:range data:SkyCondition ;
+.
+data:hasSurfaceWindCondition
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates a meteorological condition with the details of the surface wind conditions at the reporting location.."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "has surface wind condition"^^xsd:string ;
+  rdfs:range data:SurfaceWindCondition ;
+.
+data:hasTAFreport
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates an airport with TAF weather reports generated for that airport."^^xsd:string ;
+  rdfs:domain nas:Airport ;
+  rdfs:label "has TAFreport"^^xsd:string ;
+  rdfs:range data:TAFreport ;
+  owl:inverseOf data:forecastingAirport ;
+.
+data:hasVisibilityCondition
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates a meteorological condition with the details of the surface visibility conditions at the reporting location.."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "has visibility condition"^^xsd:string ;
+  rdfs:range data:VisibilityCondition ;
+.
+data:hasWeatherCondition
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates a meteorological condition with the details of the weather conditions at the reporting location."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "has weather condition"^^xsd:string ;
+  rdfs:range data:WeatherCondition ;
+.
+data:highWindWITIdaily
+  rdf:type data:WITIproperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The high wind weather impacted traffic index (WITI) computed for the airport during the specified timeframe (daily). WITI is an estimate of the number of flights potentially impacted due to inclement weather based on the scheduled traffic demand for a defined geographic region of the air traffic system (in this case, an airport). If the winds at the airport are above a set threshold, then the high wind WITI is set to the number of scheduled arrivals for that timeframe."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "high wind WITI daily"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:highWindWITIhourly
+  rdf:type data:WITIproperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The high wind weather impacted traffic index (WITI) computed for the airport during the specified timeframe (hourly). WITI is an estimate of the number of flights potentially impacted due to inclement weather based on the scheduled traffic demand for a defined geographic region of the air traffic system (in this case, an airport). If the winds at the airport are above a set threshold, then the high wind WITI is set to the number of scheduled arrivals for that timeframe."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "high wind WITI hourly"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:hourlyPrecipitation
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Recorded hourly precipitation rate at the measurement station in inches."^^xsd:string ;
+  rdfs:domain data:WeatherCondition ;
+  rdfs:label "hourly precipitation"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:limitedVisibilityDistance
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The visibility distance (in miles) at the reporting station. Only applicable if data:unlimitedVisibility is False."^^xsd:string ;
+  rdfs:domain data:VisibilityCondition ;
+  rdfs:label "limited visibility distance"^^xsd:string ;
+  rdfs:range xsd:float ;
+  rdfs:seeAlso data:unlimitedVisibility ;
+.
+data:lowCeilingWITIdaily
+  rdf:type data:WITIproperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The low ceiling weather impacted traffic index (WITI) computed for the airport during the specified timeframe (daily). WITI is an estimate of the number of flights potentially impacted due to inclement weather based on the scheduled traffic demand for a defined geographic region of the air traffic system (in this case, an airport). If the ceiling at the airport is below a set threshold, then the low ceiling WITI is set to the number of scheduled arrivals for that timeframe."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "low ceiling WITI daily"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:lowCeilingWITIhourly
+  rdf:type data:WITIproperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The low ceiling weather impacted traffic index (WITI) computed for the airport during the specified timeframe (hourly). WITI is an estimate of the number of flights potentially impacted due to inclement weather based on the scheduled traffic demand for a defined geographic region of the air traffic system (in this case, an airport). If the ceiling at the airport is below a set threshold, then the low ceiling WITI is set to the number of scheduled arrivals for that timeframe."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "low ceiling WITI hourly"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:lowVisibilityWITIdaily
+  rdf:type data:WITIproperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The low visibility weather impacted traffic index (WITI) computed for the airport during the specified timeframe (daily). WITI is an estimate of the number of flights potentially impacted due to inclement weather based on the scheduled traffic demand for a defined geographic region of the air traffic system (in this case, an airport). If the visibility at the airport is below a set threshold, then the low visibility WITI is set to the number of scheduled arrivals for that timeframe."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "low visibility WITI daily"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:lowVisibilityWITIhourly
+  rdf:type data:WITIproperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The low visibility weather impacted traffic index (WITI) computed for the airport during the specified timeframe (hourly). WITI is an estimate of the number of flights potentially impacted due to inclement weather based on the scheduled traffic demand for a defined geographic region of the air traffic system (in this case, an airport). If the visibility at the airport is below a set threshold, then the low visibility WITI is set to the number of scheduled arrivals for that timeframe."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "low visibility WITI hourly"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:metConditionProbability
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "For a forecast meteorological condition, the percent probability associated with the forecast occurrence."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "met condition probability"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:metarReportModifier
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Automation status information pertaining to a METAR report: AUTO indicates a fully automated report with no human intervention; COR indicates a corrected observation; no modifier indicates either human observer/reporter or automated report with human oversight."^^xsd:string ;
+  rdfs:domain data:METARreport ;
+  rdfs:label "metar report modifier"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:metarReportString
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Entire text of METAR report."^^xsd:string ;
+  rdfs:domain data:METARreport ;
+  rdfs:label "METAR report string"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:metarReportType
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "METAR report type indicator specifies whether this report is a regularly scheduled hourly report (METAR) or a special unscheduled report (SPECI). SPECIs are issued more frequently than hourly when adverse weather conditions prevail."^^xsd:string ;
+  rdfs:domain data:METARreport ;
+  rdfs:label "metar report type"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:metarStationHasPrecipitationSensor
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "A boolean value indicating whether the reporting METAR station has a precipitation sensor."^^xsd:string ;
+  rdfs:domain data:METARreport ;
+  rdfs:label "metar station has precipitation sensor"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+data:meteorologicalConditionStatus
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "An indicator of whether the meteorological condition is based on actual observations (observed) or on future projections (forecast)."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "meteorological condition status"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:oagArrivalDelay
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Minutes of OAG (Official Airline Guide) based arrival delay in excess of 15 minutes."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "OAG arrival delay"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:oagGateDepartureDelay
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Minutes of OAG (Official Airline Guide) based gate departure delay in excess of 15 minutes."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "OAG gate departure delay"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:rapidityOfWeatherChange
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Indicates how fast change is expected from the prior state to the forecast meteorological conditions: \"rapid\" , \"gradual\" , \"transient\"."^^xsd:string ;
+  rdfs:domain data:TAFmeteorologicalCondition ;
+  rdfs:label "rapidity of weather change"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:runwayReportedOn
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Associates a runway status report with the physical runway being measured."^^xsd:string ;
+  rdfs:domain data:RunwayStatusData ;
+  rdfs:label "runway reported on"^^xsd:string ;
+  rdfs:range nas:PhysicalRunway ;
+.
+data:runwayStatus
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "An indicator of whether the runway is open or closed during the specified period."^^xsd:string ;
+  rdfs:domain data:RunwayStatusData ;
+  rdfs:label "runway status"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:runwaySurfaceFriction
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "The surface friction (mu) value of the runway for the specified period. Runway surface friction is directly relevant to the braking action which will be available to an aircraft decelerating after touch down, or after a decision to reject a take off."^^xsd:string ;
+  rdfs:domain data:RunwayStatusData ;
+  rdfs:label "runway surface friction (mu)"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:runwayVisibleRange
+  rdf:type owl:FunctionalProperty ;
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Links a visibility condition to a runway visible range measurement class instance."^^xsd:string ;
+  rdfs:domain data:VisibilityCondition ;
+  rdfs:label "runway visible range"^^xsd:string ;
+  rdfs:range nas:RunwayVisibleRangeMeasurement ;
+.
+data:scheduledArrivals
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Count of scheduled arrivals. (Most probably from OAG (Official Airline Guide))"^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "scheduled arrivals"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:scheduledDepartures
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Count of scheduled departures. (Most probably from OAG (Official Airline Guide))"^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "scheduled departures"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:seaLevelPressure
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Sea level pressure measured under the associated meteorological conditions."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "sea level pressure"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:surfaceGustSpeed
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Surface gust speed measured under the associated surface wind conditions."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "surface gust speed"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:surfaceTemperature
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Surface temperature measured under the associated meteorological conditions."^^xsd:string ;
+  rdfs:domain data:MeteorologicalCondition ;
+  rdfs:label "surface temperature"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:surfaceWindDirectionStatus
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Information about the direction of the wind, either fixed, varyingWithinRange, or variable."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "surface wind direction status"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:surfaceWindSpeed
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The speed in knots of the surface wind."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "surface wind speed"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:tafReportString
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The full text of the entire TAF report."^^xsd:string ;
+  rdfs:domain data:TAFreport ;
+  rdfs:label "taf report string"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:tafReportType
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Type of Terminal Area Forecast (TAF) report: a routine report (TAF), an amended report (AMD), a corrected report (COR), or a delayed report (RTD). An amended TAF is issued when the current TAF no longer adequately describes the ongoing weather or the forecaster feels the TAF is not representative of the current or expected weather."^^xsd:string ;
+  rdfs:domain data:TAFreport ;
+  rdfs:label "taf report type"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:topAltitude
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The top altitude of a homogenous cloud layer."^^xsd:string ;
+  rdfs:domain data:CloudLayer ;
+  rdfs:label "top altitude"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+data:totalAirborneDelay
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:comment "Total airborne flight delay in minutes for this airport during the specified period."^^xsd:string ;
+  rdfs:domain data:AirportData ;
+  rdfs:label "total airborne delay"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:unlimitedVisibility
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "A binary property indicating whether the visibility conditions are unlimited."^^xsd:string ;
+  rdfs:domain data:VisibilityCondition ;
+  rdfs:label "unlimited visibility"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+data:weatherIntensity
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "An indicator of the intensity of the weather: light, moderate, heavy."^^xsd:string ;
+  rdfs:domain data:WeatherCondition ;
+  rdfs:label "weather intensity"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:weatherPhenomenon
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Describes the type of weather phenomena experienced during the specified period: drizzle, rain, snow, snow grains, ice crystals, ice pellets, hail, small hail and/or snow pellets, unknown precipitation, mist, fog, smoke, volcanic ash, widespread dust, sand, haze, spray, well-developed dust/sand whirls, squalls, funnel cloud, tornado/waterspout, sandstorm, duststorm"^^xsd:string ;
+  rdfs:domain data:WeatherCondition ;
+  rdfs:label "weather phenomenon"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:weatherProximity
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Describes the location of the weather phenomena in relation to the reporting station: immediate proximity or in vicinity."^^xsd:string ;
+  rdfs:domain data:WeatherCondition ;
+  rdfs:label "weather proximity"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:weatherQualifier
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "An additional qualifier describing the reported weather phenomenon: shallow, partial, patchy, low drifting, blowing, shower, thunderstorm, freezing."^^xsd:string ;
+  rdfs:domain data:WeatherCondition ;
+  rdfs:label "weather qualifier"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+data:windDirectionFixed
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Steady wind direction (in degrees), when winds are fixed and not variable."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "fixed wind direction"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:windDirectionLower
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Lower bound (in degrees) of two bounding values describing a variable wind direction."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "lower wind direction"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:windDirectionUpper
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Upper bound (in degrees) of two bounding values describing a variable wind direction."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "lower wind direction"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+data:windShearHeight
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The height in hundreds of feet above ground level associated with a wind shear phenomenon."^^xsd:string ;
+  rdfs:domain data:SurfaceWindCondition ;
+  rdfs:label "wind shear height"^^xsd:string ;
+  rdfs:range xsd:float ;
+.
+<http://spinrdf.org/arg#class>
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf sp:arg ;
+.
+<http://spinrdf.org/arg#property>
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf sp:arg ;
+.

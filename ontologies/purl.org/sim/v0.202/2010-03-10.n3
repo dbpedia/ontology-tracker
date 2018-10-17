@@ -1,0 +1,193 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix mo: <http://purl.org/ontology/mo/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sim: <http://purl.org/ontology/similarity/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wordnet: <http://xmlns.com/wordnet/1.6/> .
+
+<http://purl.org/ontology/similarity/> a owl:Ontology ;
+	dc:title "The Similarity Ontology" ;
+	rdfs:comment "This is an ontology to express associations between entities whether artists, tracks, albums, compositional styles, sections of tracks, playing techniques or anything.  It is designed with the hope of being easily extensible, extremely expressive, and still computationally reasonable."@en ;
+	owl:versionInfo "Revision: 0.2.02" ;
+	vs:term_status "testing" ;
+	dc:creator <http://kurtisrandom.com/foaf.rdf#kurtjx> , <http://moustaki.org/foaf.rdf#moustaki> .
+
+sim:Association a rdfs:Class , owl:Class ;
+	rdfs:comment "An abstract class to define some association between things.  Entities share an association if they are somehow inter-connected.  Generally a <b>directed association</b> should have at lease one <code>sim:subject</code> property and one <code>sim:object</code> property <b>or</b> an <b>undirected association</b> should have at least two <code>sim:element</code> properties, however this is not a requirement and intentionally left out of the model."@en ;
+	rdfs:label "Association" ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+_:node171h1k1mvx1 a owl:Restriction ;
+	owl:onProperty sim:method ;
+	owl:maxCardinality "1"^^xsd:integer .
+
+sim:Association owl:equivalentClass _:node171h1k1mvx1 .
+
+sim:AssociationMethod a rdfs:Class , owl:Class ;
+	rdfs:comment "A concept for representing the method used to derive association or similarity statements."@en ;
+	rdfs:label "Association Method" ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:Influence a rdfs:Class , owl:Class ;
+	rdfs:comment "An abstract class indicating a directed association of influence where the subject entity has influenced the object entity."@en ;
+	rdfs:label "Influence" ;
+	rdfs:subClassOf sim:Association ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:Similarity a rdfs:Class , owl:Class ;
+	rdfs:comment "An abstract class to define similarity between two or more things.  Entities share a similarity if they share some common characteristics of interest.  A similarity is a special type of association."@en ;
+	rdfs:label "Similarity" ;
+	rdfs:subClassOf sim:Association ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:Network a rdfs:Class , owl:Class ;
+	rdfs:comment "A network is a grouping of <code>sim:Association</code>s.  The associations that comprise a network are specified using a series of <code>sim:edge</code> predicates."@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	rdfs:label "Network" ;
+	rdfs:subClassOf owl:Thing ;
+	vs:term_status "testing" .
+
+sim:domain a owl:ObjectProperty ;
+	rdfs:comment "Specifies appropriate object types for the <code>sim:subject</code> predicate for <code>sim:Association</code>s bound to the given <code>sim:AssociationMethod</code>.  The presence of this predicate implies the given <code>sim:AssociationMethod</code> begets <i>directed</i> associations." ;
+	rdfs:domain sim:AssociationMethod ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	rdfs:label "domain" ;
+	vs:term_status "testing" .
+
+sim:range a owl:ObjectProperty ;
+	rdfs:comment "Specifies appropriate object types for the <code>sim:object</code> predicate for <code>sim:Association</code>s bound to the given <code>sim:AssociationMethod</code>.  The presence of this predicate implies the given <code>sim:AssociationMethod</code> begets <i>directed</i> associations." ;
+	rdfs:domain sim:AssociationMethod ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	rdfs:label "domain" ;
+	vs:term_status "testing" .
+
+sim:scope a owl:ObjectProperty ;
+	rdfs:comment "Specifies appropriate object types for the <code>sim:element</code> predicate for <code>sim:Association</code>s bound to the given <code>sim:AssociationMethod</code>.  The presence of this predicate implies the given <code>sim:AssociationMethod</code> begets <i>undirected</i> associations." ;
+	rdfs:domain sim:AssociationMethod ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	rdfs:label "domain" ;
+	vs:term_status "testing" .
+
+sim:edge a owl:ObjectProperty ;
+	rdfs:comment "Specifies an edge in a <code>sim:Network</code>"@en ;
+	rdfs:domain sim:Network ;
+	rdfs:range sim:Association ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	rdfs:label "edge" ;
+	vs:term_status "testing" .
+
+sim:association a owl:ObjectProperty ;
+	rdfs:comment "Binds a sim:Association to an arbitrary thing."@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	rdfs:label "association" ;
+	rdfs:range sim:Association ;
+	vs:term_status "testing" .
+
+sim:description a owl:ObjectProperty ;
+	rdfs:comment "Specifies some description that discloses the process or set of processes used to derive association statements for the given <code>AssociationMethod</code>.  This property is depricated in favor of the more appropriately named <code>sim:workflow</code> property."@en ;
+	rdfs:domain sim:AssociationMethod ;
+	rdfs:label "description" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	owl:equivalentProperty sim:workflow ;
+	vs:term_status "depricated" .
+
+sim:workflow a owl:ObjectProperty ;
+	rdfs:comment "Specifies a workflow that discloses the process or set of processes used to derive association statements for the given <code>sim:AssociationMethod</code>"@en ;
+	rdfs:domain sim:AssociationMethod ;
+	rdfs:label "workflow" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:element a owl:ObjectProperty ;
+	rdfs:comment "Specifies an entity involved in the given <code>sim:Association</code> and implies the given association is undirected."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "element" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:grounding a owl:ObjectProperty ;
+	rdfs:comment "Binds an <code>sim:Association</code> statement directly instantiated N3-Tr formulae or some other workflow graph which enabled the association derivation."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "grounding" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:method a owl:ObjectProperty ;
+	rdfs:comment "Specifies the <code>sim:AssociationMethod</code> used to derive a particular Association statement.  This should be used when the process for deriving association statements can be described further."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "method" ;
+	rdfs:range sim:AssociationMethod ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:object a owl:ObjectProperty ;
+	rdfs:comment "Specifies the object of a <code>sim:Association</code> implying a directed association where \"subject is associated to object\" but the reverse association does not necessarily exist, and if it does exist, it is not an equivalent association."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "object" ;
+	rdfs:subPropertyOf sim:element ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:subject a owl:ObjectProperty ;
+	rdfs:comment "Specifies the subject of an <code>sim:Association</code> implying a directed association where \"subject is associated to object\" but the reverse association does not necessarily exist, and if it does exist, it is not an equivalent association."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "subject" ;
+	rdfs:subPropertyOf sim:element ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:weight a owl:DatatypeProperty ;
+	rdfs:comment "A weighting value bound to a <code>sim:Association</code> where a value of 0 implies two elements are not at all associated and a higher value implies a closer association."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "weight" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+sim:distance a owl:DatatypeProperty ;
+	rdfs:comment "A weighting value for an Association where a value of 0 implies two elements are the same individual."@en ;
+	rdfs:domain sim:Association ;
+	rdfs:label "distance" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/similarity/> ;
+	vs:term_status "testing" .
+
+<http://moustaki.org/foaf.rdf#moustaki> a foaf:Person .
+
+<http://kurtisrandom.com/foaf.rdf#kurtjx> a foaf:Person .
+
+owl:Thing a owl:Class ;
+	rdfs:isDefinedBy <http://www.w3.org/2002/07/owl#> .
+
+foaf:Person a owl:Class , rdfs:Class ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+dc:creator a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://purl.org/dc/terms/> .
+
+dc:title a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://purl.org/dc/terms/> .
+
+vs:term_status a owl:AnnotationProperty ;
+	rdfs:isDefinedBy <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+
+_:node171h1k1mvx2 a owl:Restriction ;
+	owl:onProperty sim:method ;
+	owl:maxCardinality "1"^^xsd:integer .
+
+sim:Association owl:equivalentClass _:node171h1k1mvx2 .

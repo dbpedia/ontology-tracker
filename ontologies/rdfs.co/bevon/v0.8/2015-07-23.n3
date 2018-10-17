@@ -1,0 +1,2254 @@
+#
+#  Copyright © 2013-2015 James G. Kim Some Rights Reserved.
+#
+#  This work is licensed under the Creative Commons Attribution 4.0
+#  International License. To view a copy of this license, visit
+#  http://creativecommons.org/licenses/by/4.0/ or send a letter to Creative
+#  Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041,
+#  USA.
+#
+#  This copyright applies only to the Beverage Ontology Specification and
+#  accompanying documentation in RDF or Turtle; it does not apply to data
+#  formats, ontology terms, or technology. Regarding underlying technology,
+#  Beverage Ontology relies heavily on W3C's RDF technology, an open Web
+#  standard that can be freely used by anyone.
+#
+#  This ontology was first initiated at the 2nd Linked Data Party, which was
+#  held at the National Library of Korea on July 5th, 2013. For more
+#  information about the event, visit http://dakchigo.kr/events/part2/.
+#
+#  Most of the descriptions given here are from Wikipedia or from the websites
+#  of the related products.
+#
+
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix status: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix voaf: <http://purl.org/vocommons/voaf#> .
+@prefix dcam: <http://purl.org/dc/dcam/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix fowl: <http://www.w3.org/TR/2003/PR-owl-guide-20031209/food#> .
+@prefix food: <http://data.lirmm.fr/ontologies/food#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix pto: <http://www.productontology.org/id/> .
+@prefix dbpedia: <http://dbpedia.org/ontology/> .
+@prefix yago: <http://dbpedia.org/class/yago/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix wine: <http://www.w3.org/TR/2003/PR-owl-guide-20031209/wine#> .
+@prefix whisky: <http://purl.org/vocab/whisky/terms/> .
+@prefix bevon: <http://rdfs.co/bevon/> .
+@prefix container: <http://rdfs.co/bevon/container/> .
+@prefix beverage: <http://rdfs.co/bevon/beverage/> .
+
+# Ontology ####################################################################
+
+<http://rdfs.co/bevon/0.8>
+  a owl:Ontology , adms:SemanticAsset , voaf:Vocabulary , cc:Work ;
+  dcterms:title "BEVON: Beverage Ontology"@en ;
+  dcterms:description """
+    Beverage Ontology is a Web vocabulary for describing beverages, mainly
+    alcoholic.
+    """@en ;
+  rdfs:comment """
+    <div>
+      The master version of this vocabulary is maintained in <a
+      href="https://github.com/jgkim/bevon">the GitHub repository</a> so others
+      can contribute edits and improvements.
+    </div>
+    """ ;
+  rdfs:comment """
+    Most of the descriptions given here are from Wikipedia or from the websites
+    of the related products.
+    """@en ;
+  vann:termGroup
+    bevon:CoreGroup ,
+    bevon:RelationGroup ,
+    bevon:ContainerGroup ,
+    bevon:BeerGroup ,
+    bevon:WhiskyGroup ,
+    bevon:CocktailGroup ,
+    bevon:WineGroup ;
+  rdfs:seeAlso <https://github.com/jgkim/bevon> ;
+  dcterms:creator <http://jayg.me/> ;
+  dcterms:publisher <http://jayg.me/> ;
+  vann:preferredNamespaceUri "http://rdfs.co/bevon/" ;
+  vann:preferredNamespacePrefix "bevon" ;
+  dcterms:type <http://purl.org/adms/assettype/Ontology> ;
+  adms:status <http://purl.org/adms/status/UnderDevelopment> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2015-07-23+09:00"^^xsd:date ;
+  dcterms:identifier "http://rdfs.co/bevon/0.8" ;
+  dcterms:isVersionOf <http://rdfs.co/bevon/> ;
+  dcterms:replaces <http://rdfs.co/bevon/0.7> ;
+  owl:versionInfo "0.8" ;
+  skos:changeNote [
+    rdf:value """
+      Minor revisions for documentation
+      """@en ;
+    dcterms:date "2014-03-01+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] , [
+    rdf:value """
+      Added a link to the GitHub repository
+      """@en ;
+    dcterms:date "2014-03-03+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] , [
+    rdf:value """
+      Added term groups for core, relation, container, beer, whisky and
+      cocktail terms
+      """@en ;
+    dcterms:date "2014-03-06+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] , [
+    rdf:value """
+      Made the vocabulary as a type of voaf:Vocabulary
+      """@en ;
+    dcterms:date "2015-07-27+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] ;
+  skos:historyNote [
+    rdf:value """
+      Changed bevon:FermentedBeverages to bevon:FermentedBeverage for the
+      consistency
+      """@en ;
+    dcterms:date "2014-03-06+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] , [
+    rdf:value """
+      Changed the semantics of bevon:Wine to be a superclass of wine:Wine
+      """@en ;
+    dcterms:date "2014-03-07+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] , [
+    rdf:value """
+      Added bevon:RedWine, bevon:WhiteWine and bevon:FruitWine
+      """@en ;
+    dcterms:date "2014-03-07+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] , [
+    rdf:value """
+      Fixed the sameAs relationship of bevon:Whisky
+      """@en ;
+    dcterms:date "2015-07-23+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] ;
+  vann:example _:example1 , _:example2 ;
+  dcterms:hasFormat
+    <http://rdfs.co/bevon/0.8/html> ,
+    <http://rdfs.co/bevon/0.8/ttl> ,
+    <http://rdfs.co/bevon/0.8/rdf> ;
+  dcterms:rights "Copyright © 2013-2015 James G. Kim Some Rights Reserved." ;
+  cc:license <http://creativecommons.org/licenses/by/4.0/> .
+
+<http://rdfs.co/bevon/0.8/html> dcterms:format [
+  a dcterms:MediaType ;
+  dcam:memberOf dcterms:IMT ;
+  rdf:value "text/html" ;
+  rdfs:label "HTML"@en ;
+  rdfs:seeAlso <http://www.iana.org/assignments/media-types/text/html>
+] .
+
+<http://rdfs.co/bevon/0.8/ttl> dcterms:format [
+  a dcterms:MediaType ;
+  dcam:memberOf dcterms:IMT ;
+  rdf:value "text/turtle" ;
+  rdfs:label "Turtle"@en ;
+  rdfs:seeAlso <http://www.iana.org/assignments/media-types/text/turtle>
+] .
+
+<http://rdfs.co/bevon/0.8/rdf> dcterms:format [
+  a dcterms:MediaType ;
+  dcam:memberOf dcterms:IMT ;
+  rdf:value "application/rdf+xml" ;
+  rdfs:label "RDF/XML"@en ;
+  rdfs:seeAlso
+    <http://www.iana.org/assignments/media-types/application/rdf+xml>
+] .
+
+<http://jayg.me/> a foaf:Person ;
+  foaf:name "James G. Kim"@en , "김보람"@ko ;
+  foaf:mbox_sha1sum "f03421e94730da58e8943d3a1d2c4c6b02898e14" ;
+  foaf:homepage <http://jayg.org/> .
+
+# Term Groups #################################################################
+
+bevon:CoreGroup a rdf:Bag ;
+  rdfs:label "Core Terms"@en ;
+  rdfs:comment """
+    These classes and properties form the core of BEVON. They describe
+    characteristics of beverages in relatively broad terms.
+    """@en ;
+  rdf:_1 bevon:Beverage ;
+  rdf:_2 bevon:AlcoholicBeverage ;
+  rdf:_3 bevon:FermentedBeverage ;
+  rdf:_4 bevon:DistilledBeverage ;
+  rdf:_5 bevon:NonAlcoholicBeverage ;
+  rdf:_6 bevon:MixedDrink ;
+  rdf:_7 bevon:Container ;
+  rdf:_8 bevon:Aging ;
+  rdf:_9 bevon:FermentationBase ;
+  rdf:_10 bevon:Distillery ;
+  rdf:_11 bevon:name ;
+  rdf:_12 bevon:description ;
+  rdf:_13 bevon:origin ;
+  rdf:_14 bevon:manufacturer ;
+  rdf:_15 bevon:color ;
+  rdf:_16 bevon:launch ;
+  rdf:_17 bevon:abv ;
+  rdf:_18 bevon:proof ;
+  rdf:_19 bevon:container ;
+  rdf:_20 bevon:aging ;
+  rdf:_21 bevon:fermentation_base ;
+  rdf:_22 bevon:distillery ;
+  rdf:_23 bevon:ingredient .
+
+bevon:RelationGroup a rdf:Bag ;
+  rdfs:label "Relation Terms"@en ;
+  rdfs:comment """
+    These properties are used for describing relations between beverages.
+    """@en ;
+  rdf:_1 bevon:related ;
+  rdf:_2 bevon:similar ;
+  rdf:_3 bevon:variant ;
+  rdf:_4 bevon:variantOf ;
+  rdf:_5 bevon:non_alcoholic_version .
+
+bevon:ContainerGroup a rdf:Bag ;
+  rdfs:label "Container Terms"@en ;
+  rdfs:comment """
+    These classes and properties are used to describe beverage containers.
+    """@en ;
+  rdf:_1 bevon:Container ;
+  rdf:_2 bevon:BeverageCan ;
+  rdf:_3 bevon:GlassBottle ;
+  rdf:_4 bevon:PlasticBottle ;
+  rdf:_5 bevon:Keg ;
+  rdf:_6 bevon:volume .
+
+bevon:BeerGroup a rdf:Bag ;
+  rdfs:label "Beer Terms"@en ;
+  rdfs:comment """
+    In addition to the BEVON core terms, there are a number of terms for use
+    when describing beverages categorized under Beer.
+    """@en ;
+  rdf:_1 bevon:Beer ;
+  rdf:_2 bevon:Ale ;
+  rdf:_3 bevon:PaleAle ;
+  rdf:_4 bevon:IrishRedAle ;
+  rdf:_5 bevon:Porter ;
+  rdf:_6 bevon:Stout ;
+  rdf:_7 bevon:DryStout ;
+  rdf:_8 bevon:Lager ;
+  rdf:_9 bevon:Dunkel ;
+  rdf:_10 bevon:PaleLager ;
+  rdf:_11 bevon:Pilsner ;
+  rdf:_12 bevon:NonAlcoholicBeer ;
+  rdf:_13 bevon:Brewery ;
+  rdf:_14 bevon:BeerBottle ;
+  rdf:_15 bevon:Longneck ;
+  rdf:_16 bevon:BeerKeg ;
+  rdf:_17 bevon:ibu ;
+  rdf:_18 bevon:srm ;
+  rdf:_19 bevon:brewery .
+
+bevon:WhiskyGroup a rdf:Bag ;
+  rdfs:label "Whisky Terms"@en ;
+  rdfs:comment """
+    These classes describe types of whiskies.
+    """@en ;
+  rdf:_1 bevon:Whisky ;
+  rdf:_2 bevon:AmericanWhiskey ;
+  rdf:_3 bevon:BourbonWhiskey ;
+  rdf:_4 bevon:CanadianWhisky ;
+  rdf:_5 bevon:IrishWhiskey ;
+  rdf:_6 bevon:JapaneseWhisky ;
+  rdf:_7 bevon:ScotchWhisky ;
+  rdf:_8 bevon:MaltWhisky ;
+  rdf:_9 bevon:SingleMaltWhisky ;
+  rdf:_10 bevon:SingleMaltScotch ;
+  rdf:_11 bevon:SpeysideSingleMalt .
+
+bevon:WineGroup a rdf:Bag ;
+  rdfs:label "Wine Terms"@en ;
+  rdfs:comment """
+    These classes describe types of wines.
+    """@en ;
+  rdf:_1 bevon:Wine ;
+  rdf:_2 bevon:RedWine ;
+  rdf:_3 bevon:WhiteWine ;
+  rdf:_4 bevon:FruitWine .
+
+bevon:CocktailGroup a rdf:Bag ;
+  rdfs:label "Cocktail Terms"@en ;
+  rdfs:comment """
+    These classes and properties are for describing beverages categorized under
+    Mixed Drink.
+    """@en ;
+  rdf:_1 bevon:Cocktail ;
+  rdf:_2 bevon:Highball ;
+  rdf:_3 bevon:BeerCocktail ;
+  rdf:_4 bevon:Shandy ;
+  rdf:_5 bevon:Mocktail .
+
+# Classes #####################################################################
+
+bevon:Beverage a owl:Class ;
+  rdfs:subClassOf food:Food , fowl:PotableLiquid , pto:Drink ;
+  skos:prefLabel "Beverage"@en , "음료"@ko ;
+  skos:altLabel "Drink"@en ;
+  skos:definition """
+    A beverage, or drink, is a kind of liquid which is specifically prepared
+    for human consumption.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Beverage> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:AlcoholicBeverage a owl:Class ;
+  rdfs:subClassOf bevon:Beverage , pto:Alcoholic_beverage ;
+  owl:disjointWith bevon:NonAlcoholicBeverage ;
+  skos:prefLabel "Alcoholic Beverage"@en , "알코올 음료"@ko ;
+  skos:definition """
+     An alcoholic beverage is a drink and psychoactive drug containing
+     ethyl alcohol which is commonly referred to as ethanol.
+     """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Alcoholic_beverage> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:NonAlcoholicBeverage a owl:Class ;
+  rdfs:subClassOf bevon:Beverage , pto:Non-alcoholic_beverage ;
+  owl:disjointWith bevon:AlcoholicBeverage ;
+  skos:prefLabel "Non-alcoholic Beverage"@en , "비알코올 음료"@ko ;
+  skos:definition """
+     A non-alcoholic beverage (also known as a virgin drink) is defined
+     in the U.S. as a beverage that contains less than 0.5% alcohol by volume.
+     """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Non-alcoholic_beverage> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:FermentedBeverage a owl:Class ;
+  rdfs:subClassOf bevon:AlcoholicBeverage ;
+  skos:prefLabel "Fermented Beverage"@en , "양조주"@ko ;
+  skos:altLabel "발효주"@ko ;
+  skos:definition """
+    A fermented beverage is a drink produced by fermenting grain, fruit, or
+    vegetables.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:DistilledBeverage a owl:Class ;
+  rdfs:subClassOf bevon:AlcoholicBeverage , pto:Distilled_beverage ;
+  skos:prefLabel "Distilled Beverage"@en , "증류주"@ko ;
+  skos:altLabel "Spirit"@en , "Liquor"@en ;
+  skos:definition """
+     A distilled beverage, spirit, or liquor is an alcoholic beverage
+     containing ethanol that is produced by distilling (i.e., concentrating
+     by distillation) ethanol produced by means of fermenting grain, fruit,
+     or vegetables.
+     """@en ;
+  rdfs:comment """
+     This excludes undistilled fermented beverages such as beer, wine, and
+     cider.
+     """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Distilled_beverage> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:MixedDrink a owl:Class ;
+  rdfs:subClassOf bevon:Beverage , pto:Mixed_drink ;
+  skos:prefLabel "Mixed Drink"@en , "혼합 음료"@ko ;
+  skos:definition """
+    A mixed drink is a beverage in which two or more ingredients are mixed.
+    """@en ;
+  rdfs:comment """
+    Some mixed drinks are alcoholic beverages that contain liquor; others are
+    non-alcoholic.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Mixed_drink> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Cocktail a owl:Class ;
+  rdfs:subClassOf bevon:MixedDrink , bevon:AlcoholicBeverage , pto:Cocktail ;
+  owl:disjointWith bevon:Mocktail ;
+  skos:prefLabel "Cocktail"@en , "칵테일"@ko ;
+  skos:definition """
+    A cocktail is a mixed drink that contains alcohol, including mixers, mixed
+    shots, etc.
+    """@en ;
+  rdfs:comment """
+    Cocktails were originally a mixture of spirits, sugar, water, and bitters.
+    It is now often used for almost any mixed drink that contains alcohol,
+    including mixers, mixed shots, etc. A cocktail today usually contains one
+    or more kinds of spirit and one or more mixers, such as soda or fruit
+    juice. Additional ingredients may be sugar, honey, milk, cream, and various
+    herbs.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Cocktail> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Mocktail a owl:Class ;
+  rdfs:subClassOf bevon:MixedDrink , bevon:NonAlcoholicBeverage ;
+  owl:disjointWith bevon:Cocktail ;
+  skos:prefLabel "Mocktail"@en , "목테일"@ko ;
+  skos:definition """
+    Mocktails are mock cocktails, or those that do not contain any alcohol.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Beer a owl:Class ;
+  rdfs:subClassOf bevon:FermentedBeverage , pto:Beer ;
+  owl:disjointWith bevon:NonAlcoholicBeer ;
+  skos:prefLabel "Beer"@en , "맥주"@ko ;
+  skos:definition """
+    Beer is an alcoholic beverage produced by the saccharification of starch
+    and fermentation of the resulting sugar.
+    """@en ;
+  rdfs:comment """
+    The starch and saccharification enzymes are often derived from malted
+    cereal grains, most commonly malted barley and malted wheat.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Beer> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Ale a owl:Class ;
+  rdfs:subClassOf bevon:Beer , pto:Ale ;
+  skos:prefLabel "Ale"@en , "에일"@ko ;
+  skos:definition """
+    Ale is a type of beer brewed from malted barley using a warm-fermentation
+    with a strain of brewers' yeast.
+    """@en ;
+  rdfs:comment """
+    The yeast will ferment the beer quickly, giving it a sweet, full bodied and
+    fruity taste.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Ale> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:PaleAle a owl:Class ;
+  rdfs:subClassOf bevon:Ale , pto:Pale_ale ;
+  skos:prefLabel "Pale Ale"@en , "페일 에일"@ko ;
+  skos:definition """
+    Pale ale is a beer made by warm fermentation using predominantly pale malt.
+    """@en ;
+  rdfs:comment """
+    It is one of the world's major beer styles.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Pale_ale> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:IrishRedAle a owl:Class ;
+  rdfs:subClassOf bevon:PaleAle ;
+  skos:prefLabel "Irish Red Ale"@en , "아이리쉬 레드 에일"@ko ;
+  skos:definition """
+    Irish red ale, red ale, or Irish ale is a name used by brewers in Ireland.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Irish_red_ale> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Porter a owl:Class ;
+  rdfs:subClassOf bevon:Ale , pto:English_porter ;
+  skos:prefLabel "Porter"@en , "포터"@ko ;
+  skos:altLabel "English Porter"@en ;
+  skos:definition """
+    Porter is a dark style of beer originating in London in the 18th century,
+    descended from brown beer, a well hopped beer made from brown malt.
+    """@en ;
+  rdfs:comment """
+    The name came about as a result of its popularity with street and river
+    porters.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/English_porter> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Stout a owl:Class ;
+  rdfs:subClassOf bevon:Porter , pto:Stout ;
+  skos:prefLabel "Stout"@en , "스타우트"@ko ;
+  skos:altLabel "Strong Porter"@en ;
+  skos:definition """
+    Stout is a dark beer made using roasted malt or roasted barley, hops, water
+    and yeast.
+    """@en ;
+  rdfs:comment """
+    Stouts were traditionally the generic term for the strongest or stoutest
+    porters, typically 7% or 8%, produced by a brewery.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Stout> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:DryStout a owl:Class ;
+  rdfs:subClassOf bevon:Stout ;
+  skos:prefLabel "Dry Stout"@en , "드라이 스타우트"@ko ;
+  skos:altLabel "Irish Stout"@en ;
+  skos:definition """
+    Irish stout or dry stout is very dark or rich in color and it often has a
+    "roasted" or coffee-like taste.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Lager a owl:Class ;
+  rdfs:subClassOf bevon:Beer , pto:Lager ;
+  skos:prefLabel "Lager"@en , "라거"@ko ;
+  skos:definition """
+    Lager is a type of beer that is fermented and conditioned at low
+    temperatures.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Lager> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Dunkel a owl:Class ;
+  rdfs:subClassOf bevon:Lager , pto:Dunkel ;
+  skos:prefLabel "Dunkel"@en , "둔켈"@ko ;
+  skos:altLabel "Dunkles"@en ;
+  skos:definition """
+    Dunkel, or Dunkles, is a word used for several types of dark German lager.
+    """@en ;
+  rdfs:comment """
+    Dunkel is the German word meaning dark, and dunkel beers typically range in
+    color from amber to dark reddish brown. They are characterized by their
+    smooth malty flavor.
+    """@en ;
+  rdfs:seeAlso <https://en.wikipedia.org/wiki/Dunkel> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:PaleLager a owl:Class ;
+  rdfs:subClassOf bevon:Lager , pto:Pale_lager ;
+  skos:prefLabel "Pale Lager"@en , "페일 라거"@ko ;
+  skos:definition """
+    Pale lager is a very pale to golden-colored beer with a well attenuated
+    body and a varying degree of noble hop bitterness.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Pale_lager> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Pilsner a owl:Class ;
+  rdfs:subClassOf bevon:PaleLager , pto:Pilsner ;
+  skos:prefLabel "Pilsner"@en , "필스너"@ko ;
+  skos:altLabel "Pilsener"@en , "Pils"@en ;
+  skos:definition """
+    Pilsner (also pilsener or simply pils) is a type of pale lager.
+    """@en ;
+  rdfs:comment """
+    It took its name from the city of Pilsen (Plzeň, Bohemia, Czech Republic,
+    where it was first produced in 1842).
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Pilsner> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:NonAlcoholicBeer a owl:Class ;
+  rdfs:subClassOf bevon:NonAlcoholicBeverage , pto:Low-alcohol_beer ;
+  owl:disjointWith bevon:Beer ;
+  skos:prefLabel "Non-alcoholic Beer"@en , "비알코올 맥주"@ko ;
+  skos:altLabel "Low-alcoholic Beer"@en ;
+  skos:definition """
+    Non-alcohol beer (also called light beer, low-alcoholic beer, small beer,
+    small ale, or near-beer) is beer with low alcohol content or no alcohol,
+    which aim to reproduce the taste of beer without the inebriating effects of
+    standard alcoholic brews.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Low-alcohol_beer> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Sake a owl:Class ;
+  rdfs:subClassOf bevon:FermentedBeverage , pto:Sake ;
+  skos:prefLabel "Sake"@en , "Saké"@fr , "사케"@ko ;
+  skos:altLabel "Rice Wine"@en ;
+  skos:definition """
+    Sake or saké is an alcoholic beverage of Japanese origin that is made from
+    fermented rice.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Sake> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Wine a owl:Class ;
+  rdfs:subClassOf bevon:FermentedBeverage , pto:Wine ;
+  skos:prefLabel "Wine"@en , "Vin"@fr, "와인"@ko ;
+  skos:definition """
+    Wine is an alcoholic beverage made from fermented grapes or other fruits.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Wine> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-07+09:00"^^xsd:date ;
+  skos:historyNote [
+    rdf:value """
+      Changed the semantics of bevon:Wine not to be the same as wine:Wine
+      """@en ;
+    dcterms:date "2014-03-07+09:00"^^xsd:date ;
+    dcterms:creator <http://jayg.me/>
+  ] ;
+  status:term_status "testing"@en .
+
+bevon:RedWine a owl:Class ;
+  owl:sameAs wine:RedWine ;
+  rdfs:subClassOf bevon:Wine , pto:Red_wine ;
+  skos:prefLabel "Red Wine"@en , "Vin Rouge"@fr , "레드 와인"@ko ;
+  skos:definition """
+    Red wine is a type of wine made from dark-coloured (black) grape varieties.
+    """@en ;
+  rdfs:comment """
+    The actual colour of the wine can range from intense violet, typical of
+    young wines, through to brick red for mature wines and brown for older red
+    wines.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Red_wine> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2014-03-07+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-07+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:WhiteWine a owl:Class ;
+  owl:sameAs wine:WhiteWine ;
+  rdfs:subClassOf bevon:Wine , pto:White_wine ;
+  skos:prefLabel "White Wine"@en , "Vin Blanc"@fr , "화이트 와인"@ko ;
+  skos:definition """
+    White wine is a wine whose colour can be straw-yellow, yellow-green, or
+    yellow-gold coloured.
+    """@en ;
+  rdfs:comment """
+    It is produced by the alcoholic fermentation of the non-coloured pulp of
+    grapes which may have a white or black skin. It is treated so as to
+    maintain a yellow transparent colour in the final product.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/White_wine> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2014-03-07+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-07+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:FruitWine a owl:Class ;
+  rdfs:subClassOf bevon:Wine , pto:Fruit_wine ;
+  skos:prefLabel "Fruit Wine"@en , "Vin de Sureau"@fr , "과실주"@ko ;
+  skos:definition """
+    Fruit wines are fermented alcoholic beverages made from a variety of base
+    ingredients (other than grapes); they may also have additional flavors
+    taken from fruits, flowers, and herbs.
+    """@en ;
+  rdfs:comment """
+    This definition is sometimes broadened to include any fermented alcoholic
+    beverage except beer. For historical reasons, mead, cider, and perry are
+    also excluded from the definition of fruit wine.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Fruit_wine> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2014-03-07+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-07+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Brandy a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Brandy ;
+  skos:prefLabel "Brandy"@en , "브랜디"@ko ;
+  skos:definition """
+    Brandy (from brandywine, derived from Dutch brandewijn—"burnt wine") is a
+    spirit produced by distilling wine.
+    """@en ;
+  rdfs:comment """
+    Brandy generally contains 35–60% alcohol by volume (70–120 US proof) and is
+    typically taken as an after-dinner drink. Some brandies are aged in wooden
+    casks, some are colored with caramel coloring to imitate the effect of
+    aging, and some brandies are produced using a combination of both aging and
+    coloring.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Brandy> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Cognac a owl:Class ;
+  rdfs:subClassOf bevon:Brandy , pto:Cognac ;
+  skos:prefLabel "Cognac"@en , "코냑"@ko ;
+  skos:definition """
+    Cognac, named after the town of Cognac in France, is a variety of brandy.
+    """@en ;
+  rdfs:comment """
+    It is produced in the wine-growing region surrounding the town from which
+    it takes its name, in the French Departements of Charente and
+    Charente-Maritime.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Cognac> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Pisco a owl:Class ;
+  rdfs:subClassOf bevon:Brandy , pto:Pisco ;
+  skos:prefLabel "Pisco"@en , "피스코"@ko ;
+  skos:definition """
+    Pisco is a colorless or yellowish-to-amber colored grape brandy produced
+    in winemaking regions of Peru and Chile.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Pisco> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Gin a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Gin ;
+  skos:prefLabel "Gin"@en , "진"@ko ;
+  skos:definition """
+    Gin is a spirit which derives its predominant flavor from juniper berries
+    (Juniperus communis).
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Gin> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Rum a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Rum ;
+  skos:prefLabel "Rum"@en , "Ron"@es , "럼"@ko ;
+  skos:definition """
+    Rum is a distilled alcoholic beverage made from sugarcane byproducts, such
+    as molasses, or directly from sugarcane juice, by a process of fermentation
+    and distillation.
+    """@en ;
+  rdfs:comment """
+    The distillate, a clear liquid, is then usually aged in
+    oak barrels.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Rum> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Soju a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Soju ;
+  skos:prefLabel "Soju"@en , "소주"@ko ;
+  skos:definition """
+    Soju is a distilled beverage native to Korea.
+    """@en ;
+  rdfs:comment """
+    Its taste is comparable to vodka, though often slightly sweeter due to
+    sugars added in the manufacturing process.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Soju> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:DilutedSoju a owl:Class ;
+  rdfs:subClassOf bevon:Soju ;
+  owl:disjointWith bevon:DistilledSoju ;
+  skos:prefLabel "Diluted Soju"@en , "희석식 소주"@ko ;
+  skos:definition """
+    Diluted Soju is made by mixing pure ethanol distilled from various grains,
+    such as potatoes, wheat, barley, sweet potatoes, or tapioca, with water and
+    flavoring.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:DistilledSoju a owl:Class ;
+  rdfs:subClassOf bevon:Soju ;
+  owl:disjointWith bevon:DilutedSoju ;
+  skos:prefLabel "Distilled Soju"@en , "증류식 소주"@ko ;
+  skos:definition """
+    Distilled Soju is manufactured traditionally by distillation from grains,
+    mainly rice.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Tequila a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Tequila ;
+  skos:prefLabel "Tequila"@en , "테킬라"@ko ;
+  skos:definition """
+    Tequila is a distilled beverage made from the blue agave plant, primarily
+    in the area surrounding the city of Tequila, 65 kilometres (40 mi)
+    northwest of Guadalajara, and in the highlands (Los Altos) of the western
+    Mexican state of Jalisco.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Tequila> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:TequilaBlanco a owl:Class ;
+  rdfs:subClassOf bevon:Tequila ;
+  skos:prefLabel "Tequila Blanco"@en , "테킬라 블랑코"@ko ;
+  skos:altLabel "Tequila Plata"@en ;
+  skos:definition """
+    Tequila Blanco ("white") or Plata ("silver") is a white spirit, un-aged and
+    bottled or stored immediately after distillation, or aged less than two
+    months in stainless steel or neutral oak barrels.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Vodka a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Vodka ;
+  skos:prefLabel "Vodka"@en , "водка"@ru , "Wódka"@pl , "보드카"@ko ;
+  skos:definition """
+    Vodka is a distilled beverage composed primarily of water and ethanol,
+    sometimes with traces of impurities and flavorings.
+    """@en ;
+  rdfs:comment """
+    Vodka is made by the distillation of fermented substances such as grains,
+    potatoes, or sometimes fruits or sugar.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Vodka> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Whisky a owl:Class ;
+  owl:sameAs whisky:Whisky ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Whisky ;
+  skos:prefLabel "Whisky"@en , "위스키"@en ;
+  skos:altLabel "Whiskey"@en ;
+  skos:definition """
+    Whisky or whiskey is a type of distilled alcoholic beverage made from
+    fermented grain mash.
+    """@en ;
+  rdfs:comment """
+    Different grains are used for different varieties, including barley, malted
+    barley, rye, malted rye, wheat, and corn. Whisky is typically aged in
+    wooden casks, made generally of charred white oak.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Whisky> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2015-07-23+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:AmericanWhiskey a owl:Class ;
+  rdfs:subClassOf bevon:Whisky , pto:American_whiskey ;
+  skos:prefLabel "American Whiskey"@en , "아메리칸 위스키"@ko ;
+  skos:altLabel "American Whisky"@en ;
+  skos:definition """
+    American whiskey is a distilled beverage produced in the United States from
+    a fermented mash of cereal grain.
+    """@en ;
+  rdfs:comment """
+    The production and labeling of American whiskey are governed by Title 27 of
+    the U.S. Code of Federal Regulations.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/American_whiskey> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:BourbonWhiskey a owl:Class ;
+  rdfs:subClassOf bevon:AmericanWhisky , pto:Bourbon_whiskey ;
+  skos:prefLabel "Bourbon Whiskey"@en , "버번 위스키"@ko ;
+  skos:altLabel "Bourbon Whisky"@en ;
+  skos:definition """
+    Bourbon whiskey is a type of American whiskey – a barrel-aged distilled
+    spirit made primarily from corn.
+    """@en ;
+  rdfs:comment """
+    The name of the spirit derives from its historical association with an area
+    known as Old Bourbon, around what is now Bourbon County, Kentucky (which,
+    in turn, was named after the French House of Bourbon royal family). It has
+    been produced since the 18th century. While it may be made anywhere in the
+    United States, it is strongly associated with the American South in
+    general, and Kentucky in particular.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Bourbon_whiskey> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:CanadianWhisky a owl:Class ;
+  rdfs:subClassOf bevon:Whisky , pto:Canadian_whisky ;
+  skos:prefLabel "Canadian Whisky"@en , "캐내디언 위스키"@ko ;
+  skos:altLabel "Canadian Whiskey"@en ;
+  skos:definition """
+    Canadian whisky is a type of whisky produced in Canada.
+    """@en ;
+  rdfs:comment """
+    Most Canadian whiskies are blended multi-grain liquors containing a large
+    percentage of corn spirits, and are typically lighter and smoother than
+    other whisky styles.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Canadian_whisky> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:IrishWhiskey a owl:Class ;
+  rdfs:subClassOf bevon:Whisky , pto:Irish_whiskey ;
+  skos:prefLabel "Irish Whiskey"@en , "Fuisce"@ga , "아이리쉬 위스키"@ko ;
+  skos:altLabel "Irish Whisky"@en ;
+  skos:definition """
+    Irish whiskey is whisky made in Ireland.
+    """@en ;
+  rdfs:comment """
+    Key regulations defining Irish whiskey and its production are established
+    by the Irish Whiskey Act of 1980.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Irish_whiskey> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:JapaneseWhisky a owl:Class ;
+  rdfs:subClassOf bevon:Whisky , pto:Japanese_whisky ;
+  skos:prefLabel "Japanese Whisky"@en , "재패니즈 위스키"@ko ;
+  skos:altLabel "Japanese Whiskey"@en ;
+  skos:definition """
+    Japanese whisky is whisky made in Japan.
+    """@en ;
+  rdfs:comment """
+    Whisky production in Japan began around 1870, but the first commercial
+    production was in 1924 upon the opening of the country's first distillery,
+    Yamazaki. Broadly speaking the style of Japanese whisky is more similar to
+    that of Scotch whisky than Irish, American, or Canadian styles of whisky,
+    and thus the spelling typically follows the Scottish convention (omitting
+    the letter "e").
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Japanese_whisky> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:ScotchWhisky a owl:Class ;
+  rdfs:subClassOf bevon:Whisky , pto:Scotch_whisky ;
+  skos:prefLabel "Scotch Whisky"@en , "스카치 위스키"@ko ;
+  skos:altLabel "Scotch Whiskey"@en ;
+  skos:definition """
+    Scotch whisky (often referred to simply as "Scotch") is malt whisky or grain
+    whisky made in Scotland.
+    """@en ;
+  rdfs:comment """
+    All Scotch whisky was originally made from malt barley. Commercial
+    distilleries began introducing whisky made from wheat and rye in the late
+    eighteenth century.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Scotch_whisky> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:MaltWhisky a owl:Class ;
+  rdfs:subClassOf bevon:Whisky , pto:Malt_whisky ;
+  skos:prefLabel "Malt Whisky"@en , "몰트 위스키"@ko ;
+  skos:altLabel "Malt Whiskey"@en ;
+  skos:definition """
+    Malt whisky is whisky that is made from a fermented mash produced primarily
+    from a malted grain.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Malt_whisky> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:SingleMaltWhisky a owl:Class ;
+  rdfs:subClassOf bevon:MaltWhisky , pto:Single_malt_whisky ;
+  skos:prefLabel "Single Malt Whisky"@en , "싱글 몰트 위스키"@ko ;
+  skos:altLabel "Single Malt Whiskey"@en ;
+  skos:definition """
+    Single malt whisky is a whisky made at one particular distillery from a
+    mash that uses only malted grain, ordinarily barley.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Single_malt_whisky> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:SingleMaltScotch a owl:Class ;
+  rdfs:subClassOf
+    bevon:SingleMaltWhisky ,
+    bevon:ScotchWhisky ,
+    pto:Single_malt_Scotch ;
+  skos:prefLabel "Single Malt Scotch"@en , "싱글 몰트 스카치"@ko ;
+  skos:definition """
+    Single Malt Scotch is single malt whisky made in Scotland using a pot still
+    distillation process at a single distillery, with malted barley as the only
+    grain ingredient.
+    """@en ;
+  rdfs:comment """
+    As with any Scotch whisky, a single malt Scotch must be distilled in
+    Scotland and matured in oak casks in Scotland for at least three years
+    (most single malts are matured longer).
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Single_malt_Scotch> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:SpeysideSingleMalt a owl:Class ;
+  rdfs:subClassOf bevon:SingleMaltScotch , pto:Speyside_single_malts ;
+  skos:prefLabel "Speyside Single Malt"@en , "스페이사이드 싱글 몰트"@ko ;
+  skos:definition """
+    Speyside single malts are single malt Scotch whiskies, distilled in
+    Strathspey, the area around the River Spey in Moray and Badenoch and
+    Strathspey, in northeastern Scotland.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Speyside_single_malts> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Liqueur a owl:Class ;
+  rdfs:subClassOf bevon:DistilledBeverage , pto:Liqueur ;
+  skos:prefLabel "Liqueur"@en , "리큐어"@ko ;
+  skos:altLabel "Cordials"@en , "Schnapps"@en ;
+  skos:definition """
+    A liqueur is an alcoholic beverage made from a distilled spirit that has
+    been flavored with fruit, cream, herbs, spices, flowers or nuts and bottled
+    with added sugar or other sweetener (such as high-fructose corn syrup).
+    """@en ;
+  rdfs:comment """
+    Liqueurs are typically quite sweet; they are usually not aged for long
+    after the ingredients are mixed, but may have resting periods during their
+    production to allow flavors to marry.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Liqueur> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:Highball a owl:Class ;
+  rdfs:subClassOf bevon:Cocktail , pto:Highball ;
+  skos:prefLabel "Highball"@en , "하이볼"@ko ;
+  skos:definition """
+    Highball is the name for a family of mixed drinks that are composed of an
+    alcoholic base spirit and a larger proportion of a non-alcoholic mixer.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Highball> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:BeerCocktail a owl:Class ;
+  rdfs:subClassOf bevon:Cocktail , pto:Beer_cocktail ;
+  skos:prefLabel "Beer Cocktail"@en , "맥주 칵테일"@ko ;
+  skos:definition """
+    A beer cocktail is a cocktail that is made by mixing beer with a distilled
+    beverage. In this type of cocktail, the primary ingredient is beer.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Beer_cocktail> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Shandy a owl:Class ;
+  rdfs:subClassOf bevon:Cocktail , pto:Shandy ;
+  skos:prefLabel "Shandy"@en , "섄디"@ko ;
+  skos:definition """
+    A shandy, or shandygaff, is beer mixed with a soft drink, carbonated
+    lemonade, ginger beer, ginger ale, or apple juice.
+    """@en ;
+  rdfs:comment """
+    The proportions of the two ingredients are adjusted to taste, usually
+    half-and-half.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Shandy> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Water a owl:Class ;
+  rdfs:subClassOf bevon:NonAlcoholicBeverage , pto:Water ;
+  skos:prefLabel "Water"@en , "물"@ko ;
+  skos:definition """
+    In the Beverage Ontology, Water means a drinking water.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Water> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:MineralWater a owl:Class ;
+  rdfs:subClassOf bevon:Water , pto:Mineral_water ;
+  skos:prefLabel "Mineral Water"@en , "광천수"@ko ;
+  skos:definition """
+    Mineral water is water from a mineral spring containing various minerals
+    such as salts and sulfur compounds.
+    """@en ;
+  rdfs:comment """
+    Mineral water may be sparkling due to contained gases.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Mineral_water> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:CarbonatedWater a owl:Class ;
+  rdfs:subClassOf bevon:Water , pto:Carbonated_water ;
+  skos:prefLabel "Carbonated Water"@en , "탄산수"@ko ;
+  skos:altLabel
+    "Club Soda"@en ,
+    "Soda Water"@en ,
+    "Sparkling Water"@en ,
+    "Seltzer Water"@en ,
+    "Fizzy Water"@en ,
+    "클럽소다"@ko ,
+    "소다수"@ko ;
+  skos:definition """
+    Carbonated water is water into which carbon dioxide gas under pressure has
+    been dissolved.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Carbonated_water> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:FermentationBase a owl:Class ;
+  skos:prefLabel "Fermentation Base"@en , "발효 주재료"@ko ;
+  skos:definition """
+    A fruit or grain which provides the sugar for fermentation from which a
+    alcoholic beverage is made.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Aging a owl:Class ;
+  skos:prefLabel "Aging"@en , "숙성"@ko ;
+  skos:definition """
+    Aging is the process of storing beverages in casks for a specific period of
+    time to remove harsh flavors and add distinct characteristics found in the
+    cask's wood.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Container a owl:Class ;
+  rdfs:subClassOf yago:Containers ;
+  skos:prefLabel "Container"@en , "용기"@ko ;
+  skos:definition """
+    A container is an item used to contain, store, and transport a beverage.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Container> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:BeverageCan a owl:Class ;
+  rdfs:subClassOf bevon:Container ;
+  skos:prefLabel "Beverage Can"@en , "음료 캔"@ko ;
+  skos:definition """
+    A beverage can is a metal container designed to hold a fixed portion of
+    liquid such as a carbonated soft drinks, alcoholic beverages, fruit juices,
+    teas, tisanes, energy drinks, etc.
+    """@en ;
+  rdfs:comment """
+    Beverage cans are made of aluminium (75% of worldwide production) or
+    tin-plated steel (25% worldwide production).
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Beverage_can> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:GlassBottle a owl:Class ;
+  rdfs:subClassOf bevon:Container ;
+  skos:prefLabel "Glass Bottle"@en , "유리병"@ko ;
+  skos:definition """
+    A glass bottle is a bottle created from glass.
+    """@en ;
+  rdfs:comment """
+    Glass bottles can vary in size considerably, but are most commonly found in
+    sizes ranging between about 10ml and 5 litres.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Glass_bottle> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:BeerBottle a owl:Class ;
+  rdfs:subClassOf bevon:GlassBottle ;
+  skos:prefLabel "Beer Bottle"@en , "맥주병"@ko ;
+  skos:definition """
+    A beer bottle is a bottle made to contain beer, usually made of glass and
+    come in various sizes, shapes and colors.
+    """@en ;
+  rdfs:comment """
+    Dark amber or brown glass greatly reduces UV light from spoiling the beer.
+    However, lighter colored bottles are often used for marketing reasons.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Beer_bottle> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Longneck a owl:Class ;
+  rdfs:subClassOf bevon:BeerBottle ;
+  skos:prefLabel "Longneck"@en , "긴목 맥주병"@ko ;
+  skos:altLabel "Industry Standard Bottle"@en , "North American Longneck"@en ;
+  skos:definition """
+    A longneck is a type of beer bottle with a long neck.
+    """@en ;
+  rdfs:comment """
+    It is known as the standard longneck bottle or industry standard bottle
+    (ISB). The ISB longnecks have a uniform capacity, height, weight and
+    diameter and can be reused on average 16 times. The long neck offers a long
+    cushion of air to absorb the pressure of carbonation to reduce the risk of
+    exploding. The longneck also provides a handle for drinking directly from
+    the bottle without transferring body heat to the beer from one's hand.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:PlasticBottle a owl:Class ;
+  rdfs:subClassOf bevon:Container ;
+  skos:prefLabel "Plastic Bottle"@en , "플라스틱 병"@ko ;
+  skos:definition """
+    A plastic bottle is a bottle constructed of plastic.
+    """@en ;
+  rdfs:comment """
+    Plastic bottles are typically used to store liquids such as water, soft
+    drinks, motor oil, cooking oil, medicine, shampoo, milk, and ink.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Plastic_bottle> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Keg a owl:Class ;
+  rdfs:subClassOf bevon:Container ;
+  skos:prefLabel "Keg"@en , "케그"@ko ;
+  skos:definition """
+    A keg is a small barrel.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Keg> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:BeerKeg a owl:Class ;
+  rdfs:subClassOf bevon:Keg ;
+  skos:prefLabel "Beer Keg"@en , "맥주 케그"@ko ;
+  skos:definition """
+    Beer kegs are made of stainless steel, or less commonly, of aluminium.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Distillery a owl:Class ;
+  skos:prefLabel "Distillery"@en , "증류소"@ko ;
+  skos:definition """
+    A distillery is a premise where distillation takes place, especially
+    distillation of alcohol.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Distillation> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:Brewery a owl:Class ;
+  skos:prefLabel "Brewery"@en , "양조장"@ko ;
+  skos:definition """
+    A brewery is a dedicated building for the making of beer, though beer can
+    be made at home, and has been for much of beer's history.
+    """@en ;
+  rdfs:comment """
+    A company that makes beer is called either a brewery or a brewing company.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Brewery> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+# Properties ##################################################################
+
+bevon:name a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:title , foaf:name , gr:name ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range xsd:string ;
+  skos:prefLabel "name"@en , "이름"@ko ;
+  skos:definition """
+    This property indicates the name of the beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:description a owl:DatatypeProperty ;
+  rdfs:subPropertyOf dcterms:description , gr:description ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range xsd:string ;
+  skos:prefLabel "description"@en , "설명"@ko ;
+  skos:definition """
+    This property specifies the short text description of the beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:origin a owl:ObjectProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range dbpedia:Place ;
+  skos:prefLabel "origin"@en , "원산지"@ko ;
+  skos:definition """
+    This property indicates the place where the beverage was first invented.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:launch a owl:DatatypeProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range xsd:gYear ;
+  skos:prefLabel "launch"@en , "출시년도"@ko ;
+  skos:definition """
+    This property specifies the year when the beverage was first introduced to
+    the market.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:manufacturer a owl:ObjectProperty ;
+  rdfs:subPropertyOf gr:hasManufacturer ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range foaf:Agent ;
+  skos:prefLabel "manufacturer"@en , "제조사"@ko ;
+  skos:definition """
+    This property specifies the manufacturer of the beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:color a owl:DatatypeProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range dbpedia:Colour ;
+  skos:prefLabel "color"@en , "색상"@ko ;
+  skos:definition """
+    This property specifies the color of the beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:abv a owl:DatatypeProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range xsd:decimal ;
+  skos:prefLabel "ABV"@en , "알코올 도수"@ko ;
+  skos:altLabel "alcohol by volume"@en ;
+  skos:definition """
+    ABV (Alcohol by Volume) is a standard measure of how much alcohol is
+    contained in the drink.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Alcohol_by_volume> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "testing"@en .
+
+bevon:proof a owl:DatatypeProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range xsd:decimal ;
+  skos:prefLabel "proof"@en , "프루프"@ko ;
+  skos:altLabel "alcohol proof"@en ;
+  skos:definition """
+    Alcohol proof is a measure of how much alcohol (ethanol) is contained in an
+    alcoholic beverage.
+    """@en ;
+  rdfs:comment """
+    The term was originally used in the United Kingdom and was defined as 7/4
+    times the alcohol by volume (ABV). The UK now uses the ABV standard instead
+    of alcohol proof. In the United States, alcoholic proof is defined as twice
+    the percentage of ABV.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Alcohol_proof> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:container a owl:ObjectProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range bevon:Container ;
+  skos:prefLabel "container"@en , "용기"@ko ;
+  skos:definition """
+    This property can be used to indicate that the beverage is available in a
+    type of container.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:related a owl:ObjectProperty ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range bevon:Beverage ;
+  skos:prefLabel "related"@en , "연관"@ko ;
+  skos:definition """
+    This property states that a beverage is related to another beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:variant a owl:ObjectProperty ;
+  rdfs:subPropertyOf bevon:related ;
+  owl:inverseOf bevon:variantOf ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range bevon:Beverage ;
+  skos:prefLabel "variant"@en , "변형"@ko ;
+  skos:definition """
+    This property states that a beverage has a variant.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:variantOf a owl:ObjectProperty ;
+  rdfs:subPropertyOf bevon:related , dbpedia:variantOf , gr:isVariantOf ;
+  owl:inverseOf bevon:variant ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range bevon:Beverage ;
+  skos:prefLabel "variant of"@en , "바탕"@ko ;
+  skos:definition """
+    This property states that a beverage is a variant of another beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:similar a owl:SymmetricProperty ;
+  rdfs:subPropertyOf bevon:related , gr:isSimilarTo ;
+  rdfs:domain bevon:Beverage ;
+  rdfs:range bevon:Beverage ;
+  skos:prefLabel "similar"@en , "유사"@ko ;
+  skos:definition """
+    This property states that a beverage is similar to another beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:fermentation_base a owl:ObjectProperty ;
+  rdfs:domain bevon:AlcoholicBeverage ;
+  rdfs:range bevon:FermentationBase ;
+  skos:prefLabel "fermentation base"@en , "발효 주재료"@ko ;
+  skos:definition """
+    This property indicates which fermentation base is used to make the
+    alcoholic beverage.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:aging a owl:ObjectProperty ;
+  rdfs:domain bevon:AlcoholicBeverage ;
+  rdfs:range bevon:Aging ;
+  skos:prefLabel "aging"@en , "숙성"@ko ;
+  skos:definition """
+    This property specifies how the beverage has been aged.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:non_alcoholic_version a owl:ObjectProperty ;
+  rdfs:subPropertyOf bevon:related ;
+  rdfs:domain bevon:AlcoholicBeverage ;
+  rdfs:range bevon:NonAlcoholicBeverage ;
+  skos:prefLabel "non-alcoholic version"@en , "비알코올 버전"@ko ;
+  skos:definition """
+    Some alcoholic beverages have non-alcoholic versions, such as non-alcoholic
+    beer ("near beer") and cocktails ("mocktails").
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:distillery a owl:ObjectProperty ;
+  rdfs:domain bevon:DistilledBeverage ;
+  rdfs:range bevon:Distillery ;
+  skos:prefLabel "Distillery"@en , "증류소"@ko ;
+  skos:definition """
+    This property relates a distilled beverage to its distillery.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Distillation> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:brewery a owl:ObjectProperty ;
+  rdfs:domain bevon:Beer ;
+  rdfs:range bevon:Brewery ;
+  skos:prefLabel "Brewery"@en , "양조장"@ko ;
+  skos:definition """
+    This property relates a beer to its brewery.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Brewery> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:ibu a owl:DatatypeProperty ;
+  rdfs:domain bevon:Beer ;
+  rdfs:range xsd:nonNegativeInteger ;
+  skos:prefLabel "IBU scale"@en , "IBU 척도"@ko ;
+  skos:altLabel "International Bitterness Unit scale"@en ;
+  skos:definition """
+    The International Bittering Units scale, or simply IBU scale, provides a
+    measure of the bitterness of beer, which is provided by the hops used
+    during brewing.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/International_Bitterness_Units_scale> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:srm a owl:DatatypeProperty ;
+  rdfs:domain bevon:Beer ;
+  rdfs:range xsd:nonNegativeInteger ;
+  skos:prefLabel "SRM"@en ;
+  skos:altLabel "Standard Reference Method"@en ;
+  skos:definition """
+    The Standard Reference Method or SRM is one of several systems modern
+    brewers use to specify beer color.
+    """@en ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Standard_Reference_Method> ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:material a owl:ObjectProperty ;
+  rdfs:domain bevon:Aging ;
+  skos:prefLabel "material"@en , "소재"@ko ;
+  skos:definition """
+    This property specifies what the aging cask was made of.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:previous_content a owl:ObjectProperty ;
+  rdfs:domain bevon:Aging ;
+  rdfs:range fowl:PotableLiquid ;
+  skos:prefLabel "previous content"@en , "이전 내용물"@ko ;
+  skos:definition """
+    This property specifies what as in the cask before the aging.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:duration a owl:ObjectProperty ;
+  rdfs:subPropertyOf time:hasDurationDescription ;
+  rdfs:domain bevon:Aging ;
+  rdfs:range time:DurationDescription ;
+  skos:prefLabel "duration"@en , "기간"@ko ;
+  skos:definition """
+    This property describes how long the beverage was aged in the cask.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:volume a owl:ObjectProperty ;
+  rdfs:domain bevon:Container ;
+  rdfs:range gr:QuantitativeValue ;
+  skos:prefLabel "volume"@en , "용량"@ko ;
+  skos:definition """
+    This property specifies the volume of the container.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:ingredient a owl:ObjectProperty ;
+  rdfs:subPropertyOf food:containsIngredient ;
+  rdfs:domain bevon:MixedDrink ;
+  rdfs:range food:Ingredient ;
+  skos:prefLabel "ingredient"@en , "재료"@ko ;
+  skos:definition """
+    This property specifies an ingredient of the mixed drink.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:food a owl:ObjectProperty ;
+  rdfs:subPropertyOf food:food ;
+  rdfs:domain food:Ingredient ;
+  rdfs:range food:Food ;
+  skos:prefLabel "food"@en , "음식"@ko ;
+  skos:definition """
+    This property describes food that is an ingredient of a mixed drink.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+bevon:quantity a owl:ObjectProperty ;
+  rdfs:domain food:Ingredient ;
+  rdfs:range gr:QuantitativeValue ;
+  skos:prefLabel "quantity"@en , "양"@ko ;
+  skos:definition """
+    This property specifies the quantity of the ingredient with a type
+    in the UN/CEFACT Common Code.
+    """@en ;
+  rdfs:isDefinedBy <http://rdfs.co/bevon/> ;
+  dcterms:issued "2013-07-04+09:00"^^xsd:date ;
+  dcterms:modified "2014-03-01+09:00"^^xsd:date ;
+  status:term_status "unstable"@en .
+
+# Relations with Vocabulary for describing whisky varieties ###################
+
+whisky:Distillery rdfs:subClassOf bevon:Distillery .
+whisky:abv rdfs:subPropertyOf bevon:abv .
+whisky:distillery rdfs:subPropertyOf bevon:distillery .
+
+# Relations with Wine Vocabulary ##############################################
+
+wine:Wine rdfs:subClassOf bevon:Wine .
+
+# Container Individuals #######################################################
+
+container:330mlBeverageCan a owl:NamedIndividual, bevon:BeverageCan ;
+  skos:prefLabel "330ml Beverage Can"@en , "330ml 음료 캔"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "330"^^xsd:int
+  ] .
+
+container:355mlBeverageCan a owl:NamedIndividual, bevon:BeverageCan ;
+  skos:prefLabel "355ml Beverage Can"@en , "355ml 음료 캔"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "355"^^xsd:int
+  ] .
+
+container:440mlBeverageCan a owl:NamedIndividual, bevon:BeverageCan ;
+  skos:prefLabel "440ml Beverage Can"@en , "440ml 음료 캔"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "440"^^xsd:int
+  ] .
+
+container:500mlBeverageCan a owl:NamedIndividual, bevon:BeverageCan ;
+  skos:prefLabel "500ml Beverage Can"@en , "500ml 음료 캔"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "500"^^xsd:int
+  ] .
+
+container:360mlGlassBottle a owl:NamedIndividual, bevon:GlassBottle ;
+  skos:prefLabel "360ml Glass Bottle"@en , "360ml 유리병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "360"^^xsd:int
+  ] .
+
+container:700mlGlassBottle a owl:NamedIndividual, bevon:GlassBottle ;
+  skos:prefLabel "700ml Glass Bottle"@en , "700ml 유리병"@ko ;
+  skos:altLabel "70cl Glass Bottle"@en ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "700"^^xsd:int
+  ] .
+
+container:750mlGlassBottle a owl:NamedIndividual, bevon:GlassBottle ;
+  skos:prefLabel "750ml Glass Bottle"@en , "750ml 유리병"@ko ;
+  skos:altLabel "75cl Glass Bottle"@en ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "750"^^xsd:int
+  ] .
+
+container:330mlLongneck a owl:NamedIndividual, bevon:Longneck ;
+  skos:prefLabel "330ml Longneck Bottle"@en , "330ml 긴목 맥주병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "330"^^xsd:int
+  ] .
+
+container:500mlLongneck a owl:NamedIndividual, bevon:Longneck ;
+  skos:prefLabel "500ml Longneck Bottle"@en , "500ml 긴목 맥주병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "500"^^xsd:int
+  ] .
+
+container:640mlLongneck a owl:NamedIndividual, bevon:Longneck ;
+  skos:prefLabel "640ml Longneck Bottle"@en , "640ml 긴목 맥주병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "640"^^xsd:int
+  ] .
+
+container:200mlPlasticBottle a owl:NamedIndividual, bevon:PlasticBottle ;
+  skos:prefLabel "200ml Plastic Bottle"@en , "200ml 플라스틱 병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "200"^^xsd:int
+  ] .
+
+container:360mlPlasticBottle a owl:NamedIndividual, bevon:PlasticBottle ;
+  skos:prefLabel "360ml Plastic Bottle"@en , "360ml 플라스틱 병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "360"^^xsd:int
+  ] .
+
+container:640mlPlasticBottle a owl:NamedIndividual, bevon:PlasticBottle ;
+  skos:prefLabel "640ml Plastic Bottle"@en , "640ml 플라스틱 병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "640"^^xsd:int
+  ] .
+
+container:1_8lPlasticBottle a owl:NamedIndividual, bevon:PlasticBottle ;
+  skos:prefLabel "1.8l Plastic Bottle"@en , "1.8l 플라스틱 병"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueFloat ;
+    gr:hasUnitOfMeasurement "LTR" ;
+    gr:hasValue "1.8"^^xsd:float
+  ] .
+
+container:15lBeerKeg a owl:NamedIndividual, bevon:BeerKeg ;
+  skos:prefLabel "15l Beer Keg"@en , "15l 맥주 케그"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "LTR" ;
+    gr:hasValue "15"^^xsd:int
+  ] .
+
+container:25lBeerKeg a owl:NamedIndividual, bevon:BeerKeg ;
+  skos:prefLabel "25l Beer Keg"@en , "25l 맥주 케그"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "LTR" ;
+    gr:hasValue "25"^^xsd:int
+  ] .
+
+container:30lBeerKeg a owl:NamedIndividual, bevon:BeerKeg ;
+  skos:prefLabel "30l Beer Keg"@en , "30l 맥주 케그"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "LTR" ;
+    gr:hasValue "30"^^xsd:int
+  ] .
+
+container:50lBeerKeg a owl:NamedIndividual, bevon:BeerKeg ;
+  skos:prefLabel "50l Beer Keg"@en , "50l 맥주 케그"@ko ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "LTR" ;
+    gr:hasValue "50"^^xsd:int
+  ] .
+
+# Beverage Individuals ########################################################
+
+beverage:Glenfiddich12YearOld
+  a owl:NamedIndividual, bevon:SpeysideSingleMalt , gr:ProductOrServiceModel ;
+  bevon:name "Glenfiddich 12 Year Old"@en , "글렌피딕 12년"@ko ;
+  bevon:description """
+    Carefully matured in the finest American bourbon and Spanish sherry oak
+    casks for at least 12 years. Married and mellowed in oak marrying tuns for
+    complete harmony of aroma and flavor.
+
+    A single malt Scotch whisky with distinctive fresh pear, creamy with subtle
+    oak flavors and a long smooth and mellow finish.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Strathspey,_Scotland> ;
+  bevon:launch "1887"^^xsd:gYear ;
+  bevon:distillery [
+    a bevon:Distillery ;
+    owl:sameAs <http://dbpedia.org/resource/Glenfiddich_distillery> ;
+    whisky:region <http://dbpedia.org/resource/Strathspey,_Scotland> ;
+    whisky:owner <http://dbpedia.org/resource/William_Grant_%26_Sons> ;
+    whisky:waterSource [
+      a whisky:WaterSource ;
+      dcterms:title "Robbie Dhu Springs"@en , "로비 듀 수원지"@ko
+    ]
+  ] ;
+  bevon:manufacturer <http://dbpedia.org/resource/William_Grant_%26_Sons> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:aging [
+    a bevon:Aging ;
+    bevon:material <http://dbpedia.org/resource/Oak> ;
+    bevon:previous_content
+      <http://dbpedia.org/resource/Bourbon_whiskey> ,
+      <http://dbpedia.org/resource/Sherry> ;
+    bevon:duration [
+      a time:DurationDescription ;
+      time:years "12"^^xsd:decimal
+    ]
+  ] ;
+  bevon:color [
+    a dbpedia:Colour ;
+    owl:sameAs <http://dbpedia.org/resource/Gold_(color)> ;
+    owl:sameAs <http://purl.org/colors/rgb/FFD700> ;
+    dcterms:title "Gold"@en
+  ] ;
+  bevon:abv "40"^^xsd:decimal ;
+  bevon:container container:700mlGlassBottle .
+
+beverage:DonJulioBlanco
+  a owl:NamedIndividual, bevon:TequilaBlanco , gr:ProductOrServiceModel ;
+  bevon:name "Don Julio Blanco"@en , "돈 훌리오 블랑코"@ko ;
+  bevon:description """
+    Tequila Don Julio Blanco is the base from which all of our other variants
+    are derived. Commonly referred to as "silver" tequila, its crisp agave
+    flavor and hints of citrus make it an essential component to a variety of
+    innovative drinks including margaritas. It can also be enjoyed neat or on
+    the rocks.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Mexico> ;
+  bevon:launch "1942"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Diageo> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Agave> ;
+  bevon:color [
+    a dbpedia:Colour ;
+    owl:sameAs <http://dbpedia.org/resource/Clear_(color)> ;
+    dcterms:title "Clear"@en
+  ] ;
+  bevon:proof "80"^^xsd:decimal ;
+  bevon:abv "40"^^xsd:decimal ;
+  bevon:container container:750mlGlassBottle ;
+  rdfs:seeAlso <http://www.donjulio.com/blanco.aspx> .
+
+beverage:Budweiser
+  a owl:NamedIndividual, bevon:PaleLager , gr:ProductOrServiceModel ;
+  bevon:name "Budweiser"@en , "버드와이저"@ko ;
+  bevon:description """
+    Budweiser is a pale lager produced by Anheuser–Busch InBev. Introduced in
+    1876 by Adolphus Busch it has grown to become one of the highest selling
+    beers in the United States, and is available in over 80 markets worldwide.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/United_States> ;
+  bevon:launch "1876"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Anheuser–Busch_InBev> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:abv "5"^^xsd:decimal ;
+  bevon:ibu "12"^^xsd:nonNegativeInteger ;
+  bevon:srm "3"^^xsd:nonNegativeInteger ;
+  bevon:container
+    container:355mlBeverageCan ,
+    container:500mlBeverageCan ,
+    container:330mlLongneck ;
+  rdfs:seeAlso <https://en.wikipedia.org/wiki/Budweiser_(Anheuser-Busch)> .
+
+beverage:Tsingtao
+  a owl:NamedIndividual, bevon:Pilsner , gr:ProductOrServiceModel ;
+  bevon:name "Tsingtao Lager"@en , "칭타오 라거"@ko ;
+  bevon:description """
+    Tsingtao Lager, a well-hopped standard pilsner of 4.7% alcohol, is the
+    flagship brew, accounting for most of the brewery's production.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Qingdao> ;
+  bevon:launch "1904"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Tsingtao_Brewery> ;
+  bevon:brewery <http://dbpedia.org/resource/Tsingtao_Brewery> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:abv "4.7"^^xsd:decimal ;
+  bevon:ibu "20"^^xsd:nonNegativeInteger ;
+  bevon:srm "4"^^xsd:nonNegativeInteger ;
+  bevon:container
+    container:355mlBeverageCan ,
+    container:500mlBeverageCan ,
+    container:330mlLongneck ,
+    container:640mlLongneck .
+
+beverage:KozelDark
+  a owl:NamedIndividual, bevon:Dunkel , gr:ProductOrServiceModel ;
+  bevon:name
+    "Velkopopovický Kozel Dark"@en,
+    "Velkopopovický Kozel Černý"@cs,
+    "코젤 다크"@ko ;
+  bevon:description """
+    Velkopopovický Kozel Dark beer is brewed to the original recipe using a
+    special mix of dark malts, clean water from our own well close to the
+    brewery, and a selection of the best hops. The caramelized malt gives this
+    beer a unique ruby color and sweet flavor, thanks to which it is
+    appreciated and respected all over the world.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Velké_Popovice> ;
+  bevon:launch "1874"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/SABMiller> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:abv "3.8"^^xsd:decimal ;
+  bevon:container container:500mlLongneck .
+
+beverage:Guinness
+  a owl:NamedIndividual, bevon:DryStout , gr:ProductOrServiceModel ;
+  owl:sameAs <http://dbpedia.org/resource/Guinness> ;
+  bevon:name "Guinness Draught"@en , "기네스 드래프트"@ko ;
+  bevon:description """
+    Guinness is a popular Irish dry stout that originated in the brewery of
+    Arthur Guinness (1725–1803) at St. James's Gate, Dublin. Guinness is one
+    of the most successful beer brands worldwide.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Dublin> ;
+  bevon:launch "1759"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Diageo> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:abv "4.2"^^xsd:decimal ;
+  bevon:ibu "37"^^xsd:nonNegativeInteger ;
+  bevon:srm "32"^^xsd:nonNegativeInteger ;
+  bevon:container
+    container:15lBeerKeg ,
+    container:30lBeerKeg ,
+    container:330mlBeverageCan ,
+    container:330mlLongneck ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Guinness> .
+
+beverage:Kilkenny
+  a owl:NamedIndividual, bevon:IrishRedAle , gr:ProductOrServiceModel ;
+  owl:sameAs <http://dbpedia.org/resource/Kilkenny_(beer)> ;
+  bevon:name "Kilkenny Irish Cream Ale"@en , "킬케니 아이리쉬 크림 에일"@ko ;
+  bevon:description """
+    Kilkenny is a nitrogenated Irish cream ale from the makers of Guinness,
+    which originated in Kilkenny, Ireland. The brand is managed and produced
+    by Diageo. It is available in draught and cans. It is brewed in Ireland
+    and its heritage dates back to the 14th century.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Kilkenny> ;
+  bevon:launch "1710"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Diageo> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:abv "4.3"^^xsd:decimal ;
+  bevon:ibu "23"^^xsd:nonNegativeInteger ;
+  bevon:srm "14"^^xsd:nonNegativeInteger ;
+  bevon:container
+    container:30lBeerKeg ,
+    container:440mlBeverageCan ;
+  bevon:similar beverage:Smithwicks ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Kilkenny_(beer)> .
+
+beverage:Smithwicks
+  a owl:NamedIndividual, bevon:IrishRedAle , gr:ProductOrServiceModel ;
+  owl:sameAs <http://dbpedia.org/resource/Smithwick%27s> ;
+  bevon:name "Smithwick's Superior Irish Ale"@en , "스미딕스 슈페리어 아이리쉬 에일"@ko ;
+  bevon:description """
+    Smithwick's is an Irish red ale style beer from Kilkenny, Ireland. It is a
+    clear beer with a rich ruby color and creamy head.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/Kilkenny> ;
+  bevon:launch "1710"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Diageo> ;
+  bevon:fermentation_base <http://dbpedia.org/resource/Barley> ;
+  bevon:color [
+    a dbpedia:Colour ;
+    owl:sameAs <http://dbpedia.org/resource/Ruby_(color)__Ruby_Red__1> ;
+    owl:sameAs <http://purl.org/colors/rgb/9B111E> ;
+    dcterms:title "Ruby Red"@en
+  ] ;
+  bevon:abv "3.8"^^xsd:decimal ;
+  bevon:ibu "20"^^xsd:nonNegativeInteger ;
+  bevon:srm "14"^^xsd:nonNegativeInteger ;
+  bevon:container
+    container:30lBeerKeg ,
+    container:440mlBeverageCan ,
+    container:330mlLongneck ;
+  bevon:similar beverage:Kilkenny ;
+  rdfs:seeAlso <http://en.wikipedia.org/wiki/Smithwick%27s> .
+
+beverage:Chamisul
+  a owl:NamedIndividual, bevon:DilutedSoju , gr:ProductOrServiceModel ;
+  bevon:name "Chamisul"@en , "참이슬"@ko ;
+  bevon:description """
+    Chamisul is the diluted soju produced by HITEJiro.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/South_Korea> ;
+  bevon:launch "1998"^^xsd:gYear ;
+  bevon:manufacturer <http://dbpedia.org/resource/Jinro> ;
+  bevon:color [
+    a dbpedia:Colour ;
+    owl:sameAs <http://dbpedia.org/resource/Clear_(color)> ;
+    dcterms:title "Clear"@en
+  ] ;
+  bevon:abv "19"^^xsd:decimal ;
+  bevon:container
+    container:200mlPlasticBottle ,
+    container:360mlGlassBottle ,
+    container:640mlPlasticBottle ,
+    container:1_8lPlasticBottle ;
+  rdfs:seeAlso <http://ko.wikipedia.org/wiki/참이슬> .
+
+beverage:Chum-Churum
+  a owl:NamedIndividual, bevon:DilutedSoju , gr:ProductOrServiceModel ;
+  owl:sameAs <http://dbpedia.org/resource/Chum-Churum> ;
+  bevon:name "Chum-Churum"@en , "처음처럼"@ko ;
+  bevon:description """
+    Chum-Churum is the diluted soju produced by Lotte Liquor.
+    """@en ;
+  bevon:origin <http://dbpedia.org/resource/South_Korea> ;
+  bevon:launch "2006"^^xsd:gYear ;
+  bevon:manufacturer [
+    a foaf:Organization ;
+    foaf:name "Lotte Liquor"@en , "롯데주류"@ko ;
+    foaf:homepage <http://www.lotteliquor.com> ;
+    rdfs:seeAlso <http://ko.wikipedia.org/wiki/롯데칠성음료>
+  ] ;
+  bevon:color [
+    a dbpedia:Colour ;
+    owl:sameAs <http://dbpedia.org/resource/Clear_(color)> ;
+    dcterms:title "Clear"@en
+  ] ;
+  bevon:abv "19.5"^^xsd:decimal ;
+  bevon:container
+    container:200mlPlasticBottle ,
+    container:360mlPlasticBottle ,
+    container:360mlGlassBottle ,
+    container:640mlPlasticBottle ,
+    container:1_8lPlasticBottle ;
+  rdfs:seeAlso <http://ko.wikipedia.org/wiki/처음처럼_(주류)> .
+
+beverage:WhiskyAndSoda
+  a owl:NamedIndividual, bevon:Highball , gr:ProductOrServiceModel ;
+  bevon:name "Whisky & Soda"@en , "위스키 소다"@ko ;
+  bevon:description """
+    Whisky & Soda is a kind of mixed drinks that are composed of whisky and
+    carbonated water.
+    """@en ;
+  bevon:ingredient [
+    a food:Ingredient ;
+    bevon:food [
+      a bevon:Whisky ;
+      owl:sameAs <http://dbpedia.org/resource/Whisky> ;
+      dcterms:title "Whisky"@en
+    ] ;
+    bevon:quantity [
+      a gr:QuantitativeValueInteger ;
+      gr:hasUnitOfMeasurement "OZA" ;
+      gr:hasValue "2"^^xsd:int
+    ]
+  ] , [
+    a food:Ingredient ;
+    bevon:food [
+      a bevon:CarbonatedWater ;
+      owl:sameAs <http://dbpedia.org/resource/Carbonated_water> ;
+      dcterms:title "Carbonated Water"@en
+    ]
+  ] .
+
+# Example #####################################################################
+
+_:example1 rdfs:label "Glenfiddich 12 Year Old"@en ;
+  rdfs:comment '''
+    <pre><code>beverage:Glenfiddich12YearOld
+  a owl:NamedIndividual, bevon:SpeysideSingleMalt , gr:ProductOrServiceModel ;
+  bevon:name "Glenfiddich 12 Year Old"@en , "글렌피딕 12년"@ko ;
+  bevon:description """
+    Carefully matured in the finest American bourbon and Spanish sherry oak
+    casks for at least 12 years. Married and mellowed in oak marrying tuns for
+    complete harmony of aroma and flavor.
+
+    A single malt Scotch whisky with distinctive fresh pear, creamy with subtle
+    oak flavors and a long smooth and mellow finish.
+    """@en ;
+  bevon:origin &lt;http://dbpedia.org/resource/Strathspey,_Scotland&gt; ;
+  bevon:launch "1887"^^xsd:gYear ;
+  bevon:distillery [
+    a bevon:Distillery ;
+    owl:sameAs &lt;http://dbpedia.org/resource/Glenfiddich_distillery&gt; ;
+    whisky:region &lt;http://dbpedia.org/resource/Strathspey,_Scotland&gt; ;
+    whisky:owner &lt;http://dbpedia.org/resource/William_Grant_%26_Sons&gt; ;
+    whisky:waterSource [
+      a whisky:WaterSource ;
+      dcterms:title "Robbie Dhu Springs"@en , "로비 듀 수원지"@ko
+    ]
+  ] ;
+  bevon:manufacturer &lt;http://dbpedia.org/resource/William_Grant_%26_Sons&gt; ;
+  bevon:fermentation_base &lt;http://dbpedia.org/resource/Barley&gt; ;
+  bevon:aging [
+    a bevon:Aging ;
+    bevon:material &lt;http://dbpedia.org/resource/Oak&gt; ;
+    bevon:previous_content
+      &lt;http://dbpedia.org/resource/Bourbon_whiskey&gt; ,
+      &lt;http://dbpedia.org/resource/Sherry&gt; ;
+    bevon:duration [
+      a time:DurationDescription ;
+      time:years "12"^^xsd:decimal
+    ]
+  ] ;
+  bevon:color [
+    a dbpedia:Colour ;
+    owl:sameAs &lt;http://dbpedia.org/resource/Gold_(color)&gt; ;
+    owl:sameAs &lt;http://purl.org/colors/rgb/FFD700&gt; ;
+    dcterms:title "Gold"@en
+  ] ;
+  bevon:abv "40"^^xsd:decimal ;
+  bevon:container container:700mlGlassBottle .
+
+container:700mlGlassBottle a owl:NamedIndividual, bevon:GlassBottle ;
+  skos:prefLabel "700ml Glass Bottle"@en , "700ml 유리병"@ko ;
+  skos:altLabel "70cl Glass Bottle"@en ;
+  bevon:volume [
+    a gr:QuantitativeValueInteger ;
+    gr:hasUnitOfMeasurement "MLT" ;
+    gr:hasValue "700"^^xsd:int
+  ] .</code></pre>
+    '''^^rdf:XMLLiteral .
+
+_:example2 rdfs:label "Whisky & Soda"@en ;
+  rdfs:comment '''
+    <pre><code>beverage:WhiskyAndSoda
+  a owl:NamedIndividual, bevon:Highball , gr:ProductOrServiceModel ;
+  bevon:name "Whisky &amp; Soda"@en , "위스키 소다"@ko ;
+  bevon:description """
+    Whisky &amp; Soda is a kind of mixed drinks that are composed of whisky and
+    carbonated water.
+    """@en ;
+  bevon:ingredient [
+    a food:Ingredient ;
+    bevon:food [
+      a bevon:Whisky ;
+      owl:sameAs &lt;http://dbpedia.org/resource/Whisky&gt; ;
+      dcterms:title "Whisky"@en
+    ] ;
+    bevon:quantity [
+      a gr:QuantitativeValueInteger ;
+      gr:hasUnitOfMeasurement "OZA" ;
+      gr:hasValue "2"^^xsd:int
+    ]
+  ] , [
+    a food:Ingredient ;
+    bevon:food [
+      a bevon:CarbonatedWater ;
+      owl:sameAs &lt;http://dbpedia.org/resource/Carbonated_water&gt; ;
+      dcterms:title "Carbonated Water"@en
+    ]
+  ] .</code></pre>
+    '''^^rdf:XMLLiteral .

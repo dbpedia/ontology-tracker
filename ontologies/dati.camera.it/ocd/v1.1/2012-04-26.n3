@@ -1,0 +1,1264 @@
+@prefix : <http://dati.camera.it/ocd/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix voaf: <http://labs.mondeca.com/vocab/voaf#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix bio: <http://purl.org/vocab/bio/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix xsi: <http://www.w3.org/2001/XMLSchema-instance> .
+
+<http://dati.camera.it/ocd/> a owl:Ontology , voaf:Vocabulary ;
+	owl:imports <http://purl.org/dc/terms/> , <http://www.w3.org/2008/05/skos> , <http://purl.org/dc/elements/1.1/> ;
+	dc:title "Ontologia Camera dei deputati"@it ;
+	dc:description "L'ontologia Camera dei deputati è stata creata per descrivere tutte le risorse (persone, eventi, documenti) sia storiche che correnti, connesse alla Camera e alla sua attività"@it ;
+	dc:issued "20 dicembre 2012" ;
+	dcterms:modified "26 aprile 2012" ;
+	dc:rights "Camera dei deputati" ;
+	cc:licence <http://creativecommons.org/licenses/by-sa/3.0/> ;
+	dc:publisher "Camera dei deputati" ;
+	dc:creator "Camera dei deputati" ;
+	owl:versionInfo "1.1"^^xsd:decimal ;
+	vann:preferredNamespacePrefix "ocd" .
+
+:lavori a owl:Class ;
+	rdfs:label "lavori"^^xsd:string .
+
+:documenti a owl:Class ;
+	rdfs:label "documenti"^^xsd:string .
+
+:persona a owl:Class ;
+	rdfs:label "persona"^^xsd:string ;
+	rdfs:comment "è la classe che identifica la persona che ha svolto qualche ruolo all'interno della Camera dei deputati. La persona che ha un mandato parlamentare è anche un deputato. Ad una persona possono corripondere 0-n deputati."@it ;
+	owl:sameAs foaf:Person .
+
+:organo a owl:Class ;
+	rdfs:label "organo"^^xsd:string .
+
+:autore a owl:Class ;
+	rdfs:label "autore"^^xsd:string ;
+	rdfs:comment "è la classe che identifica le persone autori di pubblicazioni presenti in BPR."@it .
+
+:inarico a owl:Class ;
+	rdfs:label "incarico"^^xsd:string ;
+	rdfs:comment "è la classe che identifica gli incarichi all'interno dei gruppi parlamentari"@it .
+
+:inaricoGoverno a owl:Class ;
+	rdfs:label "incarico di Governo"^^xsd:string ;
+	rdfs:comment "è la classe che identifica gli incarichi governativi assegnati ai deputati"@it .
+
+:deputato a owl:Class ;
+	rdfs:label "deputato"^^xsd:string ;
+	rdfs:comment "La classe deputati comprende tutte le persone che hanno ricevuto un mandato parlamentare alla Camera"@it ;
+	rdfs:subClassOf :persona ;
+	rdfs:isDefinedBy <http://www.camera.it/423?conoscerelacamera=2> .
+
+:aic a owl:Class ;
+	rdfs:label "atti di indirizzo e controllo"^^xsd:string ;
+	rdfs:comment "è la classe che descrive le interrogazioni, domande che i parlamentari rivolgono al Governo per avere informazioni su fatti specifici e le interpellanze, domande che sollecitano chiarimenti sui motivi dell’azione politica del Governo"@it ;
+	rdfs:subClassOf :lavori ;
+	rdfs:isDefinedBy <http://www.camera.it/205> .
+
+:bollettino a owl:Class ;
+	rdfs:label "bollettino"^^xsd:string ;
+	rdfs:subClassOf :lavori .
+
+:legge a owl:Class ;
+	rdfs:label "legge"^^xsd:string .
+
+:mandatoCamera a owl:Class ;
+	rdfs:label "mandato"^^xsd:string ;
+	rdfs:comment "La classe fa riferimento allo status di deputato assunto da una persona  - candidato in elezioni politiche -  in seguito ad un voto popolare"@it .
+
+:mandatoSenato a owl:Class ;
+	rdfs:label "mandato"^^xsd:string ;
+	rdfs:comment "La classe fa riferimento allo status di senatore assunto da una persona  - candidato in elezioni politiche -  in seguito ad un voto popolare"@it .
+
+:assemblea a owl:Class ;
+	rdfs:label "assemblea"^^xsd:string ;
+	rdfs:comment "la classe fa riferimento al  centro dell'attività della Camera,  dove si esercita la funzione legislativa, si concede o si revoca la fiducia al Governo, si discutono gli atti di indirizzo,  le interrogazioni e le interpellanze"@it ;
+	rdfs:isDefinedBy <http://www.camera.it/734> .
+
+:legislatura a owl:Class ;
+	rdfs:label "legislatura"^^xsd:string ;
+	rdfs:comment "La classe fa riferimento al  periodo di durata del mandato parlamentare compreso fra le elezioni e lo scioglimento delle Camere. La legislatura si articola in sessioni e sedute"@it .
+
+:governo a owl:Class ;
+	rdfs:label "governo"^^xsd:string ;
+	rdfs:comment "La classe fa riferimento all'istituzione cui è affidato dall'ordinamento giuridico l'esercizio della funzione esecutiva"@it .
+
+:organoGoverno a owl:Class ;
+	rdfs:label "organo governativo"^^xsd:string ;
+	rdfs:comment "la classe fa riferimento agli organi monocratici o collegiali, necessari e non, che costituiscono il governo: Presidente del Consiglio, singoli Ministri,,Consiglio dei Ministri, Consiglio di Gabinetto, Comitati di Ministri e Comitati interministeriali, Vice-presidenti del Consiglio, Ministri senza portafoglio, Sottosegretari di Stato, Vice-ministri e Commissari straordinari"@it .
+
+:sistemaElettorale a owl:Class ;
+	rdfs:label "sistema elettorale"^^xsd:string ;
+	rdfs:comment """La classe contiene le normative applicate nelle consultazioni elettorali dal regno di Sardegna alla Repubblica: maggioritario uninominale (1848 - 1880); maggioritario: scrutinio di lista (1882 - 1890); maggioritario: uninominale (1892 - 1913); proporzionale (1919 - 1921); lista unica (1929 - 1934); 
+proporzionale (1946 - 1993); misto: maggioritario e proporzionale (1994-2005); proporzionale con premio di maggioranza (2006-2011)"""@it .
+
+:normativa a owl:Class ;
+	rdfs:label "normativa"^^xsd:string ;
+	rdfs:comment "la classe contiene le Gazzette ufficiale della Repubblica Italiana e dell'Unione Europea"@it ;
+	rdfs:subClassOf :documenti .
+
+:giurisprudenza a owl:Class ;
+	rdfs:label "giurisprudenza"^^xsd:string ;
+	rdfs:subClassOf :documenti .
+
+:presidenteCamera a owl:Class ;
+	rdfs:label "presidente della Camera dei deputati"^^xsd:string .
+
+:presidenteConsiglioMinistri a owl:Class ;
+	rdfs:label "presidente del Consiglio dei ministri"^^xsd:string .
+
+:presidenteRepubblica a owl:Class ;
+	rdfs:label "presidente della Repubblica"^^xsd:string .
+
+:atto a owl:Class ;
+	rdfs:label "atto camera"^^xsd:string ;
+	rdfs:comment "la classe contiene proposte e disegni di legge"@it ;
+	rdfs:subClassOf :documenti .
+
+:pubblicistica a owl:Class ;
+	rdfs:label "pubblicistica"^^xsd:string ;
+	rdfs:subClassOf :documenti .
+
+:dossier a owl:Class ;
+	rdfs:label "dossier"^^xsd:string ;
+	rdfs:comment "la classe contiene i dossier di documentazione, analisi e materiali predisposti dai Servizi di documentazione della Camera a supporto dell'attività parlamentare"@it ;
+	rdfs:subClassOf :documenti .
+
+:cronologia a owl:Class ;
+	rdfs:label "cronologia"^^xsd:string .
+
+:dibattito a owl:Class ;
+	rdfs:label "dibattito"^^xsd:string ;
+	rdfs:subClassOf :lavori .
+
+:discussione a owl:Class ;
+	rdfs:label "discussione"^^xsd:string ;
+	rdfs:subClassOf :lavori .
+
+:seduta a owl:Class ;
+	rdfs:label "seduta"^^xsd:string ;
+	rdfs:subClassOf :lavori .
+
+:senatore a owl:Class ;
+	rdfs:label "senatore"^^xsd:string .
+
+:DOC a owl:Class ;
+	rdfs:label "doc"^^xsd:string ;
+	rdfs:comment "la classe contiene i documenti parlamentari stampati dalla Camera dei deputati, i cosiddetti \"DOC\" in numero romano: documenti e relazioni, trasmessi alla Camera dal Governo o da altri soggetti istituzionali ovvero predisposti da organi della Camera stessa"@it ;
+	rdfs:subClassOf <http://www.camera.it/168> .
+
+:documentazione a owl:Class ;
+	rdfs:label "documentazione"^^xsd:string ;
+	rdfs:subClassOf :documenti .
+
+:dottrina a owl:Class ;
+	rdfs:label "dottrina"^^xsd:string ;
+	rdfs:subClassOf :documenti .
+
+:gruppoParlamentare a owl:Class ;
+	rdfs:label "gruppo parlamentare"^^xsd:string ;
+	rdfs:comment "La classe fa riferimento ai gruppi dei partiti o movimenti politici rappresentati alla Camera. Secondo il Regolamento della Camera ogni deputato deve necessariamente appartenere ad un gruppo"@it .
+
+:risorsa_web a owl:Class ;
+	rdfs:label "risorsa_web"^^xsd:string .
+
+:note a owl:Class ;
+	rdfs:label "note"^^xsd:string ;
+	rdfs:subClassOf :documenti .
+
+:tipologia a owl:Class ;
+	rdfs:label "tipologia documentaria"^^xsd:string .
+
+:ufficioParlamentare a owl:Class ;
+	rdfs:label "ufficio Parlamentare"^^xsd:string ;
+	rdfs:comment "ufficioParlamentare è la classe che identifica tutte le cariche ricoperte dai deputati negli organi parlamentari"@it .
+
+:unitaOrganizzativa a owl:Class ;
+	rdfs:label "unità organizzativa"^^xsd:string ;
+	rdfs:comment "unitaOrganizzativa è la classe che identifica i dipartimenti/uffici in cui si struttura la Camera dei Deputati"@it .
+
+:componenteGruppoMisto a owl:Class ;
+	rdfs:label "componente del Gruppo Misto"^^xsd:string ;
+	rdfs:comment "componenteGruppoMisto è la classe che identifica le compononeti di cui si compone il Gruppo Misto"@it .
+
+:lavoriPreparatoriLegge a owl:Class ;
+	rdfs:label "lavori preparatori"^^xsd:string ;
+	rdfs:comment "riferimento ai lavori preparatori di una legge"@it .
+
+:rispostaAIC a owl:Class ;
+	rdfs:label "risposta scritta alle interrogazioni"^^xsd:string ;
+	rdfs:comment "classe usata per individuare le risposte scritte alle interrogazioni parlamentari"@it .
+
+:trasformazioneGruppo a owl:Class ;
+	rdfs:label "trasformazione del Gruppo Parlamentare"^^xsd:string ;
+	rdfs:comment "classe per gestire scissioni, accorpamenti, promozioni o riduzione a componente dei Gruppi Parlamentari"@it ;
+	rdfs:subClassOf _:node17168lu6ix187 .
+
+_:node17168lu6ix187 a owl:Restriction ;
+	owl:onProperty dc:date ;
+	owl:someValuesFrom rdfs:Literal .
+
+:trasformazioneGruppo rdfs:subClassOf _:node17168lu6ix188 .
+
+_:node17168lu6ix188 a owl:Restriction ;
+	owl:onProperty dc:type ;
+	owl:someValuesFrom rdfs:Literal .
+
+:trasformazioneGruppo rdfs:subClassOf _:node17168lu6ix189 .
+
+_:node17168lu6ix189 a owl:Restriction ;
+	owl:onProperty :rif_gruppoParlamentare .
+
+:cambioDenominazione a owl:Class ;
+	rdfs:label "cambio denominazione del Gruppo Parlamentare"^^xsd:string ;
+	rdfs:comment "questa classe è utilizzata per gestire i cambi di denominazione del Gruppo Parlamentare"@it ;
+	rdfs:subClassOf _:node17168lu6ix190 .
+
+_:node17168lu6ix190 a owl:Restriction ;
+	owl:onProperty dc:date ;
+	owl:someValuesFrom rdfs:Literal .
+
+:cambioDenominazione rdfs:subClassOf _:node17168lu6ix191 .
+
+_:node17168lu6ix191 a owl:Restriction ;
+	owl:onProperty dc:title ;
+	owl:someValuesFrom rdfs:Literal .
+
+:cambioDenominazione rdfs:subClassOf _:node17168lu6ix192 .
+
+_:node17168lu6ix192 a owl:Restriction ;
+	owl:onProperty dcterms:alternative ;
+	owl:someValuesFrom rdfs:Literal .
+
+:elezione a owl:Class ;
+	rdfs:label "elezione"^^xsd:string ;
+	rdfs:comment "elezione è la classe che identifica i dati di elezione di un sinoglo deputato (collegio, voti, sistema elettorale)"@it .
+
+:proclamazione a owl:Class ;
+	rdfs:label "proclamazione"^^xsd:string ;
+	rdfs:comment "questa classe è stata creata per gestire subentri e sostituzioni nel mandato camera"@it ;
+	rdfs:subClassOf _:node17168lu6ix193 .
+
+_:node17168lu6ix193 a owl:Restriction ;
+	owl:onProperty dc:type ;
+	owl:someValuesFrom rdfs:Literal .
+
+:proclamazione rdfs:subClassOf _:node17168lu6ix194 .
+
+_:node17168lu6ix194 a owl:Restriction ;
+	owl:onProperty :rif_deputato .
+
+:circoscrizionePlurieletto a owl:Class ;
+	rdfs:label "circoscrizioni per plurieletti"^^xsd:string ;
+	rdfs:comment "questa classe è stata creata per gestire la descrizione di tutte le circoscrizione dei plurieletti"@it ;
+	rdfs:subClassOf _:node17168lu6ix195 .
+
+_:node17168lu6ix195 a owl:Restriction ;
+	owl:onProperty dc:coverage ;
+	owl:someValuesFrom rdfs:Literal .
+
+:adesioneGruppo a owl:Class ;
+	rdfs:label "adesione del deputato al Gruppo Parlamentare"^^xsd:string ;
+	rdfs:comment "questa classe è stata creata per gestire le adesioni dei deputati ai gruppi parlamentari"@it ;
+	rdfs:subClassOf _:node17168lu6ix196 .
+
+_:node17168lu6ix196 a owl:Restriction ;
+	owl:onProperty :rif_gruppoParlamentare .
+
+:adesioneGruppo rdfs:subClassOf _:node17168lu6ix197 .
+
+_:node17168lu6ix197 a owl:Restriction ;
+	owl:onProperty dc:date ;
+	owl:someValuesFrom rdfs:Literal .
+
+:adesioneGruppoMisto a owl:Class ;
+	rdfs:label "adesione al Gruppo Misto"^^xsd:string ;
+	rdfs:comment "questa classe è stata creata per gestire le adesioni del Gruppo Misto"@it ;
+	rdfs:subClassOf _:node17168lu6ix198 .
+
+_:node17168lu6ix198 a owl:Restriction ;
+	owl:onProperty :rif_componente .
+
+:adesioneGruppoMisto rdfs:subClassOf _:node17168lu6ix199 .
+
+_:node17168lu6ix199 a owl:Restriction ;
+	owl:onProperty dc:date ;
+	owl:someValuesFrom rdfs:Literal .
+
+:appartenenzaOrgano a owl:Class ;
+	rdfs:label "appertenenza di un deputato ad un organo"^^xsd:string ;
+	rdfs:comment "questa classe è stata creata per descrivere i membri di un organo"@it ;
+	rdfs:subClassOf _:node17168lu6ix200 .
+
+_:node17168lu6ix200 a owl:Restriction ;
+	owl:onProperty :rif_organo .
+
+:appartenenzaOrgano rdfs:subClassOf _:node17168lu6ix201 .
+
+_:node17168lu6ix201 a owl:Restriction ;
+	owl:onProperty :rif_deputato .
+
+:appartenenzaOrgano rdfs:subClassOf _:node17168lu6ix202 .
+
+_:node17168lu6ix202 a owl:Restriction ;
+	owl:onProperty dc:date ;
+	owl:someValuesFrom rdfs:Literal .
+
+:appartenenzaOrgano rdfs:subClassOf _:node17168lu6ix203 .
+
+_:node17168lu6ix203 a owl:Restriction ;
+	owl:onProperty dc:description ;
+	owl:someValuesFrom rdfs:Literal .
+
+:appartenenzaOrgano rdfs:subClassOf _:node17168lu6ix204 .
+
+_:node17168lu6ix204 a owl:Restriction ;
+	owl:onProperty dc:type ;
+	owl:someValuesFrom rdfs:Literal .
+
+:composizioneOrgano a owl:Class ;
+	rdfs:label "composizione di un organo parlamentare"^^xsd:string ;
+	rdfs:comment "questa classe è stata creata per descrivere i membri di un organo"@it ;
+	rdfs:subClassOf _:node17168lu6ix205 .
+
+_:node17168lu6ix205 a owl:Restriction ;
+	owl:onProperty :rif_deputato .
+
+:composizioneOrgano rdfs:subClassOf _:node17168lu6ix206 .
+
+_:node17168lu6ix206 a owl:Restriction ;
+	owl:onProperty dc:date ;
+	owl:someValuesFrom rdfs:Literal .
+
+:rif_sistemaElettorale a owl:ObjectProperty ;
+	rdfs:label "riferimento al sistema elettorale" ;
+	rdfs:domain _:node17168lu6ix207 .
+
+_:node17168lu6ix207 a owl:Class ;
+	owl:unionOf _:node17168lu6ix208 .
+
+_:node17168lu6ix208 rdf:first :legislatura ;
+	rdf:rest _:node17168lu6ix209 .
+
+_:node17168lu6ix209 rdf:first :elezione ;
+	rdf:rest rdf:nil .
+
+:rif_sistemaElettorale rdfs:range :sistemaElettorale ;
+	rdfs:comment "questa proprietà collega ogni legislatura ad un sistema elettorale"@it .
+
+:membro a owl:ObjectProperty ;
+	rdfs:label "membro" ;
+	rdfs:domain :deputato ;
+	rdfs:range :appartenenzaOrgano ;
+	rdfs:comment "proprietà che collega un deputato ad un organo"@it .
+
+:rif_mandatoCamera a owl:ObjectProperty ;
+	rdfs:label "riferimento a mandato camera" ;
+	rdfs:domain _:node17168lu6ix210 .
+
+_:node17168lu6ix210 a owl:Class ;
+	owl:unionOf _:node17168lu6ix211 .
+
+_:node17168lu6ix211 rdf:first :deputato ;
+	rdf:rest _:node17168lu6ix212 .
+
+_:node17168lu6ix212 rdf:first :persona ;
+	rdf:rest rdf:nil .
+
+:rif_mandatoCamera rdfs:range :mandatoCamera ;
+	rdfs:comment "serve a collegare il deputato al mandato elettorale"@it .
+
+:rif_mandatoSenato a owl:ObjectProperty ;
+	rdfs:label "riferimento a mandato senato" ;
+	rdfs:domain _:node17168lu6ix213 .
+
+_:node17168lu6ix213 a owl:Class ;
+	owl:unionOf _:node17168lu6ix214 .
+
+_:node17168lu6ix214 rdf:first :senatore ;
+	rdf:rest _:node17168lu6ix215 .
+
+_:node17168lu6ix215 rdf:first :persona ;
+	rdf:rest rdf:nil .
+
+:rif_mandatoSenato rdfs:range :mandatoSenato ;
+	rdfs:comment "serve a collegare il deputato al mandato di senatore"@it .
+
+:rif_deputato a owl:ObjectProperty ;
+	rdfs:label "rierimento a deputato" ;
+	rdfs:domain _:node17168lu6ix216 .
+
+_:node17168lu6ix216 a owl:Class ;
+	owl:unionOf _:node17168lu6ix217 .
+
+_:node17168lu6ix217 rdf:first :persona ;
+	rdf:rest _:node17168lu6ix218 .
+
+_:node17168lu6ix218 rdf:first :incarico .
+
+:incarico a owl:Class .
+
+_:node17168lu6ix218 rdf:rest _:node17168lu6ix219 .
+
+_:node17168lu6ix219 rdf:first :presidenteCamera ;
+	rdf:rest _:node17168lu6ix220 .
+
+_:node17168lu6ix220 rdf:first :ufficioParlamentare ;
+	rdf:rest _:node17168lu6ix221 .
+
+_:node17168lu6ix221 rdf:first :mandatoCamera ;
+	rdf:rest _:node17168lu6ix222 .
+
+_:node17168lu6ix222 rdf:first :cronologia ;
+	rdf:rest _:node17168lu6ix223 .
+
+_:node17168lu6ix223 rdf:first :discussione ;
+	rdf:rest rdf:nil .
+
+:rif_deputato rdfs:range :deputato ;
+	rdfs:comment "proprietà generica utilizzata per puntare alla risorsa deputato in vari punti dell'ontologia"@it .
+
+:rif_presidenteConsiglioMinistri a owl:ObjectProperty ;
+	rdfs:label "rierimento al Presidente del Consiglio dei ministri" ;
+	rdfs:domain _:node17168lu6ix224 .
+
+_:node17168lu6ix224 a owl:Class ;
+	owl:unionOf _:node17168lu6ix225 .
+
+_:node17168lu6ix225 rdf:first :governo ;
+	rdf:rest _:node17168lu6ix226 .
+
+_:node17168lu6ix226 rdf:first :persona ;
+	rdf:rest rdf:nil .
+
+:rif_presidenteConsiglioMinistri rdfs:range :presidenteConsiglioMinistri .
+
+:rif_persona a owl:ObjectProperty ;
+	rdfs:label "riferimento a persona" ;
+	rdfs:domain _:node17168lu6ix227 .
+
+_:node17168lu6ix227 a owl:Class ;
+	owl:unionOf _:node17168lu6ix228 .
+
+_:node17168lu6ix228 rdf:first :discussione ;
+	rdf:rest _:node17168lu6ix229 .
+
+_:node17168lu6ix229 rdf:first :incaricoGoverno .
+
+:incaricoGoverno a owl:Class .
+
+_:node17168lu6ix229 rdf:rest _:node17168lu6ix230 .
+
+_:node17168lu6ix230 rdf:first :presidenteCamera ;
+	rdf:rest _:node17168lu6ix231 .
+
+_:node17168lu6ix231 rdf:first :presidenteConsiglioMinistri ;
+	rdf:rest _:node17168lu6ix232 .
+
+_:node17168lu6ix232 rdf:first :cronologia ;
+	rdf:rest rdf:nil .
+
+:rif_persona rdfs:range :persona ;
+	rdfs:comment "propreità generica utilizzata per puntare ad una risorsa persona"@it .
+
+:haMembro a owl:ObjectProperty ;
+	rdfs:label "ha membro" ;
+	rdfs:domain :organo ;
+	rdfs:range :composizioneOrgano ;
+	rdfs:comment "propreità utilizzata per descrivere le composizioni degli organi parlamentari"@it .
+
+:fa_parte_della a owl:ObjectProperty ;
+	rdfs:label "appartiene alla legislatura" ;
+	rdfs:domain :deputato ;
+	rdfs:range :legislatura ;
+	rdfs:comment "proprietà che collega una risorsa deputato ad una specifica legislatura"@it .
+
+:rif_unitaOrganizzativa a owl:ObjectProperty ;
+	rdfs:label "unità organizzativa" ;
+	rdfs:domain _:node17168lu6ix233 .
+
+_:node17168lu6ix233 a owl:Class ;
+	owl:unionOf _:node17168lu6ix234 .
+
+_:node17168lu6ix234 rdf:first :aic ;
+	rdf:rest _:node17168lu6ix235 .
+
+_:node17168lu6ix235 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix236 .
+
+_:node17168lu6ix236 rdf:first :doc .
+
+:doc a owl:Class .
+
+_:node17168lu6ix236 rdf:rest _:node17168lu6ix237 .
+
+_:node17168lu6ix237 rdf:first :documentazione ;
+	rdf:rest _:node17168lu6ix238 .
+
+_:node17168lu6ix238 rdf:first :dottrina ;
+	rdf:rest _:node17168lu6ix239 .
+
+_:node17168lu6ix239 rdf:first :risorsa_web ;
+	rdf:rest _:node17168lu6ix240 .
+
+_:node17168lu6ix240 rdf:first :note ;
+	rdf:rest rdf:nil .
+
+:rif_unitaOrganizzativa rdfs:range :unitaOrganizzativa ;
+	rdfs:comment "puntamento dei documenti ad una unità organizzativa all'interno della struttura camera"@it .
+
+:aderisce a owl:ObjectProperty ;
+	rdfs:label "aderisce" ;
+	rdfs:domain :deputato ;
+	rdfs:range :gruppoParlamentare ;
+	rdfs:comment "adesione di un deputato ad un gruppo parlamentare"@it .
+
+:rif_ufficioParlamentare a owl:ObjectProperty ;
+	rdfs:label "riferimento ufficio parlamentare" ;
+	rdfs:domain _:node17168lu6ix241 .
+
+_:node17168lu6ix241 a owl:Class ;
+	owl:unionOf _:node17168lu6ix242 .
+
+_:node17168lu6ix242 rdf:first :organo ;
+	rdf:rest _:node17168lu6ix243 .
+
+_:node17168lu6ix243 rdf:first :deputato ;
+	rdf:rest rdf:nil .
+
+:rif_ufficioParlamentare rdfs:range :ufficioParlamentare ;
+	rdfs:comment "propreità che collega un organo agli uffici parlamentari"@it .
+
+:rif_leg a owl:ObjectProperty ;
+	rdfs:label "riferimento alla legislatura" ;
+	rdfs:domain _:node17168lu6ix244 .
+
+_:node17168lu6ix244 a owl:Class ;
+	owl:unionOf _:node17168lu6ix245 .
+
+_:node17168lu6ix245 rdf:first :mandatoCamera ;
+	rdf:rest _:node17168lu6ix246 .
+
+_:node17168lu6ix246 rdf:first :organo ;
+	rdf:rest _:node17168lu6ix247 .
+
+_:node17168lu6ix247 rdf:first :governo ;
+	rdf:rest _:node17168lu6ix248 .
+
+_:node17168lu6ix248 rdf:first :assemblea ;
+	rdf:rest _:node17168lu6ix249 .
+
+_:node17168lu6ix249 rdf:first :aic ;
+	rdf:rest _:node17168lu6ix250 .
+
+_:node17168lu6ix250 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix251 .
+
+_:node17168lu6ix251 rdf:first :cronologia ;
+	rdf:rest _:node17168lu6ix252 .
+
+_:node17168lu6ix252 rdf:first :dibattito ;
+	rdf:rest _:node17168lu6ix253 .
+
+_:node17168lu6ix253 rdf:first :DOC ;
+	rdf:rest _:node17168lu6ix254 .
+
+_:node17168lu6ix254 rdf:first :documentazione ;
+	rdf:rest _:node17168lu6ix255 .
+
+_:node17168lu6ix255 rdf:first :dottrina ;
+	rdf:rest _:node17168lu6ix256 .
+
+_:node17168lu6ix256 rdf:first :elezione ;
+	rdf:rest _:node17168lu6ix257 .
+
+_:node17168lu6ix257 rdf:first :giurisprudenza ;
+	rdf:rest _:node17168lu6ix258 .
+
+_:node17168lu6ix258 rdf:first :gruppoParlamentare ;
+	rdf:rest _:node17168lu6ix259 .
+
+_:node17168lu6ix259 rdf:first :incarico ;
+	rdf:rest _:node17168lu6ix260 .
+
+_:node17168lu6ix260 rdf:first :incaricoGoverno ;
+	rdf:rest _:node17168lu6ix261 .
+
+_:node17168lu6ix261 rdf:first :legge ;
+	rdf:rest _:node17168lu6ix262 .
+
+_:node17168lu6ix262 rdf:first :risorsa_web ;
+	rdf:rest _:node17168lu6ix263 .
+
+_:node17168lu6ix263 rdf:first :normativa ;
+	rdf:rest _:node17168lu6ix264 .
+
+_:node17168lu6ix264 rdf:first :note ;
+	rdf:rest _:node17168lu6ix265 .
+
+_:node17168lu6ix265 rdf:first :presidenteCamera ;
+	rdf:rest _:node17168lu6ix266 .
+
+_:node17168lu6ix266 rdf:first :pubblicistica ;
+	rdf:rest _:node17168lu6ix267 .
+
+_:node17168lu6ix267 rdf:first :sistemaElettorale ;
+	rdf:rest _:node17168lu6ix268 .
+
+_:node17168lu6ix268 rdf:first :seduta ;
+	rdf:rest _:node17168lu6ix269 .
+
+_:node17168lu6ix269 rdf:first :ufficioParlamentare ;
+	rdf:rest _:node17168lu6ix270 .
+
+_:node17168lu6ix270 rdf:first :componenteGruppoMisto ;
+	rdf:rest rdf:nil .
+
+:rif_leg rdfs:range :legislatura ;
+	rdfs:comment "proprietà generica utilizzata ovunque tra le risorse per specificare l'appartenenza ad una legislatura"@it .
+
+:rif_governo a owl:ObjectProperty ;
+	rdfs:label "riferimento al governo" ;
+	rdfs:domain _:node17168lu6ix271 .
+
+_:node17168lu6ix271 a owl:Class ;
+	owl:unionOf _:node17168lu6ix272 .
+
+_:node17168lu6ix272 rdf:first :organoGoverno ;
+	rdf:rest _:node17168lu6ix273 .
+
+_:node17168lu6ix273 rdf:first :legislatura ;
+	rdf:rest _:node17168lu6ix274 .
+
+_:node17168lu6ix274 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix275 .
+
+_:node17168lu6ix275 rdf:first :incaricoGoverno ;
+	rdf:rest _:node17168lu6ix276 .
+
+_:node17168lu6ix276 rdf:first :doc ;
+	rdf:rest _:node17168lu6ix277 .
+
+_:node17168lu6ix277 rdf:first :presidenteConsiglioMinistri ;
+	rdf:rest _:node17168lu6ix278 .
+
+_:node17168lu6ix278 rdf:first :componenteGruppoMisto ;
+	rdf:rest rdf:nil .
+
+:rif_governo rdfs:range :governo ;
+	rdfs:comment "riferimento al Governo"@it .
+
+:rif_dossier a owl:ObjectProperty ;
+	rdfs:label "riferimento al dossier" ;
+	rdfs:domain _:node17168lu6ix279 .
+
+_:node17168lu6ix279 a owl:Class ;
+	owl:unionOf _:node17168lu6ix280 .
+
+_:node17168lu6ix280 rdf:first :atto ;
+	rdf:rest rdf:nil .
+
+:rif_dossier rdfs:range :dossier ;
+	rdfs:comment "riferimento ad un altro dossier citato nell'atto camera"@it .
+
+:rif_incaricoGoverno a owl:ObjectProperty ;
+	rdfs:label "riferimento all'incarico di Governo" ;
+	rdfs:domain _:node17168lu6ix281 .
+
+_:node17168lu6ix281 a owl:Class ;
+	owl:unionOf _:node17168lu6ix282 .
+
+_:node17168lu6ix282 rdf:first :deputato ;
+	rdf:rest _:node17168lu6ix283 .
+
+_:node17168lu6ix283 rdf:first :governo ;
+	rdf:rest _:node17168lu6ix284 .
+
+_:node17168lu6ix284 rdf:first :organoGoverno ;
+	rdf:rest _:node17168lu6ix285 .
+
+_:node17168lu6ix285 rdf:first :persona ;
+	rdf:rest rdf:nil .
+
+:rif_incaricoGoverno rdfs:range :incaricoGoverno .
+
+:rif_organo a owl:ObjectProperty ;
+	rdfs:label "riferimento all'organo" ;
+	rdfs:domain _:node17168lu6ix286 .
+
+_:node17168lu6ix286 a owl:Class ;
+	owl:unionOf _:node17168lu6ix287 .
+
+_:node17168lu6ix287 rdf:first :ufficioParlamentare ;
+	rdf:rest _:node17168lu6ix288 .
+
+_:node17168lu6ix288 rdf:first :dibattito ;
+	rdf:rest _:node17168lu6ix289 .
+
+_:node17168lu6ix289 rdf:first :doc ;
+	rdf:rest _:node17168lu6ix290 .
+
+_:node17168lu6ix290 rdf:first :seduta ;
+	rdf:rest rdf:nil .
+
+:rif_organo rdfs:range :organo ;
+	rdfs:comment "puntamento all'organo parlamentare citato"@it .
+
+:rif_discussione a owl:ObjectProperty ;
+	rdfs:label "riferimento alla discussione" ;
+	rdfs:domain :dibattito ;
+	rdfs:range :discussione ;
+	rdfs:comment "un dabattito può avere più discussioni"@it .
+
+:siComponeDi a owl:ObjectProperty ;
+	rdfs:label "si compone di" ;
+	rdfs:domain _:node17168lu6ix291 .
+
+_:node17168lu6ix291 a owl:Class ;
+	owl:unionOf _:node17168lu6ix292 .
+
+_:node17168lu6ix292 rdf:first :assemblea ;
+	rdf:rest _:node17168lu6ix293 .
+
+_:node17168lu6ix293 rdf:first :componenteGruppoMisto ;
+	rdf:rest _:node17168lu6ix294 .
+
+_:node17168lu6ix294 rdf:first :legislatura ;
+	rdf:rest _:node17168lu6ix295 .
+
+_:node17168lu6ix295 rdf:first :gruppoParlamentare ;
+	rdf:rest rdf:nil .
+
+:siComponeDi rdfs:range _:node17168lu6ix296 .
+
+_:node17168lu6ix296 a owl:Class ;
+	owl:unionOf _:node17168lu6ix297 .
+
+_:node17168lu6ix297 rdf:first :organo ;
+	rdf:rest _:node17168lu6ix298 .
+
+_:node17168lu6ix298 rdf:first :deputato ;
+	rdf:rest rdf:nil .
+
+:siComponeDi rdfs:comment "proprietà utilizzata per descrivere la composizione dei deputati nell'assemblea e nei gruppi e degli orgnao nelle legislature"@it .
+
+:nomina a owl:ObjectProperty ;
+	rdfs:label "nomina" ;
+	rdfs:domain :legislatura ;
+	rdfs:range :assemblea ;
+	rdfs:comment "descrive la relazione tra legislatura e assemblea"@it .
+
+:rif_organoGoverno a owl:ObjectProperty ;
+	rdfs:label "riferimento all'organo di governo" ;
+	rdfs:domain _:node17168lu6ix299 .
+
+_:node17168lu6ix299 a owl:Class ;
+	owl:unionOf _:node17168lu6ix300 .
+
+_:node17168lu6ix300 rdf:first :incaricoGoverno ;
+	rdf:rest _:node17168lu6ix301 .
+
+_:node17168lu6ix301 rdf:first :atto ;
+	rdf:rest rdf:nil .
+
+:rif_organoGoverno rdfs:range :organoGoverno ;
+	rdfs:comment "proprietà utilizzata all'interno degli incarichi di governo per puntare all'organo di governo"@it .
+
+:rif_senatore a owl:ObjectProperty ;
+	rdfs:label "riferimento al senatore" ;
+	rdfs:domain _:node17168lu6ix302 .
+
+_:node17168lu6ix302 a owl:Class ;
+	owl:unionOf _:node17168lu6ix303 .
+
+_:node17168lu6ix303 rdf:first :mandatoSenato ;
+	rdf:rest _:node17168lu6ix304 .
+
+_:node17168lu6ix304 rdf:first :ufficioParlamentare ;
+	rdf:rest rdf:nil .
+
+:rif_senatore rdfs:range :senatore ;
+	rdfs:comment "proprietà utilizzata all'interno degli incarichi di governo per puntare all'organo di governo"@it .
+
+:rif_seduta a owl:ObjectProperty ;
+	rdfs:label "riferimento alla seduta" ;
+	rdfs:domain _:node17168lu6ix305 .
+
+_:node17168lu6ix305 a owl:Class ;
+	owl:unionOf _:node17168lu6ix306 .
+
+_:node17168lu6ix306 rdf:first :discussione ;
+	rdf:rest _:node17168lu6ix307 .
+
+_:node17168lu6ix307 rdf:first :aic ;
+	rdf:rest _:node17168lu6ix308 .
+
+_:node17168lu6ix308 rdf:first :bollettino ;
+	rdf:rest rdf:nil .
+
+:rif_seduta rdfs:range :seduta ;
+	rdfs:comment "in una seduta si svolgono più discussioni"@it .
+
+:rif_elezione a owl:ObjectProperty ;
+	rdfs:label "riferimento all'elezione" ;
+	rdfs:domain :mandatoCamera ;
+	rdfs:range :elezione .
+
+:risposta a owl:ObjectProperty ;
+	rdfs:label "riferimento alla risposta scritta all'interrogazione" ;
+	rdfs:domain :aic ;
+	rdfs:range :rispostaAIC .
+
+:rif_doc a owl:ObjectProperty ;
+	rdfs:label "riferimento al doc" ;
+	rdfs:domain _:node17168lu6ix309 .
+
+_:node17168lu6ix309 a owl:Class ;
+	owl:unionOf _:node17168lu6ix310 .
+
+_:node17168lu6ix310 rdf:first :DOC ;
+	rdf:rest _:node17168lu6ix311 .
+
+_:node17168lu6ix311 rdf:first :dibattito ;
+	rdf:rest rdf:nil .
+
+:rif_doc rdfs:range :DOC ;
+	rdfs:comment "un doc può fare riferimento ad un altro DOC"@it .
+
+:rif_gruppoParlamentare a owl:ObjectProperty ;
+	rdfs:label "riferimento al Gruppo parlamentare" ;
+	rdfs:domain _:node17168lu6ix312 .
+
+_:node17168lu6ix312 a owl:Class ;
+	owl:unionOf _:node17168lu6ix313 .
+
+_:node17168lu6ix313 rdf:first :componenteGruppoMisto ;
+	rdf:rest _:node17168lu6ix314 .
+
+_:node17168lu6ix314 rdf:first :incarico ;
+	rdf:rest rdf:nil .
+
+:rif_gruppoParlamentare rdfs:range :gruppoParlamentare ;
+	rdfs:comment "riferimento al Gruppo parlamentare"@it .
+
+:rif_incarico a owl:ObjectProperty ;
+	rdfs:label "riferimento all'incarico" ;
+	rdfs:domain _:node17168lu6ix315 .
+
+_:node17168lu6ix315 a owl:Class ;
+	owl:unionOf _:node17168lu6ix316 .
+
+_:node17168lu6ix316 rdf:first :gruppoParlamentare ;
+	rdf:rest _:node17168lu6ix317 .
+
+_:node17168lu6ix317 rdf:first :deputato ;
+	rdf:rest rdf:nil .
+
+:rif_incarico rdfs:range :incarico ;
+	rdfs:comment "riferimento all'incarico nel Gruppo parlamentare"@it .
+
+:rif_assemblea a owl:ObjectProperty ;
+	rdfs:label "riferimento all'assemblea" ;
+	rdfs:domain _:node17168lu6ix318 .
+
+_:node17168lu6ix318 a owl:Class ;
+	owl:unionOf _:node17168lu6ix319 .
+
+_:node17168lu6ix319 rdf:first :dibattito ;
+	rdf:rest _:node17168lu6ix320 .
+
+_:node17168lu6ix320 rdf:first :seduta ;
+	rdf:rest rdf:nil .
+
+:rif_assemblea rdfs:range :assemblea ;
+	rdfs:comment "un doc può fare riferimento ad un altro doc"@it .
+
+:lavoriPreparatori a owl:ObjectProperty ;
+	rdfs:label "lavori preparatori" ;
+	rdfs:domain :lavoriPreparatoriLegge ;
+	rdfs:range :atto .
+
+:presieduta_da a owl:ObjectProperty ;
+	rdfs:label "presieduta da" ;
+	rdfs:domain :seduta ;
+	rdfs:range :deputato ;
+	rdfs:comment "proprietà che serve ad indicare da quale deputato è presieduta una seduta"@it .
+
+:griglia a owl:ObjectProperty ;
+	rdfs:label "griglia" ;
+	rdfs:domain _:node17168lu6ix321 .
+
+_:node17168lu6ix321 a owl:Class ;
+	owl:unionOf _:node17168lu6ix322 .
+
+_:node17168lu6ix322 rdf:first :aic ;
+	rdf:rest _:node17168lu6ix323 .
+
+_:node17168lu6ix323 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix324 .
+
+_:node17168lu6ix324 rdf:first :DOC ;
+	rdf:rest _:node17168lu6ix325 .
+
+_:node17168lu6ix325 rdf:first :documentazione ;
+	rdf:rest _:node17168lu6ix326 .
+
+_:node17168lu6ix326 rdf:first :dottrina ;
+	rdf:rest _:node17168lu6ix327 .
+
+_:node17168lu6ix327 rdf:first :giurisprudenza ;
+	rdf:rest _:node17168lu6ix328 .
+
+_:node17168lu6ix328 rdf:first :risorsa_web ;
+	rdf:rest _:node17168lu6ix329 .
+
+_:node17168lu6ix329 rdf:first :normativa ;
+	rdf:rest _:node17168lu6ix330 .
+
+_:node17168lu6ix330 rdf:first :note ;
+	rdf:rest _:node17168lu6ix331 .
+
+_:node17168lu6ix331 rdf:first :pubblicistica ;
+	rdf:rest rdf:nil .
+
+:griglia rdfs:range <http://ocd.intra.camera.it/theca.rdf/Concept> ;
+	rdfs:comment "riferimento ai concetti delle griglie tematiche di TheCa"@it .
+
+:primo_firmatario a owl:ObjectProperty ;
+	rdfs:label "primo firmatario" ;
+	rdfs:domain _:node17168lu6ix332 .
+
+_:node17168lu6ix332 a owl:Class ;
+	owl:unionOf _:node17168lu6ix333 .
+
+_:node17168lu6ix333 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix334 .
+
+_:node17168lu6ix334 rdf:first :DOC ;
+	rdf:rest _:node17168lu6ix335 .
+
+_:node17168lu6ix335 rdf:first :aic ;
+	rdf:rest rdf:nil .
+
+:primo_firmatario rdfs:range :persona ;
+	rdfs:comment "indica il primo firmatario del documento"@it .
+
+:altro_firmatario a owl:ObjectProperty ;
+	rdfs:label "altro firmatario" ;
+	rdfs:domain _:node17168lu6ix336 .
+
+_:node17168lu6ix336 a owl:Class ;
+	owl:unionOf _:node17168lu6ix337 .
+
+_:node17168lu6ix337 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix338 .
+
+_:node17168lu6ix338 rdf:first :aic ;
+	rdf:rest rdf:nil .
+
+:altro_firmatario rdfs:range :persona ;
+	rdfs:comment "indica gli altri firmatari del documento"@it .
+
+:ac a owl:ObjectProperty ;
+	rdfs:label "URL dell'atto camera" ;
+	rdfs:domain _:node17168lu6ix339 .
+
+_:node17168lu6ix339 a owl:Class ;
+	owl:unionOf _:node17168lu6ix340 .
+
+_:node17168lu6ix340 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix341 .
+
+_:node17168lu6ix341 rdf:first :doc ;
+	rdf:rest _:node17168lu6ix342 .
+
+_:node17168lu6ix342 rdf:first :documentazione ;
+	rdf:rest _:node17168lu6ix343 .
+
+_:node17168lu6ix343 rdf:first :dossier ;
+	rdf:rest _:node17168lu6ix344 .
+
+_:node17168lu6ix344 rdf:first :dottrina ;
+	rdf:rest _:node17168lu6ix345 .
+
+_:node17168lu6ix345 rdf:first :giurisprudenza ;
+	rdf:rest _:node17168lu6ix346 .
+
+_:node17168lu6ix346 rdf:first :governo ;
+	rdf:rest _:node17168lu6ix347 .
+
+_:node17168lu6ix347 rdf:first :normativa ;
+	rdf:rest _:node17168lu6ix348 .
+
+_:node17168lu6ix348 rdf:first :note ;
+	rdf:rest _:node17168lu6ix349 .
+
+_:node17168lu6ix349 rdf:first :pubblicistica ;
+	rdf:rest rdf:nil .
+
+:ac rdfs:comment "puntamento alla URL dell'atto camera"@it .
+
+:doc a owl:ObjectProperty ;
+	rdfs:label "URL del DOC" ;
+	rdfs:domain _:node17168lu6ix350 .
+
+_:node17168lu6ix350 a owl:Class ;
+	owl:unionOf _:node17168lu6ix351 .
+
+_:node17168lu6ix351 rdf:first :doc ;
+	rdf:rest rdf:nil .
+
+:doc rdfs:comment "puntamento alla URL del DOC"@it .
+
+:rif_attocamera a owl:ObjectProperty ;
+	rdfs:label "riferimento all'atto camera" ;
+	rdfs:domain _:node17168lu6ix352 .
+
+_:node17168lu6ix352 a owl:Class ;
+	owl:unionOf _:node17168lu6ix353 .
+
+_:node17168lu6ix353 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix354 .
+
+_:node17168lu6ix354 rdf:first :cronologia ;
+	rdf:rest _:node17168lu6ix355 .
+
+_:node17168lu6ix355 rdf:first :dibattito ;
+	rdf:rest _:node17168lu6ix356 .
+
+_:node17168lu6ix356 rdf:first :documentazione ;
+	rdf:rest _:node17168lu6ix357 .
+
+_:node17168lu6ix357 rdf:first :lavoriPreparatori .
+
+:lavoriPreparatori a owl:Class .
+
+_:node17168lu6ix357 rdf:rest rdf:nil .
+
+:rif_attocamera rdfs:range :atto ;
+	rdfs:comment "riferimento agli altri atti camera citati"@it .
+
+:tipoProclamazione a owl:ObjectProperty ;
+	rdfs:label "tipologia proclamazione" ;
+	rdfs:domain :mandatoCamera ;
+	rdfs:range :proclamazione ;
+	rdfs:comment "propreità utilizzata per descrivere la tipologia di proclamazione legata ad un mandato elettorale (per sostituzione, subentro, ...)"@it .
+
+:rif_bollettino a owl:ObjectProperty ;
+	rdfs:label "riferimento al bollettino" ;
+	rdfs:domain :seduta ;
+	rdfs:range :bollettino .
+
+:plurieletto a owl:ObjectProperty ;
+	rdfs:label "plurieletto" ;
+	rdfs:domain :elezione ;
+	rdfs:range :circoscrizionePlurieletto ;
+	rdfs:comment "proprietà utilizzata per descrivere tutte le circoscrizioni di elezione di un plurieletto"@it .
+
+:aderisce rdfs:range :adesioneGruppo ;
+	rdfs:comment "descrive l'adesione di un deputato ad un gruppo Parlamentare"@it .
+
+:componente a owl:ObjectProperty ;
+	rdfs:label "componente" ;
+	rdfs:domain :adesioneGruppo ;
+	rdfs:range :adesioneGruppoMisto ;
+	rdfs:comment "proprietà utilizzata per descrivere l'adesione di un deputato ad una componente del gruppo misto"@it .
+
+:destinatario a owl:ObjectProperty ;
+	rdfs:label "componente" ;
+	rdfs:domain :aic ;
+	rdfs:range :organoGoverno ;
+	rdfs:comment "proprietà che designa l'organo di Governo destinatario"@it .
+
+:lavoriPreparatori rdfs:label "componente" ;
+	rdfs:domain :legge ;
+	rdfs:range :organoGoverno ;
+	rdfs:comment "proprietà che designa l'organo di Governo destinatario"@it .
+
+:diventa a owl:ObjectProperty ;
+	rdfs:label "diventa" ;
+	rdfs:domain _:node17168lu6ix358 .
+
+_:node17168lu6ix358 a owl:Class ;
+	owl:unionOf _:node17168lu6ix359 .
+
+_:node17168lu6ix359 rdf:first :gruppoParlamentare ;
+	rdf:rest _:node17168lu6ix360 .
+
+_:node17168lu6ix360 rdf:first :componenteGruppoMisto ;
+	rdf:rest rdf:nil .
+
+:diventa rdfs:range :trasformazioneGruppo ;
+	rdfs:comment "propreità per gestire le trasformazione dei gruppi parlamentari"@it .
+
+:denominazione a owl:ObjectProperty ;
+	rdfs:label "denominazione" ;
+	rdfs:domain _:node17168lu6ix361 .
+
+_:node17168lu6ix361 a owl:Class ;
+	owl:unionOf _:node17168lu6ix362 .
+
+_:node17168lu6ix362 rdf:first :gruppoParlamentare ;
+	rdf:rest _:node17168lu6ix363 .
+
+_:node17168lu6ix363 rdf:first :componenteGruppoMisto ;
+	rdf:rest rdf:nil .
+
+:denominazione rdfs:range :cambioDenominazione ;
+	rdfs:comment "proprietà utilizzata per gestire i cambi di denominazione"@it .
+
+:dicastero a owl:DatatypeProperty ;
+	rdfs:label "dicastero" ;
+	rdfs:comment "booleano per indicare se si tratta di un dicastero"@it ;
+	rdfs:domain :organoGoverno ;
+	rdfs:range xsd:boolean .
+
+:carica a owl:DatatypeProperty ;
+	rdfs:label "dicastero" ;
+	rdfs:comment "identifica la tipologia della carica all'interno dell'Ufficio parlamentare"@it ;
+	rdfs:domain :ufficioParlamentare ;
+	rdfs:range xsd:string .
+
+:interim a owl:DatatypeProperty ;
+	rdfs:label "interim" ;
+	rdfs:comment "utilizzata per gestire le cariche ad interim"@it ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain :incaricoGoverno .
+
+:incaricoGovernativo a owl:DatatypeProperty ;
+	rdfs:label "incarico governativo" ;
+	rdfs:comment "per indicare la qualifica di incarico di Governo ricporta"@it ;
+	rdfs:range xsd:string ;
+	rdfs:domain :incaricoGoverno .
+
+:iniziativa a owl:DatatypeProperty ;
+	rdfs:label "iniziativa" ;
+	rdfs:comment "per indicare se l'atto camera è di iniziativa popolare, parlamentare o mista"@it ;
+	rdfs:range xsd:string ;
+	rdfs:domain :atto .
+
+:costituzionale a owl:DatatypeProperty ;
+	rdfs:label "costituzionale" ;
+	rdfs:comment "per indicare se un atto camera è costituzionale o ordinario"@it ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain :atto .
+
+:concluso a owl:DatatypeProperty ;
+	rdfs:label "costituzionale" ;
+	rdfs:comment "per indicare lo status di un atto di indirizzo e controllo"@it ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain :aic .
+
+:convalida a owl:DatatypeProperty ;
+	rdfs:label "data di convalida" ;
+	rdfs:comment "data di convalida del mandato camera"@it ;
+	rdfs:range xsd:date ;
+	rdfs:domain :mandatoCamera .
+
+:opzione a owl:DatatypeProperty ;
+	rdfs:label "data di opzione" ;
+	rdfs:comment "data di opzione in una elezione"@it ;
+	rdfs:range xsd:date ;
+	rdfs:domain :elezione .
+
+:name a owl:DatatypeProperty ;
+	rdfs:label "nome del luogo" ;
+	rdfs:comment "nome del luogo"@it ;
+	rdfs:subPropertyOf gn:name ;
+	rdfs:range xsd:string .
+
+:parentADM1 a owl:DatatypeProperty ;
+	rdfs:label "ADM1" ;
+	rdfs:comment "primo livello di divisione amministrativa"@it ;
+	rdfs:subPropertyOf gn:parentADM1 ;
+	rdfs:range xsd:string .
+
+:parentADM2 a owl:DatatypeProperty ;
+	rdfs:label "ADM2" ;
+	rdfs:comment "secondo livello di divisione amministrativa"@it ;
+	rdfs:subPropertyOf gn:parentADM2 ;
+	rdfs:range xsd:string .
+
+:parentADM3 a owl:DatatypeProperty ;
+	rdfs:label "ADM3" ;
+	rdfs:comment "terzo livello di divisione amministrativa"@it ;
+	rdfs:subPropertyOf gn:parentADM3 ;
+	rdfs:range xsd:string .
+
+:parentCountry a owl:DatatypeProperty ;
+	rdfs:label "parentCountry" ;
+	rdfs:comment "nazione"@it ;
+	rdfs:subPropertyOf gn:parentCountry ;
+	rdfs:range xsd:string .
+
+:lista a owl:DatatypeProperty ;
+	rdfs:label "lista" ;
+	rdfs:comment "Lista di appartenenza"@it ;
+	rdfs:range xsd:string .
+
+:lex a owl:DatatypeProperty ;
+	rdfs:label "legge" ;
+	rdfs:domain rdfs:Resource ;
+	rdfs:range xsd:anyURI ;
+	rdfs:comment "riferimento esterno alla norma ufficiale"@it .
+
+:membroConsulta a owl:DatatypeProperty ;
+	rdfs:label "membro" ;
+	rdfs:domain :persona ;
+	rdfs:range xsd:boolean .
+
+:tipoElezione a owl:DatatypeProperty ;
+	rdfs:label "tipo di elezione" ;
+	rdfs:domain :elezione ;
+	rdfs:range xsd:string .
+
+:ruolo a owl:DatatypeProperty ;
+	rdfs:label "ruolo" ;
+	rdfs:comment "ruolo ricoperto"@it ;
+	rdfs:domain _:node17168lu6ix364 .
+
+_:node17168lu6ix364 a owl:Class ;
+	owl:unionOf _:node17168lu6ix365 .
+
+_:node17168lu6ix365 rdf:first :atto ;
+	rdf:rest _:node17168lu6ix366 .
+
+_:node17168lu6ix366 rdf:first :deputato ;
+	rdf:rest _:node17168lu6ix367 .
+
+_:node17168lu6ix367 rdf:first :incarico ;
+	rdf:rest _:node17168lu6ix368 .
+
+_:node17168lu6ix368 rdf:first :persona ;
+	rdf:rest rdf:nil .
+
+:ruolo rdfs:range xsd:string .
+
+:motivoTermine a owl:DatatypeProperty ;
+	rdfs:label "motivo termine mandato" ;
+	rdfs:domain _:node17168lu6ix369 .
+
+_:node17168lu6ix369 a owl:Class ;
+	owl:unionOf _:node17168lu6ix370 .
+
+_:node17168lu6ix370 rdf:first :incaricoGoverno ;
+	rdf:rest _:node17168lu6ix371 .
+
+_:node17168lu6ix371 rdf:first :mandatoCamera ;
+	rdf:rest _:node17168lu6ix372 .
+
+_:node17168lu6ix372 rdf:first :mandatoSenato ;
+	rdf:rest rdf:nil .
+
+:motivoTermine rdfs:range xsd:string ;
+	rdfs:comment "motivo termine del mandato"@it .

@@ -1,0 +1,173 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://purl.org/spar/biro/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix co: <http://purl.org/co/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix core: <http://purl.org/vocab/frbr/core#> .
+@prefix collections: <http://swan.mindinformatics.org/ontologies/1.2/collections/> .
+
+<http://purl.org/spar/biro> a owl:Ontology ;
+	owl:versionInfo "1.1.1"^^xsd:string ;
+	dc:description """BiRO, the Bibliographic Reference Ontology, is an ontology structured according to the FRBR model to define bibliographic records (as subclasses of frbr:Work) and bibliographic references (as subclasses of frbr:Expression), and their compilations into bibliographic collections such as library catalogues, and into bibliographic lists such as reference lists in journal articles, respectively.
+
+It provides a logical system for relating an individual bibliographic reference, such as appears in the reference list of a published article (which may lack the title of the cited article, the full names of the listed authors, or indeed the full list of authors):
+- to the full bibliographic record for that cited article, which in addition to missing reference fields may also include the name of the publisher, and the ISSN or ISBN of the publication;
+- to collections of bibliographic records such as library catatlogues; and
+- to bibliographic lists, such as reference lists."""^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:date "2013-05-11" ;
+	dc:title "BiRO, the Bibliographic Reference Ontology"@en ;
+	rdfs:comment "BiRO, the Bibliographic Reference Ontology is an ontology for describing bibliographic records and references, and their compilation into bibliographic collections and reference lists. It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies.  Other SPAR ontologies are described at http://purl.org/spar/."@en , "This ontology is available at http://purl.org/spar/biro, and uses the namespace prefix biro."@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://purl.org/co> , <http://purl.org/spar/frbr> ;
+	dc:description <https://svn.code.sf.net/p/sempublishing/code/BiRO/BiRO.png> .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+:isReferencedBy a owl:ObjectProperty ;
+	rdfs:label "is referenced by"@en ;
+	rdfs:comment "The relation between a publication and the bibliographic record or bibliographic reference describing it."@en ;
+	rdfs:domain core:Endeavour ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:range _:node17qbqbgdox17 .
+
+_:node17qbqbgdox17 a owl:Class ;
+	owl:unionOf _:node17qbqbgdox18 .
+
+_:node17qbqbgdox18 rdf:first :BibliographicRecord ;
+	rdf:rest _:node17qbqbgdox19 .
+
+_:node17qbqbgdox19 rdf:first :BibliographicReference ;
+	rdf:rest rdf:nil .
+
+:references a owl:ObjectProperty ;
+	rdfs:label "references"@en ;
+	rdfs:comment "The relation between a bibliographic record or a bibliographic reference and the publication being referenced."@en ;
+	owl:inverseOf :isReferencedBy ;
+	rdfs:range core:Endeavour ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain _:node17qbqbgdox20 .
+
+_:node17qbqbgdox20 a owl:Class ;
+	owl:unionOf _:node17qbqbgdox21 .
+
+_:node17qbqbgdox21 rdf:first :BibliographicRecord ;
+	rdf:rest _:node17qbqbgdox22 .
+
+_:node17qbqbgdox22 rdf:first :BibliographicReference ;
+	rdf:rest rdf:nil .
+
+core:part a owl:ObjectProperty .
+
+core:realization a owl:ObjectProperty .
+
+core:realizationOf a owl:ObjectProperty .
+
+owl:topObjectProperty a owl:ObjectProperty .
+
+:BibliographicCollection a owl:Class ;
+	rdfs:label "bibliographic collection"@en ;
+	rdfs:subClassOf co:Set , core:Work , _:node17qbqbgdox23 .
+
+_:node17qbqbgdox23 a owl:Restriction ;
+	owl:onProperty core:part ;
+	owl:allValuesFrom _:node17qbqbgdox24 .
+
+_:node17qbqbgdox24 a owl:Class ;
+	owl:complementOf :BibliographicCollection .
+
+:BibliographicCollection rdfs:subClassOf _:node17qbqbgdox25 .
+
+_:node17qbqbgdox25 a owl:Restriction ;
+	owl:onProperty co:element ;
+	owl:allValuesFrom :BibliographicRecord .
+
+:BibliographicCollection rdfs:subClassOf _:node17qbqbgdox26 .
+
+_:node17qbqbgdox26 a owl:Restriction ;
+	owl:onProperty core:realization ;
+	owl:allValuesFrom :BibliographicList .
+
+:BibliographicCollection dc:description "A bibliographic collection is composed only of items containing bibliographic records.  Moreover, it cannot be part of other bibliographic collections, and it is realized only by bibliographic lists."@en ;
+	rdfs:comment "A collection of bibliographic records, each of which references a publication (or a work in preparation for publication). Examples of bibliographic collections include a collection of the bibliographic records of all the publications that a single individual has authored, or a collection of those bibliographic records to be included in a research paper, where they are expressed as a reference list."@en .
+
+:BibliographicList a owl:Class ;
+	rdfs:label "bibliographic list"@en ;
+	rdfs:subClassOf co:List , core:Expression , _:node17qbqbgdox27 .
+
+_:node17qbqbgdox27 a owl:Restriction ;
+	owl:onProperty co:element ;
+	owl:allValuesFrom :BibliographicReference .
+
+:BibliographicList rdfs:subClassOf _:node17qbqbgdox28 .
+
+_:node17qbqbgdox28 a owl:Restriction ;
+	owl:onProperty core:realizationOf ;
+	owl:allValuesFrom :BibliographicCollection .
+
+:BibliographicList dc:description "A bibliographic list is composed only of items containing bibliographic references.  Moreover, it is always a realization of a bibliographic collection."@en ;
+	rdfs:comment "An ordered list of bibliographic items, each of which contains a bibliographic reference."@en .
+
+:BibliographicRecord a owl:Class ;
+	rdfs:label "bibliographic record"@en ;
+	rdfs:subClassOf co:Set , core:Work , _:node17qbqbgdox29 .
+
+_:node17qbqbgdox29 a owl:Restriction ;
+	owl:onProperty core:realization ;
+	owl:allValuesFrom :BibliographicReference .
+
+:BibliographicRecord dc:description "A bibliographic record is realized only through bibliographic references."@en ;
+	rdfs:comment "A record that uniquely describes a particular textual or data publication (or a work in preparation for publication). Each bibliographic record is a set of entities describing aspects of the referenced work, including, for example, but not restricted to: authors, title, journal, publication year, DOI, ISSN, publisher and copyright information, or, in the case of a data publication: creators, title, version, archive, publication year, DOI or other identifier). The FRBR expression of a bibliographic record is a bibliographic reference, which usually contains only a sub-set of these entities, ordered in a particular way that corresponds to the house style of the publication in which it occurs."@en .
+
+:BibliographicReference a owl:Class ;
+	rdfs:label "bibliographic reference"@en ;
+	rdfs:subClassOf co:List , core:Expression , _:node17qbqbgdox30 .
+
+_:node17qbqbgdox30 a owl:Restriction ;
+	owl:onProperty co:element ;
+	owl:allValuesFrom _:node17qbqbgdox31 .
+
+_:node17qbqbgdox31 a owl:Restriction ;
+	owl:onProperty co:elementOf ;
+	owl:allValuesFrom :BibliographicRecord .
+
+:BibliographicReference rdfs:subClassOf _:node17qbqbgdox32 .
+
+_:node17qbqbgdox32 a owl:Restriction ;
+	owl:onProperty core:realizationOf ;
+	owl:allValuesFrom :BibliographicRecord .
+
+:BibliographicReference dc:description "A bibliographic reference is a realization of a bibliographic record. Moreover, it can contain only items referring to elements contained by the bibliographic record it realizes."@en ;
+	rdfs:comment "An expression of a bibliographic record in a specific format, that references a particular textual or data publication (or a work in preparation for publication). Each bibliographic reference is a list of items containing entities that describe aspects of the referenced work - for example authors, title, journal, publication year - selected from the bibliographic record.  Note that because different journal styles may require omission of elements of the bibliographic record in references included in a paper's reference list (e.g. the title, the identifier, the names of the eighth and subsequent authors), and because errors can be introduced when an author creates a bibliographic reference, the bibliographic reference to a published work may not be a complete or fully accurate expression of the information contained within the authoritative bibliographic record for that work."@en .
+
+:LibraryCatalogue a owl:Class ;
+	rdfs:label "library catalogue"@en ;
+	rdfs:subClassOf :BibliographicCollection ;
+	rdfs:comment "A catalogue of the bibliographic holdings of a library."@en .
+
+:ReferenceList a owl:Class ;
+	rdfs:label "reference list"@en ;
+	rdfs:subClassOf :BibliographicList ;
+	rdfs:comment "A list used to describe the bibliography of a research paper, a journal article, a book, a book chapter or similar publication."@en .
+
+core:Endeavour a owl:Class .
+
+core:Expression a owl:Class .
+
+core:Work a owl:Class .

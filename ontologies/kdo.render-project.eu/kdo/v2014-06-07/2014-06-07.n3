@@ -1,0 +1,163 @@
+@prefix :      <http://kdo.render-project.eu/kdo#> .
+@prefix sioc:  <http://rdfs.org/sioc/ns#> .
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix kdo:   <http://kdo.render-project.eu/kdo#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+dc:description  a  owl:DatatypeProperty .
+
+kdo:hasBias  a            owl:ObjectProperty ;
+        rdfs:comment      "The kdo:hasBias property is used associate a kdo:Bias with a sioc:Post.\n"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( sioc:Post kdo:Statement )
+                          ] ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has bias"@en ;
+        rdfs:range        kdo:Bias .
+
+kdo:Opinion  a            owl:Class ;
+        rdfs:comment      "The opinion class represents is used to contextualize2 provenance, crawling other meta-information. A blank node may be used to represent opinions. Opinions are connected to statement through kdo:hasOpinion.\n\n"@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Opinion"@en .
+
+kdo:relatedTo  a          owl:ObjectProperty ;
+        rdfs:comment      "Relates one bias to another.\n"@en ;
+        rdfs:domain       kdo:Bias ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "related to"@en ;
+        rdfs:range        kdo:Bias .
+
+dc:modified  a  owl:DatatypeProperty .
+
+kdo:negativePolarity  a   kdo:Polarity ;
+        rdfs:comment      "This individual is used to mark a negative polarity."@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Negative polarity"@en .
+
+sioc:Container  a  owl:Class .
+
+kdo:Statement  a          owl:Class ;
+        rdfs:comment      "The statement class is the central class in the core of the KD ontology. It serves as a hub that connects sentiments (kdo:hasSentiment), opinions (kdo:hasOpinion), biases (kdo:hasBias), posts (kdo:hasPost), and agents (kdo:involvedAgent). Moreover, each statement may have an expression which is a string literal.\n"@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Statement"@en .
+
+kdo:hasExpression  a      owl:DatatypeProperty ;
+        rdfs:comment      "This property attaches a string literal to a kdo:Statement. This literal should be a text excerpt which states a statement and is extracted from a related post.\n"@en ;
+        rdfs:domain       kdo:Statement ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has expression"@en ;
+        rdfs:range        xsd:string .
+
+kdo:involvedAgent  a      owl:ObjectProperty ;
+        rdfs:comment      "The kdo:involvedAgent property is used to specify the holder of an opinion. An opinion holder is represented by the foaf:Agent class.\n"@en ;
+        rdfs:domain       kdo:Statement ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "involved agent"@en ;
+        rdfs:range        foaf:Agent .
+
+kdo:hasPost  a            owl:ObjectProperty ;
+        rdfs:comment      "This class attaches a statement to a post" ;
+        rdfs:domain       kdo:Statement ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has post"@en ;
+        rdfs:range        sioc:Post .
+
+foaf:Agent  a   owl:Class .
+
+kdo:positivePolarity  a   kdo:Polarity ;
+        rdfs:comment      "This individual is used to mark a postitive polarity."@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Positive polarity"@en .
+
+kdo:Bias  a               owl:Class ;
+        rdfs:comment      "A bias can be attached to a kdo:Statement and can therefore also relate to agents, posts, and opinions. More specifically, a bias can also relate to another bias.\n\n"@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Bias"@en .
+
+kdo:hasSentiment  a       owl:ObjectProperty ;
+        rdfs:comment      "The kdo:hasSentiment property is used to specify which kdo:Sentiment is attached to a sioc:Post.\n"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( sioc:Post kdo:Statement )
+                          ] ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has sentiment"@en ;
+        rdfs:range        kdo:Sentiment .
+
+sioc:Post  a    owl:Class .
+
+kdo:neutralPolarity  a    kdo:Polarity ;
+        rdfs:comment      "This individual is used to mark a neutral polarity."@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Neutral polarity"@en .
+
+dc:title  a     owl:DatatypeProperty .
+
+kdo:NewsWebsite  a        owl:Class ;
+        rdfs:comment      "The kdo:NewsWebsite class represents news publisher containers that are commonly related to a single web site. The NewsWebsite class is defined because there is no container class to represent the news publisher web sites in the SIOC ontology. The NewsWebsite class is defined as a subclass of the sioc:Container.\n"@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "News web site"@en ;
+        rdfs:subClassOf   sioc:Container .
+
+kdo:NewsArticle  a        owl:Class ;
+        rdfs:comment      "The kdo:NewsArticle class represents news articles. The news article class is defined because there is no class to represent news articles in the SIOC ontology. The NewsArticle is a subclass of the sioc:Post class which is itself a subclass of the foaf:Document.\n"@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "News article"@en ;
+        rdfs:subClassOf   sioc:Post .
+
+kdo:hasScore  a           owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates the score of a kdo:Sentiment. This score is denoted as a decimal. However, the range can vary and depends on the implementation of the sentiment extraction process.\n"@en ;
+        rdfs:domain       kdo:Sentiment ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has score"@en ;
+        rdfs:range        xsd:decimal .
+
+kdo:hasOpinion  a         owl:ObjectProperty ;
+        rdfs:comment      "Relates a sioc:Post to a kdo:Opinion.\n"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( sioc:Post kdo:Statement )
+                          ] ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has opinion"@en ;
+        rdfs:range        kdo:Opinion .
+
+kdo:Sentiment  a          owl:Class ;
+        rdfs:comment      "The sentiment class represents the sentiments expressed by the opinions and posts. A sentiment can have (kdo:hasPolarity) different types of polarity (positive, negative, and neutral) and a decimal score (kdo:hasScore). It is in the range of kdo:hasSentiment.\n"@en ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "Sentiment"@en .
+
+kdo:    a                              owl:Ontology ;
+        rdfs:comment                   "This ontology has been developed in context with the RENDER project."@en ;
+        rdfs:seeAlso                   <http://kdo.render-project.eu> ;
+        dc:description                 "The Knowledge Diversity Ontology aims at providing a vocabulary that describes different dimensions of knowledge diversity of the Web. To support the representation of diversity information, the conceptual model of the Knowledge Diversity Ontology includes concepts and relations that were identified and modelled by focusing on real world scenarios in context of customer feedback, news, and Wikipedia opinion mining as well as content and sentiment analysis."@en ;
+        dc:modified                    "2012-10-03"^^xsd:date ;
+        dc:title                       "The Knowledge Diversity Ontology"@en ;
+        vann:preferredNamespacePrefix  "kdo" ;
+        vann:preferredNamespaceUri     "http://kdo.render-project.eu/kdo#" ;
+        owl:imports                    <http://rdfs.org/sioc/ns> ;
+        owl:versionInfo                "v2.2" .
+
+kdo:hasPolarity  a        owl:ObjectProperty ;
+        rdfs:comment      "The kdo:hasPolarity is used to specify the polarity of a kdo:Sentiment. It has three individuals: kdo:positivePolarity representing the positive orientation, kdo:negativePolarity representing the negative orientation, kdo:neutralPolarity representing the neutral.\n"@en ;
+        rdfs:domain       kdo:Sentiment ;
+        rdfs:isDefinedBy  kdo: ;
+        rdfs:label        "has polarity"@en ;
+        rdfs:range        kdo:Polarity .
+
+<http://kdo.render-project.eu>
+        rdfs:label  "Knowledge Diversity Ontology (KDO) Specification" .
+
+kdo:Polarity  a           owl:Class ;
+        rdfs:comment      "The kdo:Polarity class is used to express the polarity of sentiments. The predefined instances of this class are: kdo:neutralPolarity, kdo:positivePolarity, kdo:negativePolarity.\n"@en ;
+        rdfs:isDefinedBy  kdo: .
+
+vann:preferredNamespaceUri
+        a       owl:DatatypeProperty .
+
+vann:preferredNamespacePrefix
+        a       owl:DatatypeProperty .

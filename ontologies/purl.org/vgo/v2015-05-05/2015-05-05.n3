@@ -1,0 +1,504 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix v1:    <http://purl.org/goodrelations/v1#> .
+@prefix :      <http://purl.org/net/GameOntology#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix resource: <http://dbpedia.org/resource/> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix ontology: <http://dbpedia.org/ontology/> .
+@prefix net:   <http://purl.org/net/> .
+@prefix schema: <http://schema.org/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix VideoGameOntology: <http://purl.org/net/VideoGameOntology#> .
+
+foaf:knows  a   owl:ObjectProperty .
+
+VideoGameOntology:hasFeature
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:hasFeature property indicates what is a vgo:Feature (or ability) of a particular vgo:Item. For example, a fire sword, a healing staff or boots of flight connects item to a feature it can have. An item with connection to potable feature would make the item potable."@en ;
+        rdfs:domain   VideoGameOntology:Item ;
+        rdfs:label    "has feature"@en ;
+        rdfs:range    VideoGameOntology:Feature .
+
+VideoGameOntology:Character
+        a             owl:Class ;
+        rdfs:comment  "A vgo:Character is any actor that can exists in a game. A character  can be a human-like creature as seen traditionally in video games. However, a character could also be a car, a paddle in game of Pong or spaceship of a space shooter game. This is often contextually related to the gameplay of a certain game. A character can be either controller by a player or by a computer."@en ;
+        rdfs:label    "Character"@en .
+
+VideoGameOntology:startTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "startTime describes the starting moment in time of a single Session. startTime connects the session to a DateTime value which holds the moment when the session started."@en ;
+        rdfs:domain   VideoGameOntology:Session ;
+        rdfs:label    "start time"@en ;
+        rdfs:range    xsd:dateTime .
+
+net:VideoGameOntology
+        a                              owl:Ontology ;
+        rdfs:comment                   "An ontology for describing video games and game plays. Created by Janne Parkkila, Filip Radulovic, Daniel Garijo and María Poveda."@en ;
+        dc:creator                     "http://delicias.dia.fi.upm.es/members/DGarijo/#me"^^xsd:anyURI , "http://www.mendeley.com/profiles/janne-parkkila/"^^xsd:anyURI , "http://purl.org/net/mpoveda"^^xsd:anyURI , "http://filip.milstan.net/"^^xsd:anyURI ;
+        dc:description                 "The Video Game Ontology is an ontology designed for describing video games and all the resources related to their game plays."@en ;
+        dc:title                       "The Video Game Ontology"@en ;
+        terms:created                  "2013-10-22"^^xsd:date ;
+        terms:license                  "http://creativecommons.org/licenses/by-nc-sa/2.0/" ;
+        terms:modified                 "2014-12-19"^^xsd:date ;
+        vann:preferredNamespacePrefix  "vgo" ;
+        vann:preferredNamespaceUri     "http://purl.org/net/VideoGameOntology#" ;
+        owl:versionInfo                "1.0" .
+
+VideoGameOntology:isEventAssociatedToPlayer
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:isEventAssociatedToPlayer property asserts an event to a specific vgo:Player. A player may have caused an event to happen through the actions of his/her character and this property is used to connect the real person to the event."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "is event associated to player"@en ;
+        rdfs:range    VideoGameOntology:Player .
+
+VideoGameOntology:Completion
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Completion type of achievement is usually rewarded from successfully completing a certain goal or subgoal in a game. An example of vgo:Completion would be to save a princess from a burning tower or completing all side-quests in a game."@en ;
+        rdfs:label       "Completion"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:ownsItem
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:ownsItem describes ownership of an item. A vgo:Item is always owned by a certain vgo:Character. A vgo:Character can own multiple vgo:Items and this relationship is used to keep track of the character’s owned items. Even though players may lose items, the vgo:ownsItem connection is still held with the item. This approach allows to keep track of character’s history of owned items."@en ;
+        rdfs:domain   VideoGameOntology:Character ;
+        rdfs:label    "owns item"@en ;
+        rdfs:range    VideoGameOntology:Item .
+
+VideoGameOntology:GameProduct
+        a                owl:Class ;
+        rdfs:comment     "A vgo:GameProduct is anything that is for sale inside a game. These can be either normal game items purchased with in-game currency or with real world money. An example of vgo:GameProduct could be a consumable health potion bought with real money, a better weapon or some visual improvement (e.g. Hats in Steam). Basically a game product can be anything, a character, an item or an achievement.\nGameProduct is a subclass of Good Relations: ProductOrService & schema:Product. Since vgo:GameProduct is a type of buyable product, it reuses the properties available in the schema and Good Relations, such as currency price, validity of the offer and so on."@en ;
+        rdfs:label       "game product"@en ;
+        rdfs:subClassOf  schema:Product , v1:ProductOrService ;
+        rdfs:subClassOf  [ a            owl:Class ;
+                           owl:unionOf  ( VideoGameOntology:Achievement VideoGameOntology:Character VideoGameOntology:Game VideoGameOntology:Item VideoGameOntology:PlayingArea )
+                         ] .
+
+VideoGameOntology:isEventTriggeredByCharacter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:isEventTriggeredByCharacter connects the vgo:InstantaneousEvent to specific vgo:Character. This describes that an event is often caused by a character. The character in question can be either a character controlled by a player or a computer. For example, both player and non-player characters can trigger a character death event."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "is event triggered by character"@en ;
+        rdfs:range    VideoGameOntology:Character .
+
+VideoGameOntology:Game
+        a             owl:Class ;
+        rdfs:comment  "The vgo:Game class describes a game product that can be played by a player.\nExamples of games are Pong, Grand Theft Auto, Pokemon and Need for Speed."@en ;
+        rdfs:label    "Game"@en .
+
+VideoGameOntology:involvesPlayer
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:involvesPlayer property specifies that a session involves a specific player. A session may involve more than one player."@en ;
+        rdfs:domain   VideoGameOntology:Session ;
+        rdfs:label    "involves player"@en ;
+        rdfs:range    VideoGameOntology:Player .
+
+VideoGameOntology:Minigame
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Minigame achievement describes success in mini-games that have been included in a certain game but are not vital for completing the game. An example could be to complete all the Pizza deliveries in GTA minigame or gaining over 100 dollars while playing poker in Red Dead Redemption."@en ;
+        rdfs:label       "Minigame"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:isFriendWithPlayer
+        a                   owl:SymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment        "The vgo:isFriendWithPlayer describes a connection between players. The property is used to model the friends a player has and with whom he might be playing games with. The friends of a player are not bound necessarily to particular game, but can be describe the friendly playing relationship in overall."@en ;
+        rdfs:domain         VideoGameOntology:Player ;
+        rdfs:label          "is friend with player"@en ;
+        rdfs:range          VideoGameOntology:Player ;
+        rdfs:subPropertyOf  foaf:knows .
+
+VideoGameOntology:purchasesGameOffering
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:purchasesGameOffering property aseerts a vgo:InAppPurchaseEvent to a specific vgo:GameProduct. This property describes what is purchased by the in-app purchase event that the player has done."@en ;
+        rdfs:domain   VideoGameOntology:InAppPurchaseEvent ;
+        rdfs:label    "purchases game offering"@en ;
+        rdfs:range    VideoGameOntology:GameProduct .
+
+VideoGameOntology:Paragon
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Paragon is a rare achievement that is given only to limited number of players. An example of vgo:Paragon achievement could be the first player to finish a game under 10 hours or the first ten players to complete the game 100% through."@en ;
+        rdfs:label       "Paragon"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:ownsAchievement
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:ownsAchievement links the vgo:Player to the particular vgo:Achievement earned in a game."@en ;
+        rdfs:domain   VideoGameOntology:Player ;
+        rdfs:label    "owns achievement"@en ;
+        rdfs:range    VideoGameOntology:Achievement .
+
+VideoGameOntology:isEventInGame
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:isEventInGame property asserts an event to a specific game. An event always happens inside a specific a game."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "is event in game"@en ;
+        rdfs:range    VideoGameOntology:Game .
+
+VideoGameOntology:username
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "The username connects player to a text string which describes the username a player has."@en ;
+        rdfs:domain   VideoGameOntology:Player ;
+        rdfs:label    "username"@en ;
+        rdfs:range    xsd:string .
+
+VideoGameOntology:playsGame
+        a             owl:ObjectProperty ;
+        rdfs:comment  "the vgo:playsGame property asserts which games has the vgo:Player played at any point of time."@en ;
+        rdfs:domain   VideoGameOntology:Player ;
+        rdfs:label    "plays game"@en ;
+        rdfs:range    VideoGameOntology:Game .
+
+VideoGameOntology:hasLeaderboard
+        a              owl:ObjectProperty ;
+        rdfs:comment   "The vgo:hasLeaderboard specifies that a leaderboard belongs to a particular game. A game can have one or more leaderboards that keep track of ranking of the players. For example a leaderboard could be ranking of who has the most soccer game victories or who has the fastest lap in a Formula 1 game."@en ;
+        rdfs:domain    VideoGameOntology:Game ;
+        rdfs:label     "has leaderboard"@en ;
+        rdfs:range     VideoGameOntology:Leaderboard ;
+        owl:inverseOf  VideoGameOntology:isLeaderboardInGame .
+
+terms:creator  a     owl:ObjectProperty ;
+        rdfs:domain  VideoGameOntology:Game ;
+        rdfs:range   foaf:Agent .
+
+VideoGameOntology:Veteran
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Veteran achievement is an award that is given for accumulating a lot of play hours or game actions. For example, vgo:Veteran could be playing thousand hours of World of Tanks or making 100 goals in ice hockey game."@en ;
+        rdfs:label       "Veteran"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:LoseEvent
+        a                owl:Class ;
+        rdfs:comment     "vgo:LoseEvent describes an event that is related to character/player losing something in a game. This is a subclass of GameEvent as gaining something is related to a specific game. For example, a player can lose a character due to trade with another player. Another example would be a character losing item due to consuming it."@en ;
+        rdfs:label       "lose event"@en ;
+        rdfs:subClassOf  VideoGameOntology:GameEvent .
+
+VideoGameOntology:hasGameGenre
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:hasGameGenre property specifies that a game belongs to a certain game genre. For example, Pong would be an arcade game and Mario a platformer."@en ;
+        rdfs:domain   VideoGameOntology:Game ;
+        rdfs:label    "has game genre"@en ;
+        rdfs:range    VideoGameOntology:Genre .
+
+VideoGameOntology:PlayingArea
+        a             owl:Class ;
+        rdfs:comment  "The vgo:PlayingArea is the description of a place where the gameplay takes place. All of the games have some kind of area where they are played in. An example of playing areas could be football field in soccer game, a race track from a racing game or a star system of EVE Online."@en ;
+        rdfs:label    "playing area"@en .
+
+VideoGameOntology:involvesCharacter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:involvesCharacter property specifies that a session involves a specific character."@en ;
+        rdfs:domain   VideoGameOntology:Session ;
+        rdfs:label    "involves character"@en ;
+        rdfs:range    VideoGameOntology:Character .
+
+VideoGameOntology:releaseDate
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "releaseDate connects a game to a time which describes the release date of the game."@en ;
+        rdfs:domain   VideoGameOntology:Game ;
+        rdfs:label    "release date"@en ;
+        rdfs:range    xsd:dateTime .
+
+dc:creator  a   owl:AnnotationProperty .
+
+VideoGameOntology:isAchievementInGame
+        a              owl:ObjectProperty ;
+        rdfs:comment   "The property vgo:isAchievementInGame asserts that a specific vgo:Achievement can be earned in a particular vgo:Game. An achievement must belong to a certain game."@en ;
+        rdfs:domain    VideoGameOntology:Achievement ;
+        rdfs:label     "is achievement in game"@en ;
+        rdfs:range     VideoGameOntology:Game ;
+        owl:inverseOf  VideoGameOntology:hasAchievement .
+
+VideoGameOntology:HardMode
+        a                owl:Class ;
+        rdfs:comment     "The vgo:HardMode achievement describes succeeding in a game on a high difficulty level. An example could be completing the “Doom” game on Nightmare difficulty level."@en ;
+        rdfs:label       "hard mode"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:GameEvent
+        a                owl:Class ;
+        rdfs:comment     "The vgo:GameEvent describes an event that takes place in a game without straight player interaction. GameEvents are often very specific for each game. Examples of vgo:GameEvent could be an enemy dying, connecting to a multiplayer server, loading a new level or playing an animation."@en ;
+        rdfs:label       "game event"@en ;
+        rdfs:subClassOf  VideoGameOntology:InstantaneousEvent .
+
+VideoGameOntology:Achievement
+        a             owl:Class ;
+        rdfs:comment  "The vgo:Achievement is a reward gained in a game due to some event accomplished in the game. Achievements are commonly used in game industry to reward players for having accomplished tasks in the game. \nThis ontology defines various subclasses of vgo:Achievement, which are all based on the classification presented by Markus Montola et al. [Markus Montola, Timo Nummenmaa, Andrés Lucero, Marion Boberg, and Hannu Korhonen, 2009, “Applying game achievement systems to enhance user experience in a photo sharing service”, In Proceedings of the 13th International MindTrek Conference: Everyday Life in the Ubiquitous Era (MindTrek '09)] http://dl.acm.org/citation.cfm?id=1621859"@en ;
+        rdfs:label    "Achievement"@en .
+
+VideoGameOntology:livesIn
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:livesIn describes the connection between a player and his place of existence in the real-world. A vgo:Player is connected to wgs84:SpatialThing as that has descriptions for places where people live and contains more detailed information of them, such as continents and regions."@en ;
+        rdfs:domain   VideoGameOntology:Player ;
+        rdfs:label    "lives in"@en ;
+        rdfs:range    ontology:PopulatedPlace .
+
+VideoGameOntology:Item
+        a             owl:Class ;
+        rdfs:comment  "A vgo:Item portrays any item that exists in a game. The item can either be just visual part of the game or a concrete usable item. As an example an item could be a drinkable potion, a magical sword or just a flower pot."@en ;
+        rdfs:label    "Item"@en .
+
+VideoGameOntology:isCharacterInGame
+        a              owl:ObjectProperty ;
+        rdfs:comment   "vgo:isCharacterInGame property describes the relation between a vgo:Character and a vgo:Game. a vgo:Character always belongs to a certain game."@en ;
+        rdfs:domain    VideoGameOntology:Character ;
+        rdfs:label     "is character in game"@en ;
+        rdfs:range     VideoGameOntology:Game ;
+        owl:inverseOf  VideoGameOntology:hasCharacter .
+
+VideoGameOntology:hasItem
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:hasItem property specifies that a game has a specific item. A game often contains more than one items."@en ;
+        rdfs:domain   VideoGameOntology:Game ;
+        rdfs:label    "has item"@en ;
+        rdfs:range    VideoGameOntology:Item .
+
+VideoGameOntology:SpecialPlayStyle
+        a                owl:Class ;
+        rdfs:comment     "The vgo:SpecialPlayStyle achievement is awarded to players after playing a game in special fashion. Often this is something harder than the regular play and requires more player experience to excel in it. An example of vgo:SpecialPlayStyle could be to complete a game without any violence or against a timer."@en ;
+        rdfs:label       "special play style"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:isItemInGame
+        a              owl:ObjectProperty ;
+        rdfs:comment   "The vgo:isItemInGame is used to specify which item belongs to a particular game. An item cannot exist alone and thus should always be associated to a certain game."@en ;
+        rdfs:domain    VideoGameOntology:Item ;
+        rdfs:label     "is item in game"@en ;
+        rdfs:range     VideoGameOntology:Game ;
+        owl:inverseOf  VideoGameOntology:hasItem .
+
+VideoGameOntology:Tutorial
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Tutorial achievement is  awarded to a player for trying out various features of the game. This is often related to learning how to play the game, how the controls work and how the game logic works. An example of vgo:Tutorial could be testing out newly gained special equipment or just playing through the in-game tutorial in the beginning."@en ;
+        rdfs:label       "Tutorial"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:ownsCharacter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:ownsCharacter property asserts which characters are owned by a specific player. A player can have multiple characters in one game and this connection is used to define all the different characters a player could be playing. Even though a player deletes, trades or loses his/her character in any way, the connection can be kept to contain the player’s history of owned characters."@en ;
+        rdfs:domain   VideoGameOntology:Player ;
+        rdfs:label    "owns character"@en ;
+        rdfs:range    VideoGameOntology:Character .
+
+v1:ProductOrService  a  owl:Class .
+
+owl:Thing  a    owl:Class .
+
+VideoGameOntology:Virtuosity
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Virtuosity describes an achievement that is awarded for playing masterfully in the game. Examples of virtuous play could be finishing the game without saving at all, dying zero times or preventing an opposing team from scoring any goals in a soccer game."@en ;
+        rdfs:label       "Virtuosity"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:Player
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Player describes the entity playing the game. This can be either a human or a computer. vgo:Player class is used to keep a profile of a certain playing entity and to connect all the games, achievements and characters he/she has. The vgo:Player is a subclass of foaf:Person as it contains all relative information of a certain person."@en ;
+        rdfs:label       "Player"@en ;
+        rdfs:subClassOf  foaf:Agent .
+
+VideoGameOntology:Fandom
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Fandom achievement is related to doing some true fan activities. An example of vgo:Fandom could be purchasing a collectors edition of the game or attending a fan gathering."@en ;
+        rdfs:label       "Fandom"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:Luck
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Lucky describes an achievement that is awarded to the player in a lucky situation. An example of vgo:Lucky achievement would be winning in a lottery or throwing “Yahtzee” without re-rolling the dice."@en ;
+        rdfs:label       "Luck"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:Curiosity
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Curiosity describes funny random things that can happen or be found in the game. An example could be jumping from the Eiffel tower without dying or following a comupter controlled character’s activities for one hour."@en ;
+        rdfs:label       "Curiosity"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:Loyalty
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Loyalty achievement is used to give recognition to loyal players. For example, this could be an achievement received after subscribing to the game for a year."@en ;
+        rdfs:label       "Loyalty"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:Genre
+        a             owl:Class ;
+        rdfs:comment  "The vgo:Genre class describes the genre a game belongs to. All of the games have at least one genre. Examples of this are RPG, Simulator and Adventure"@en ;
+        rdfs:label    "Genre"@en .
+
+VideoGameOntology:endTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "endTime describes the ending moment in time of a single Session. endTime connects the session to a DateTime value which holds the moment when the session ended."@en ;
+        rdfs:domain   VideoGameOntology:Session ;
+        rdfs:label    "end time"@en ;
+        rdfs:range    xsd:dateTime .
+
+VideoGameOntology:GainEvent
+        a                owl:Class ;
+        rdfs:comment     "The vgo:GainEvent describes an event that is related to character/player gaining something in a game. This is a subclass of vgo:GameEvent as gaining something is related to a specific game. For example, a player can gain a new character, achievement or item."@en ;
+        rdfs:label       "gain event"@en ;
+        rdfs:subClassOf  VideoGameOntology:GameEvent .
+
+VideoGameOntology:isAchievedInSession
+        a              owl:ObjectProperty ;
+        rdfs:comment   "The property vgo:isAchievedInSession asserts the receiving of an achievement to a certain gameplay session. This enables to keep track of what achievements a player has gained during one gameplay session."@en ;
+        rdfs:domain    VideoGameOntology:Achievement ;
+        rdfs:label     "is achieved in session"@en ;
+        rdfs:range     VideoGameOntology:Session ;
+        owl:inverseOf  VideoGameOntology:involvesAchievement .
+
+VideoGameOntology:Multiplayer
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Multiplayer achievement describes anything that can be awarded to one or multiple players due to their gameplay in multiplayer. For example, this could be winning 10 Team Fortress matches in a row with the same team or getting killed ten times in a row in Counter-Strike."@en ;
+        rdfs:label       "Multiplayer"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:eventName
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "name connects InstantaneousEvent a text string. This allows the event to have a name to recognize it for."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "event name"@en ;
+        rdfs:range    xsd:string .
+
+VideoGameOntology:isPlayerInSession
+        a              owl:ObjectProperty ;
+        rdfs:comment   "The vgo:isPlayerInSession property connects vgo:Player to a specific vgo:Session. This property is used to keep track of the gameplay sessions the player has played and what has happened in those sessions. For example vgo:Player may have participated in a this can be a one round of Counter-Strike or played one hour session of mario."@en ;
+        rdfs:domain    VideoGameOntology:Player ;
+        rdfs:label     "is player in session"@en ;
+        rdfs:range     VideoGameOntology:Session ;
+        owl:inverseOf  VideoGameOntology:involvesPlayer .
+
+foaf:Agent  a   owl:Class .
+
+VideoGameOntology:Leaderboard
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Leaderboard class describes a ranking system of the players. There can be multiple rankings in a game, for example, the kill-count ranking of Modern Warfare or the best time listing of Formula 1 game."@en ;
+        rdfs:label       "Leaderboard"@en ;
+        rdfs:subClassOf  owl:Thing .
+
+schema:Product  a  owl:Class .
+
+VideoGameOntology:InAppPurchaseEvent
+        a                owl:Class ;
+        rdfs:comment     "The vgo:InAppPurchaseEvent describes an event that is related to making a purchase with real money inside a game. This is a subclass of InstantaneousEvent because it happens at certain moment in time. An example of vgo:InAppPurchaseEvent would be unlocking secret levels with real money or purchasing better equipment with real money."@en ;
+        rdfs:label       "in-app purchase event"@en ;
+        rdfs:subClassOf  VideoGameOntology:InstantaneousEvent .
+
+VideoGameOntology:eventTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "time describes the connection of InstantaneousEvent happening at a certain moment of time. time Conncets the event to a DateTime value that describes the moment when the event happened."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "event time"@en ;
+        rdfs:range    xsd:dateTime .
+
+VideoGameOntology:isEventInSession
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:isEventInSession property links an event to a specific gameplay session. An event always happens during a certain session and this property enables to link the events to that session. For example, an event of moving the queen in game of chess should be connected to a session of chess."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "is event in session"@en ;
+        rdfs:range    VideoGameOntology:Session .
+
+VideoGameOntology:isLeaderboardInGame
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:isLeaderboardInGame property specifies that a leaderboard is from a specific game."@en ;
+        rdfs:domain   VideoGameOntology:Leaderboard ;
+        rdfs:label    "is leaderboard in game"@en ;
+        rdfs:range    VideoGameOntology:Game .
+
+VideoGameOntology:hasPlayingArea
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:hasPlayingArea property asserts a gaming area to a specific game. In every game, the gameplay takes place in some playing area."@en ;
+        rdfs:domain   VideoGameOntology:Game ;
+        rdfs:label    "has playing area"@en ;
+        rdfs:range    VideoGameOntology:PlayingArea .
+
+VideoGameOntology:involvesAchievement
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:involvesPlayer property specifies that a session involves a specific player. A session may involve more than one player."@en ;
+        rdfs:domain   VideoGameOntology:Session ;
+        rdfs:label    "involves achievement"@en ;
+        rdfs:range    VideoGameOntology:Achievement .
+
+VideoGameOntology:hasCharacter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:hasCharacter property specifies that a game has a specific character. A game can have more than one characters involved."@en ;
+        rdfs:domain   VideoGameOntology:Game ;
+        rdfs:label    "has character"@en ;
+        rdfs:range    VideoGameOntology:Character .
+
+VideoGameOntology:Session
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Session class describes a session of gameplay. A session can be a single round of chess, a round of Counter-Strike, one half-time of soccer or one race of Formula 1. vgo:Session class can be used to store gameplay information, especially for analytical reasons."@en ;
+        rdfs:label       "Session"@en ;
+        rdfs:subClassOf  owl:Thing .
+
+dc:contributor  a  owl:AnnotationProperty .
+
+VideoGameOntology:Feature
+        a             owl:Class ;
+        rdfs:comment  "vgo:Feature describes an ability or characteristic. For example, a sword could have “damage dealing” ability and a bottle of water could be “potable”."@en ;
+        rdfs:label    "Feature"@en .
+
+VideoGameOntology:isEventRelatedToItem
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:isEventRelatedToItem property asserts an event to a specific item. This property is used to describe an event that includes an item in one way or another. For example, an event where character gains a new sword can be described with this relation."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "is event related to item"@en ;
+        rdfs:range    VideoGameOntology:Item .
+
+VideoGameOntology:unlocksAchievement
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:unlocksAchievement property asserts an event to a certain achievement. An achievement is always unlocked as a consequence of some event. For example, eating the 100th piece of cake unlocks the “Cake Eater” achievement."@en ;
+        rdfs:domain   VideoGameOntology:InstantaneousEvent ;
+        rdfs:label    "unlocks achievement"@en ;
+        rdfs:range    VideoGameOntology:Achievement .
+
+VideoGameOntology:Collection
+        a                owl:Class ;
+        rdfs:comment     "The vgo:Collection type of achievement is typically rewarded from collecting an amount of certain items in a game. An example of vgo:Collection would be obtaining a full set of christmas clothes for a character to wear or collecting every possible flower in the game."@en ;
+        rdfs:label       "Collection"@en ;
+        rdfs:subClassOf  VideoGameOntology:Achievement .
+
+VideoGameOntology:InstantaneousEvent
+        a             owl:Class ;
+        rdfs:comment  "The vgo:InstantaneousEvent class describes an event that happens during the gameplay at a certain moment in time. This can be a player gaining an achievement, killing an enemy or making an in-app purchase."@en ;
+        rdfs:label    "instantaneous event"@en .
+
+VideoGameOntology:MenuEvent
+        a                owl:Class ;
+        rdfs:comment     "The vgo:MenuEvent describes an event that is related to interacting with the ingame menu. An example of menu event is muting sounds, changing graphic settings, changing gameplay difficulty or remapping game controls."@en ;
+        rdfs:label       "menu event"@en ;
+        rdfs:subClassOf  VideoGameOntology:InstantaneousEvent .
+
+VideoGameOntology:isSessionInGame
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The vgo:isSessionInGame property links a vgo:Session to a certain vgo:Game. Each gameplay session must belong to a certain game."@en ;
+        rdfs:domain   VideoGameOntology:Session ;
+        rdfs:label    "is session in game"@en ;
+        rdfs:range    VideoGameOntology:Game .
+
+VideoGameOntology:hasAchievement
+        a             owl:ObjectProperty ;
+        rdfs:comment  "optional"@en , "The vgo:hasAchievement property specifies that a game has a specific achievement. A game often contains more than one achievement that can be awarded to the players."@en ;
+        rdfs:domain   VideoGameOntology:Game ;
+        rdfs:label    "has achievement"@en ;
+        rdfs:range    VideoGameOntology:Achievement .
+
+ontology:PopulatedPlace
+        a       owl:Class .
+
+VideoGameOntology:isCharacterInSession
+        a              owl:ObjectProperty ;
+        rdfs:comment   "The vgo:isCharacterInSession property connects the vgo:Character to a vgo:Session. A character participates in a game session (e.g., a football match or a counter strike round) during a period of time. As players can have multiple characters, a character needs to be connected to the session, in order to know which of those characters participated in the certain session."@en ;
+        rdfs:domain    VideoGameOntology:Character ;
+        rdfs:label     "is character in session"@en ;
+        rdfs:range     VideoGameOntology:Session ;
+        owl:inverseOf  VideoGameOntology:involvesCharacter .
+
+VideoGameOntology:PlayerEvent
+        a                owl:Class ;
+        rdfs:comment     "The vgo:PlayerEvent describes a vgo:InstantaneousEvent that is caused by the player. For example jumping in the game, throwing an item or pressing a joystick button."@en ;
+        rdfs:label       "player event"@en ;
+        rdfs:subClassOf  VideoGameOntology:InstantaneousEvent .

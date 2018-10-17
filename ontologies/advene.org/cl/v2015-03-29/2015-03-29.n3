@@ -1,0 +1,274 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix :      <http://advene.org/ns/cinelab/ld#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix oa:    <http://www.w3.org/ns/oa#> .
+@prefix cnt:   <http://www.w3.org/2011/content#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix ma:    <http://www.w3.org/ns/ma-ont#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+
+:imports  a          owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Package ;
+        rdfs:label   "importe"@fr , "imports"@en ;
+        rdfs:range   :Package .
+
+:Resource  a             owl:Class , rdfs:Class ;
+        rdfs:label       "Ressource"@fr , "Resource"@en ;
+        rdfs:subClassOf  :WithContent , :Element .
+
+:Annotation  a           owl:Class , rdfs:Class ;
+        rdfs:label       "Annotation"@fr , "Annotation"@en ;
+        rdfs:subClassOf  oa:Annotation , :WithContent , :Element ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      :hasAnnotationContent ;
+                           owl:someValuesFrom  owl:Thing
+                         ] .
+
+:WithContent  a          owl:Class , rdfs:Class ;
+        rdfs:comment     "Aspect of all elements supporting the :hasContent property"@en ;
+        rdfs:label       "Ayant un Contenu"@fr , "With Content"@en ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      :hasContent ;
+                           owl:someValuesFrom  owl:Thing
+                         ] .
+
+:hasMediaElement  a  owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  ma:MediaFragment ;
+        rdfs:label   "a pour élément média"@fr , "has media element"@en ;
+        rdfs:range   :Media .
+
+:UserList  a             owl:Class , rdfs:Class ;
+        rdfs:label       "Liste Utilisateur"@fr , "User List"@en ;
+        rdfs:subClassOf  :List .
+
+:fragDimId  a         owl:DatatypeProperty , rdf:Property ;
+        rdfs:comment  "This metadata of an annotation encodes the 'id' dimension of its fragment."@en ;
+        rdfs:domain   :Annotation ;
+        rdfs:label    "Fragment Dimension 'id'" .
+
+:represents  a       owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Media ;
+        rdfs:label   "représente"@fr , "represents"@en ;
+        rdfs:range   ma:MediaResource .
+
+:hasFrameOfReference  a  owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Media ;
+        rdfs:label   "a pour référenciel"@fr , "has frame of reference"@en ;
+        rdfs:range   :FrameOfReference .
+
+:Schema  a               owl:Class , rdfs:Class ;
+        rdfs:label       "Schéma"@fr , "Schema"@en ;
+        rdfs:subClassOf  :List .
+
+:Package  a              owl:Class , rdfs:Class ;
+        rdfs:label       "Recueil"@fr , "Package"@en ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ owl:unionOf  ( [ owl:complementOf
+                                                       :Relation ] [ a                   owl:Restriction ;
+                                                                     owl:onProperty      :hasRType ;
+                                                                     owl:someValuesFrom  owl:Thing
+                                                                   ] ) ] ;
+                           owl:onProperty     :hasElement
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ owl:unionOf  ( [ owl:complementOf
+                                                       :Annotation ] [ a                   owl:Restriction ;
+                                                                       owl:onProperty      :hasAType ;
+                                                                       owl:someValuesFrom  owl:Thing
+                                                                     ] ) ] ;
+                           owl:onProperty     :hasElement
+                         ] .
+
+:hasPackage  a         owl:ObjectProperty , rdf:Property ;
+        rdfs:domain    :Element ;
+        rdfs:label     "a pour recueil"@fr , "has package"@en ;
+        rdfs:range     :Package ;
+        owl:inverseOf  :hasElement .
+
+:hasItems  a         owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :List ;
+        rdfs:label   "a pour éléments"@fr , "has items"@en ;
+        rdfs:range   rdf:List .
+
+:Query  a                owl:Class , rdfs:Class ;
+        rdfs:label       "Requête"@fr , "Query"@en ;
+        rdfs:subClassOf  :WithContent , :Pipe , :Element .
+
+:Media  a                owl:Class , rdfs:Class ;
+        rdfs:label       "Média"@fr , "Media"@en ;
+        rdfs:subClassOf  :Element .
+
+:fragDimTrack  a      owl:DatatypeProperty , rdf:Property ;
+        rdfs:comment  "This metadata of an annotation encodes the 'track' dimension of its fragment."@en ;
+        rdfs:domain   :Annotation ;
+        rdfs:label    "Fragment Dimension 'track'" .
+
+:Test   a                owl:Class , rdfs:Class ;
+        rdfs:label       "Test"@fr , "Test"@en ;
+        rdfs:subClassOf  :View .
+
+:Group  a             owl:Class , rdfs:Class ;
+        rdfs:comment  "Aspect of all elements acting as collections of other elements"@en ;
+        rdfs:label    "Groupe"@fr , "Group"@en .
+
+:hasImportedPackage  a  owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Import ;
+        rdfs:label   "a pour recueil importé"@fr , "has imported package"@en ;
+        rdfs:range   :Package .
+
+:hasFragment  a             owl:ObjectProperty , rdf:Property ;
+        rdfs:domain         :Annotation ;
+        rdfs:label          "a pour fragment"@fr , "has fragment"@en ;
+        rdfs:range          ma:MediaFragment ;
+        rdfs:subPropertyOf  oa:hasTarget .
+
+:hasAnnotationContent
+        a                   owl:ObjectProperty ;
+        rdfs:domain         :Annotation ;
+        rdfs:subPropertyOf  :hasContent , oa:hasBody .
+
+:taggedWith  a       owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Element ;
+        rdfs:label   "tagué avec"@fr , "tagged with"@en ;
+        rdfs:range   :Tag .
+
+:AnnotationType  a       owl:Class , rdfs:Class ;
+        rdfs:label       "Type d'Annotation"@fr , "Annotation Type"@en ;
+        rdfs:subClassOf  :Tag .
+
+:FrameOfReference  a  owl:Class , rdfs:Class ;
+        rdfs:label  "Référenciel"@fr , "Frame of Reference"@en .
+
+:Tag    a                owl:Class , rdfs:Class ;
+        rdfs:label       "Tag"@fr , "Tag"@en ;
+        rdfs:subClassOf  :Group , :Element .
+
+:end    a             owl:DatatypeProperty , rdf:Property ;
+        rdfs:comment  "End-time of the fragment, in milliseconds."@en ;
+        rdfs:domain   ma:MediaFragment ;
+        rdfs:label    "a pour fin"@fr , "has end"@en ;
+        rdfs:range    xsd:integer .
+
+:mimeType  a                owl:DatatypeProperty , rdf:Property ;
+        rdfs:domain         :Content ;
+        rdfs:label          "a pour type MIME"@fr , "has MIME type"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  dc:format .
+
+ma:MediaFragment  a  owl:Class .
+
+<http://champin.net/#pa>
+        rdfs:label  "Pierre-Antoine Champin" .
+
+:Import  a               owl:Class , rdfs:Class ;
+        rdfs:label       "Import"@fr , "Import"@en ;
+        rdfs:subClassOf  :Element .
+
+:UserTag  a              owl:Class , rdfs:Class ;
+        rdfs:label       "Tag Utilisateur"@fr , "User Tag"@en ;
+        rdfs:subClassOf  :Tag .
+
+:Relation  a             owl:Class , rdfs:Class ;
+        rdfs:label       "Relation"@fr , "Relation"@en ;
+        rdfs:subClassOf  :WithContent , :Group , :Element .
+
+:fragDimXywh  a       owl:DatatypeProperty , rdf:Property ;
+        rdfs:comment  "This metadata of an annotation encodes the 'xywh' dimension of its fragment."@en ;
+        rdfs:domain   :Annotation ;
+        rdfs:label    "Fragment Dimension 'xywh'" .
+
+<http://advene.org/ns/cinelab/ld>
+        a                              owl:Ontology , vann:Vocabulary ;
+        rdfs:comment                   "This ontology allows to represent in RDF the Cinelab model <http://advene.org/cinelab/>."@en , "Cette ontologie permet de représenter en RDF le modèle Cinelab <http://advene.org/cinelab/>."@fr ;
+        rdfs:isDefinedBy               <http://advene.org/cinelab/> ;
+        dct:contributor                "Yannick Prié" , "Olivier Aubert" ;
+        dct:created                    "2014-03-26T21:31:42CET" ;
+        dct:creator                    <http://champin.net/#pa> ;
+        dct:date                       "2015-03-28" ;
+        dct:description                "Le projet Advene a pour objectif de fournir un modèle et plusieurs formats de données pour partager des annotations sur des vidéos numériques (films, cours, conférences...), ainsi que des outils pour éditer et visualiser les hypérvidéos générées à partir de ces vidéos et des annotations. Les enseignants, les amateurs de cinéma, etc., peuvent les utiliser pour échanger leurs commentaires et analyse de documents audiovisuels.\n\nLe modèle Cinelab permet non seulement de représenter les annotations vidéos, mais aussi d'expliciter leur structure (à travers les notions de schéma et de type d'annotation), ainsi que leur présentations à l'aide de vues (modèles appliqués aux données pour produire des hypervidéos) et de requêtes.\n\nCe modèle a été développé par les partenaires du projet Cinelab (2007-2008, financé par l'ANR), et utilisé par la suite dans plusieurs projets et applications, dont Advene (LIRIS) et Ligne de temps (IRI)."@fr , "The Advene project aims at providing a model and various formats to share annotations about digital video documents (movies, courses, conferences...), as well as tools to edit and visualize the hypervideos generated from both the annotations and the audiovisual documents. Teachers, moviegoers, etc. can use them to exchange multimedia comments and analyses about video documents.\n\nThe Cinelab model allows not only to represent video annotations, but also an elicitation of their structure (through notions of schema and annotation type), as well as their presentations with views (templates applied on data to produce hypervideos) and queries.\n\nThis model has been developed by the partners of the Cinelab project (2007-2008, funded by the french national research agency), and used afterwards in a number of projects and applications, including Advene (LIRIS) and Ligne de temps (IRI)."@en ;
+        dct:modified                   "2015-03-28T19:32:00CET" ;
+        dct:title                      "Cinelab ontology" ;
+        vann:preferredNamespacePrefix  "cl" ;
+        vann:preferredNamespaceUri     "http://advene.org/ns/cinelab/ld#" ;
+        owl:imports                    oa: , <http://www.w3.org/ns/ma-ont> .
+
+:Pipe   a             owl:Class , rdfs:Class ;
+        rdfs:comment  "Aspect of all elements able to transform other elements"@en ;
+        rdfs:label    "Tube"@fr , "Pipe"@en .
+
+:hasMembers  a       owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Relation ;
+        rdfs:label   "a pour membres"@fr , "has members"@en ;
+        rdfs:range   rdf:List .
+
+:url    a            owl:DatatypeProperty , rdf:Property ;
+        rdfs:domain  :Package ;
+        rdfs:label   "URL"@fr , "URL"@en ;
+        rdfs:range   xsd:anyURI .
+
+:RelationType  a         owl:Class , rdfs:Class ;
+        rdfs:label       "Type de Relation"@fr , "Relation Type"@en ;
+        rdfs:subClassOf  :Tag .
+
+:hasModel  a         owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Content ;
+        rdfs:label   "a pour modèle de contenu"@fr , "has content model"@en ;
+        rdfs:range   :Resource .
+
+:Content  a              owl:Class , rdfs:Class ;
+        rdfs:label       "Contenu"@fr , "Content"@en ;
+        rdfs:subClassOf  cnt:ContentAsText .
+
+:hasAType  a                owl:FunctionalProperty , owl:ObjectProperty , rdf:Property ;
+        rdfs:domain         :Annotation ;
+        rdfs:label          "a pour type d'annotation"@fr , "has annotation type"@en ;
+        rdfs:range          :AnnotationType ;
+        rdfs:subPropertyOf  :taggedWith .
+
+:hasContent  a       owl:FunctionalProperty , owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :WithContent ;
+        rdfs:label   "a pour contenu"@fr , "has content"@en ;
+        rdfs:range   :Content .
+
+:begin  a             owl:DatatypeProperty , rdf:Property ;
+        rdfs:comment  "Start-time of the fragment, in milliseconds."@en ;
+        rdfs:domain   ma:MediaFragment ;
+        rdfs:label    "a pour début"@fr , "has begin"@en ;
+        rdfs:range    xsd:integer .
+
+:View   a                owl:Class , rdfs:Class ;
+        rdfs:label       "Vue"@fr , "View"@en ;
+        rdfs:subClassOf  :WithContent , :Pipe , :Element .
+
+:List   a                owl:Class , rdfs:Class ;
+        rdfs:label       "Liste"@fr , "List"@en ;
+        rdfs:subClassOf  :Group , :Element .
+
+:hasRType  a                owl:FunctionalProperty , owl:ObjectProperty , rdf:Property ;
+        rdfs:domain         :Relation ;
+        rdfs:label          "a pour type d'relation"@fr , "has relation type"@en ;
+        rdfs:range          :RelationType ;
+        rdfs:subPropertyOf  :taggedWith .
+
+:data   a                   owl:DatatypeProperty , rdf:Property ;
+        rdfs:domain         :Content ;
+        rdfs:label          "a pour valeur"@fr , "has value"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:seeAlso        :base64 ;
+        rdfs:subPropertyOf  cnt:chars .
+
+:Element  a         owl:Class , rdfs:Class ;
+        rdfs:label  "Élément"@fr , "Element"@en .
+
+:hasElement  a       owl:ObjectProperty , rdf:Property ;
+        rdfs:domain  :Package ;
+        rdfs:label   "a pour élément"@fr , "has element"@en ;
+        rdfs:range   :Element .
+
+:base64  a            rdfs:Datatype ;
+        rdfs:comment  "A literal datatype to represent base64-encoded binary data."@en ;
+        rdfs:label    "données encodées en base64"@fr , "base64 encoded data"@en ;
+        rdfs:seeAlso  :data .

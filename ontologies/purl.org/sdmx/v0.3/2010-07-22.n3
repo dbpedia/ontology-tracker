@@ -1,0 +1,111 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sdmx-concept: <http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix sdmx: <http://purl.org/linked-data/sdmx#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://dublincore.org/documents/dcmi-terms/> .
+
+<http://purl.org/linked-data/sdmx> a owl:Ontology ;
+	owl:versionInfo "0.3" ;
+	rdfs:label "SDMX-RDF vocabulary" ;
+	rdfs:comment "This vocabulary extends the data cube vocabulary to support publication of statistical data in RDF, using an information model based on SDMX" ;
+	dcterms:created "2010-02-05"^^xsd:date ;
+	dcterms:modified "2010-07-22"^^xsd:date ;
+	dcterms:title "Vocabulary for publishing SDMX statistical data in RDF" ;
+	dcterms:source <http://sdmx.org> ;
+	dcterms:references <http://sdmx.org/?page_id=16#package> .
+
+_:node17168m34ix6 foaf:mbox "richard@cyganiak.de" .
+
+<http://purl.org/linked-data/sdmx> dcterms:contributor _:node17168m34ix6 .
+
+_:node17168m34ix7 foaf:mbox "jeni@jenitennison.com" .
+
+<http://purl.org/linked-data/sdmx> dcterms:contributor _:node17168m34ix7 .
+
+_:node17168m34ix8 foaf:mbox "arofan.gregory@earthlink.net" .
+
+<http://purl.org/linked-data/sdmx> dcterms:contributor _:node17168m34ix8 .
+
+_:node17168m34ix9 foaf:mbox "ian@epimorphics.com" .
+
+<http://purl.org/linked-data/sdmx> dcterms:contributor _:node17168m34ix9 .
+
+_:node17168m34ix10 foaf:mbox "dave@epimorphics.com" .
+
+<http://purl.org/linked-data/sdmx> dcterms:contributor _:node17168m34ix10 .
+
+sdmx:DataStructureDefinition a rdfs:Class , owl:Class ;
+	rdfs:label "Data Structure Definition"@en ;
+	rdfs:comment "A specialization of qb:DataStructureDefinition which additional constraints: if there are multiple measures then a MeasureDimensionProperty must be included in the DSD"@en ;
+	rdfs:subClassOf qb:DataStructureDefinition .
+
+sdmx:CodeList a rdfs:Class , owl:Class ;
+	rdfs:label "Concept scheme"@en ;
+	rdfs:subClassOf skos:ConceptScheme .
+
+sdmx:Concept a rdfs:Class , owl:Class ;
+	rdfs:label "concept"@en ;
+	rdfs:subClassOf skos:Concept ;
+	rdfs:comment "Denotes an SDMX concept, used in the particular SDMX terminological sense, which is in principle narrower than skos:Concept" .
+
+sdmx:ConceptRole a rdfs:Class , owl:Class ;
+	rdfs:label "Concept role (abstract)"@en ;
+	rdfs:subClassOf sdmx:Concept ;
+	rdfs:comment "Abstract superclass of classes denoting statistical roles which be played by concepts"@en .
+
+sdmx:FrequencyRole a rdfs:Class , owl:Class ;
+	rdfs:label "Frequency property"@en ;
+	rdfs:comment "concept for a dimension or attribute that plays the role of frequency"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:CountRole a rdfs:Class , owl:Class ;
+	rdfs:label "Count property"@en ;
+	rdfs:comment "concept for a dimension or attribute that plays the role of an identifier where the identifier is taken from a known system of counts (e.g. the Nth current dataset update for a given day)"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:EntityRole a rdfs:Class , owl:Class ;
+	rdfs:label "Entity property"@en ;
+	rdfs:comment "concept for a dimension or attribute that plays the role of the DataAttribute subject to whom the data refers (e.g. the reporting agent for primary reporting, the country for secondary reporting)"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:TimeRole a rdfs:Class , owl:Class ;
+	rdfs:label "Time property"@en ;
+	rdfs:comment "concept for a dimension that specifies the time of the observation of the primaryMeasure"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:MeasureTypeRole a rdfs:Class , owl:Class ;
+	rdfs:label "Measure type property"@en ;
+	rdfs:comment "concept for a dimension that plays the role of identifying a type of measure"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:NonObsTimeRole a rdfs:Class , owl:Class ;
+	rdfs:label "Non-observation time property"@en ;
+	rdfs:comment "concept for a dimension or attribute that plays the role of a date/time identifier in the KeyFamily which is not related to the time of the observation"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:IdentityRole a rdfs:Class , owl:Class ;
+	rdfs:label "Identity property"@en ;
+	rdfs:comment "concept for a dimension or attribute that plays the role of an identifier which is taken from a known scheme of identifiers."@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+sdmx:PrimaryMeasureRole a rdfs:Class , owl:Class ;
+	rdfs:label "Primary measure property"@en ;
+	rdfs:comment "concept for a measure that plays the role of the observation in a time series"@en ;
+	rdfs:subClassOf sdmx:ConceptRole .
+
+qb:measureType qb:concept sdmx:measureTypeConcept .
+
+sdmx:measureTypeConcept a sdmx:MeasureTypeRole , sdmx:ConceptRole , skos:Concept ;
+	rdfs:label "measureType"@en ;
+	rdfs:comment "The concept corresponding to the generic measure type dimension which indicates which measure is being denoted by the primary measure on an observation"@en .
+
+sdmx:primaryMeasure a rdf:Property , owl:ObjectProperty ;
+	rdfs:label "primary measure"@en ;
+	rdfs:comment "Indicates an additional component used as the primary measure within the SDMX data. In the case of multi-measure data sets the RDF representation uses the specific measure rather than a subsuming overall measure. This property records the subsuming primary measure (typically sdmx-measure:obsValue) to enable round tripping of this information."@en ;
+	rdfs:domain sdmx:DataStructureDefinition ;
+	rdfs:range qb:MeasureProperty .

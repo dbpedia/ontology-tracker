@@ -1,0 +1,78 @@
+@prefix :      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix wfdesc: <http://purl.org/wf4ever/wfdesc#> .
+@prefix wfprov: <http://purl.org/wf4ever/wfprov#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+wfprov:describedByWorkflow
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "This property associates a wfprov:WorkflowRun to its corresponding wfdesc:Workflow description."@en ;
+        rdfs:domain         wfprov:WorkflowRun ;
+        rdfs:range          wfdesc:WorkflowTemplate ;
+        rdfs:subPropertyOf  wfprov:describedByProcess .
+
+wfprov:wasOutputFrom  a  owl:ObjectProperty ;
+        rdfs:comment  "This property specifies that a wfprov:Artifact was generated as an output from a wfprov:ProcessRun"@en ;
+        rdfs:domain   wfprov:Artifact ;
+        rdfs:range    wfprov:ProcessRun .
+
+wfprov:describedByProcess
+        a             owl:ObjectProperty ;
+        rdfs:comment  "This object property associate a wfprov:Processrun to its wfdesc:Process description ."@en ;
+        rdfs:domain   wfprov:ProcessRun ;
+        rdfs:range    wfdesc:Process .
+
+wfprov:wasPartOfWorkflowRun
+        a             owl:ObjectProperty ;
+        rdfs:comment  "This property specifies that a wfprov:ProcessRun was executed as part of a wfprov:WorkflowRun. This typically corresponds to wfdesc:hasSubProcess in the workflow description."@en ;
+        rdfs:domain   wfprov:ProcessRun ;
+        rdfs:range    wfprov:WorkflowRun .
+
+wfprov:wasEnactedBy  a  owl:ObjectProperty ;
+        rdfs:comment  "wfprov:wasEnactedBy associates a wfprov:ProcessRun with a wfprov:WorkflowEngine, specifying that the execution of the process was enacted by the engine."@en ;
+        rdfs:domain   wfprov:ProcessRun ;
+        rdfs:range    wfprov:WorkflowEngine .
+
+wfprov:usedInput  a   owl:ObjectProperty ;
+        rdfs:comment  "This property specifies that a wfprov:ProcessRun used an wfprov:Artifact as an input"@en ;
+        rdfs:domain   wfprov:ProcessRun ;
+        rdfs:range    wfprov:Artifact .
+
+<http://purl.org/wf4ever/wfprov>
+        a                owl:Ontology ;
+        rdfs:comment     "The wfprov ontology shows how to express minimal provenance information about the execution of a workflow described using the wf ontology. \n\nHere the concern is mainly the provenance which affects the research object, so in particular how some ro:Resource's might have been generated or used by the execution of a wfdesc:Workflow.\n\nThe main class here is a wfprov:WorkflowRun which shows how wfprov:Artifact instances (the data) wfprov:wasOutputFrom a wfprov:ProcessRun for generated artifacts, or wfprov:usedInput for consumed artifacts. The WorkflowRun is also a ProcessRun, and so the overall inputs and outputs of thw workflow execution can be described in the same manner.\n\nThese provenance details are linked to the corresponding wfdesc descriptions using wfdesc:describedbyProcess, wfdesc:describedByWorkflow and wfdesc:describedByParameter.\n\n\nThis ontology can be further linked to more specific provenance ontologies like OPM-V or W3C PROV-O, but this should be done separately."@en ;
+        rdfs:seeAlso     <http://purl.org/wf4ever/ro> ;
+        dc:description   "The wfprov ontology shows how to express minimal provenance information about the execution of a workflow described using the wfdesc ontology. "@en ;
+        dc:title         "The Wfprov Ontology"@en ;
+        owl:imports      foaf: , <http://purl.org/wf4ever/wfdesc> ;
+        owl:versionIRI   <https://raw.github.com/wf4ever/ro/0.1.1/wfprov.owl> ;
+        owl:versionInfo  "0.1.1"^^xsd:string .
+
+wfprov:WorkflowRun  a    owl:Class ;
+        rdfs:comment     "A workflow run is a wfprov:ProcessRun which have been enacted by a wfprov:WorkflowEngine, according to a workflow definition (which could be wfdesc:describedByWorkflow a wfdesc:Workflow). Such a process typically contains several subprocesses (wfprov:wasPartOfWorkflowRun) corresponding to wfdesc:Process descriptions"@en ;
+        rdfs:seeAlso     wfprov:WorkflowEngine , wfdesc:Workflow , wfdesc:Process ;
+        rdfs:subClassOf  wfprov:ProcessRun .
+
+wfprov:Artifact  a    owl:Class ;
+        rdfs:comment  "Artifact is a general concept that represents immutable piece of state, which may have a physical embodiment in a physical object, or a digital representation in a computer system. In the case of wfprov, an artifact is used as input to a process run, or produced by the output of a process run."@en ;
+        rdfs:seeAlso  wfprov:workflowRun , wfprov:wasOutputFrom , wfprov:usedInput , wfprov:ProcessRun , <http://purl.org/wf4ever/ro#Resource> , <http://purl.org/wf4ever/ro#ResearchObject> .
+
+wfprov:describedByParameter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "This object property is used to associate a wfprov:Artifact to the wfdesc:Parameter description."@en ;
+        rdfs:domain   wfprov:Artifact ;
+        rdfs:range    wfdesc:Parameter .
+
+wfprov:WorkflowEngine
+        a                owl:Class ;
+        rdfs:comment     "A workflow engine is an foaf:Agent that is responsible for enacting a workflow definition (which could be described in a wfdesc:Workflow). The result of workflow enactment gives rise to a wfprov:WorkflowRun."@en ;
+        rdfs:seeAlso     wfprov:WorkflowRun , wfdesc:Workflow ;
+        rdfs:subClassOf  foaf:Agent .
+
+wfprov:ProcessRun  a  owl:Class ;
+        rdfs:comment  "A process run is a particular execution of a wfdesc:Process description (wfprov:describedByProcess), which can wfprov:usedInput some wfprov:Artifact instances, and produce new artifacts (wfprov:wasOutputFrom). A wfprov:WorkflowRun is a specialisation of this class."@en ;
+        rdfs:seeAlso  wfprov:wasOutputFrom , wfprov:usedInput , wfprov:describedByProcess , wfprov:WorkflowRun , wfprov:Artifact , wfdesc:Process .

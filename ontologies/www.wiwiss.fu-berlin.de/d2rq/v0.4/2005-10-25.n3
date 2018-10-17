@@ -1,0 +1,198 @@
+@prefix : <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dtype: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> rdfs:comment "Database to RDF Query Vocabulary" ;
+	dc:creator "Chris Bizer" , "Richard Cyganiak" ;
+	dc:subject "" ;
+	dc:publisher "" ;
+	dc:title "" ;
+	dc:description "" ;
+	dc:date "2004-08-10" ;
+	dc:format "RDF" ;
+	dc:identifier <http://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+:ProcessingInstructions a rdfs:Class ;
+	rdfs:comment "Attach processing instructions to nodes of this type." .
+
+:queryHandler a rdf:Property ;
+	rdfs:comment "a Java class name that specifies the graphs QueryHandler" ;
+	rdfs:domain :ProcessingInstructions .
+
+:Database a rdfs:Class ;
+	rdfs:comment "Represents a database" .
+
+:odbcDSN a rdf:Property ;
+	rdfs:domain :Database .
+
+:jdbcDriver a rdf:Property ;
+	rdfs:domain :Database .
+
+:jdbcDSN a rdf:Property ;
+	rdfs:domain :Database .
+
+:username a rdf:Property ;
+	rdfs:domain :Database .
+
+:password a rdf:Property ;
+	rdfs:domain :Database .
+
+:numericColumn a rdf:Property ;
+	rdfs:domain :Database .
+
+:textColumn a rdf:Property ;
+	rdfs:domain :Database .
+
+:dateColumn a rdf:Property ;
+	rdfs:domain :Database .
+
+:allowDistinct a rdf:Property ;
+	rdfs:comment "Value: true/false that describe the databases ability to handle DISTINCT correctly. (e.g. MSAccess cuts fields longer than 256 chars)" ;
+	rdfs:domain :Database .
+
+:expressionTranslator a rdf:Property ;
+	rdfs:comment "A Java class or string null (for no expression translation" ;
+	rdfs:domain :Database .
+
+:ClassMap a rdfs:Class ;
+	rdfs:comment "Maps a class in the ontology to its relational representation in a specific database." .
+
+:class a rdf:Property ;
+	rdfs:comment "Links d2rq:classMaps to RDFS or OWL classes." ;
+	rdfs:domain :ClassMap ;
+	rdfs:range rdfs:Class ;
+	owl:inverseOf :classMap .
+
+:uriPattern a rdf:Property ;
+	rdfs:comment "Pattern used for URI construction and reversing." ;
+	rdfs:domain :ClassMap .
+
+:uriColumn a rdf:Property ;
+	rdfs:comment "Database column which contains object URIs." ;
+	rdfs:domain :ClassMap .
+
+:bNodeIdColumns a rdf:Property ;
+	rdfs:comment "Database column or columns which contain the primary key information about an which is identified by an bNode in RDF." ;
+	rdfs:domain :ClassMap .
+
+:dataStorage a rdf:Property ;
+	rdfs:domain :ClassMap ;
+	rdfs:range :Database .
+
+:additionalProperty a rdf:Property ;
+	rdfs:domain :ClassMap ;
+	rdfs:range :AdditionalProperty .
+
+:containsDuplicates a rdf:Property ;
+	rdfs:domain :ClassMap .
+
+:classMap a rdf:Property ;
+	rdfs:comment "Used to link RDFS or OWL classes to d2r:classMaps." ;
+	rdfs:domain rdfs:Class ;
+	rdfs:range :ClassMap ;
+	owl:inverseOf :class .
+
+:PropertyBridge a rdfs:Class ;
+	rdfs:comment "Abstract Superclass of DatatypePropertyBridge and ObjectPropertyBridge" .
+
+:property a rdf:Property ;
+	rdf:comment "Links a d2rq:PropertyBridge to an RDF property." ;
+	rdfs:domain :PropertyBridge ;
+	rdfs:range rdf:Property ;
+	owl:inverseOf :propertyBridge .
+
+:column a rdf:Property ;
+	rdfs:domain :PropertyBridge .
+
+:join a rdf:Property ;
+	rdfs:domain :PropertyBridge .
+
+:alias a rdf:Property ;
+	rdfs:domain :PropertyBridge .
+
+:pattern a rdf:Property ;
+	rdfs:domain :PropertyBridge .
+
+:belongsToClassMap a rdf:Property ;
+	rdfs:domain :PropertyBridge ;
+	rdfs:range :ClassMap .
+
+:translateWith a rdf:Property ;
+	rdfs:domain :PropertyBridge ;
+	rdfs:range :TranslationTable .
+
+:valueContains a rdf:Property ;
+	rdfs:domain :PropertyBridge ;
+	rdfs:comment "Optimizing hint: a string contained in every value of this PropertyBridge" .
+
+:valueRegex a rdf:Property ;
+	rdfs:domain :PropertyBridge ;
+	rdfs:comment "Optimizing hint: a regular expression matching every value of this PropertyBridge" .
+
+:valueMaxLength a rdf:Property ;
+	rdfs:domain :PropertyBridge ;
+	rdfs:comment "Optimizing hint: the maximum length of values of this PropertyBridge" .
+
+:DatatypePropertyBridge a rdfs:Class ;
+	rdfs:subClassOf :PropertyBridge ;
+	rdfs:comment "Maps a datatype property to a column in a specific database." .
+
+:datatype a rdf:Property ;
+	rdfs:domain :DatatypePropertyBridge .
+
+:lang a rdf:Property ;
+	rdfs:domain :DatatypePropertyBridge .
+
+:ObjectPropertyBridge a rdfs:Class ;
+	rdfs:subClassOf :PropertyBridge ;
+	rdfs:comment "Maps a object property to a column in a specific database." .
+
+:refersToClassMap a rdf:Property ;
+	rdfs:domain :ObjectPropertyBridge ;
+	rdfs:comment "Has to be used if a join refers to a different classMap." ;
+	rdfs:range :ClassMap .
+
+:propertyBridge a rdf:Property ;
+	rdfs:comment "Used for linking RDFS properties to D2R property bridges." ;
+	rdfs:domain rdf:Property ;
+	rdfs:range :PropertyBridge ;
+	owl:inverseOf :property .
+
+:condition a rdf:Property ;
+	rdfs:comment "Additional SQL WHERE condition" .
+
+:AdditionalProperty a rdfs:Class ;
+	rdfs:comment "Adds an additonal property to a class if D2R Map is used for DB exports, not DB queries." .
+
+:propertyName a rdf:Property ;
+	rdfs:domain :AdditionalProperty .
+
+:propertyValue a rdf:Property ;
+	rdfs:domain :AdditionalProperty .
+
+:TranslationTable a rdfs:Class ;
+	rdfs:comment "Lookup table for translations used in the mapping process." .
+
+:href a rdf:Property ;
+	rdfs:domain :TranslationTable ;
+	rdfs:comment "Link to a translation table in an external CSV file." .
+
+:javaClass a rdf:Property ;
+	rdfs:comment "Qualified name of a Java class that implements de.fuberlin.wiwiss.d2rq.Translator and translates between database and RDF." ;
+	rdfs:domain :ClassMap .
+
+:translation a rdf:Property ;
+	rdfs:domain :TranslationTable ;
+	rdfs:range :Translation .
+
+:Translation a rdfs:Class ;
+	rdfs:comment "Translation Key/Value Pair." .
+
+:databaseValue a rdf:Property ;
+	rdfs:domain :Translation .
+
+:rdfValue a rdf:Property ;
+	rdfs:domain :Translation .

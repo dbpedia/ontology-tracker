@@ -1,0 +1,152 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix spcm: <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0#> .
+
+<http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> a owl:Ontology ;
+	dc:title "Software Process Control Model" ;
+	dc:description "<p>La planificación y monitorización de la ejecución de proyectos software puede llevarse a cabo con diferentes herramientas, desde sistemas basados en gestión de tareas, hasta herramientas especializadas en diagramas de Gantt o incluso mediante simples hojas de cálculo.  Este vocabulario contempla los elementos típicos a la hora de controlar los proyectos de desarrollo o mantenimiento de software. </p>" ;
+	dc:modified "2013-12-17"^^xsd:date ;
+	vann:preferredNamespaceUri "http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0#" ;
+	vann:preferredNamespacePrefix "spcm" ;
+	foaf:page <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0.html> ;
+	dc:creator spcm:ruizrube .
+
+spcm:ruizrube a foaf:Person ;
+	foaf:name "Iván Ruiz Rube" .
+
+spcm:TaskCategory a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The TaskCategory entity" ;
+	rdfs:comment """Clase que permite categorizar una tarea según su ámbito
+   de aplicación.""" .
+
+spcm:TaskDependency a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The TaskDependency entity" ;
+	rdfs:comment """Clase de asociación que permite representar la
+   dependencia entre dos tareas concretas.""" .
+
+spcm:Milestone a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The Milestone entity" ;
+	rdfs:comment """Clase que representa los hitos del desarrollo o
+   versiones del software durante el transcurso de los proyectos.
+  """ .
+
+spcm:Role a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The Role entity" ;
+	rdfs:comment """Clase que representa el papel que juega un determinado
+   miembro de un proyecto de desarrollo o mantenimiento de software.
+  """ .
+
+spcm:Task a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The Task entity" ;
+	rdfs:comment """Clase que define la acción de realizar una labor
+   necesaria para conseguir los objetivos del proyecto.""" .
+
+spcm:Project a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The Project entity" ;
+	rdfs:comment """Clase contenedora de todos las tareas y milestones
+   establecidos para la planificación y monitorización de un proyecto
+   software.""" .
+
+spcm:taskCategories a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The taskCategories reference" ;
+	rdfs:comment "Categorías definidas para las tareas de un proyecto" ;
+	rdfs:domain spcm:Project ;
+	rdfs:range spcm:TaskCategory .
+
+spcm:type a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The type attribute" ;
+	rdfs:comment "Tipo de dependencia entre tareas" ;
+	rdfs:domain spcm:TaskDependency ;
+	rdfs:range skos:Concept .
+
+spcm:dependencies a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The dependencies reference" ;
+	rdfs:comment "Dependencias de una tarea" ;
+	rdfs:domain spcm:Task ;
+	rdfs:range spcm:TaskDependency .
+
+spcm:category a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The category reference" ;
+	rdfs:comment "Categoría de una tarea dada" ;
+	rdfs:domain spcm:Task ;
+	rdfs:range spcm:TaskCategory .
+
+spcm:members a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The members reference" ;
+	rdfs:comment "Roles asignados a un proyecto" ;
+	rdfs:domain spcm:Project ;
+	rdfs:range spcm:Role .
+
+spcm:skills a rdf:Property , owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The skills attribute" ;
+	rdfs:comment "Habilidades específicas de un determinado rol." ;
+	rdfs:domain spcm:Role ;
+	rdfs:range xsd:string .
+
+spcm:name a rdf:Property , owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The name attribute" ;
+	rdfs:comment "Tareas asociadas a un determinado hito del proyecto" ;
+	rdfs:domain spcm:Project , spcm:Milestone , spcm:Role , spcm:Task , spcm:TaskCategory ;
+	rdfs:range xsd:string .
+
+spcm:tasks a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The tasks reference" ;
+	rdfs:comment "Tareas asociadas a un determinado hito del proyecto" ;
+	rdfs:domain spcm:Milestone ;
+	rdfs:range spcm:Task .
+
+spcm:dependentTask a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The dependentTask reference" ;
+	rdfs:comment "Tarea dependiente de una tarea dada" ;
+	rdfs:domain spcm:TaskDependency ;
+	rdfs:range spcm:Task .
+
+spcm:description a rdf:Property , owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The description attribute" ;
+	rdfs:comment "Descripción de un proyecto, un hito o una tarea" ;
+	rdfs:domain spcm:Project , spcm:Milestone , spcm:Task ;
+	rdfs:range xsd:string .
+
+spcm:responsible a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The responsible reference" ;
+	rdfs:comment "Rol responsable de realizar una determinada tarea" ;
+	rdfs:domain spcm:Task ;
+	rdfs:range spcm:Role .
+
+spcm:milestones a rdf:Property ;
+	rdfs:isDefinedBy <http://spi-fm.uca.es/spdef/models/deployment/spcm/1.0> ;
+	rdfs:label "The milestones reference" ;
+	rdfs:comment "Conjunto de milestones o hitos de un proyecto" ;
+	rdfs:domain spcm:Project ;
+	rdfs:range spcm:Milestone .
+
+<http://spi-fm.uca.es/spdef/models/deployment/swpm/1.0#Project> rdfs:subClassOf <http://usefulinc.com/ns/doap#Project> .
+
+<http://spi-fm.uca.es/spdef/models/deployment/swpm/1.0#name> rdfs:subPropertyOf dc:title .
+
+<http://spi-fm.uca.es/spdef/models/deployment/swpm/1.0#description> rdfs:subPropertyOf dc:description .
+
+<http://spi-fm.uca.es/spdef/models/deployment/swpm/1.0#type> rdfs:subPropertyOf dc:subject .

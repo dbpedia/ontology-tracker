@@ -1,0 +1,177 @@
+@prefix llmap: <http://www.linklion.org/mapping/> .
+@prefix :      <http://www.linklion.org/ns/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lllink: <http://www.linklion.org/link/> .
+@prefix llalg: <http://www.linklion.org/algorithm/> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix llont: <http://www.linklion.org/ontology#> .
+@prefix lldat: <http://www.linklion.org/dataset/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix llfw:  <http://www.linklion.org/framework/> .
+@prefix llver: <http://www.linklion.org/version/> .
+
+void:Dataset  a          owl:Class ;
+        rdfs:subClassOf  prov:Entity .
+
+dcterms:license  a  owl:DatatypeProperty .
+
+rdf:object  a   owl:ObjectProperty .
+
+prov:wasDerivedFrom  a  owl:ObjectProperty .
+
+llont:Algorithm  a       owl:Class ;
+        rdfs:label       "Algorithm"@en ;
+        rdfs:subClassOf  prov:Activity ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:dateTime ;
+                           owl:onProperty            prov:generatedAtTime ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:string ;
+                           owl:onProperty            foaf:name ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               llont:LDFrameworkVersion ;
+                           owl:onProperty            prov:wasAssociatedWith ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:string ;
+                           owl:onProperty            llont:parameters ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+llont:hasSource  a   owl:ObjectProperty ;
+        rdfs:domain  llont:Mapping ;
+        rdfs:range   void:Dataset .
+
+llont:hasTarget  a   owl:ObjectProperty ;
+        rdfs:domain  llont:Mapping ;
+        rdfs:range   void:Dataset .
+
+llont:LDFramework  a     owl:Class ;
+        rdfs:label       "Link Discovery Framework"@en ;
+        rdfs:subClassOf  prov:Agent , doap:Project ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:string ;
+                           owl:onProperty            foaf:name ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+doap:Version  a  owl:Class .
+
+llont:Link  a            owl:Class ;
+        rdfs:label       "Link"@en ;
+        rdfs:subClassOf  prov:Entity ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               llont:Mapping ;
+                           owl:onProperty            prov:wasDerivedFrom ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               rdfs:Resource ;
+                           owl:onProperty            rdf:object ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               rdfs:Resource ;
+                           owl:onProperty            rdf:subject ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               rdfs:Resource ;
+                           owl:onProperty            rdf:predicate ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+<http://www.linklion.org/ontology>
+        a                 owl:Ontology ;
+        rdfs:isDefinedBy  "http://www.linklion.org/ontology" ;
+        rdfs:label        "LinkLion - the Link Discovery Portal"@en ;
+        owl:versionInfo   "0.1"@en .
+
+prov:Agent  a   owl:Class .
+
+rdf:predicate  a  owl:ObjectProperty .
+
+llont:Mapping  a         owl:Class ;
+        rdfs:label       "Mapping"@en ;
+        rdfs:subClassOf  prov:Entity ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               void:Dataset ;
+                           owl:onProperty            llont:hasTarget ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:dateTime ;
+                           owl:onProperty            prov:generatedAtTime ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               void:Dataset ;
+                           owl:onProperty            llont:hasSource ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            llont:storedAt ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+rdfs:Resource  a  owl:Class .
+
+foaf:name  a    owl:DatatypeProperty .
+
+prov:wasAssociatedWith
+        a       owl:ObjectProperty .
+
+llont:parameters  a  owl:DatatypeProperty ;
+        rdfs:domain  llont:Algorithm ;
+        rdfs:range   xsd:string .
+
+doap:revision  a  owl:DatatypeProperty .
+
+llont:LDFrameworkVersion
+        a                owl:Class ;
+        rdfs:label       "Link Discovery Framework Version"@en ;
+        rdfs:subClassOf  prov:Agent , doap:Version ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:string ;
+                           owl:onProperty            foaf:name ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            dcterms:license ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+doap:Project  a  owl:Class .
+
+prov:Entity  a  owl:Class .
+
+prov:wasGeneratedBy  a  owl:ObjectProperty .
+
+rdf:subject  a  owl:ObjectProperty .
+
+llont:storedAt  a    owl:DatatypeProperty ;
+        rdfs:domain  llont:Mapping ;
+        rdfs:range   xsd:anyURI .
+
+prov:Activity  a  owl:Class .
+
+doap:release  a  owl:InverseFunctionalProperty , owl:ObjectProperty .
+
+prov:generatedAtTime  a  owl:DatatypeProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( llont:Algorithm llont:Mapping )
+                     ] ;
+        rdfs:range   xsd:dateTime .

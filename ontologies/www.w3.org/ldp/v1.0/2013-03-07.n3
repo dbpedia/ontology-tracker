@@ -1,0 +1,102 @@
+@prefix : <http://www.w3.org/ns/ldp#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://www.w3.org/ns/ldp#> a owl:Ontology ;
+	dcterms:description "All vocabulary URIs defined in the Linked Data Platform (LDP) namespace." ;
+	dcterms:title "The W3C Linked Data Platform (LDP) Vocabulary" ;
+	rdfs:label "W3C Linked Data Platform (LDP)" ;
+	rdfs:comment """This ontology provides an informal representation of the concepts and terms
+	as defined in the LDP specification.  Consult the LDP specification for normative reference.""" ;
+	rdfs:seeAlso <http://www.w3.org/2012/ldp> , <http://www.w3.org/TR/ldp-ucr/> , <http://www.w3.org/TR/ldp/> , <http://www.w3.org/2011/09/LinkedData/> .
+
+:Resource a rdfs:Class ;
+	rdfs:comment "A HTTP-addressable resource with a linked data representation." ;
+	vs:term_status "unstable" ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "Resource" .
+
+:Container a rdfs:Class ;
+	rdfs:subClassOf :Resource ;
+	rdfs:comment """A Linked Data Platform Resource (LDPR) that also conforms to 
+	additional patterns and conventions for managing membership.
+	Readers should refer to the specification defining this ontology for the list of 
+	behaviors associated with it.""" ;
+	vs:term_status "unstable" ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "Container" .
+
+:AggregateContainer a rdfs:Class ;
+	rdfs:subClassOf :Container ;
+	rdfs:comment """A Linked Data Platform Container (LDPC) that also conforms to 
+	additional patterns and conventions for managing members.  It is distinguished from
+	CompositeContainer by the following behaviors:
+	(1) Clients cannot assume that an AggregateContainer, when deleted, deletes its members.
+	
+	While every attempt is made to be complete in this list, readers should also refer 
+	to the specification defining this ontology.""" ;
+	vs:term_status "unstable" ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "AggregateContainer" .
+
+:CompositeContainer a rdfs:Class ;
+	rdfs:subClassOf :Container ;
+	rdfs:comment """A Linked Data Platform Container (LDPC) that also conforms to 
+	additional patterns and conventions for managing members.  It is distinguished from
+	AggregateContainer by the following behaviors:
+	(1) An CompositeContainer, when deleted, must delete all its members.
+	
+	While every attempt is made to be complete in this list, readers should also
+	refer to the specification defining this ontology.""" ;
+	vs:term_status "unstable" ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "CompositeContainer" .
+
+:containerSortPredicates a rdf:Property ;
+	rdfs:comment "List of predicates that indicate the ascending order of the members in a page." ;
+	vs:term_status "unstable" ;
+	rdfs:domain :Page ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "containerSortPredicates" ;
+	rdfs:range rdf:List .
+
+:membershipPredicate a rdf:Property ;
+	rdfs:comment "Indicates which predicate of the container should be used to determine the membership." ;
+	vs:term_status "unstable" ;
+	rdfs:domain :Container ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "membershipPredicate" ;
+	rdfs:range rdf:Property .
+
+:membershipSubject a rdf:Property ;
+	rdfs:comment "Indicates which resource is the subject for the members of the container." ;
+	vs:term_status "unstable" ;
+	rdfs:domain :Container ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "membershipSubject" ;
+	rdfs:range rdf:Property .
+
+:nextPage a rdf:Property ;
+	rdfs:comment "From a known page, how to indicate the next or last page as rdf:nil." ;
+	vs:term_status "unstable" ;
+	rdfs:domain :Page ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "nextPage" ;
+	rdfs:range rdfs:Resource .
+
+:Page a rdfs:Class ;
+	rdfs:comment "A resource that represents a limited set of members of a LDP Container." ;
+	vs:term_status "unstable" ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "Page" .
+
+:pageOf a rdf:Property ;
+	rdfs:comment "Associated a page with its container." ;
+	vs:term_status "unstable" ;
+	rdfs:domain :Page ;
+	rdfs:isDefinedBy <http://www.w3.org/ns/ldp#> ;
+	rdfs:label "pageOf" ;
+	rdfs:range :Container .

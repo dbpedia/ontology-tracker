@@ -1,0 +1,975 @@
+@prefix v1:    <http://linkeddata.center/kees/v1#> .
+@prefix :      <http://linkeddata.center/kees/v1#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix sd:    <http://www.w3.org/ns/sparql-service-description#> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix wv:    <http://vocab.org/waiver/terms/norms> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix llo:   <http://lodlaundromat.org/ontology/> .
+
+:ConfigImporter  a       owl:Class ;
+        rdfs:comment     "A processor that processes config accrual policies."@en ;
+        rdfs:label       "Config Importer"@en ;
+        rdfs:subClassOf  :LDPRSAccrualPolicyProcessor .
+
+:KBConfigGraph  a        owl:Class ;
+        rdfs:comment     "A named graph that contains knowlege base configuration data. Data consist in instances of Accrual Policies."@en ;
+        rdfs:label       "Knowledge Base Config Graph"@en ;
+        rdfs:subClassOf  :ABoxGraph .
+
+:FailureReport  a        owl:Class ;
+        rdfs:comment     "A  report  that states a processing error."@en ;
+        rdfs:label       "Failure Report"@en ;
+        rdfs:subClassOf  :ProcessingReport .
+
+:DestructRule  a         owl:Class ;
+        rdfs:comment     "A rule that destroy (invalidated) facts in a knowledge base"@en ;
+        rdfs:label       "Destruct Rule"@en ;
+        rdfs:subClassOf  :ReasoningPolicy .
+
+:supportsLDPPP  a     owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The described accrual  policy supports the Linked Data Platform Paging Protocol following link=next in http headers. If not specified false is inferred false."@en ;
+        rdfs:domain   :LDPRSAccrualPolicy ;
+        rdfs:label    "supports LDPPP"@en ;
+        rdfs:range    xsd:boolean .
+
+:isLastPage  a        owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "states that the referenced page is the last one. If not present defautlt is false."@en ;
+        rdfs:domain   :Page ;
+        rdfs:label    "is the last page"@en ;
+        rdfs:range    xsd:boolean .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :BulkAccrualPolicy :ConfigAccrualPolicy :TBoxAccrualPolicy )
+] .
+
+:BulkAccrualPolicy  a    owl:Class ;
+        rdfs:comment     "Linked data platform  Rdf Resource accrual policy"@en , "An accrual policy that creates a knowledge graph in the knowlegde base  from a  web resource exposing  RDF data. Implies that the described resource kees:generatesGraphType  kees:LinkedDataGraph."@en ;
+        rdfs:label       "Bulk Accrual Policy"@en ;
+        rdfs:subClassOf  :LDPRSAccrualPolicy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :generatesGraphType ;
+                           owl:qualifiedCardinality  "0"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :source ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:ProcessingReport  a     owl:Class ;
+        rdfs:comment     "The report about the result of a processing activity."@en ;
+        rdfs:label       "Processing Report"@en ;
+        rdfs:subClassOf  :Entity .
+
+dc:modifed  a   owl:AnnotationProperty .
+
+:KnowledgeAccrualPolicy
+        a                owl:Class ;
+        rdfs:comment     "The superclass for all the policies that describe how to learn facts from the web. The Accrual policy describes how to create and maintain ABox and TBox statements in a knowledge base."@en ;
+        rdfs:label       "Knowledge Accrual Policy"@en ;
+        rdfs:subClassOf  :Policy ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:string ;
+                           owl:onProperty               :forceAccept
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  :RetentionPolicy ;
+                           owl:onProperty               :onFetchingError
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:anyURI ;
+                           owl:onProperty               :url
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  :UpdatePolicy ;
+                           owl:onProperty               :hasUpdatePolicy
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:anyURI ;
+                           owl:onProperty               :generatesGraphType
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  :AuthenticationPolicy ;
+                           owl:onProperty               :requiresAuthentication
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:anyURI ;
+                           owl:onProperty               :createsGraphName
+                         ] .
+
+:expectedParts  a     owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "the number of expected resource partitions (i.e pages)."@en ;
+        rdfs:domain   :IngestionPlan ;
+        rdfs:label    "expected parts"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+:createsGraphName  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The related uri is used as as the name of the graph produced according the described accrual policy. If not specified the same value of kees:url is inferred."@en ;
+        rdfs:domain   :KnowledgeAccrualPolicy ;
+        rdfs:label    "creates graph name" ;
+        rdfs:range    xsd:anyURI .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :KnowledgeBase :KnowledgeGraph :Page :PagingData :Plan :Policy :ProcessingReport :Query )
+] .
+
+:username  a          owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Username in basic http autentication method"@en ;
+        rdfs:domain   :HttpBasicAuthentication ;
+        rdfs:label    "username"@en ;
+        rdfs:range    xsd:string .
+
+:ConstructRule  a         owl:Class ;
+        rdfs:comment      "A rule that create new facts in a Knowledge base"@en ;
+        rdfs:label        "Construct Rule"@en ;
+        rdfs:subClassOf   :ReasoningPolicy ;
+        owl:disjointWith  :DestructRule .
+
+:HttpBasicAuthentication
+        a                owl:Class ;
+        rdfs:comment     "http basic autentication method as described in RFC 2617"@en ;
+        rdfs:label       "Http Basic Autentication Method"@en ;
+        rdfs:subClassOf  :AuthenticationPolicy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:success ;
+                           owl:onProperty            :username ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:success ;
+                           owl:onProperty            :password ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:hasOffset  a         owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "first record ofset of a page."@en ;
+        rdfs:domain   :Page ;
+        rdfs:label    "has offset"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+:SparqlIngestor  a       owl:Class ;
+        rdfs:comment     "a processor that manages sparql service accrual policies."@en ;
+        rdfs:label       "Sparql Ingestor"@en ;
+        rdfs:subClassOf  :Agent .
+
+:SparqlServiceAccrualPolicy
+        a                owl:Class ;
+        rdfs:comment     "Load RDF resource executing a sparql query to a sparql endpoint (using POST).\nThe query must be contained (unencoded) in accrualOption propery"@en ;
+        rdfs:label       "SPARQL Ingestion Accrual Policy"@en ;
+        rdfs:subClassOf  :KnowledgeAccrualPolicy ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:success ;
+                           owl:onProperty               :constructQuery
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :toPage
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :pageSize
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              [ a          rdfs:Datatype ;
+                                                          owl:oneOf  [ a          rdf:List ;
+                                                                       rdf:first  "GET" ;
+                                                                       rdf:rest   [ a          rdf:List ;
+                                                                                    rdf:first  "POST" ;
+                                                                                    rdf:rest   ()
+                                                                                  
+                                                                                  ]
+                                                                     ]
+                                                        ] ;
+                           owl:onProperty               :queryMethod
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :sparqlEndpoint ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:positiveInteger ;
+                           owl:onProperty               :fromPage
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :queryName ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:KnowledgeGraph  a       owl:Class ;
+        rdfs:subClassOf  :Entity .
+
+dcterms:license  a  owl:AnnotationProperty .
+
+owl:deprecated  a  owl:AnnotationProperty .
+
+:havingTargetGraphName
+        a             owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "States that the described ingestion plan is about the creation/maintenance of a graph named as the referenced object."@en ;
+        rdfs:domain   :IngestionPlan ;
+        rdfs:label    "having target graph name"@en ;
+        rdfs:range    xsd:anyURI .
+
+:pageNum  a           owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "A page sequence number ."@en ;
+        rdfs:domain   :Page ;
+        rdfs:label    "page number"@en ;
+        rdfs:range    xsd:positiveInteger .
+
+:toPage  a            owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The last page returned by a SPARQL query. If not present defaults to 1."@en ;
+        rdfs:domain   :SparqlServiceAccrualPolicy ;
+        rdfs:label    "to page"@en ;
+        rdfs:range    xsd:positiveInteger .
+
+:executionPriority  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "An optional integer that determine the ordere of execution of a rule ( ascending)."@en ;
+        rdfs:domain   :ReasoningPolicy ;
+        rdfs:label    "execution priority"@en ;
+        rdfs:range    xsd:integer .
+
+:hasReasoningRule  a  owl:ObjectProperty ;
+        rdfs:comment  "this property states that the annotated Knowledge Accrual has a reasoning policy."@en ;
+        rdfs:label    "hasReasoningPolicy"@en .
+
+:Graph  a                owl:Class ;
+        rdfs:comment     "A query that returns an RDF graph. Realized by a SPARQL CONSTRUCT."@en ;
+        rdfs:label       "Graph"@en ;
+        rdfs:subClassOf  :Query .
+
+dc:subject  a   owl:AnnotationProperty .
+
+:url    a             owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "An url"@en ;
+        rdfs:domain   :KnowledgeAccrualPolicy ;
+        rdfs:label    "url"@en ;
+        rdfs:range    xsd:anyURI .
+
+:policyName  a        owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "a conventional name for a Policy. Should be univoque inside the knowledge base."@en ;
+        rdfs:domain   :Policy ;
+        rdfs:label    "policy name"@en .
+
+:hasFrequencyPeriod  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Frequency period in seconds."@en ;
+        rdfs:domain   :UpdatePolicy ;
+        rdfs:label    "has frequency period"@en ;
+        rdfs:range    xsd:nonNegativeInteger ;
+        rdfs:seeAlso  <http://www.w3.org/TR/swbp-xsch-datatypes/#section-duration> .
+
+:Reasoning  a             owl:Class ;
+        rdfs:comment      "The activity of materializing RDF statements from rules and axioms."@en ;
+        rdfs:label        "Reasoning"@en ;
+        rdfs:subClassOf   :KnowledgeAccrual ;
+        owl:disjointWith  :ResourceIngestion .
+
+:hasBootGraph  a      owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment  "This property states that annotated knowledge base as a referened boot graph."@en ;
+        rdfs:domain   :KnowledgeGraph ;
+        rdfs:label    "has boot graph"@en ;
+        rdfs:range    :BootGraph .
+
+:hasResilience  a     owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The number of times  ABOX graph is retained in storage after a failure in fetchin it. The default is 0 that means that when a graph fails to load it is removed from the knowledge base. If the value of this attribute is, for instance 3, this means that the Graph will be keept in the knowledge base untill its loading fails for three consecutive  times (the fourth error drives a graph drop). A succesfull loading reset the fail counter.N.B. a \"not modified\" message does not reset the fail counter."@en ;
+        rdfs:domain   :RetentionPolicy ;
+        rdfs:label    "has resilience"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :LDPRSAccrualPolicy :LodLaundromatAccrualPolicy :SparqlServiceAccrualPolicy )
+] .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :BootGraph :InferredKnowledgeGraph :IngestionActivityReportGraph :KBConfigGraph :LinkedDataGraph )
+] .
+
+:generatesGraphType  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The  described accrual policy has the objective to generate/maintain a knowledge graph of the related type. If the property is not specified, nor explicitely nor implicitely (by axioms), kees:LinkedDataGraph is inferred."@en ;
+        rdfs:domain   :KnowledgeAccrualPolicy ;
+        rdfs:label    "generates  graph type"@en ;
+        rdfs:range    xsd:anyURI .
+
+dc:creator  a   owl:AnnotationProperty .
+
+<http://linkeddata.center/kees/v1>
+        a                owl:Ontology ;
+        rdfs:label       "KEES Ontology"@en ;
+        rdfs:seeAlso     <http://linkeddata.center/help/devop/kees-profile> ;
+        dc:creator       "Enrico Fagnoni"@en ;
+        dc:description   "KEES (Knowledge Exchenge Engine Schema ) ontology describes a knowledge base configuration in terms of ABox and TBox statements together with their accrual and reasoning policies.  This vocabulary is designed to drive automatic data ingestion in a graph database according KEES (Knowledge Exchange Engine Schema) and Linked (Open) Data principles.  For a pratical use  of KEES ontology see  http://linkeddata.center/help/devop/kees-profile article."@en ;
+        dc:description   <http://linkeddata.center/kees/images/cycle.png> ;
+        dc:rights        "The KEES ontology is available under the Creative Commons Attribution 3.0 Unported license; see http://creativecommons.org/licenses/by/3.0/. In a nutshell, you are free to copy, distribute and transmit the work; to remix/adapt the work (e.g. to import the ontology and create specializations of its elements), as long as you attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work). Proper Attribution: Simply include the statement \"This work is based on the KEES ontology, developed by Enrico Fagnoni\" and link back to http:/linkeddata.center/kees/v1"@en ;
+        dc:subject       "Knowledge Exchange Engine Schema Ontology."@en ;
+        dc:title         "The KEES Vocabulary for knowledge  base management"@en ;
+        dcterms:license  <http://creativecommons.org/licenses/by/4.0/> ;
+        owl:versionInfo  "V 1.1.19 Release 2016-02-04" ;
+        foaf:homepage    <http://linkeddata.center/kees/> .
+
+:hasLimit  a          owl:DatatypeProperty ;
+        rdfs:comment  "the max size in RDF triple of a paged resource"@en ;
+        rdfs:label    "has limit"@en .
+
+foaf:homepage  a  owl:AnnotationProperty .
+
+:hasTBoxGraph  a            owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is one of the ABox graphs that contain vocabularies and taxonomies used in the described  knowlege base."@en ;
+        rdfs:domain         :KnowledgeBase ;
+        rdfs:label          "has TBox graph"@en ;
+        rdfs:range          :TBoxGraph ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:ReasoningPolicy  a      owl:Class ;
+        rdfs:comment     "A construction rule according a legacy syntax derived from stardog DL entilement rules"@en ;
+        rdfs:label       "Reasoning Policy"@en ;
+        rdfs:subClassOf  :Policy ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:string ;
+                           owl:onProperty               :ruleName
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:integer ;
+                           owl:onProperty               :executionPriority
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:success ;
+                           owl:onProperty            :ruleText ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:queryMethod  a       owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The http request method used in a SPARQL query. Accepted metods: \"POST\"  and \"GET\". Defaults to \"POST\" if not specified."@en ;
+        rdfs:domain   :SparqlServiceAccrualPolicy ;
+        rdfs:label    "query method"@en ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  [ a          rdf:List ;
+                                     rdf:first  "GET" ;
+                                     rdf:rest   [ a          rdf:List ;
+                                                  rdf:first  "POST" ;
+                                                  rdf:rest   ()
+                                                
+                                                ]
+                                   ]
+                      ] .
+
+:byteCount  a         owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "is the number of bytes processed by an ingestion activity."@en ;
+        rdfs:domain   :SuccessReport ;
+        rdfs:label    "byte count"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :FailureReport :NoChangeReport :SuccessReport )
+] .
+
+:password  a          owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Password in basic autentication method"@en ;
+        rdfs:domain   :HttpBasicAuthentication ;
+        rdfs:label    "password"@en ;
+        rdfs:range    xsd:string .
+
+xsd:success  rdfs:label   "has input"@en ;
+        owl:priorVersion  "task  processor input as a json structure."@en .
+
+:InferredKnowledgeGraph
+        a                owl:Class ;
+        rdfs:comment     "A named graph containing inferred facts (by axioms or rules)"@en ;
+        rdfs:label       "Inferred Knowledge Graph"@en ;
+        rdfs:subClassOf  :ABoxGraph .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :BulkIngestor :ConfigImporter :TBoxIngestor )
+] .
+
+:IngestionFromSparqlService
+        a                owl:Class ;
+        rdfs:comment     "An activity to index  RDF triples extracted from a sparql service."@en ;
+        rdfs:label       "Ingestion From Sparql Service"@en ;
+        rdfs:subClassOf  :ResourceIngestion .
+
+:lodLaundromatUrl  a        owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "An url of a resource stored in the  lod laundromat wardrobe. similar to llo:url."@en ;
+        rdfs:domain         :LodLaundromatAccrualPolicy ;
+        rdfs:label          "lod laundromat url"@en ;
+        rdfs:range          xsd:anyURI ;
+        rdfs:seeAlso        <http://lodlaundromat.org/> ;
+        rdfs:subPropertyOf  :url .
+
+:hasInferenceGraph  a       owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is the graph where reasoners places all materialized triples."@en ;
+        rdfs:domain         :KnowledgeBase ;
+        rdfs:label          "has inference graph"@en ;
+        rdfs:range          :InferredKnowledgeGraph ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:forceAccept  a       owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Define specified http accept header in requesting source. The sintax must be complain to RFC 2616 for HTTP 1.1. accept header. If not specified 'application/n-triples,application/ld+json,application/rdf+xml,text/turtle,*/*;q=0.4' it is used."@en ;
+        rdfs:domain   :KnowledgeAccrualPolicy ;
+        rdfs:label    "force accept"@en ;
+        rdfs:range    xsd:string .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :Activity :Agent :Entity )
+] .
+
+:supportsHttpCaching  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Support http caching specification (RFC 2616 ) in sending HTTP requests. If not present, true is inferred."@en ;
+        rdfs:domain   :LDPRSAccrualPolicy ;
+        rdfs:label    "supports http caching"@en ;
+        rdfs:range    xsd:boolean .
+
+:sparqlEndpoint  a          owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "An url of a sparql service endpoint. similar to sd:endpoint"@en ;
+        rdfs:domain         :SparqlServiceAccrualPolicy ;
+        rdfs:label          "sparql endpoint"@en ;
+        rdfs:range          xsd:anyURI ;
+        rdfs:subPropertyOf  :url .
+
+dc:description  a  owl:AnnotationProperty .
+
+:Table  a                owl:Class ;
+        rdfs:comment     "A query that returns a table of data. Realized by a SPARQL SELECT construct."@en ;
+        rdfs:label       "Table"@en ;
+        rdfs:subClassOf  :Query .
+
+:hasConfigGraph  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is one of the configuration graph that caracterize the described knowledge base."@en ;
+        rdfs:domain         :KnowledgeBase ;
+        rdfs:label          "has config graph"@en ;
+        rdfs:range          :KBConfigGraph ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:requiresAuthentication
+        a             owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment  "The related resource is an authentication method to be used to access dataset during the execution of the described accrual policy. If not present, no authentication required."@en ;
+        rdfs:domain   :KnowledgeAccrualPolicy ;
+        rdfs:label    "requires authentication"@en ;
+        rdfs:range    :AuthenticationPolicy .
+
+:NoChangeReport  a       owl:Class ;
+        rdfs:comment     "A report that states that the knowledge base was not changed by the processing activity."@en ;
+        rdfs:label       "No Change Report"@en ;
+        rdfs:subClassOf  :ProcessingReport .
+
+:hasPagingData  a     owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment  "The related resource is a dataset that contains the page info about the annotated paged resource."@en ;
+        rdfs:domain   :Page ;
+        rdfs:label    "has Paging Data"@en ;
+        rdfs:range    :PagingData .
+
+:Query  a                owl:Class ;
+        rdfs:comment     "A generic query expressed by a SPARQL construct."@en ;
+        rdfs:label       "Query"@en ;
+        rdfs:subClassOf  :Entity ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:string ;
+                           owl:onProperty            :queryText ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:Workflow  a             owl:Class ;
+        rdfs:comment     "A plan for a kees Cycle processing."@en ;
+        rdfs:label       "Workflow"@en ;
+        rdfs:subClassOf  :Plan ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:string ;
+                           owl:onProperty            :workflowStructure ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:queryName  a               owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "The name of the graph that will contain a sparql query result. If not specfied hinerit the sparql service endpoint url."@en ;
+        rdfs:domain         :SparqlServiceAccrualPolicy ;
+        rdfs:label          "query name"@en ;
+        rdfs:range          xsd:anyURI ;
+        rdfs:subPropertyOf  :createsGraphName .
+
+:LDPRSAccrualPolicy  a   owl:Class ;
+        rdfs:comment     "An accrual policy to  create a  named  graph in the graph database from a Linked Data Platform Rdf Source , using eTag and lastUpdate http caching info. It recognizes LDP paging protocol.  Standard RDF resource loading  policy for  any  web resource exposing RDF data."@en ;
+        rdfs:label       "LDPRS Accrual Policy"@en ;
+        rdfs:seeAlso     <http://www.w3.org/TR/ldp/#dfn-linked-data-platform-resource> ;
+        rdfs:subClassOf  :KnowledgeAccrualPolicy ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:boolean ;
+                           owl:onProperty               :supportsHttpCaching
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:boolean ;
+                           owl:onProperty               :supportsLDPPP
+                         ] .
+
+:IngestionFromLDPRS  a    owl:Class ;
+        rdfs:comment      "Indexing of a web RDF resource using INSERT DATA sparql update construct. This activity is pretty flexible but requires an extra loading and parsing of resources. It recognize LDPRS accual policies."@en ;
+        rdfs:label        "Ingestion From LDPRS"@en ;
+        rdfs:subClassOf   :ResourceIngestion ;
+        owl:disjointWith  :SimplifiedResourceIngestion .
+
+:tripleCount  a       owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "triple count"@en , "is the number of triples ingested by an accrual activity."@en ;
+        rdfs:domain   :Entity ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+:LodLaundromatAgent  a   owl:Class ;
+        rdfs:comment     "A client for lod laundromat web service. A processor that processes lod laundromat  accrual policies."@en ;
+        rdfs:label       "Lod Laundromat Agent"@en ;
+        rdfs:subClassOf  :Agent .
+
+:usedMemory  a        owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Extimated RAM bytes used by activity processing."@en ;
+        rdfs:domain   :SuccessReport ;
+        rdfs:label    "used memory"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+:LDPRSAccrualPolicyProcessor
+        a                owl:Class ;
+        rdfs:comment     "The abstract superclass for processors that manage  LDPRS accual policies."@en ;
+        rdfs:label       "LDPRS Accrual Policy Processor"@en ;
+        rdfs:subClassOf  :Agent .
+
+:queryText  a         owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "the text of a sparql query. In the query text you can inject variables with the form %varname=default value% where varname is a word a default value a string."@en ;
+        rdfs:domain   :Query ;
+        rdfs:label    "query text"@en ;
+        rdfs:range    xsd:string .
+
+:SimplifiedResourceIngestion
+        a                owl:Class ;
+        rdfs:comment     "Indexing of a web resource useing the LOAD construct in sparql update. This Ingestion activity doe not supports content negotiation, http chahcing, LDP paging and depends from baking quadstore server inplementation. Should be used when possible because it is portable and fast. It recognize LDPRS accual policies."@en ;
+        rdfs:label       "Simplified Resource Ingestion"@en ;
+        rdfs:subClassOf  :ResourceIngestion .
+
+:SuccessReport  a        owl:Class ;
+        rdfs:comment     "A report that states a succesful processing result."@en ;
+        rdfs:label       "Success Report"@en ;
+        rdfs:subClassOf  :ProcessingReport ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :transactionCount
+                         ] .
+
+dc:contributor  a  owl:AnnotationProperty .
+
+:IngestionCycle  a        owl:Class ;
+        rdfs:comment      "The kees cycle window processing activity ( ie.  Booting, Learning, reasoning)"@en ;
+        rdfs:label        "Ingestion Cycle"@en ;
+        rdfs:subClassOf   :Activity ;
+        owl:disjointWith  :KnowledgeAccrual .
+
+:KnowledgeAccrual  a     owl:Class ;
+        rdfs:comment     "The abstract superclass for activities that builds knowledge graphs."@en ;
+        rdfs:label       "Knowledge Accrual"@en ;
+        rdfs:subClassOf  :Activity .
+
+:constructQuery  a    owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The SPARQL 1.1.  query to extract data from a SPARQL endpoint. No paging constructs allowed ( OFSET and LIMIT ), use pageSize, fromPage and toPage instead. If not specified \"CONSTRUCT { ?s ?p ?o }  WHERE { ?s ?p ?o }\" apply"@en ;
+        rdfs:domain   :SparqlServiceAccrualPolicy ;
+        rdfs:label    "construct query"@en ;
+        rdfs:range    xsd:string .
+
+:prevPage  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment  "states that referred Page has a previous page"@en ;
+        rdfs:domain   :Page ;
+        rdfs:label    "previous page"@en ;
+        rdfs:range    :Page .
+
+:transactionCount  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "transaction count"@en , "is the number of SPARQL uopdate transaction performed to complete a knowledge accrual activity."@en ;
+        rdfs:domain   :SuccessReport ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+:TBoxAccrualPolicy  a    owl:Class ;
+        rdfs:comment     "An accrual policy that creates a knowledge graph in the knowlegde base  from a resource exposing ontologies in RDF (owl, rdfs, skos). Implies that the described resource kees:generatesGraphType  kees:TBoxGraph."@en ;
+        rdfs:label       "TBox Accrual Policy"@en ;
+        rdfs:subClassOf  :LDPRSAccrualPolicy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :vocabulary ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :generatesGraphType ;
+                           owl:qualifiedCardinality  "0"^^xsd:nonNegativeInteger
+                         ] .
+
+:Agent  a             owl:Class ;
+        rdfs:comment  "A software agent running kees compliant software. It is a subclass of prov:SoftwareAgent"@en ;
+        rdfs:label    "Agent"@en .
+
+dc:rights  a    owl:AnnotationProperty .
+
+:expectedTriples  a   owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "the expected maximum number of triple to be indexed by an activity."@en ;
+        rdfs:domain   :IngestionPlan ;
+        rdfs:label    "expected triples"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+:ReasoningPlan  a        owl:Class ;
+        rdfs:comment     "A  plan for a reasoning activity  that concens the creation or the destruction of   facts from a production rule."@en ;
+        rdfs:label       "Reasoning Plan"@en ;
+        rdfs:subClassOf  :Plan .
+
+:Plan   a                owl:Class ;
+        rdfs:comment     "An entity that represents a set of actions or steps intended by one or more processor  to achieve some goals. It is equivalent to prov:Plan."@en ;
+        rdfs:label       "Plan"@en ;
+        rdfs:subClassOf  :Entity .
+
+:Policy  a               owl:Class ;
+        rdfs:comment     "A plan or course of action by an authority, intended to influence and determine  actions, and other matters. Can be considered a subclass of dct:Plan Class."@en ;
+        rdfs:label       "Policy"@en ;
+        rdfs:subClassOf  :Entity ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:string ;
+                           owl:onProperty               :policyName
+                         ] .
+
+:fromPage  a          owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The first page returned by a SPARQL in a query iteration. Defaults to 1 if not present."@en ;
+        rdfs:domain   :SparqlServiceAccrualPolicy ;
+        rdfs:label    "from page"@en ;
+        rdfs:range    xsd:positiveInteger .
+
+:ABoxGraph  a             owl:Class ;
+        rdfs:comment      "A named graph containing only facts."@en ;
+        rdfs:label        "ABox Graph"@en ;
+        rdfs:subClassOf   :KnowledgeGraph ;
+        owl:disjointWith  :TBoxGraph .
+
+:Reasoner  a             owl:Class ;
+        rdfs:comment     "A processor that create new facts using inference, rules and axioms."@en ;
+        rdfs:label       "reasoner"@en ;
+        rdfs:subClassOf  :Agent .
+
+:ConfigAccrualPolicy  a  owl:Class ;
+        rdfs:comment     "An accrual policy that creates a knowledge graph in the knowlegde base  from a resource exposing KEES ontology RDF data. Implies that the described resource kees:generatesGraphType  keesConfigDataGraph."@en ;
+        rdfs:label       "Config Accrual Policy"@en ;
+        rdfs:subClassOf  :LDPRSAccrualPolicy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :generatesGraphType ;
+                           owl:qualifiedCardinality  "0"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :includes ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:IngestionActivityReportGraph
+        a                owl:Class ;
+        rdfs:comment     "A named graph that stores statements about an ingestion activity.  By default all report about completed activities older than 24 hours are purged away."@en ;
+        rdfs:label       "Ingestion Activity Report Graph"@en ;
+        rdfs:subClassOf  :ABoxGraph .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :Answer :Graph :Table )
+] .
+
+:RetentionPolicy  a      owl:Class ;
+        rdfs:label       "Retention Policy"@en ;
+        rdfs:subClassOf  :Policy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:negativeInteger ;
+                           owl:onProperty            :hasResilience ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        dc:description   "How to manage errors during learning phase: is default  dropDataset "@en .
+
+:BootGraph  a            owl:Class ;
+        rdfs:comment     "A special graph that can include boot directive that are copiet to config graph."@en ;
+        rdfs:label       "Boot Graph"@en ;
+        rdfs:subClassOf  :ABoxGraph .
+
+:Answer  a               owl:Class ;
+        rdfs:comment     "A query that returns a boolean value (true or false). Realized by a SPARQL ASK construct."@en ;
+        rdfs:label       "Answer"@en ;
+        rdfs:subClassOf  :Query .
+
+:KnowledgeBase  a        owl:Class ;
+        rdfs:comment     "A RDF graph database composed by ABox and TBox statements organized in named graph."@en ;
+        rdfs:label       "Knowledge Base"@en ;
+        rdfs:subClassOf  :Entity ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               :BootGraph ;
+                           owl:onProperty            :hasBootGraph ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      :hasInferenceGraph ;
+                           owl:someValuesFrom  :InferredKnowledgeGraph
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      :hasConfigGraph ;
+                           owl:someValuesFrom  :KBConfigGraph
+                         ] .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :IngestionPlan :ReasoningPlan :Workflow )
+] .
+
+:nextPage  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment  "States that referred Page has a next page."@en ;
+        rdfs:domain   :Page ;
+        rdfs:label    "next page"@en ;
+        rdfs:range    :Page .
+
+:IngestionPlan  a        owl:Class ;
+        rdfs:comment     "A plan that describe the objective  for a data ingestion activity."@en ;
+        rdfs:label       "Ingestion Plan"@en ;
+        rdfs:subClassOf  :Plan ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :expectedTriples
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :havingTargetGraphName ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :expectedParts
+                         ] .
+
+:includes  a                owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "The URL of a web resource exposing a Kees configuration data."@en ;
+        rdfs:domain         :ConfigAccrualPolicy ;
+        rdfs:label          "include"@en ;
+        rdfs:range          xsd:anyURI ;
+        rdfs:subPropertyOf  :url .
+
+:TBoxGraph  a            owl:Class ;
+        rdfs:comment     "A named graph that contains vocabularies and taxonomies."@en ;
+        rdfs:label       "TBox Graph"@en ;
+        rdfs:subClassOf  :KnowledgeGraph .
+
+:UpdatePolicy  a         owl:Class ;
+        rdfs:comment     "A forecasted  rate at which change recurs in an ABox Graph ."@en ;
+        rdfs:label       "Update Policy"@en ;
+        rdfs:seeAlso     dcterms:Frequency ;
+        rdfs:subClassOf  :Policy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:nonNegativeInteger ;
+                           owl:onProperty            :hasFrequencyPeriod ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:ruleName  a                owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "a conventional name for a Reasoning Policy. Should be univoque inside the knowledge base."@en ;
+        rdfs:domain         :ReasoningPolicy ;
+        rdfs:label          "rule  name"@en ;
+        rdfs:subPropertyOf  :policyName .
+
+:PagingData  a           owl:Class ;
+        rdfs:comment     "Page sequence info"@en ;
+        rdfs:label       "Paging Data"@en ;
+        rdfs:subClassOf  :Entity ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:positiveInteger ;
+                           owl:onProperty               :pageNum
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:boolean ;
+                           owl:onProperty               :isLastPage
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  :Page ;
+                           owl:onProperty               :nextPage
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  :Page ;
+                           owl:onProperty               :prevPage
+                         ] .
+
+dc:title  a     owl:AnnotationProperty .
+
+:pageSize  a          owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The size for a SPARQL query page. Equivalent  with LIMIT clause. Defaults to 1000 if not defined"@en ;
+        rdfs:domain   :SparqlServiceAccrualPolicy ;
+        rdfs:label    "page size"@en ;
+        rdfs:range    xsd:positiveInteger .
+
+:Activity  a          owl:Class ;
+        rdfs:comment  "An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating knowledge base entities. It is a subclass of prov:Activity class."@en ;
+        rdfs:label    "Activity"@en .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :IngestionFromLDPRS :IngestionFromLodLaundromat :IngestionFromSparqlService :SimplifiedResourceIngestion )
+] .
+
+:vocabulary  a              owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "It's datasource for a resource that contains TBox statements."@en ;
+        rdfs:domain         :TBoxAccrualPolicy ;
+        rdfs:label          "vocabulary"@en ;
+        rdfs:range          xsd:anyURI ;
+        rdfs:subPropertyOf  :url .
+
+:BulkIngestor  a         owl:Class ;
+        rdfs:comment     "A processor that processes bulk accrual policies."@en ;
+        rdfs:label       "Bulk Ingestor"@en ;
+        rdfs:subClassOf  :LDPRSAccrualPolicyProcessor .
+
+:hasABoxGraph  a            owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is one of the ABox graphs that contain linked data facts in the described  knowlege base."@en ;
+        rdfs:domain         :KnowledgeBase ;
+        rdfs:label          "has ABox graph"@en ;
+        rdfs:range          :ABoxGraph ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:ruleText  a          owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The rule text body in the form:\nprefixes declaration\nIF { sparql where clause }\nTHEN { sparql insert(delete clause }.\n\nExample:\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nPREFIX gr: <http://purl.org/goodrelations/v1#>\nPREFIX :<urn:test:>\nIF {\n           ?offering gr:hasPriceSpecification ?ps .\n           ?ps gr:hasCurrencyValue ?price .\n           FILTER (?price >= 200.00).\n}\nTHEN {\n           ?offering a :ExpensiveProduct .\n}\n\n"@en ;
+        rdfs:domain   :ReasoningPolicy ;
+        rdfs:range    xsd:string .
+
+:LodLaundromatAccrualPolicy
+        a                owl:Class ;
+        rdfs:comment     "An accrual policy that creates a knowledge graph in the knowlegde base  from a resource contained in lod laundromatic service."@en ;
+        rdfs:label       "Lod Laundromat Accrual Policy"@en ;
+        rdfs:subClassOf  :KnowledgeAccrualPolicy ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:anyURI ;
+                           owl:onProperty            :lodLaundromatUrl ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:LinkedDataGraph  a      owl:Class ;
+        rdfs:comment     "An ABox named graph that stores facts from  linked data learned from web 3.0 resources."@en ;
+        rdfs:label       "Linked Data Graph"@en ;
+        rdfs:subClassOf  :ABoxGraph .
+
+[ a            owl:AllDisjointProperties ;
+  owl:members  ( :includes :lodLaundromatUrl :source :sparqlEndpoint :vocabulary )
+] .
+
+:hasIngestionActivityReportGraph
+        a                   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is a graph used to store logs  about a kees cycle executions."@en ;
+        rdfs:domain         :KnowledgeBase ;
+        rdfs:label          "has ingestion activity report graph"@en ;
+        rdfs:range          :IngestionActivityReportGraph ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:Page   a                owl:Class ;
+        rdfs:comment     "A paged resource,  a subclass of http://www.w3.org/ns/ldp#Page."@en ;
+        rdfs:label       "Page"@en ;
+        rdfs:subClassOf  :Entity ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :hasOffset
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      :hasPagingData ;
+                           owl:someValuesFrom  :PagingData
+                         ] .
+
+:Entity  a               owl:Class ;
+        rdfs:comment     "An kees entity is a something about the  Knowledge Base.   It is a subclass of prov:Entity Class"@en ;
+        rdfs:label       "Entity"@en ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :byteCount
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:nonNegativeInteger ;
+                           owl:onProperty               :tripleCount
+                         ] .
+
+:onFetchingError  a   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment  "The related resource declares the policy to adopt when an error occurs during the execution of the described accrual policy. If not present any error in data loading removes the related graph the in knowledge base."@en ;
+        rdfs:domain   :KnowledgeAccrualPolicy ;
+        rdfs:label    "on fetching error"@en ;
+        rdfs:range    :RetentionPolicy .
+
+:TBoxIngestor  a         owl:Class ;
+        rdfs:comment     "A processor that processes TBox accrual policies."@en ;
+        rdfs:label       "TBox Ingestor"@en ;
+        rdfs:subClassOf  :LDPRSAccrualPolicyProcessor .
+
+:hasUpdatePolicy  a         owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is a policy that suggest a time frame, expressed in seconds after witch the described accrual policy should check data for update.  If not specified , a period of one hour is guessed . A policy that specify a long interval greatly improves ingestion engines performances."@en ;
+        rdfs:domain         :KnowledgeAccrualPolicy ;
+        rdfs:label          "has update policy"@en ;
+        rdfs:range          :UpdatePolicy ;
+        rdfs:seeAlso        dcterms:accrualPeriodicity ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :AuthenticationPolicy :KnowledgeAccrualPolicy :ReasoningPolicy :RetentionPolicy :UpdatePolicy )
+] .
+
+:ResourceIngestion  a    owl:Class ;
+        rdfs:comment     "A super class for all activities that get data from a web resource."@en ;
+        rdfs:label       "Resource Ingestion"@en ;
+        rdfs:subClassOf  :KnowledgeAccrual .
+
+:source  a                  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment        "The URL of a web resource exposing RDF data facts."@en ;
+        rdfs:domain         :BulkAccrualPolicy ;
+        rdfs:label          "source"@en ;
+        rdfs:range          xsd:anyURI ;
+        rdfs:subPropertyOf  :url .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( :LDPRSAccrualPolicyProcessor :LodLaundromatAgent :SparqlIngestor )
+] .
+
+:hasAccrualPolicy  a        owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "The related resource is a policy governing the addition of a named graph to the described knowledge base. Very similar to the dct:accrualPolicy property."@en ;
+        rdfs:domain         :KnowledgeBase ;
+        rdfs:label          "has accrual policy"@en ;
+        rdfs:range          :KnowledgeAccrualPolicy ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:AuthenticationPolicy
+        a                owl:Class ;
+        rdfs:comment     "An authentication method used to access a resource"@en ;
+        rdfs:label       "Authentication Method"@en ;
+        rdfs:subClassOf  :Policy .
+
+:IngestionFromLodLaundromat
+        a                owl:Class ;
+        rdfs:comment     "An activity to index a streamed RDF resouce provided by a LOD Laundromat service."@en ;
+        rdfs:label       "Ingestion From a Lod Laundromat"@en ;
+        rdfs:seeAlso     <http://lodlaundromat.org/> ;
+        rdfs:subClassOf  :ResourceIngestion .
+
+:workflowStructure  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "A kees cycle description  in the form \"booting => learning => reasoning \" with some phases that can be omitted (i.e.  \"learning => reasoning \")"@en ;
+        rdfs:domain   :Workflow ;
+        rdfs:label    "workflow structure"@en ;
+        rdfs:range    xsd:string .

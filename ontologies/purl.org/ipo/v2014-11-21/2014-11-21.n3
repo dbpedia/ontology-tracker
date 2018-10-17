@@ -1,0 +1,480 @@
+@prefix :      <http://www.w3.org/2002/07/owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix ipo:   <http://purl.org/ipo/core#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+ipo:hasMaker  a             owl:ObjectProperty ;
+        rdfs:comment        "Indicates a Person or Organization (Party) who created or registered the IssueEntity. This property is also used by Asset class to relate to its manufacturer, developer, inventor, etc.\n\nUsage note:\nAn example of using this property can be the relationship of an IT professional who registers a problem."@en ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( ipo:Asset ipo:IssueEntity )
+                            ] ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "has maker"@en ;
+        rdfs:range          ipo:Party ;
+        rdfs:subPropertyOf  foaf:maker ;
+        owl:inverseOf       ipo:makerOf .
+
+ipo:hasMember  a                owl:ObjectProperty ;
+        rdfs:comment            "Indicates a Person who is a member of this Organization or another Organization that is member of this Organization, representing here a department or business unit.\n"@en ;
+        rdfs:domain             ipo:Organization ;
+        rdfs:isDefinedBy        <http://purl.org/ipo/core> ;
+        rdfs:label              "has member"@en ;
+        rdfs:range              ipo:Party ;
+        owl:equivalentProperty  foaf:member ;
+        owl:inverseOf           ipo:memberOf .
+
+<http://purl.org/ipo/core>
+        a                              voaf:Vocabulary , owl:Ontology ;
+        rdfs:comment                   "Vocabulary for describing issues (or problems) and corresponding symptoms and solutions to a broad variety of contexts. It is intended to provide a generic, reusable core ontology that can be extended or specialized for use in domain-specific situations, aimed at supporting linked data publishing. The solutions are represented by procedures, which are possible workflows for solving corresponding issues."^^xsd:string ;
+        rdfs:label                     "IPO - Issue Procedure Ontology"^^xsd:string ;
+        cc:license                     <http://creativecommons.org/licenses/by/3.0/> ;
+        dc:description                 "Vocabulary for describing issues (or problems) and corresponding symptoms and solutions to a broad variety of contexts. It is intended to provide a generic, reusable core ontology that can be extended or specialized for use in domain-specific situations, aimed at supporting linked data publishing. The solutions are represented by procedures, which are possible workflows for solving corresponding issues."^^xsd:string ;
+        dc:description                 <https://1fe33463c9df35a31bd21e2a230a892120ff7435.googledrive.com/host/0B1S7VTv6EOyHMTlsTzBfSGVnXzQ/ipo.png> ;
+        dc:language                    "en" ;
+        dc:title                       "IPO - Issue Procedure Ontology"^^xsd:string ;
+        dcterms:creator                [ a         ipo:Person ;
+                                         ipo:name  "Matheus Dimas de Morais"^^xsd:string
+                                       ] ;
+        dcterms:creator                [ a         ipo:Person ;
+                                         ipo:name  "Mark Douglas de Azevedo Jacyntho"^^xsd:string
+                                       ] ;
+        dcterms:issued                 "2014-11-21"^^xsd:date ;
+        dcterms:license                <http://creativecommons.org/licenses/by/3.0/> ;
+        dcterms:rights                 "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+        vann:preferredNamespacePrefix  "ipo" ;
+        vann:preferredNamespaceUri     "http://purl.org/ipo/core#" .
+
+rdfs:comment  a  owl:AnnotationProperty .
+
+ipo:hasPostCondition  a   owl:InverseFunctionalProperty , owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates a postcondition (effect) will be reached after executing the Action."@en ;
+        rdfs:domain       ipo:Action ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has post condition"@en ;
+        rdfs:range        ipo:BooleanExpression .
+
+ipo:dependsOn  a          owl:TransitiveProperty , owl:ObjectProperty ;
+        rdfs:comment      "This property indicates that an Issue depends directly or indirectly another.\n\nUsage note:\nThis property expresses a dependence relationship between Issues and has the characteristic of transitivity, ie if Issue A depends on the Issue B, and the Issue B depends on Issue C, then the Issue A depends on Issue C."@en ;
+        rdfs:domain       ipo:Issue ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "depends on"@en ;
+        rdfs:range        ipo:Issue ;
+        owl:inverseOf     ipo:dependenceOf .
+
+ipo:directDependenceOf
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "Indicates an Issue that depends directly this Issue."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "direct dependence of"@en ;
+        rdfs:subPropertyOf  ipo:dependenceOf .
+
+ipo:false  a    ipo:BooleanExpression , owl:NamedIndividual .
+
+vann:preferredNamespaceUri
+        a       owl:AnnotationProperty .
+
+dc:language  a  owl:AnnotationProperty .
+
+ipo:directlyCausedBy  a     owl:ObjectProperty ;
+        rdfs:comment        "Indicates that an Issue is caused by another Issue directly."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "directly caused by"@en ;
+        rdfs:subPropertyOf  ipo:causedBy .
+
+ipo:dependenceOf  a       owl:TransitiveProperty , owl:ObjectProperty ;
+        rdfs:comment      "This property indicates that an Issue is directly or indirectly dependent on another. \n\nUsage note: This property also has a transitive characteristic,  but with the direction inverse of the property ipo:dependsOn."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "dependence of"@en .
+
+ipo:description  a          owl:DatatypeProperty ;
+        rdfs:comment        "Indicates text that describes something in detail."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "description"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  rdfs:comment , dcterms:description .
+
+ipo:Issue  a              owl:Class ;
+        rdfs:comment      "A problem or issue to be resolved. For example, something that is not operating normally or a hindrance to performing some task.\n\nUsage note:\nA Issue can be cause and/or caused, directly or indirectly, by another Issue, the same that the Issue A may depend on the Issue B, needing that the Issue B be solved before solving Issue A.\nThe Issue may have a set of actions (Procedures) that will fix it.\nA Issue can be indicated by several Symptoms, where a set of Symptoms can identify a Issue."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Issue"@en ;
+        rdfs:subClassOf   ipo:IssueEntity ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:indicatedBy ;
+                            owl:someValuesFrom  ipo:Symptom
+                          ] .
+
+ipo:true  a     ipo:BooleanExpression , owl:NamedIndividual .
+
+ipo:hasSource  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates the Step of origin of this Transition."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has source"@en .
+
+ipo:title  a                owl:DatatypeProperty ;
+        rdfs:comment        "Word or phrase which briefly describes something. For example a title of an article summarizing its contents."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "title"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  rdfs:label , dcterms:title .
+
+ipo:BooleanExpression
+        a                 owl:Class ;
+        rdfs:comment      "A Boolean expression that aims to give a true or false answer, aiming to validate a transition between two steps, or serve like a precondition for the execution of an Action or even serve as an postcondition to validate the execution of a Action.\n\nUsage note:\nThis class has a description of the expression and two possible values: true or false. For these values, were created instances to be reused."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Boolean Expression"@en ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:description ;
+                            owl:someValuesFrom  xsd:string
+                          ] .
+
+ipo:Activity  a           owl:Class ;
+        rdfs:comment      "A set of steps that perform an activity, but does not aim to solve a particular Issue.\n\nUsage note:\nCan be used to group multiple steps that are repeated in various Procedures to facilitate reuse."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Activity"@en ;
+        rdfs:subClassOf   ipo:CompoundAction ;
+        owl:disjointWith  ipo:Procedure .
+
+ipo:hasCategory  a        owl:ObjectProperty ;
+        rdfs:comment      "Indicates a category to IssueEntity using a classification scheme representing hierarchies of classes (or concepts).\n\nUsage note:\nThe Concept ontology SKOS class has properties that allow the creation of hierarchies of classes (or concepts), allowing even express transitivity between categories. This approach should be used as an alternative to classification by subclass IssueEntity when it is not intrinsic ratings, just grouping. For example, in one sector IT you might want to classify problems as hardware or software problem. For this kind of need, the property described herein can be used."@en ;
+        rdfs:domain       ipo:IssueEntity ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has category"@en ;
+        rdfs:range        skos:Concept .
+
+ipo:hasPreCondition  a    owl:InverseFunctionalProperty , owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates a precondition for the Action be executed.\n\nUsage note:\nA precondition may represent a prerequisite for execution of the Action, without which it is not guaranteed correct execution."@en ;
+        rdfs:domain       ipo:Action ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has pre condition"@en ;
+        rdfs:range        ipo:BooleanExpression .
+
+ipo:Symptom  a            owl:Class ;
+        rdfs:comment      "Represents a sign or indication of one or more Issues. Something that is perceived when a problem occurs.\n\nUsage note:\nA person who does not print correctly on your printer is a symptom of problems in the printer software installation."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Symptom"@en ;
+        rdfs:subClassOf   ipo:IssueEntity ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:indicates ;
+                            owl:someValuesFrom  ipo:Issue
+                          ] .
+
+dc:creator  a   owl:AnnotationProperty .
+
+ipo:goal  a               owl:DatatypeProperty ;
+        rdfs:comment      "Indicates the description of the goal to be reached after the execution of Procedure."@en ;
+        rdfs:domain       ipo:Procedure ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "goal"@en ;
+        rdfs:range        xsd:string .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( ipo:BooleanExpression ipo:Image ipo:IssueEntity ipo:Party ipo:Step ipo:Transition skos:Concept )
+] .
+
+ipo:Organization  a          owl:Class ;
+        rdfs:comment         "Represents a group of people organized aiming at a common goal: social, commercial or political.\n\nUsage note:\nCan be used, for example, to represent a company that manufactures an Asset."@en ;
+        rdfs:isDefinedBy     <http://purl.org/ipo/core> ;
+        rdfs:label           "Organization"@en ;
+        rdfs:subClassOf      ipo:Party ;
+        owl:disjointWith     ipo:Person ;
+        owl:equivalentClass  foaf:Organization .
+
+ipo:hasFirstStep  a         owl:InverseFunctionalProperty , owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "A compoundAction has one or more steps, so this property indicates that the first step should be executed."@en ;
+        rdfs:domain         ipo:CompoundAction ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "has first step"@en ;
+        rdfs:range          ipo:Step ;
+        rdfs:subPropertyOf  ipo:hasStep .
+
+ipo:hasAsset  a           owl:ObjectProperty ;
+        rdfs:comment      "Indicates an asset to IssueEntity, or any \"thing\" which is related to IssueEntity.\n\nUsage note:\nA IssueEntity is related to something, for example, a computer problem associated with the computer object that has the problem."@en ;
+        rdfs:domain       ipo:IssueEntity ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has Asset"@en ;
+        rdfs:range        ipo:Asset .
+
+rdfs:label  a   owl:AnnotationProperty .
+
+ipo:depictionOf  a          owl:ObjectProperty ;
+        rdfs:comment        "Indicates a IssueEntity illustrated by the image.\n\nUsage note:\nThis property is functional, ie an Image is related, by this property, with only one IssueEntity."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "depiction of"@en ;
+        rdfs:subPropertyOf  foaf:depicts ;
+        owl:inverseOf       ipo:hasDepiction .
+
+ipo:causedBy  a             owl:TransitiveProperty , owl:ObjectProperty ;
+        rdfs:comment        "Indicates that an Issue  is caused by another Issue, directly or indirectly.\n\nUsage note: This property also has a transitive characteristic, but with the direction inverse of the property ipo:causes"@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "caused by"@en ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+ipo:directlyDependsOn
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "This relation indicates that a issue directly depends on another. For example,  to solve the \"computer format\" Issue we need first solve the \"Back up personal data\" issue."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "directly depends on"@en ;
+        rdfs:subPropertyOf  ipo:dependsOn ;
+        owl:inverseOf       ipo:directDependenceOf .
+
+ipo:memberOf  a           owl:ObjectProperty ;
+        rdfs:comment      "Indicates a organization that the Party is participant.\n\nUsage note:\nYou can use this property to mean that an employee is a member of an organization.\nAnother approach is to use this property to relate two organizations thus representing a department that is a member of his company."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "member of"@en .
+
+ipo:hasTarget  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates the Step of destination of this Transition."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has target"@en .
+
+ipo:causes  a               owl:TransitiveProperty , owl:ObjectProperty ;
+        rdfs:comment        "Indicates that an Issue causes another Issue directly or indirectly.\n\nUsage note:\nThis property expresses a causal relationship between Issues and have the characteristic of transitivity, ie, if the Issue A causes Issue B and the Issue B causes Issue C, then the Issue A causes Issue C."@en ;
+        rdfs:domain         ipo:Issue ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "causes"@en ;
+        rdfs:range          ipo:Issue ;
+        rdfs:subPropertyOf  owl:topObjectProperty ;
+        owl:inverseOf       ipo:causedBy .
+
+ipo:Action  a             owl:Class ;
+        rdfs:comment      "Represents an action to be performed. An Action can only be a primitive action or (Task) task or a set of actions (compoundAction).\n\nUsage note:\nAn Action has a precondition that will enable the execution of the Action, and a postcondition (effect) which will be validated after running the Action."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Action"@en ;
+        rdfs:subClassOf   ipo:IssueEntity ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasPostCondition ;
+                            owl:someValuesFrom  ipo:BooleanExpression
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasPreCondition ;
+                            owl:someValuesFrom  ipo:BooleanExpression
+                          ] .
+
+ipo:solves  a             owl:ObjectProperty ;
+        rdfs:comment      "Indicates a Issue that this Procedure solves."@en ;
+        rdfs:domain       ipo:Procedure ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "solves"@en ;
+        rdfs:range        ipo:Issue ;
+        owl:inverseOf     ipo:solvedBy .
+
+ipo:Transition  a         owl:Class ;
+        rdfs:comment      "An Transition represents a transition (passage) between two Steps. Each Transition has a Step of origin (source) and a Step of destination (target). A Transition has a guard condition that specifies a Boolean condition for that the transition to occur.\nThrough the guard condition, can be implemented, in a simplified way, a workflow, establishing decision structures, repetition, choice, etc."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Transition"@en ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasSource ;
+                            owl:someValuesFrom  ipo:Step
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasGuardCondition ;
+                            owl:someValuesFrom  ipo:BooleanExpression
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasTarget ;
+                            owl:someValuesFrom  ipo:Step
+                          ] .
+
+ipo:assetOf  a            owl:ObjectProperty ;
+        rdfs:comment      "Indicates a IssueEntity that is related to the Asset.\n\nUsage note:\nThis property can be used to facilitate retrieval records of problems related with the Asset."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "asset of"@en ;
+        owl:inverseOf     ipo:hasAsset .
+
+ipo:directlyCauses  a       owl:ObjectProperty ;
+        rdfs:comment        "This property indicates that an Issue causes another Issue directly.\n\nUsage note:\nFor example, a problem of bad sectors in a HD (Hard Disk) of a computer can be a direct cause of another problem that is read error.\n"@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "directly causes"@en ;
+        rdfs:subPropertyOf  ipo:causes ;
+        owl:inverseOf       ipo:directlyCausedBy .
+
+ipo:Image  a                 owl:Class ;
+        rdfs:comment         "An artifact that illustrates or records a visual perception.\n\nUsage note:\nIt can be used to illustrate a IssueEntity seeking a better understanding of it."@en ;
+        rdfs:isDefinedBy     <http://purl.org/ipo/core> ;
+        rdfs:label           "Image"@en ;
+        owl:equivalentClass  foaf:Image .
+
+ipo:hasGuardCondition
+        a                 owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates a Boolean condition for that a Transition occurs.\n\nUsage note:\nA Transition can have as guardCondition that the Step of origin be executed 10 times. So while this Step does not run 10 times, will not be started the Step of destination. This example illustrates a repeating structure within the workflow"@en ;
+        rdfs:domain       ipo:Transition ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has guard condition"@en ;
+        rdfs:range        ipo:BooleanExpression .
+
+ipo:Step  a               owl:Class ;
+        rdfs:comment      "A step to be performed within a compoundAction. Every Step has an Action to be performed and a transition to another Step to be performed after completing the execution of the Action. \n\nUsage note: With Steps is possible to establish an order for the execution of Actions, as each Step has a transition that sets the Step of origin and destination. Once a compoundAction has an initial Step (IPO: hasFirstStep), from this Step can be run all other steps that composes the compoundAction following the transition between them."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Step"@en .
+
+ipo:Person  a                owl:Class ;
+        rdfs:comment         "This class represents a person.\n\nUsage note:\nCan be used, for example, to represent a person who works in an organization, produces some Asset or records a IssueEntity."@en ;
+        rdfs:isDefinedBy     <http://purl.org/ipo/core> ;
+        rdfs:label           "Person"@en ;
+        rdfs:subClassOf      ipo:Party ;
+        owl:equivalentClass  foaf:Person .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( ipo:Action ipo:Issue ipo:Symptom )
+] .
+
+ipo:Asset  a              owl:Class ;
+        rdfs:comment      "Any \"thing\" that a IssueEntity is related. Example: A problem with a monitor may have as Asset Monitor, because this is the object on which the problem occurs.\n\nUsage note:\nAn Asset can be a person, an object, a report, a document, etc."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Asset"@en ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:title ;
+                            owl:someValuesFrom  xsd:string
+                          ] .
+
+ipo:hasDepiction  a         owl:InverseFunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "Indicates an image that illustrates the IssueEntity.\n\nUsage note:\nSeeking a better description of IssueEntity, one can make use of this property to relate an illustrative image. As an example, an image of a software screen containing an error occurred can help describe a problem."@en ;
+        rdfs:domain         ipo:IssueEntity ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "has depiction"@en ;
+        rdfs:range          ipo:Image ;
+        rdfs:subPropertyOf  foaf:depiction .
+
+dc:date  a      owl:AnnotationProperty .
+
+ipo:Party  a                 owl:Class ;
+        rdfs:comment         "A class representing a person or an organization, and it assumes a role of agent within the treated domain."@en ;
+        rdfs:isDefinedBy     <http://purl.org/ipo/core> ;
+        rdfs:label           "Party"@en ;
+        rdfs:subClassOf      foaf:Agent ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:onProperty      ipo:name ;
+                               owl:someValuesFrom  xsd:string
+                             ] ;
+        owl:equivalentClass  [ a            owl:Class ;
+                               owl:unionOf  ( ipo:Organization ipo:Person )
+                             ] .
+
+ipo:solvedBy  a           owl:ObjectProperty ;
+        rdfs:comment      "Indica uma possível solução (Procedure) para este Issue.\n\nNota de uso:\nUm Issue pode ser solucionado por um ou mais Procedures. Um exemplo: Um erro na configuração de uma máquina industrial pode ser reparado com um procedimento que descrever como reconfigurar essa máquina corretamente."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "solved by"@en .
+
+ipo:Task  a               owl:Class ;
+        rdfs:comment      "One elementary and single action that performs simple. Example: Connecting a device to the computer.\n\nUsage note:\nBeing an elementary task, it can not be decomposed into simpler actions."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Task"@en ;
+        rdfs:subClassOf   ipo:Action .
+
+ipo:indicatedBy  a        owl:ObjectProperty ;
+        rdfs:comment      "Indica um Symptom deste Issue."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "indicated by"@en .
+
+ipo:IssueEntity  a        owl:Class ;
+        rdfs:comment      "A generic class representing the three main concepts within the domain of ontology: Symptom, Problem and Action."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Issue Entity"@en ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:description ;
+                            owl:someValuesFrom  xsd:string
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:title ;
+                            owl:someValuesFrom  xsd:string
+                          ] .
+
+ipo:makerOf  a              owl:ObjectProperty ;
+        rdfs:comment        "This property can be used to indicate an Asset created/manufactured by Party or a IssueEntity created/registered by the Party.\n\nUsage note: This property can be used to relate a manufacturer (instance of Party) with a product (instance of Asset) produced by him."@en ;
+        rdfs:isDefinedBy    <http://purl.org/ipo/core> ;
+        rdfs:label          "maker of"@en ;
+        rdfs:subPropertyOf  foaf:made .
+
+vann:preferredNamespacePrefix
+        a       owl:AnnotationProperty .
+
+ipo:indicates  a          owl:ObjectProperty ;
+        rdfs:comment      "This property relates a Issue indicated by this Symptom.\n\nUsage note:\nA Symptom may indicate various Issues, such as a symptom of fever can indicate various diseases."@en ;
+        rdfs:domain       ipo:Symptom ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "indicates"@en ;
+        rdfs:range        ipo:Issue ;
+        owl:inverseOf     ipo:indicatedBy .
+
+ipo:CompoundAction  a     owl:Class ;
+        rdfs:comment      "An action composed of several other actions. A compoundAction may have the goal of solving one or more Issues, representing a Procedure or not having an explicit goal, just be a group of Actions to be reused, behaving as an Activity. A compoundAction has one or more execution steps that activate one Action (Task or other compoundAction), thus allowing, that a compoundAction reuse other.\n\nUsage note:\nA compoundAction can be used to create a workflow structure, aimed at better structuring of actions that compose it."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Compound Action"@en ;
+        rdfs:subClassOf   ipo:Action ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasFirstStep ;
+                            owl:someValuesFrom  ipo:Step
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:hasStep ;
+                            owl:someValuesFrom  ipo:Step
+                          ] ;
+        owl:disjointWith  ipo:Task .
+
+ipo:activates  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates the action to be activated by a Step."@en ;
+        rdfs:domain       ipo:Step ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "activates"@en ;
+        rdfs:range        ipo:Action .
+
+dc:contributor  a  owl:AnnotationProperty .
+
+ipo:Procedure  a          owl:Class ;
+        rdfs:comment      "A sequence of steps which, after executed solve one or more Issues.\n\nUsage note:\nA procedure has a number of steps that are executed in a specific sequence, one seeking to solve Issue."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "Procedure"@en ;
+        rdfs:subClassOf   ipo:CompoundAction ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      ipo:solves ;
+                            owl:someValuesFrom  ipo:Issue
+                          ] .
+
+ipo:hasStep  a            owl:InverseFunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates a Step that composes the compoundAction."@en ;
+        rdfs:domain       ipo:CompoundAction ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has step"@en ;
+        rdfs:range        ipo:Step .
+
+ipo:name  a                     owl:DatatypeProperty ;
+        rdfs:comment            "Indicates a name to identify something.\n\nUsage note:\nCan be used to express, for example, the name of a person or an organization."@en ;
+        rdfs:isDefinedBy        <http://purl.org/ipo/core> ;
+        rdfs:label              "name"@en ;
+        rdfs:range              xsd:string ;
+        owl:equivalentProperty  foaf:name .
+
+dc:rights  a    owl:AnnotationProperty .
+
+dc:title  a     owl:AnnotationProperty .
+
+ipo:hasIncoming  a        owl:InverseFunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates the transition that starts the execution of this Step."@en ;
+        rdfs:domain       ipo:Step ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has incoming"@en ;
+        rdfs:range        ipo:Transition ;
+        owl:inverseOf     ipo:hasTarget .
+
+ipo:hasOutcoming  a       owl:InverseFunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Indicates the transition that occurs after execution of this Step and that activates the next Step to be executed."@en ;
+        rdfs:domain       ipo:Step ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "has outcoming"@en ;
+        rdfs:range        ipo:Transition ;
+        owl:inverseOf     ipo:hasSource .
+
+ipo:categoryOf  a         owl:ObjectProperty ;
+        rdfs:comment      "Indicates a IssueEntity classified in a skos:Concept."@en ;
+        rdfs:isDefinedBy  <http://purl.org/ipo/core> ;
+        rdfs:label        "category of"@en ;
+        owl:inverseOf     ipo:hasCategory .

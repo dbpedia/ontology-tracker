@@ -1,0 +1,108 @@
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ssn:   <https://www.w3.org/ns/ssn/> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix vs:    <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix qb:    <http://purl.org/linked-data/cube#> .
+@prefix qudt:  <http://qudt.org/1.1/schema/qudt#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix seas:  <https://w3id.org/seas/> .
+@prefix dul:   <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix liner: <https://w3id.org/liner/> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+seas:FeatureOfInterest
+        a                 owl:Class ;
+        rdfs:comment      "A feature of interest is an abstraction of a real world phenomena (thing, person, event, etc). A feature of interest is then defined in terms of its properties."@en ;
+        rdfs:isDefinedBy  seas:FeatureOfInterestOntology ;
+        rdfs:label        "Feature of Interest"@en ;
+        vs:term_status    "stable" .
+
+dcterms:creator  a  owl:AnnotationProperty .
+
+dcterms:description  a  owl:AnnotationProperty .
+
+seas:hasProperty  a       owl:ObjectProperty ;
+        rdfs:comment      "Links a seas:FeatureOfInterest to a seas:Property of that feature. In the first version of the SSN ontology, this concept was defined as a subproperty of dul:hasQuality. dul:hasQuality is a relation between entities and qualities, e.g. 'Dmitri's skin is yellowish'.\r\n\r\nFor example, the following RDF graph describes that feature of interest `<fridge/1>` has property `<fridge/1/consumption>` .\r\n\r\n```\r\n<fridge/1> seas:hasProperty <fridge/1/consumption> .\r\n```\r\n"@en ;
+        rdfs:domain       seas:FeatureOfInterest ;
+        rdfs:isDefinedBy  seas:FeatureOfInterestOntology ;
+        rdfs:label        "property"@en ;
+        rdfs:range        seas:Property ;
+        owl:inverseOf     seas:isPropertyOf ;
+        vs:term_status    "stable" .
+
+voaf:Vocabulary  a  owl:Class .
+
+dcterms:modified  a  owl:AnnotationProperty .
+
+dcterms:contributor  a  owl:AnnotationProperty .
+
+seas:Property  a          owl:Class ;
+        rdfs:comment      "An observable or operable Quality of an Event or Object. That is, not a quality of an abstract entity as is also allowed by DUL's Quality, but rather an aspect of an entity that is intrinsic to and cannot exist without the entity and is observable by a sensor, or operable by an actuator. \r\n\r\nOn the other hand, a property may also itself be a feature of interest. For example if a fridge uses alternative current energy, then several aspects of its energy consumption property may be quantified. Examples of such aspects include:\r\n\r\n- the active power consumption;\r\n- the reactive power consumption;\r\n- the phase of voltage relative to current;\r\n- the frequency;\r\n- the minimal operating value of the frequency;\r\n- the number of occurences of unusual values.\r\n\r\nThese are different properties of the same property:\r\n\r\n```\r\nex:activePower a owl:ObjectProperty ;\r\n  rdfs:subPropertyOf seas:hasProperty ;\r\n  rdfs:domain seas:PowerProperty ;\r\n  rdfs:range seas:PowerProperty .\r\n\r\n<fridge/1/consumption> a seas:FeatureOfInterest ;\r\n  ex:activePower <fridge/1/consumption/activePower> .\r\n```\r\n\r\n"@en ;
+        rdfs:isDefinedBy  seas:FeatureOfInterestOntology ;
+        rdfs:label        "Property"@en ;
+        rdfs:subClassOf   [ owl:cardinality  1 ;
+                            owl:onProperty   seas:isPropertyOf
+                          ] ;
+        vs:term_status    "stable" .
+
+cc:license  a   owl:AnnotationProperty .
+
+seas:isPropertyOf  a      owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a seas:Property of its one and only seas:FeatureOfInterest. \r\n  For example,\r\n\r\n```\r\n<fridge/1/consumption> seas:isPropertyOf <fridge/1> .\r\n```\r\n"@en ;
+        rdfs:domain       seas:Property ;
+        rdfs:isDefinedBy  seas:FeatureOfInterestOntology ;
+        rdfs:label        "is property of"@en ;
+        rdfs:range        seas:FeatureOfInterest ;
+        owl:inverseOf     seas:hasProperty ;
+        vs:term_status    "stable" .
+
+dcterms:issued  a  owl:AnnotationProperty .
+
+foaf:name  a    owl:DatatypeProperty .
+
+vs:term_status  a  owl:AnnotationProperty .
+
+seas:PercentageProperty
+        a                 owl:Class ;
+        rdfs:comment      "The class of properties that are quantified using some percentage value."@en ;
+        rdfs:isDefinedBy  seas:FeatureOfInterestOntology ;
+        rdfs:label        "Percentage Property"@en ;
+        rdfs:subClassOf   seas:Property ;
+        vs:term_status    "stable" .
+
+foaf:Person  a  owl:Class .
+
+dcterms:title  a  owl:AnnotationProperty .
+
+seas:derivesFrom  a       owl:SymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a seas:Property of another seas:Property it derives from.\r\n\r\nFor example,\r\n\r\n```\r\n<fridge/1/consumptionPower> seas:derivesFrom <fridge/1/consumedEnergy> .\r\n```\r\n\r\nThis property is symmetric, and the derived property is also a property of the feature of interest:\r\n\r\n```\r\nseas:hasProperty < seas:hasProperty o seas:derivesFrom\r\n```\r\n\r\n"@en ;
+        rdfs:domain       seas:Property ;
+        rdfs:isDefinedBy  seas:FeatureOfInterestOntology ;
+        rdfs:label        "derives from"@en ;
+        rdfs:range        seas:Property ;
+        owl:inverseOf     seas:derivesFrom ;
+        vs:term_status    "stable" .
+
+vann:preferredNamespaceUri
+        a       owl:AnnotationProperty .
+
+seas:FeatureOfInterestOntology
+        a                              owl:Ontology , voaf:Vocabulary ;
+        cc:license                     <https://www.apache.org/licenses/LICENSE-2.0> ;
+        dcterms:creator                <http://www.maxime-lefrancois.info/me#> ;
+        dcterms:description            "This ontology defines feature of interest and their properties, as an extension of the core classes of the SSN ontology (https://www.w3.org/ns/ssn/).\r\n\r\nA feature of interest is an abstraction of a real world phenomena (thing, person, event, etc). A feature of interest is then defined in terms of its properties, which are qualifiable, quantifiable, observable or operable qualities of the feature of interest. \r\n\r\nFigure below provides an overview of the concepts in this ontology:\r\n\r\n[![Overview of the System ontology](https://w3id.org/seas/featureofinterest.png)](https://w3id.org/seas/featureofinterest.png)\r\n\r\nFor example the following RDF Graph describes a fridge, with its property `<fridge/1/consumption>`:\r\n\r\n```\r\n<fridge/1> a seas:FeatureOfInterest ;\r\n  seas:hasProperty <fridge/1/consumption> .\r\n```\r\n\r\nOne can further define the semantics of this property by refining the relationship it has with `<fridge/1>`.\r\nThis is done using sub properties of `seas:hasProperty`, informally named *property keys*, that are functional properties with domain `seas:FeatureOfInterest` and range `seas:Property`.\r\nFor example, \r\n\r\n```\r\nex:consumption a owl:ObjectProperty , owl:FunctionalProperty ;\r\n  rdfs:subPropertyOf seas:hasProperty ;\r\n  rdfs:domain ex:ElectricPowerSystem ;\r\n  rdfs:range ex:EnergyProperty .\r\n```\r\n\r\nThen the link between `<fridge/1>` and property `<fridge/1/consumption>` can be further specified:\r\n\r\n```\r\n<fridge/1> a seas:FeatureOfInterest ;\r\n  ex:consumption <fridge/1/consumption> .\r\n```\r\n\r\nIf a property is quantifiable, then it has one unique quantity dimension. There is hence a vocabulary of property classes depending on the quantity dimension they have.\r\n\r\nUnlike in the 2005 SSN ontology, any feature of interest property may itself be a feature of interest. In fact, the SSN ontology was originally based on the DUL ontology, which imposed that properties could not be feature of interest themselves. Yet we identified in some use cases where properties should have properties.\r\n\r\nFor example, the fridge consumption has a frequency, or a faults counter. \r\n\r\n```\r\n<fridge/1/consumption> a seas:FeatureOfInterest ;\r\n  ex:frequency <fridge/1/consumption/frequency> .\r\n```\r\n\r\n\r\nOne may also define the class of electric power systems as the class of feature of interest that are linked to some property by property key `ex:consumption`:\r\n\r\n```\r\nex:ElectricPowerSystem a owl:Class ;\r\n  rdfs:subClassOf [\r\n    owl:onProperty ex:consumption ;\r\n    owl:someValuesFrom seas:Property ] .\r\n```\r\n\r\nAlignments to other ontologies are proposed in external documents: \r\n\r\n- [SSNAlignment](https://w3id.org/seas/SSNAlignment) proposes an alignement to the [SSN ontology](http://www.w3.org/ns/ssn/).\r\n- [QUDTAlignment](https://w3id.org/seas/QUDTAlignment) proposes an alignement to the [QUDT ontology](http://qudt.org/).\r\n\r\n\r\nSub types of `seas:Property` constrain the type of the value of the property. This ontology defines only two such sub types of property, `seas:BooleanProperty` and `seas:EnumeratedProperty`. Other ontologies may define many more.\r\n\r\nThere may be many other sub properties of `seas:hasProperty` define the semantics of the link between a feature of interest and its property. This ontology defines only one such subproperty of hasProperty: `seas:location`. Other ontologies may define many more. \r\n"@en ;
+        dcterms:issued                 "2016-07-01"^^xsd:date ;
+        dcterms:modified               "2016-09-21"^^xsd:date ;
+        dcterms:title                  "The SEAS Feature of Interest ontology."@en ;
+        vann:preferredNamespacePrefix  "seas" ;
+        vann:preferredNamespaceUri     seas: ;
+        owl:versionIRI                 seas:FeatureOfInterestOntology-1.0 ;
+        owl:versionInfo                "v1.0" .
+
+vann:preferredNamespacePrefix
+        a       owl:AnnotationProperty .

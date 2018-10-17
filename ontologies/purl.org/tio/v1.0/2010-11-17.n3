@@ -1,0 +1,466 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gr:    <http://purl.org/goodrelations/v1#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://purl.org/tio/ns#scope>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This links a tio:Ticket to the tio:ScopeOfAccess node or nodes that are included in the ticket. \n\nNote: For simple scenarios, you can also directly use tio:accessTo."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Ticket> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "scope (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#ScopeOfAccess> .
+
+<http://purl.org/tio/ns#SeatOrSeatCategory>
+        a                 owl:Class ;
+        rdfs:comment      "The class of qualitative values indicating a seat position (e.g. the seat 4B in a given plane) or a seat category (e.g. window seat). \n    Note that the same vessel or building may have multiple seating layouts."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "SeatOrSeatCategory (gr:QualitativeValue)"@en ;
+        rdfs:subClassOf   gr:QualitativeValue ;
+        owl:disjointWith  <http://purl.org/tio/ns#SeatingLayout> , <http://purl.org/tio/ns#ScopeOfAccess> , <http://purl.org/tio/ns#Stop> , <http://purl.org/tio/ns#Event> .
+
+<http://purl.org/tio/ns#Taxi>
+        a                 owl:Class ;
+        rdfs:comment      "A taxi service to transport passengers from one location to another location"@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Taxi"@en ;
+        rdfs:subClassOf   <http://purl.org/tio/ns#TransportationService> ;
+        owl:disjointWith  <http://purl.org/tio/ns#Flight> , <http://purl.org/tio/ns#CoachService> , <http://purl.org/tio/ns#TrainService> .
+
+<http://purl.org/tio/ns#flightNo>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The flight number (or numbers, in case of codeshare flights)"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Flight> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "flightNo (0..*)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://purl.org/tio/ns#validFrom>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "This property specifies the beginning of the validity of the access or right that the ticket grants. \nIt can be attached to the tio:Ticket (if meant for the ticket as a whole) and to individual tio:ScopeOfAccess entities (if meant for just a particular part of the access rights).\n\nA time-zone should be specified. For a time in GMT/UTC, simply add a \"Z\" following the time:\n\n2010-11-15T09:30:10Z.\n\nAlternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:\n\n2010-11-15T09:30:10-09:00\n\nor\n\n2010-11-15T09:30:10+09:00."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#Ticket> <http://purl.org/tio/ns#ScopeOfAccess> )
+                          ] ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "validFrom (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://purl.org/tio/ns#from>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the location of origin and time of departure.\n\nNote: When the object of the statement is a tio:Stop, one can indicate the exact date and time for a single connection.\nIf such a level of detail is not needed, you can directly link to a point of interest, e.g. an instance of tio:POI."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TransportationService> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "from (1..1)"@en ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#POI> <http://purl.org/tio/ns#Stop> )
+                          ] .
+
+<http://purl.org/tio/ns#at>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the location of a tio:Stop."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Stop> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "at (1..1)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#POI> .
+
+<http://purl.org/tio/ns#ticketID>
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "A unique identifier for a particular ticket or ticket type."@en ;
+        rdfs:domain         <http://purl.org/tio/ns#Ticket> ;
+        rdfs:isDefinedBy    <http://purl.org/tio/ns#> ;
+        rdfs:label          "ticketID (0..1)"@en ;
+        rdfs:range          <http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subPropertyOf  gr:datatypeProductOrServiceProperty .
+
+dcterms:license  a  owl:AnnotationProperty .
+
+<http://purl.org/tio/ns#total>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The total number of tickets of this category that will be issued for the event"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TicketPlaceholder> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "total (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://purl.org/tio/ns#TrainService>
+        a                 owl:Class ;
+        rdfs:comment      "A regular or individual service to transport passengers or cargo from one location to another location by means of a train, subway, or other railroad vehicle\n\nNote: By design, the Tickets Ontology does not provide mechanisms for modeling rules for recurring patterns of transportation services (e.g. every Monday at 8:00). Instead, it expects that you materialize each individual connection on a given day.\nMost train schedule applications are complex databases, so they will have to be exposed as SPARQL endpoints anyway."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "TrainService"@en ;
+        rdfs:subClassOf   <http://purl.org/tio/ns#TransportationService> ;
+        owl:disjointWith  <http://purl.org/tio/ns#Flight> , <http://purl.org/tio/ns#Taxi> , <http://purl.org/tio/ns#CoachService> .
+
+dc:subject  a   owl:AnnotationProperty .
+
+<http://purl.org/NET/c4dm/event.owl#Event>
+        a       owl:Class .
+
+<http://linkedevents.org/ontology/Event>
+        a       owl:Class .
+
+<http://purl.org/tio/ns#ActualTicket>
+        a                 owl:Class ;
+        rdfs:comment      "An actual ticket is single, identifiable right to access a particular event, location, or transportation service."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "ActualTicket (gr:ProductOrService)"@en ;
+        rdfs:subClassOf   <http://purl.org/tio/ns#Ticket> , gr:ActualProductOrServiceInstance ;
+        owl:disjointWith  <http://purl.org/tio/ns#TicketPlaceholder> .
+
+<http://purl.org/tio/ns#availableServiceLevel>
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "This indicates the service level(s) or fare class(es) available for the particular tio:TransportationService."@en ;
+        rdfs:domain         <http://purl.org/tio/ns#TransportationService> ;
+        rdfs:isDefinedBy    <http://purl.org/tio/ns#> ;
+        rdfs:label          "availableServiceLevel (0..*)"@en ;
+        rdfs:range          <http://purl.org/tio/ns#ServiceLevel> ;
+        rdfs:subPropertyOf  gr:qualitativeProductOrServiceProperty .
+
+<http://purl.org/tio/ns#via>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the location, time of arrival, and time of departure for an intermediate stop.\n\nNote: When the object of the statement is a tio:Stop, one can indicate the exact date and time for a single connection.\nIf such a level of detail is not needed, you can directly link to a point of interest, e.g. an instance of tio:POI."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TransportationService> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "via (0..*)"@en ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#POI> <http://purl.org/tio/ns#Stop> )
+                          ] .
+
+<http://purl.org/tio/ns#ends>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The date and time for which the event is scheduled to end\n\nNote: You can attach the time and date of the event using tio:starts and tio:ends as simple datatype properties,\neven if lode:Event and event:Event recommend other, more sophisticated ways of modeling the temporal aspects of events."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Event> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "ends (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://purl.org/tio/ns#Flight>
+        a                 owl:Class ;
+        rdfs:comment      "A regular or individual service to transport passengers or cargo from one location to another location by means of an aircraft\n\nNote: By design, the Tickets Ontology does not provide mechanisms for modeling rules for recurring patterns of transportation services (e.g. every Monday at 8:00). Instead, it expects that you materialize each individual connection on a given day.\nMost flight schedule applications are complex databases, so they will have to be exposed as SPARQL endpoints anyway."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Flight"@en ;
+        rdfs:subClassOf   <http://purl.org/tio/ns#TransportationService> ;
+        owl:disjointWith  <http://purl.org/tio/ns#Taxi> , <http://purl.org/tio/ns#TrainService> , <http://purl.org/tio/ns#CoachService> .
+
+<http://purl.org/tio/ns#Ticket>
+        a                 owl:Class ;
+        rdfs:comment      "A ticket is a tradeable right to access a particular event or location, or to use a particular transportation service."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Ticket (gr:ProductOrService)"@en ;
+        rdfs:subClassOf   gr:ProductOrService ;
+        owl:disjointWith  <http://purl.org/tio/ns#SeatingLayout> , <http://purl.org/tio/ns#ScopeOfAccess> , <http://purl.org/tio/ns#Stop> , <http://purl.org/tio/ns#Event> .
+
+<http://purl.org/tio/ns#DiscountType>
+        a                 owl:Class ;
+        rdfs:comment      "The class of qualitative values indicating a discount type, audience, or group type - e.g. students, military personnel, etc.\n\nNote: Discount types that solely represent age ranges (e.g. children, senior citizens, ...) are better expressed using tio:ageRange."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "DiscountType (gr:QualitativeValue)"@en ;
+        rdfs:subClassOf   gr:QualitativeValue ;
+        owl:disjointWith  <http://purl.org/tio/ns#SeatingLayout> , <http://purl.org/tio/ns#ScopeOfAccess> , <http://purl.org/tio/ns#Stop> , <http://purl.org/tio/ns#Event> .
+
+<http://purl.org/tio/ns#Stop>
+        a                 owl:Class ;
+        rdfs:comment      "The initial, final, or any intermediate point in time and space of a particular tio:TransportationService, \ncharacterized by its location (tio:at), arrival time (tio:arrives), and departure time (tio:departs). \nEach tio:TransportationService has at least one tio:Stop for the point and time of departure and another one for the final destination."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Stop"@en ;
+        owl:disjointWith  gr:BusinessEntityType , gr:QualitativeValue , <http://purl.org/tio/ns#SeatingLayout> , gr:DayOfWeek , <http://purl.org/tio/ns#Event> , gr:WarrantyScope , gr:QuantitativeValue , gr:PaymentMethod , gr:DeliveryMethod , gr:PriceSpecification , gr:BusinessFunction , gr:LocationOfSalesOrServiceProvisioning , <http://purl.org/tio/ns#ScopeOfAccess> , gr:ProductOrService , gr:N-Ary-Relations , gr:BusinessEntity , gr:Offering .
+
+<http://purl.org/tio/ns#accessTo>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This links a tio:Ticket or a tio:ScopeOfAccess node to the tio:POI, tio:Event, or tio:TransportationService for which the tio:Ticket grants access.\n\nNote: When used to link a tio:Ticket directly to a tio:POI, tio:Event, or tio:TransportationService, you cannot specify the various details of a tio:ScopeOfAccess node."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#Ticket> <http://purl.org/tio/ns#ScopeOfAccess> )
+                          ] ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "accessTo (0..*)"@en ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#POI> <http://purl.org/tio/ns#Event> <http://purl.org/tio/ns#TransportationService> )
+                          ] .
+
+<http://purl.org/tio/ns#FirstClass>
+        a                 <http://purl.org/tio/ns#ServiceLevel> ;
+        rdfs:comment      "First class as a service level / fare class for transportation by aircraft\n\nNote: The exact character of a particular fare class may vary by carrier or country. \nYou can create individual instances of tio:ServiceLevel for a particular fare class for a particular airline."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "FirstClass (tio:ServiceLevel)"@en ;
+        gr:greater        <http://purl.org/tio/ns#BusinessClass> .
+
+dc:creator  a   owl:AnnotationProperty .
+
+<http://purl.org/tio/ns#operatedBy>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the business entity that actually operates the vessel used for a transportation service."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TransportationService> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "operatedBy (0..1)"@en ;
+        rdfs:range        gr:BusinessEntity .
+
+<http://purl.org/tio/ns#ServiceLevel>
+        a                 owl:Class ;
+        rdfs:comment      "The class of qualitative values indicating a service level oder fare class (e.g. Business Class)."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "ServiceLevel (gr:QualitativeValue)"@en ;
+        rdfs:subClassOf   gr:QualitativeValue ;
+        owl:disjointWith  <http://purl.org/tio/ns#SeatingLayout> , <http://purl.org/tio/ns#ScopeOfAccess> , <http://purl.org/tio/ns#Stop> , <http://purl.org/tio/ns#Event> .
+
+<http://purl.org/tio/ns#availableLayouts>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the available seating layouts for a tio:POI."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#POI> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "availableLayouts (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#SeatingLayout> .
+
+<http://purl.org/tio/ns#durationOfAccess>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "The eligible duration of uninterrupted attendance or access.\nTypical unit code(s): HUR for hours, DAY for days, WEE for weeks, MON for months, ANN for years "@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "durationOfAccess (0..1)"@en ;
+        rdfs:range        gr:QuantitativeValue .
+
+<http://purl.org/tio/ns#validThrough>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "This property specifies the ending of the validity of the access or right that the ticket grants. \nIt can be attached to the tio:Ticket (if meant for the ticket as a whole) and to individual tio:ScopeOfAccess entities (if meant for just a particular part of the access rights).\n\nA time-zone should be specified. For a time in GMT/UTC, simply add a \"Z\" following the time:\n\n2010-11-15T09:30:10Z.\n\nAlternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:\n\n2010-11-15T09:30:10-09:00\n\nor\n\n2010-11-15T09:30:10+09:00."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#Ticket> <http://purl.org/tio/ns#ScopeOfAccess> )
+                          ] ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "validThrough (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://purl.org/tio/ns#includes>
+        a                 owl:ObjectProperty , owl:TransitiveProperty ;
+        rdfs:comment      "This indicates that a particular area includes another area or points of interest.\n\nNote: Modeling geo-spatial relationships is non-trivial. This property is a very simple approach, sufficient for e.g. grouping all train stations in a particular fare area."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#POI> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "includes (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#POI> .
+
+<http://purl.org/tio/ns#to>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the destination and time of arrival.\n\nNote: When the object of the statement is a tio:Stop, one can indicate the exact date and time for a single connection.\nIf such a level of detail is not needed, you can directly link to a point of interest, e.g. an instance of tio:POI."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TransportationService> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "to (1..1)"@en ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/tio/ns#POI> <http://purl.org/tio/ns#Stop> )
+                          ] .
+
+<http://purl.org/tio/ns#Economy>
+        a                 <http://purl.org/tio/ns#ServiceLevel> ;
+        rdfs:comment      "Economy class as a service level / fare class for transportation by aircraft\n\nNote: The exact character of a particular fare class may vary by carrier or country. \nYou can create individual instances of tio:ServiceLevel for a particular fare class for a particular airline."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Economy (tio:ServiceLevel)"@en .
+
+<http://purl.org/tio/ns#eligibleAudience>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This links a tio:ScopeOfAccess node to the tio:DiscountType for which the specified access is granted."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "eligibleAudience (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#DiscountType> .
+
+<http://purl.org/tio/ns#participants>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "The number of participants that are allowed to enter the event, POI, or use transportation service\nTypical unit code(s): C62 for persons "@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "participants (0..1)"@en ;
+        rdfs:range        gr:QuantitativeValueInteger .
+
+<http://purl.org/tio/ns#availableSeats>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the individual seats for a given seating layout."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#SeatingLayout> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "availableSeats (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#SeatOrSeatCategory> .
+
+<http://purl.org/tio/ns#seat>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the seat or seat category."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "seat (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#SeatOrSeatCategory> .
+
+<http://purl.org/tio/ns#POI>
+        a                 owl:Class ;
+        rdfs:comment      "A point or area of interest, e.g. a museum, a train station, an airport, a bus stop, a store, a box office, etc.\n\nNote 1: Use existing vocabularies like vcard or geo to attach address and geoposition (lat/long) details to the location.\nNote 2: You can safely re-use any existing location, area, or point of interest from other data sources, e.g. DBPedia."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "POI (gr:LocationOfSalesOrServiceProvisioning)"@en ;
+        rdfs:subClassOf   gr:LocationOfSalesOrServiceProvisioning ;
+        owl:disjointWith  <http://purl.org/tio/ns#SeatingLayout> , <http://purl.org/tio/ns#ScopeOfAccess> , <http://purl.org/tio/ns#Stop> , <http://purl.org/tio/ns#Event> .
+
+<http://purl.org/tio/ns#TicketPlaceholder>
+        a                 owl:Class ;
+        rdfs:comment      "A ticket placeholder is a dummy for multiple tickets that are themselves not exposed as data."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "TicketPlaceholder (gr:ProductOrService)"@en ;
+        rdfs:subClassOf   <http://purl.org/tio/ns#Ticket> , gr:ProductOrServicesSomeInstancesPlaceholder ;
+        owl:disjointWith  <http://purl.org/tio/ns#ActualTicket> .
+
+<http://purl.org/tio/ns#arrives>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The date and time at which the transportation service will arrive at the respective tio:Stop"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Stop> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "arrives (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://purl.org/tio/ns#Event>
+        a                 owl:Class ;
+        rdfs:comment      "An event, e.g. a concert, a show, etc. You can also safely use the following external classes for describing the respective event:\n\nhttp://linkedevents.org/ontology/Event (lode:Event)\nhttp://purl.org/NET/c4dm/event.owl#Event (event:Event)\nhttp://www.loa-cnr.it/ontologies/DUL.owl#Event (dul:Event)\n\nNote: You can attach the time and date of the event using tio:starts and tio:ends as simple datatype properties, even if lode:Event and event:Event recommend other, more sophisticated ways of modeling the temporal aspects of events."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Event"@en ;
+        rdfs:subClassOf   [ a            owl:Class ;
+                            owl:unionOf  ( <http://linkedevents.org/ontology/Event> <http://purl.org/NET/c4dm/event.owl#Event> <http://www.loa-cnr.it/ontologies/DUL.owl#Event> )
+                          ] ;
+        owl:disjointWith  gr:PriceSpecification , gr:DayOfWeek , gr:N-Ary-Relations , <http://purl.org/tio/ns#SeatingLayout> , gr:LocationOfSalesOrServiceProvisioning , gr:ProductOrService , gr:DeliveryMethod , <http://purl.org/tio/ns#Stop> , gr:BusinessFunction , gr:Offering , <http://purl.org/tio/ns#ScopeOfAccess> , gr:BusinessEntity , gr:QualitativeValue , gr:BusinessEntityType , gr:PaymentMethod , gr:WarrantyScope , gr:QuantitativeValue .
+
+<http://purl.org/tio/ns#noOfEntrances>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "The number of times the respective participant(s) is/are allowed to enter the event, POI, or transportation service\nTypical unit code(s): C62 for times "@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "noOfEntrances (0..1)"@en ;
+        rdfs:range        gr:QuantitativeValueInteger .
+
+<http://purl.org/tio/ns#eligibleTimes>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This links a tio:ScopeOfAccess node to one or more gr:OpeningHoursSpecifications that indicate the times of access.\n\nNote: The times of access for a particular ticket may be more constrained than the opening hours of the location, event, or transportation service. Use tio:openingHours for specifying the overall opening hours or hours of operation."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "eligibleTimes (0..*)"@en ;
+        rdfs:range        gr:OpeningHoursSpecification .
+
+<http://www.loa-cnr.it/ontologies/DUL.owl#Event>
+        a       owl:Class .
+
+<http://purl.org/tio/ns#CoachService>
+        a                 owl:Class ;
+        rdfs:comment      "A regular or individual service to transport passengers or cargo from one location to another location by means of a coach or bus."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "CoachService"@en ;
+        rdfs:subClassOf   <http://purl.org/tio/ns#TransportationService> ;
+        owl:disjointWith  <http://purl.org/tio/ns#Flight> , <http://purl.org/tio/ns#Taxi> , <http://purl.org/tio/ns#TrainService> .
+
+<http://purl.org/tio/ns#openingHours>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the opening hours for a point of interest. \n\nNote: The opening hours of the location and the time-windows for which a particular ticket is eligible may differ. Use tio:eligibleTimes for the latter."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#POI> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "openingHours (0..*)"@en ;
+        rdfs:range        gr:OpeningHoursSpecification .
+
+<http://purl.org/tio/ns#eligibleServiceLevel>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the service level(s) or fare class(es) to which the tio:Ticket entitles."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "eligibleServiceLevel (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#ServiceLevel> .
+
+<http://purl.org/tio/ns#available>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The number of tickets of this category still available at the time of publishing the data"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TicketPlaceholder> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "available (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://purl.org/tio/ns#departs>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The date and time at which the transportation service will depart from the respective tio:Stop"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Stop> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "departs (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+dc:contributor  a  owl:AnnotationProperty .
+
+<http://purl.org/tio/ns#ScopeOfAccess>
+        a                 owl:Class ;
+        rdfs:comment      "This is a conceptual entity that collates all properties defining the type of access a ticket provides to a particular event, location, or transportation."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "ScopeOfAccess"@en ;
+        owl:disjointWith  gr:BusinessEntity , gr:DayOfWeek , <http://purl.org/tio/ns#Stop> , gr:BusinessEntityType , gr:LocationOfSalesOrServiceProvisioning , <http://purl.org/tio/ns#SeatingLayout> , gr:BusinessFunction , gr:QuantitativeValue , gr:Offering , gr:DeliveryMethod , gr:PriceSpecification , <http://purl.org/tio/ns#Event> , gr:N-Ary-Relations , gr:ProductOrService , gr:QualitativeValue , gr:PaymentMethod , gr:WarrantyScope .
+
+<http://purl.org/tio/ns#starts>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The date and time for which the event is scheduled to begin\n\nNote: You can attach the time and date of the event using tio:starts and tio:ends as simple datatype properties,\neven if lode:Event and event:Event recommend other, more sophisticated ways of modeling the temporal aspects of events."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Event> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "starts (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+<http://purl.org/tio/ns#TransportationService>
+        a                 owl:Class ;
+        rdfs:comment      "A service to transport passengers or cargo from one location to another location, with optionally intermediate stops\n\nNote: By design, the Tickets Ontology does not provide mechanisms for modeling rules for recurring patterns of transportation services (e.g. every Monday at 8:00). Instead, it expects that you materialize each individual connection on a given day.\nMost timetable applications are complex databases, so they will have to be exposed as SPARQL endpoints anyway."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "TransportationService"@en ;
+        rdfs:subClassOf   gr:ProductOrService ;
+        owl:disjointWith  <http://purl.org/tio/ns#SeatingLayout> , <http://purl.org/tio/ns#ScopeOfAccess> , <http://purl.org/tio/ns#Stop> , <http://purl.org/tio/ns#Event> .
+
+<http://purl.org/tio/ns#BusinessClass>
+        a                 <http://purl.org/tio/ns#ServiceLevel> ;
+        rdfs:comment      "Business class as a service level / fare class for transportation by aircraft\n\nNote: The exact character of a particular fare class may vary by carrier or country. \nYou can create individual instances of tio:ServiceLevel for a particular fare class for a particular airline."@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "BusinessClass (tio:ServiceLevel)"@en ;
+        gr:greater        <http://purl.org/tio/ns#Economy> .
+
+dc:rights  a    owl:AnnotationProperty .
+
+<http://purl.org/tio/ns#>
+        a                owl:Ontology ;
+        rdfs:comment     "TIO: The TIckets Ontology\n    \nA vocabulary for describing tickets for events, transportation, or points of interest for e-commerce.\n\nVocabulary:    http://purl.org/tio/ns#\nNamespace:     http://purl.org/tio/ns#\n\nThe Tickets Ontology is designed to be used in combination with GoodRelations, a standard vocabulary for the commercial aspects of offers of tickets.\n\nSee http://purl.org/goodrelations/ for more information."@en ;
+        rdfs:label       "Tickets Ontology"@en ;
+        rdfs:seeAlso     <http://purl.org/goodrelations/> ;
+        dc:contributor   "Some class and property definitions are inspired by or based on abstracts from Wikipedia, the free encyclopedia."@en ;
+        dc:creator       "Martin Hepp"@en ;
+        dc:rights        "The Tickets Ontology is available under the Creative Commons Attribution 3.0 Unported license; see http://creativecommons.org/licenses/by/3.0/. \nIn a nutshell, you are free to copy, distribute and transmit the work; to remix/adapt the work (e.g. to import the ontology and create specializations of its elements), \nas long as you attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work)."@en ;
+        dc:subject       "E-Commerce, E-Business, GoodRelations, Ontology, Tickets, Transportation, Events, Concerts, Museums"@en ;
+        dc:title         "TIO: The TIckets Ontology for Semantic Web-based E-Commerce"@en ;
+        dcterms:license  <http://creativecommons.org/licenses/by/3.0/> ;
+        owl:imports      <http://purl.org/goodrelations/v1> ;
+        owl:versionInfo  "V 1.0, Release 2010-11-17" .
+
+dc:title  a     owl:AnnotationProperty .
+
+<http://purl.org/tio/ns#takesPlaceAt>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "This indicates the location or locations of a tio:Event."@en ;
+        rdfs:domain       <http://purl.org/tio/ns#Event> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "takesPlaceAt (0..*)"@en ;
+        rdfs:range        <http://purl.org/tio/ns#POI> .
+
+<http://purl.org/tio/ns#Etix>
+        a                 gr:DeliveryMethod ;
+        rdfs:comment      "A special form of electronic ticket delivery, mainly for flight tickets"@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "Etix (gr:DeliveryMethod)"@en .
+
+<http://purl.org/tio/ns#ageRange>
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "The eligible age range or age ranges for admission to the revent, POI, or transportation service\nTypical unit code(s): ANN for year (less frequently used: MON for months, WEE for weeks)"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#ScopeOfAccess> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "ageRange (0..*)"@en ;
+        rdfs:range        gr:QuantitativeValue .
+
+<http://purl.org/tio/ns#sold>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The number of tickets of this category already sold at the time of publishing the data"@en ;
+        rdfs:domain       <http://purl.org/tio/ns#TicketPlaceholder> ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "sold (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://purl.org/tio/ns#SeatingLayout>
+        a                 owl:Class ;
+        rdfs:comment      "A seating layout for a particular location, vessel, or single transportation service"@en ;
+        rdfs:isDefinedBy  <http://purl.org/tio/ns#> ;
+        rdfs:label        "SeatingLayout"@en ;
+        owl:disjointWith  <http://purl.org/tio/ns#ScopeOfAccess> , gr:BusinessFunction , gr:Offering , gr:ProductOrService , gr:DayOfWeek , <http://purl.org/tio/ns#Event> , gr:LocationOfSalesOrServiceProvisioning , gr:WarrantyScope , gr:BusinessEntity , gr:QuantitativeValue , gr:PaymentMethod , gr:BusinessEntityType , gr:DeliveryMethod , gr:PriceSpecification , gr:N-Ary-Relations , <http://purl.org/tio/ns#Stop> , gr:QualitativeValue .

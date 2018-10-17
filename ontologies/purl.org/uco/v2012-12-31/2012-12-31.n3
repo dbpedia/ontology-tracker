@@ -1,0 +1,521 @@
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco:   <http://purl.org/uco/ns#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gr:    <http://purl.org/goodrelations/v1#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+uco:originalPartsOnly
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "This indicates whether the parts used for repairing a damage, for a maintenance task, or a modification were all original."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( uco:ModificationOrMaintenance uco:DamageOrAccident )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "original parts only (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:Taxi  a               uco:UsageType ;
+        rdfs:comment      "The usage of a vehicle as a taxi"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Taxi (uco:UsageType)"@en .
+
+uco:from  a               owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates the beginning of the period of ownership represented by this uco:OwnershipInfo node."@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "from (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+dcterms:subject  a  owl:AnnotationProperty .
+
+uco:hasOwnershipInfo  a   owl:ObjectProperty ;
+        rdfs:comment      "This property points to information about the current and previous owners of the vehicle."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "hasOwnershipInfo (0..*)"@en ;
+        rdfs:range        uco:OwnershipInfo .
+
+uco:propertyValue  a      owl:DatatypeProperty ;
+        rdfs:comment      "The value of of the property"@en ;
+        rdfs:domain       uco:PropertyValue ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "property value (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+uco:Carport  a            uco:ParkingType ;
+        rdfs:comment      "The parking of a vehicle under a protective roof, e.g. in a carport"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Carport (uco:ParkingType)"@en .
+
+<http://ontologies.makolab.com/uco/ns.html>
+        a                  foaf:Document ;
+        foaf:primaryTopic  uco: .
+
+uco:mileage  a            owl:ObjectProperty ;
+        rdfs:comment      "The mileage of the vehicle at the event, e.g. at the accident, maintenance, check, or modification. \n\nTypical unit code(s): KMT for kilometers, SMI for statute miles"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( uco:Check uco:DamageOrAccident uco:ModificationOrMaintenance )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "mileage (0..1)"@en ;
+        rdfs:range        gr:QuantitativeValue .
+
+<http://schema.org/PostalAddress>
+        a       owl:Class .
+
+dcterms:license  a  owl:AnnotationProperty .
+
+uco:feature  a            owl:ObjectProperty ;
+        rdfs:comment      "This property points to vehicle features in a semi-structured property-value form."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "feature (0..*)"@en ;
+        rdfs:range        uco:PropertyValue .
+
+<http://ontologies.makolab.com/uco/ns.owl>
+        a                  foaf:Document ;
+        foaf:primaryTopic  uco: .
+
+uco:ModificationOrMaintenance
+        a                 owl:Class ;
+        rdfs:comment      "A modification or maintenance is an event in which a part of the vehicle is being replaced or removed, or a new part is being added.\nTypical examples are the replacement of the engine or the installation of a trailor-hitch."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Modification or Maintenance"@en ;
+        rdfs:subClassOf   <http://schema.org/Event> .
+
+<http://purl.org/uco/ns>
+        a                  foaf:Document ;
+        foaf:primaryTopic  uco: .
+
+<http://schema.org/Event>
+        a       owl:Class .
+
+uco:MoneyBack  a          gr:WarrantyScope ;
+        rdfs:comment      "The promise to take back the vehicle without any specific reason for a full refund within a certain amount of time"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Money-back Guarantee (gr:WarrantyScope)"@en .
+
+uco:valuation  a          owl:ObjectProperty ;
+        rdfs:comment      "The market price assessment gained by the respective valuation. Use gr:name to indicate the name of the valuation service."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "valuation (0..*)"@en ;
+        rdfs:range        gr:PriceSpecification .
+
+uco:numberOfDrivers  a    owl:DatatypeProperty ;
+        rdfs:comment      "The number of people who were/are regularly driving the vehicle in the respective period of time (when attached to uco:OwnershipInfo) or in total (when directly applied to a vso:Vehicle)"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/vso/ns#Vehicle> uco:OwnershipInfo )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "number of drivers (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://ontologies.makolab.com/uco/ns>
+        a                  foaf:Document ;
+        foaf:primaryTopic  uco: .
+
+uco:notAtFaultAccident
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates whether the accident leading to the damage was a not-at-fault accident from the perspective of the owner."@en ;
+        rdfs:domain       uco:DamageOrAccident ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "total loss (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:parking  a            owl:ObjectProperty ;
+        rdfs:comment      "The main type(s) of parking that have been used for the vehicle during the period of ownership (if attached to uco:OwnershipInfo) or in general (if attached to the vso:Vehicle directly)"@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> , uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "parking (0..*)"@en ;
+        rdfs:range        uco:ParkingType .
+
+dcterms:creator  a  owl:AnnotationProperty .
+
+uco:smoking  a            owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates whether it has been smoked inside the car in the respective period of time (when attached to uco:OwnershipInfo) or ever (when directly applied to a vso:Vehicle)."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/vso/ns#Vehicle> uco:OwnershipInfo )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "smoking (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:partAdded  a          owl:DatatypeProperty ;
+        rdfs:comment      "A textual description of the part or parts added in the modification (e.g. tuning) or maintenance task"@en ;
+        rdfs:domain       uco:ModificationOrMaintenance ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "part added (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+dcterms:title  a  owl:AnnotationProperty .
+
+uco:airbagDeployment  a   owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates whether at least one of the airbags of the vehicle has been deployed in the respective accident (when attached to uco:DamageOrAccident) or ever (when directly applied to a vso:Vehicle)."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/vso/ns#Vehicle> uco:DamageOrAccident )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "airbag deployment (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:repaired  a           owl:DatatypeProperty ;
+        rdfs:comment      "This indicates whether damages resulting from a certain uco:DamageOrAccident (when attached to this type) or all damages (when directly attached to a vso:Vehicle) have been properly repaired. Do not use this propery on a vso:Vehicle if it never had a damage."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/vso/ns#Vehicle> uco:DamageOrAccident )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "repaired (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:UsageType  a          owl:Class ;
+        rdfs:comment      "A type of usage of a vehicle, e.g. rental, taxi, driving school, commuting. It is best to either use one of the predefined individuals or DBpedia URIs whenever possible."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Usage Type"@en ;
+        rdfs:subClassOf   gr:QualitativeValue .
+
+uco:DrivingSchool  a      uco:UsageType ;
+        rdfs:comment      "The usage of a vehicle for commercial driver's education"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Driving School (uco:UsageType)"@en .
+
+uco:pets  a               owl:ObjectProperty ;
+        rdfs:comment      "The type(s) of animals that have been transported in the vehicle during the period of ownership (if attached to uco:OwnershipInfo) or in general (if attached to the vso:Vehicle directly). \n\t\nIf possible, use DBPedia URIs, e.g. http://dbpedia.org/resource/Dog."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> , uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "pets (0..*)"@en ;
+        rdfs:range        uco:Species .
+
+uco:carriedOutBy  a       owl:ObjectProperty ;
+        rdfs:comment      "The business or type of business that carried out the check, repair, maintenance, or modification"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( uco:Check uco:DamageOrAccident uco:ModificationOrMaintenance )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "carried out by (0..1)"@en ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( gr:BusinessEntity gr:BusinessEntityType )
+                          ] .
+
+dcterms:contributor  a  owl:AnnotationProperty .
+
+uco:ParkingType  a        owl:Class ;
+        rdfs:comment      "A type of parking for a vehicle, e.g. in a garage, on the street (open-sky), or in a carport. You can use DBpedia URIs for additional types."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Parking Type"@en ;
+        rdfs:subClassOf   gr:QualitativeValue .
+
+uco:numberOfOwners  a     owl:DatatypeProperty ;
+        rdfs:comment      "The total number of people or organizations who owned the vehicle, including the current owner.\n\nNote that this value can be higher (but not lower) than the number of uco:OwnershipInfo nodes, since those records may be incomplete."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "number of owners (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#integer> .
+
+uco:CarSharing  a         uco:UsageType ;
+        rdfs:comment      "The usage of a vehicle for car sharing networks"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Car Sharing (uco:UsageType)"@en .
+
+uco:listPrice  a          owl:ObjectProperty ;
+        rdfs:comment      "The original list price of the new car at the time of production"@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "listPrice (0..1)"@en ;
+        rdfs:range        gr:PriceSpecification .
+
+uco:validFrom  a          owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates the beginning of the validity of the inspection represented by the uco:Check node. This is typically the day of the inspection."@en ;
+        rdfs:domain       uco:Check ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "valid from (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+uco:partReplaced  a       owl:DatatypeProperty ;
+        rdfs:comment      "A textual description of the part or parts replaced in the modification (e.g. tuning) or maintenance (e.g. new engine) task"@en ;
+        rdfs:domain       uco:ModificationOrMaintenance ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "part replaced (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+uco:Check  a              owl:Class ;
+        rdfs:comment      "A mandatory or optional technical inspection, e.g. the MOT, a vendor-specific certification of used cars, etc."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Check"@en .
+
+uco:AuthorizedDealer  a   gr:BusinessEntityType ;
+        rdfs:comment      "An authorized dealer of the manufacturer of the respective vehicle"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Authorized Dealer (gr:BusinessEntityType)"@en .
+
+uco:DamageOrAccident  a   owl:Class ;
+        rdfs:comment      "A damage or accident is an event in which the vehicle is being damaged."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Damage or Accident"@en ;
+        rdfs:subClassOf   <http://schema.org/Event> .
+
+uco:Business  a           uco:UsageType ;
+        rdfs:comment      "The usage of a vehicle for general business purposes, i.e. excluding usages like as a taxi, rental car, or driving instructions."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Business (uco:UsageType)"@en .
+
+uco:eventInformation  a   owl:ObjectProperty ;
+        rdfs:comment      "This property points to events related to the vehicle, like accidents and damages or major modifications or maintenance."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "eventInformation (0..*)"@en ;
+        rdfs:range        <http://schema.org/Event> .
+
+uco:driver  a             owl:ObjectProperty ;
+        rdfs:comment      "This property points to the driver or drivers that were regularly driving the vehicle during the respective period of time (when attached to uco:OwnershipInfo) or in total (when attached directly to a vso:Vehicle)."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> , uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "driver (0..*)"@en ;
+        rdfs:range        <http://schema.org/Person> .
+
+uco:mainLocation  a       owl:ObjectProperty ;
+        rdfs:comment      "The main location(s) of the vehicle during the period of ownership"@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "main location (0..*)"@en ;
+        rdfs:range        <http://schema.org/Place> , <http://schema.org/PostalAddress> .
+
+uco:owner  a              owl:ObjectProperty ;
+        rdfs:comment      "This property points to the owner of the vehicle for the respective period of time, as indicated by the uco:OwnershipInfo node."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> , uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "owner (0..*)"@en ;
+        rdfs:range        <http://schema.org/Organization> , gr:BusinessEntity , <http://schema.org/Person> .
+
+uco:partRemoved  a        owl:DatatypeProperty ;
+        rdfs:comment      "A textual description of the part or parts removed in the modification (e.g. tuning) or maintenance task"@en ;
+        rdfs:domain       uco:ModificationOrMaintenance ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "part removed (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+uco:licensePlate  a       owl:DatatypeProperty ;
+        rdfs:comment      "The license plate string(s) assigned to the vehicle during the period of ownership"@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "license plate (0..*)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+uco:contains  a           owl:ObjectProperty ;
+        rdfs:comment      "A naive part-whole relation that allows providing more granular uco:OwnershipInfo data for a part of the duration of the ownership"@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "contains (0..*)"@en ;
+        rdfs:range        uco:OwnershipInfo .
+
+uco:Species  a            owl:Class ;
+        rdfs:comment      "A species, typically a pet, for indicating the type of animals that were regularly transported in the vehicle. \n\nIf possible, use DBPedia URIs, e.g. http://dbpedia.org/resource/Dog."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Species"@en ;
+        rdfs:subClassOf   gr:QualitativeValue .
+
+uco:to  a                 owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates the end of the period of ownership represented by this uco:OwnershipInfo node."@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "to (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+uco:Garage  a             uco:ParkingType ;
+        rdfs:comment      "The parking of a vehicle in a closed garage"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Garage (uco:ParkingType)"@en .
+
+<http://schema.org/Organization>
+        a                owl:Class ;
+        rdfs:subClassOf  gr:BusinessEntity .
+
+uco:Private  a            uco:UsageType ;
+        rdfs:comment      "The usage of a vehicle soleley for private purposes"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Private (uco:UsageType)"@en .
+
+uco:propertyID  a         owl:DatatypeProperty ;
+        rdfs:comment      "A global identifier, e.g. a URI, a prefixed string, or any other identifier that can be used to refer to a standardized property type"@en ;
+        rdfs:domain       uco:PropertyValue ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "property ID (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+uco:Rental  a             uco:UsageType ;
+        rdfs:comment      "The usage of a vehicle as a rental car"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Rental (uco:UsageType)"@en .
+
+dcterms:rights  a  owl:AnnotationProperty .
+
+foaf:primaryTopic  a  owl:AnnotationProperty .
+
+uco:Street  a             uco:ParkingType ;
+        rdfs:comment      "The parking of a vehicle on a public or private street"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Street (uco:ParkingType)"@en .
+
+foaf:depiction  a  owl:ObjectProperty .
+
+uco:totalLoss  a          owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates whether the vehicle is considered a total loss as the result of a damage in the respective accident (when attached to uco:DamageOrAccident) or in general (when directly applied to a vso:Vehicle)."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/vso/ns#Vehicle> uco:DamageOrAccident )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "total loss (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:currentOwner  a         owl:ObjectProperty ;
+        rdfs:comment        "This property points to the current owner of the vehicle."@en ;
+        rdfs:domain         uco:OwnershipInfo , <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy    uco: ;
+        rdfs:label          "currentOwner (0..1)"@en ;
+        rdfs:range          gr:BusinessEntity , <http://schema.org/Person> , <http://schema.org/Organization> ;
+        rdfs:subPropertyOf  uco:owner .
+
+uco:validThrough  a       owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates the end of the validity of the inspection represented by the uco:Check node. This is typically the day of the inspection plus one (UK MOT) or two years (e.g. German TÜV)."@en ;
+        rdfs:domain       uco:Check ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "valid to (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+uco:unitText  a           owl:DatatypeProperty ;
+        rdfs:comment      "A string or text indicating the unit of measurement. Useful if you cannot provide a standard unit code for uco:unitCode."@en ;
+        rdfs:domain       uco:PropertyValue ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "unit text (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+uco:inspected  a          owl:ObjectProperty ;
+        rdfs:comment      "This property points to inspections and certifications that the vehicle has undergone."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "inspected (0..*)"@en ;
+        rdfs:range        uco:Check .
+
+gr:BusinessEntity  owl:equivalentClass  [ a            owl:Class ;
+                                          owl:unionOf  ( <http://schema.org/Person> <http://schema.org/Organization> )
+                                        ] .
+
+uco:structuralDamage  a   owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates whether the vehicle has suffered from structural damage in the respective accident (when attached to uco:DamageOrAccident) or ever (when directly applied to a vso:Vehicle)."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( <http://purl.org/vso/ns#Vehicle> uco:DamageOrAccident )
+                          ] ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "structural damage (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+uco:indicationOfOdometerRollback
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "This property indicates whether it is likely or known that the odometer of the vehicle does not properly reflect the total mileage of the vehicle, e.g. because the odometer has been replaced, reset, or tampered with "@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "indication of odometer rollback (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#boolean> .
+
+<http://schema.org/Person>
+        a                owl:Class ;
+        rdfs:subClassOf  gr:BusinessEntity .
+
+uco:    a                owl:Ontology ;
+        rdfs:comment     "UCO: The The Used Cars Ontology\n    \nA Web vocabulary for describing aspects of used cars for e-commerce.\n\nVocabulary:    http://purl.org/uco/ns#\nNamespace:     http://purl.org/uco/ns#\n\nThe vocabulary is designed to be used in combination with \n(1) GoodRelations, a standard vocabulary for the commercial aspects of offers for sale, rental, repair, or disposal; and\n(2) the Vehicle Sales Ontology, a standard vocabulary for cars and other vehicles.\n\t\nSee http://purl.org/goodrelations/ and http://purl.org/vso/ns for more information."@en ;
+        rdfs:label       "Used Cars Ontology"@en ;
+        dcterms:creator  "Hepp Research GmbH and Makolab S.A."@en ;
+        dcterms:license  <http://creativecommons.org/licenses/by/3.0/> ;
+        dcterms:rights   "The Used Cars Ontology is available under the Creative Commons Attribution 3.0 Unported license; see http://creativecommons.org/licenses/by/3.0/. \nIn a nutshell, you are free to copy, distribute and transmit the work; to remix/adapt the work (e.g. to import the ontology and create specializations of its elements), \nas long as you attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work)."@en ;
+        dcterms:subject  "E-Commerce, E-Business, GoodRelations, Ontology, Automotive, Cars, Vehicles, Used Cars"@en ;
+        dcterms:title    "UCO: The Used Cars Ontology for Semantic Web-based E-Commerce"@en ;
+        owl:imports      <http://purl.org/vso/ns> , <http://purl.org/goodrelations/v1> ;
+        owl:versionInfo  "V 1.0:A, Release 2012-12-31" .
+
+uco:usage  a              owl:ObjectProperty ;
+        rdfs:comment      "The type(s) of usage during the period of ownership (if attached to uco:OwnershipInfo) or in general (if attached to the vso:Vehicle directly)"@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> , uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "usage (0..*)"@en ;
+        rdfs:range        uco:UsageType .
+
+uco:mileageEnd  a         owl:ObjectProperty ;
+        rdfs:comment      "The mileage of the vehicle at the end of the period of ownership. \n\nTypical unit code(s): KMT for kilometers, SMI for statute miles"@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "mileage end (0..1)"@en ;
+        rdfs:range        gr:QuantitativeValue .
+
+uco:OwnershipInfo  a      owl:Class ;
+        rdfs:comment      "An ownership information node is a structured value representing information about the period of ownership of a vehicle by a person or organisation."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Ownership Info"@en .
+
+uco:currentLocation  a    owl:ObjectProperty ;
+        rdfs:comment      "The current location of the vehicle, i.e. where the car could be tested. For indicating alternative locations to which the seller is willing to bring the car, use gr:availableAtOrFrom attached to the gr:Offering, since those are aspects of the offer, not of the vehicle."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "currentLocation (0..1)"@en ;
+        rdfs:range        <http://schema.org/Place> , <http://schema.org/PostalAddress> .
+
+uco:countryOfRegistration
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The country or geo-political region in which the vehicle is currently registered, indicated as the two-character version of ISO 3166-1 (ISO 3166-1 alpha-2) for regions or ISO 3166-2, which breaks down the countries from ISO 3166-1 into administrative subdivisions."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "country of registration (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+uco:IndependentDealer
+        a                 gr:BusinessEntityType ;
+        rdfs:comment      "An independent dealer"@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Independent Dealer (gr:BusinessEntityType)"@en .
+
+<http://schema.org/Place>
+        a                    owl:Class ;
+        owl:equivalentClass  gr:Location .
+
+uco:propertyName  a       owl:DatatypeProperty ;
+        rdfs:comment      "The name of the property"@en ;
+        rdfs:domain       uco:PropertyValue ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "property name (0..1)"@en ;
+        rdfs:range        rdfs:Literal .
+
+uco:mileageInitial  a     owl:ObjectProperty ;
+        rdfs:comment      "The mileage of the vehicle at the beginning of the period of ownership. \n\nTypical unit code(s): KMT for kilometers, SMI for statute miles"@en ;
+        rdfs:domain       uco:OwnershipInfo ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "mileage initial (0..1)"@en ;
+        rdfs:range        gr:QuantitativeValue .
+
+uco:PropertyValue  a      owl:Class ;
+        rdfs:comment      "A property-value is a structured value for representing a feature of a vehicle in a semi-formal way."@en ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "Property Value"@en .
+
+foaf:Document  a  owl:Class .
+
+<http://schema.org/image>
+        owl:equivalentProperty  foaf:depiction .
+
+uco:countryOfOrigin  a    owl:DatatypeProperty ;
+        rdfs:comment      "The country or geo-political region in which the vehicle was initially sold officially, indicated as the two-character version of ISO 3166-1 (ISO 3166-1 alpha-2) for regions or ISO 3166-2, which breaks down the countries from ISO 3166-1 into administrative subdivisions."@en ;
+        rdfs:domain       <http://purl.org/vso/ns#Vehicle> ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "country of origin (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+uco:unitCode  a           owl:DatatypeProperty ;
+        rdfs:comment      "A UN/CEFACT Common Code for indicating the unit of measurement of the value, if available"@en ;
+        rdfs:domain       uco:PropertyValue ;
+        rdfs:isDefinedBy  uco: ;
+        rdfs:label        "unit code (0..1)"@en ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://purl.org/uco/ns.owl>
+        a                  foaf:Document ;
+        foaf:primaryTopic  uco: .

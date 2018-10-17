@@ -1,0 +1,179 @@
+@prefix :      <http://www.kanzaki.com/ns/whois#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://purl.org/net/ns/ex#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ont:   <http://purl.org/net/ns/ontology-annot#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:honor  a                   owl:ObjectProperty ;
+        rdfs:comment        "顕彰歴を記述する。careerのサブプロパティ"@ja , "an honor that one has been rewarded." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Honor" ;
+        rdfs:subPropertyOf  :career .
+
+<http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing>
+        a       owl:Class .
+
+:description  a           owl:ObjectProperty ;
+        rdfs:comment      "人の活動の一般的な記述。stage、career、planの上位プロパティ。一つのステージに収まらない事項を記述するためにも使える"@ja , "General description of a person's activities. Use to describe something that does not fit into a Stage." ;
+        rdfs:domain       foaf:Person ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Description" ;
+        rdfs:range        owl:Thing .
+
+:born   a                   owl:DatatypeProperty ;
+        rdfs:comment        "誕生日を記述する。sinceのサブプロパティ（人生の最初のステージの始まり）"@ja , "One's birthday. This can be used in place of 'whois:since' where the 'whois:Stage' is one's first stage." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Born" ;
+        rdfs:subPropertyOf  :since .
+
+:career  a                  owl:ObjectProperty ;
+        rdfs:comment        "人生における職業、教育、業績などを記述する"@ja , "A job, education or any achievement in one's life, which can be specific to a stage of life (object = #Stage) or in general (object = any)." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Career" ;
+        rdfs:subPropertyOf  :description .
+
+<http://www.kanzaki.com/ns/whois>
+        a                owl:Ontology ;
+        rdfs:comment     "プロフィールを記述するための実験ボキャブラリ。Ian DavisのBIO: vocabと似ていますが、BIO:がEventという単位を基本に特定の日を記述するのに対し、こちらはライフサイクルのステージという概念で期間も記述できるようにしています。career, honorといったプロパティは、履歴メタデータの記述にも使えます。"@ja , "An experimental vocabulary to describe a person's profile/history. Properties 'whois:stage' describe one's stage of life (whois:Stage). Similar to Ian Davis' BIO: vocab, however, while BIO: describes events on specific dates, this vocabulary uses whois:since/whois:until so that it can describe a period of time. This also includes such properties as career or honor to be used as a personal resume. Examples included in this document. " ;
+        rdfs:label       "Who's who description vocabulary" ;
+        ont:created      "2003-07-08" ;
+        ont:creator      <urn:pin:MK705> ;
+        ont:modified     "2012-09-16" ;
+        owl:imports      <http://www.kanzaki.com/ns/dliser.rdf> ;
+        owl:versionInfo  "Version 0.5.4. added whois:publication." .
+
+:professionalCareer  a      owl:ObjectProperty ;
+        rdfs:comment        "職歴を記述する。careerのサブプロパティ"@ja , "a professional or business career in one's personal history." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Professional Career" ;
+        rdfs:range          :Job ;
+        rdfs:subPropertyOf  :career .
+
+<urn:pin:MK705>  a    foaf:Person ;
+        rdfs:seeAlso  <http://www.kanzaki.com/info/webwho.rdf> ;
+        foaf:name     "神崎正英"@ja .
+
+:academicCareer  a          owl:ObjectProperty ;
+        rdfs:comment        "学歴を記述する。careerのサブプロパティ"@ja , "an educational career in one's personal history." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Academic Career" ;
+        rdfs:range          :Education ;
+        rdfs:subPropertyOf  :career .
+
+:where  a                 owl:ObjectProperty ;
+        rdfs:comment      "あるステージの場所を記述する"@ja , "Place which relates to a stage of life. The range is whois:Place to have structured description. Use bio:place for literal value" ;
+        rdfs:domain       :Stage ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Where" ;
+        rdfs:range        :Place .
+
+:Job    a                 owl:Class ;
+        rdfs:comment      "ライフステージ中でのある職業の期間。職歴を表す"@ja , "A period of job in one's professional career, as a stage of life. NOT an activity of working." ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Job (stage)" ;
+        rdfs:subClassOf   :Stage .
+
+:achievement  a             owl:ObjectProperty ;
+        rdfs:comment        "業績を記述する。careerのサブプロパティ"@ja , "a one's achievement in general. Note you can use foaf:pastProject for a specific achievement." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Achievement" ;
+        rdfs:subPropertyOf  :career .
+
+<http://www.w3.org/2002/12/cal/icaltzd#dtstart>
+        a       owl:DatatypeProperty .
+
+:when   a                 owl:DatatypeProperty ;
+        rdfs:comment      "あるステージの時期を記述するための上位プロパティ"@ja , "date/time which is related to a stage of life. Super property of since and until. W3C-DTF format value is assumed (i.e. can be yyyy, yyyy-mm, yyyy-mm-dd etc)." ;
+        rdfs:domain       :Stage ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "When" ;
+        rdfs:range        rdfs:Literal .
+
+[ a             ex:Example ;
+  rdfs:comment  "最もシンプルな例（rdf:parseType='Resource'を用いて'whois:Stage'も省略）。場所を単なるリテラルとするためにwhois:placeを用いている。whois:bornを持つwhois:Stageは出身地での人生の最初のステージを示す。また、whois:untilのないwhois:Stageは現在のステージ。"@ja , "Simple, unstructured description. Class tags 'whois:Stage' are omitted by using rdf:parseType='Resource', and 'whois:place' property is used instead of 'whois:where' to have literal values). Note the 'whois:born' (instead of 'whois:since') implies (the omitted 'whois:Stage' is) one's first stage of life, and the stage without 'whois:until' denotes the current phase." ;
+  ex:code       "\n<foaf:Person>\n <foaf:name>Masahide Kanzaki</foaf:name>\n <whois:stage rdf:parseType='Resource'>\n  <whois:place>Tokyo, Japan</whois:place>\n  <whois:since>1982</whois:since>\n </whois:stage>\n <whois:stage rdf:parseType='Resource'>\n  <whois:place>Suzuka, Mie, Japan</whois:place>\n  <whois:born>1960</whois:born>\n  <whois:until>1978</whois:until>\n </whois:stage>\n</foaf:Person>\n " ;
+  ex:exampleOf  <http://www.kanzaki.com/ns/whois> ;
+  ex:image      <http://www.kanzaki.com/works/2007/misc/whois-vocab-sample1.png> ;
+  ex:pfx        "whois:"
+] .
+
+:place  a                 owl:DatatypeProperty ;
+        rdfs:comment      "あるステージの場所をリテラルとして記述する"@ja , "Place which relates to a stage of life. Literal version of 'where'. \":x whois:place 'y'.\" implies \":x whois:where [rdfs:label 'y'].\"." ;
+        rdfs:domain       :Stage ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Place" .
+
+:Place  a                 owl:Class ;
+        rdfs:comment      "場所を表すクラス"@ja , "A place -- this can be the domain of both contact: vocab and geo: vocab." ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Place" ;
+        rdfs:subClassOf   <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> .
+
+:until  a                   owl:DatatypeProperty ;
+        rdfs:comment        "あるステージが終わったときを記述する。whenのサブプロパティ"@ja , "date when a stage of life ended." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Until" ;
+        rdfs:subPropertyOf  <http://www.w3.org/2002/12/cal/icaltzd#dtend> , :when .
+
+:stage  a                   owl:ObjectProperty ;
+        rdfs:comment        "人の履歴のにおけるある切り口を記述する"@ja , "Describes an aspect of one's personal history. " ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Stage" ;
+        rdfs:range          :Stage ;
+        rdfs:subPropertyOf  :description .
+
+:Stage  a                 owl:Class ;
+        rdfs:comment      "人生のあるステージ。人のライフサイクルの中での、はっきりと区切られる一時期"@ja , "A stage of life. A distinct time period in a sequence of one's life cycle." ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Stage" .
+
+[ a             ex:Example ;
+  rdfs:comment  "whois:where、whois:whatの内容にほかの語彙を含む構造的な記述を利用した例。"@ja , "A structured description of a stage of one's life. Note properties from contact: and geo: vocabulary can be used with whois:Place." ;
+  ex:code       "\n<whois:stage>\n <whois:Stage>\n  <whois:since>1987</whois:since>\n  <whois:until>1989</whois:until>\n  <whois:where>\n   <whois:Place geo:lat=\"40.794\" geo:long=\"-73.972\">\n    <contact:country>U.S.A.</contact:country>\n    <contact:city>New York</contact:city>\n   </whois:Place>\n  </whois:where>\n  <whois:what>\n   <wn:School>\n    <foaf:homepage rdf:resource=\"http://www.columbia.edu/cu/business/\"/>\n   </wn:School>\n  </whois:what>\n </whois:Stage>\n</whois:stage>\n " ;
+  ex:exampleOf  <http://www.kanzaki.com/ns/whois>
+] .
+
+:publication  a             owl:ObjectProperty ;
+        rdfs:comment        "出版物、論文を記述する。descriptionのサブプロパティ"@ja , "a one's publication in general. Note foaf:publications describes publication list page." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Publication" ;
+        rdfs:subPropertyOf  :description .
+
+:since  a                   owl:DatatypeProperty ;
+        rdfs:comment        "あるステージが始まったときを記述する。whenのサブプロパティ"@ja , "date when a stage of life started. " ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Since" ;
+        rdfs:subPropertyOf  <http://www.w3.org/2002/12/cal/icaltzd#dtstart> , :when .
+
+:Education  a             owl:Class ;
+        rdfs:comment      "ライフステージ中での、学業期間。学歴を表す"@ja , "A period of education in one's academic career, as a stage of life. NOT an activity of learning." ;
+        rdfs:isDefinedBy  <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label        "Educaton (stage)" ;
+        rdfs:subClassOf   :Stage .
+
+<http://www.w3.org/2002/12/cal/icaltzd#dtend>
+        a       owl:DatatypeProperty .
+
+[ a             ex:Example ;
+  rdfs:comment  "'whois:career'プロパティと'whois:Education', 'whois:Job'クラスを使って、履歴メタデータを記述する例。これらはサブプロパティ'whois:academicCareer'および'whois:professionalCareer'によってクラスを暗黙的に示すこともできる。"@ja , "Combined with other FOAF vocabularies, we can make a personal resume as a metadata. A career can be described with 'whois:career' property + 'whois:Education' or 'whois:Job' class, or sub properties 'whois:academicCareer' and 'whois:professionalCareer' that denote appropriate classes as range." ;
+  ex:code       "\n<foaf:Person>\n <foaf:name>Masahide Kanzaki</foaf:name>\n <foaf:homepage rdf:resource=\"http://www.kanzaki.com/\"/>\n <whois:stage whois:born=\"1960\" rdfs:label=\"Suzuka, Mie, Japan\"/>\n <whois:career>\n  <whois:Education>\n   <rdfs:label>Columbia Business School</rdfs:label>\n   <whois:since>1987</whois:since>\n   <whois:until>1989</whois:until>\n  </whois:Education>\n </whois:career>\n <whois:career>\n  <whois:Job>\n   <rdfs:label>A virtual corporation</rdfs:label>\n   <whois:since>1989</whois:since>\n   <whois:until>2002</whois:until>\n  </whois:Job>\n </whois:career>\n <whois:professionalCareer rdf:parseType=\"Resource\">\n  <rdfs:label>Keio University</rdfs:label>\n  <whois:since>2003</whois:since>\n </whois:professionalCareer>\n</foaf:Person>\n " ;
+  ex:exampleOf  <http://www.kanzaki.com/ns/whois>
+] .
+
+:plan   a                   owl:ObjectProperty ;
+        rdfs:comment        "人の将来の活動予定を記述する"@ja , "General description of a person's future activities. Note past activity can be described with #career." ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "Plan" ;
+        rdfs:subPropertyOf  :description .
+
+foaf:topic  a   owl:ObjectProperty .
+
+:what   a                   owl:ObjectProperty ;
+        rdfs:comment        "あるステージを特徴付けるトピックを記述する（目的語はリテラルではないことに注意）"@ja , "Specifies a topic in a stage of life. The range is owl:Thing to have structured description. Use dc:description for literal description, or dc:subject for keywords." ;
+        rdfs:domain         :Stage ;
+        rdfs:isDefinedBy    <http://www.kanzaki.com/ns/whois> ;
+        rdfs:label          "What" ;
+        rdfs:range          owl:Thing ;
+        rdfs:subPropertyOf  foaf:topic .

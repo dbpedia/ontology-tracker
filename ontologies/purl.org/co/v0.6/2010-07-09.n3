@@ -1,0 +1,86 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix co: <http://purl.org/ontology/co/core#> .
+@prefix event: <http://purl.org/NET/c4dm/event.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+
+<http://purl.org/ontology/co/core#> a owl:Ontology ;
+	dc:creator <http://foaf.me/zazi#me> , <http://moustaki.org/foaf.rdf#moustaki> , <http://foaf.me/intrz#me> ;
+	dc:date "2010-07-09T19:01:52+01:00"^^xsd:dateTime ;
+	dc:description """The Counter Ontology specification provides basic concepts and properties 
+for describing a general counter concept and some important sub counters, e.g. an event counter, on/ for 
+the Semantic Web. This document contains a RDF description of the Counter Ontology."""@en ;
+	dc:title "The Counter Ontology"@en ;
+	owl:imports <http://purl.org/dc/elements/1.1/> , <http://www.w3.org/2003/06/sw-vocab-status/ns> , <http://purl.org/NET/c4dm/event.owl> ;
+	owl:versionInfo "0.6"^^xsd:decimal .
+
+co:Counter a owl:Class , rdfs:Class ;
+	rdfs:comment "Counter of a given object/ given objects, which are related to that counter."@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "Counter"@en ;
+	rdfs:subClassOf owl:Thing .
+
+_:node171gugeucx1 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty co:count .
+
+co:Counter rdfs:subClassOf _:node171gugeucx1 ;
+	vs:term_status "stable"@en .
+
+co:ScrobbleEvent a owl:Class , rdfs:Class ;
+	rdfs:comment """An event corresponding to a scrobbling (counting an activity, which includes at least a specific factor and 
+a specific agent), e.g. a track being played by someone, a video watched by someone, a book read by 
+someone, a sporting activity by someone, ..."""@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "Scrobble Event"@en ;
+	rdfs:subClassOf event:Event ;
+	vs:term_status "unstable"@en .
+
+co:count a owl:FunctionalProperty , rdf:Property ;
+	rdfs:comment "Links a counter resource to the actual count"@en ;
+	rdfs:domain co:Counter ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "has count"@en ;
+	rdfs:range xsd:integer ;
+	vs:term_status "stable"@en .
+
+co:counter a owl:ObjectProperty , rdf:Property ;
+	rdfs:comment "Links an object to a counter resource. Please feel free to create further sub properties with more restricted domains."@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "has counter"@en ;
+	rdfs:range co:Counter ;
+	vs:term_status "stable"@en .
+
+co:event a owl:ObjectProperty , rdf:Property ;
+	rdfs:comment "Links counter resources to related events."@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "has event"@en ;
+	rdfs:range event:Event ;
+	rdfs:subPropertyOf co:object ;
+	owl:inverseOf co:event_counter ;
+	vs:term_status "testing"@en .
+
+co:event_counter a owl:ObjectProperty , rdf:Property ;
+	rdfs:comment "Links events to a counter resource, where they where counted in."@en ;
+	rdfs:domain event:Event ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "has event counter"@en ;
+	rdfs:subPropertyOf co:counter ;
+	vs:term_status "unstable"@en .
+
+co:object a owl:ObjectProperty , rdf:Property ;
+	rdfs:comment "Links a counter resource to an object. Please feel free to create further sub properties with more restricted ranges."@en ;
+	rdfs:domain co:Counter ;
+	rdfs:isDefinedBy <http://purl.org/ontology/co/core#> ;
+	rdfs:label "has object"@en ;
+	owl:inverseOf co:counter ;
+	vs:term_status "testing"@en .
+
+_:node171gugeucx2 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty co:count .
+
+co:Counter rdfs:subClassOf _:node171gugeucx2 .

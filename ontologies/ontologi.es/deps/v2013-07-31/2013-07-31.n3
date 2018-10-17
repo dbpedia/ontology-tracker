@@ -1,0 +1,251 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix deps: <http://ontologi.es/doap-deps#> .
+
+deps:
+	a owl:Ontology;
+	rdfs:label "DOAP Dependencies";
+	rdfs:comment "an extension to DOAP for describing a project's requirements";
+	dc:creator <http://tobyinkster.co.uk/#i>;
+	dc:creator _:toxi;
+	dc:created "2013-07-30"^^xsd:date;
+	dc:modified "2013-07-30"^^xsd:date;
+	dc:modified "2013-07-31"^^xsd:date;
+	dc:issued "2013-07-31"^^xsd:date;
+	.
+
+<http://tobyinkster.co.uk/#i>
+	a foaf:Person;
+	foaf:name "Toby Inkster";
+	foaf:isPrimaryTopicOf <http://tobyinkster.co.uk/>.
+
+_:toxi
+	a foaf:Person;
+	foaf:name "Karsten Schmidt";
+	foaf:mbox_sha1sum "e66da09c6f6f75f0d512266706ece1647279a52e";
+	foaf:isPrimaryTopicOf <http://toxi.co.uk/foaf.rdf>;
+	foaf:page <https://twitter.com/toxi>.
+
+# Dependency class
+
+deps:Dependency
+	a owl:Class;
+	rdfs:label "Dependency";
+	rdfs:comment "A condition to be met".
+
+deps:HistoricDependency
+	a owl:Class;
+	rdfs:subClassOf deps:Dependency;
+	rdfs:label "Historic Dependency".
+
+deps:on
+	a rdf:Property;
+	rdfs:domain deps:Dependency;
+	rdfs:comment "the range of this property is a little woolly; a doap:Project is certainly fine, as is a literal which acts as an identifier, provided it's qualified with a datatype indicating what scheme it's an identifier in";
+	rdfs:label "on".
+
+deps:since
+	a owl:ObjectProperty;
+	rdfs:domain deps:Dependency;
+	rdfs:range doap:Version;
+	rdfs:label "since".
+
+deps:until
+	a owl:ObjectProperty;
+	rdfs:domain deps:HistoricDependency;
+	rdfs:range doap:Version;
+	rdfs:label "until".
+
+# Datatypes for "on" - if none of the above float your boat, it's perfectly
+# allowable to define your own identifier scheme in your own namespace.
+
+deps:IdentifierScheme
+	a rdfs:Class;
+	rdfs:subClassOf rdfs:Datatype.
+
+deps:CpanId
+	a deps:IdentifierScheme;
+	rdfs:label "CPAN Identifier";
+	rdfs:comment "A module name, optionally followed by a space character and a version.";
+	rdfs:comment "Examples: `Moose::Role` or `Moose::Role 2.0600`".
+
+deps:DebianId
+	a deps:IdentifierScheme;
+	rdfs:label "Debian Package Identifier";
+	rdfs:seeAlso <http://www.debian.org/doc/debian-policy/ch-relationships.html>;
+	rdfs:comment "Note that architecture-specific modifiers (in square brackets) are not supported yet.";
+	rdfs:comment "Examples: `libmoose-perl` or `libmoose-perl (>= 2.0600-1)`".
+
+deps:RpmId
+	a deps:IdentifierScheme;
+	rdfs:label "RPM Package Identifier";
+	rdfs:comment "Examples: `perl-Moose` or `perl-Moose >= 2.0600-1`".
+
+deps:PipId
+	a deps:IdentifierScheme;
+	rdfs:label "Pip Identifier";
+	rdfs:comment "A single line from a requirements.txt file, minus the line break.";
+	rdfs:comment "Example: `html5lib==0.95`".
+
+deps:GemId
+	a deps:IdentifierScheme;
+	rdfs:label "Gem Identifier";
+	rdfs:comment "A module name, optionally followed by one or more operator, version number pairs.";
+	rdfs:comment "Examples: `log4r` or `log4r >= 1.0.5` or `log4r >= 1.0.5, < 2.0.0`".
+
+deps:MvnId
+	a deps:IdentifierScheme;
+	rdfs:label "Maven Identifier";
+	rdfs:comment "A fully qualified Maven artefact name: 'groupID/artefactID version[-classifier]'";
+	rdfs:comment "Example 'org.clojure/clojure 1.5.1-SNAPSHOT'".
+
+# Properties for associating a doap:Project with a Dependency
+
+deps:configure-requirement
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "configure requirement";
+	deps:phase deps:ConfigurePhase;
+	deps:level deps:Required.
+
+deps:configure-recommendation
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "configure recommendation";
+	deps:phase deps:ConfigurePhase;
+	deps:level deps:Recommended.
+
+deps:configure-suggestion
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "configure suggestion";
+	deps:phase deps:ConfigurePhase;
+	deps:level deps:Suggested.
+
+deps:build-requirement
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "build requirement";
+	deps:phase deps:BuildPhase;
+	deps:level deps:Required.
+
+deps:build-recommendation
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "build recommendation";
+	deps:phase deps:BuildPhase;
+	deps:level deps:Recommended.
+
+deps:build-suggestion
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "build suggestion";
+	deps:phase deps:BuildPhase;
+	deps:level deps:Suggested.
+
+deps:test-requirement
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "test requirement";
+	deps:phase deps:TestPhase;
+	deps:level deps:Required.
+
+deps:test-recommendation
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "test recommendation";
+	deps:phase deps:TestPhase;
+	deps:level deps:Recommended.
+
+deps:test-suggestion
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "test suggestion";
+	deps:phase deps:TestPhase;
+	deps:level deps:Suggested.
+
+deps:runtime-requirement
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "runtime requirement";
+	deps:phase deps:RuntimePhase;
+	deps:level deps:Required.
+
+deps:runtime-recommendation
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "runtime recommendation";
+	deps:phase deps:RuntimePhase;
+	deps:level deps:Recommended.
+
+deps:runtime-suggestion
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "runtime suggestion";
+	deps:phase deps:RuntimePhase;
+	deps:level deps:Suggested.
+
+deps:develop-requirement
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "development requirement";
+	deps:phase deps:DevelopmentPhase;
+	deps:level deps:Required.
+
+deps:develop-recommendation
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "development recommendation";
+	deps:phase deps:DevelopmentPhase;
+	deps:level deps:Recommended.
+
+deps:develop-suggestion
+	a owl:ObjectProperty;
+	rdfs:domain doap:Project;
+	rdfs:range deps:Dependency;
+	rdfs:label "development suggestion";
+	deps:phase deps:DevelopmentPhase;
+	deps:level deps:Suggested.
+
+# Property annotations.
+
+deps:phase
+	a owl:AnnotationProperty;
+	rdfs:domain owl:ObjectProperty;
+	rdfs:range deps:Phase.
+
+deps:Phase a owl:Class.
+deps:ConfigurePhase a deps:Phase.
+deps:BuildPhase a deps:Phase.
+deps:TestPhase a deps:Phase.
+deps:RuntimePhase a deps:Phase.
+deps:DevelopmentPhase a deps:Phase.
+
+deps:level
+	a owl:AnnotationProperty;
+	rdfs:domain owl:ObjectProperty;
+	rdfs:range deps:Level.
+
+deps:Level a owl:Class.
+deps:Suggested a deps:Level.
+deps:Recommended a deps:Level.
+deps:Required a deps:Level.

@@ -1,0 +1,593 @@
+@prefix :      <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-data.owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ns0:   <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix resource: <http://semanticscience.org/resource/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+:hasCapabilitiesDocumentURL
+        a            owl:DatatypeProperty ;
+        rdfs:domain  :OGCServiceManifestation ;
+        rdfs:label   "has capabilities document url" ;
+        rdfs:range   rdfs:Literal .
+
+:RasterDataset  a            owl:Class ;
+        rdfs:comment         "A raster dataset is a geospatial dataset that organizes information as the value of a single characteristic at every location in space, such as temperature. Multiple raster datasets can be combined into a single dataset as bands of information."^^xsd:string ;
+        rdfs:label           "raster dataset"^^xsd:string ;
+        rdfs:subClassOf      :GeospatialDataset ;
+        resource:example     "satellite imagery, aerial photographs."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasDataBand ;
+                               owl:someValuesFrom  :DataBand
+                             ] .
+
+:coversRegion  a     owl:ObjectProperty ;
+        rdfs:domain  :GeospatialDataset ;
+        rdfs:label   "covers region" ;
+        rdfs:range   :GeographicRegion .
+
+:representsEntity  a  owl:ObjectProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "represents entity" ;
+        rdfs:range   :Entity .
+
+:Format  a                owl:Class ;
+        rdfs:comment      "The arrangement of data for computer input or output."^^xsd:string ;
+        rdfs:label        "format"^^xsd:string ;
+        resource:example  "tiff"^^xsd:string .
+
+<http://provenanceweb.org/format/mime/text/csv>
+        a       :PayloadFormat , owl:NamedIndividual .
+
+:hasLayer  a         owl:ObjectProperty ;
+        rdfs:domain  :VectorDataset ;
+        rdfs:label   "has layer" ;
+        rdfs:range   :Layer .
+
+resource:comment  a  owl:AnnotationProperty .
+
+:hasGeospatialProjection
+        a            owl:ObjectProperty ;
+        rdfs:domain  :GeospatialDataset ;
+        rdfs:label   "has geospatial projection" ;
+        rdfs:range   :Projection .
+
+:WCSResponseManifestation
+        a                 owl:Class ;
+        rdfs:comment      "Provides information about the file that is returned by a Web coverage service, including the format."^^xsd:string ;
+        rdfs:label        "wcs response manifestation"^^xsd:string ;
+        rdfs:subClassOf   :OGCResponseManifestation ;
+        resource:example  "A WCS service, in a described URL, will return a MODIS dataset encoded in a specific format."^^xsd:string .
+
+:WFSResponseManifestation
+        a                 owl:Class ;
+        rdfs:comment      "Provides information about the file that is returned by a Web coverage service, including the format."^^xsd:string ;
+        rdfs:label        "wfs response manifestation"^^xsd:string ;
+        rdfs:subClassOf   :OGCResponseManifestation ;
+        resource:example  "A MODIS dataset, encoded in a specific format, and returned by a WFS service."^^xsd:string .
+
+:hasNoDataValue  a   owl:DatatypeProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "has no data value" ;
+        rdfs:range   xsd:double .
+
+:hasUpperLatitude  a        owl:DatatypeProperty ;
+        rdfs:domain         :BoxedGeographicRegion ;
+        rdfs:label          "has upper latitude" ;
+        rdfs:range          xsd:double ;
+        rdfs:subPropertyOf  :hasLongitude .
+
+:MetadataFormat  a        owl:Class ;
+        rdfs:comment      "Describes the format of the metadata included in a file."^^xsd:string ;
+        rdfs:label        "metadata format"^^xsd:string ;
+        rdfs:subClassOf   :Format ;
+        resource:example  "XML, RDF."^^xsd:string .
+
+:hasDataBand  a      owl:ObjectProperty ;
+        rdfs:domain  :RasterDataset ;
+        rdfs:label   "has data band" ;
+        rdfs:range   :DataBand .
+
+:hasBandName  a      owl:DatatypeProperty ;
+        rdfs:domain  :BandIdentification ;
+        rdfs:label   "has band name" ;
+        rdfs:range   rdfs:Literal .
+
+:Duration  a             owl:Class ;
+        rdfs:comment     "Time period defined by a start and end time."^^xsd:string ;
+        rdfs:label       "duration"^^xsd:string ;
+        rdfs:subClassOf  :TimePeriod .
+
+:Characteristic  a        owl:Class ;
+        rdfs:label        "characteristic"^^xsd:string ;
+        resource:comment  "A characteristic, following OBOE guidelines,  represents a property of an entity that can be measured. "^^xsd:string ;
+        resource:example  "Temperature of air."^^xsd:string .
+
+<http://provenanceweb.org/format/mime/image/gif>
+        a       :PayloadFormat , owl:NamedIndividual .
+
+:capturesCharacteristic
+        a            owl:ObjectProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "captures characteristic" ;
+        rdfs:range   :Characteristic .
+
+:GeoTIFF  a     :PayloadFormat , owl:NamedIndividual .
+
+:Theme  a                 owl:Class ;
+        rdfs:comment      "Metadata describing the information captured in a dataset."^^xsd:string ;
+        rdfs:label        "theme"^^xsd:string ;
+        resource:example  "vegetation"^^xsd:string .
+
+:hasMaximumValue  a  owl:DatatypeProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "has maximum value" ;
+        rdfs:range   xsd:double .
+
+:hasLongitude  a    owl:DatatypeProperty ;
+        rdfs:label  "has longitude" .
+
+:hasDate  a         owl:ObjectProperty ;
+        rdfs:label  "has date" .
+
+:hasStartDate  a            owl:ObjectProperty ;
+        rdfs:domain         :DateRange ;
+        rdfs:label          "has start date" ;
+        rdfs:range          :Date ;
+        rdfs:subPropertyOf  :hasDate .
+
+:VectorDataset  a            owl:Class ;
+        rdfs:label           "vector dataset"^^xsd:string ;
+        rdfs:subClassOf      :GeospatialDataset ;
+        resource:comment     "A dataset that represents values using points, lines and polygons."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasLayer ;
+                               owl:someValuesFrom  :Layer
+                             ] .
+
+:esri-grid  a   :PayloadFormat , owl:NamedIndividual .
+
+<http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-data.owl>
+        a                              owl:Ontology ;
+        rdfs:isDefinedBy               <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-data.owl> ;
+        cc:license                     "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
+        ns0:defaultLanguage            "en" ;
+        dc:contributor                 "Contributors are those that engage in discussions during the development of this ontology (in alphabetical order):\nkarl benedict\nluis garnica\ncj grady\nbill hudspeth\ndeana pennington\nsoren scott\naimee stewart"^^xsd:string ;
+        dc:creator                     "Natalia Villanueva-Rosales"@en , "ELSEWeb team"@en , "http://cybershare.utep.edu"^^xsd:anyURI , "Nicholas del Rio"@en ;
+        dc:description                 "The ELSEWeb Data ontology provides simple classes for describing datasets. This project provides foundational support for the ELSEWeb project(http://elseweb.cybershare.utep.edu/).\nwebsite: http://elseweb.cybershare.utep.edu/ontologies\nemail: nvillanuevarosales@utep.edu\n"@en ;
+        dc:issued                      "2014-05-01"^^xsd:date ;
+        dc:rights                      "free to use,share,modify. modify with attribution [http://creativecommons.org/licenses/by/3.0/]."^^xsd:string ;
+        dc:title                       "ELSEWeb Data Ontology"@en ;
+        terms:identifier               "elseweb-data.owl" ;
+        terms:modified                 "2015-09-24"^^xsd:date ;
+        vann:preferredNamespacePrefix  "elseweb-data"@en ;
+        vann:preferredNamespaceUri     "http://ontology.cybershare.utep.edu/ELSEWeb/"^^xsd:string ;
+        owl:versionIRI                 <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-data.owl> ;
+        owl:versionInfo                "1.2"^^xsd:string .
+
+:OGCServiceManifestation
+        a                    owl:Class ;
+        rdfs:comment         "Provides information about a service that can be executed over the web  using OGC standards, including the URL where the service is located."^^xsd:string ;
+        rdfs:label           "OGC  service manifestation"^^xsd:string ;
+        rdfs:subClassOf      :ServiceManifestation ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasCapabilitiesDocumentURL ;
+                               owl:someValuesFrom  rdfs:Literal
+                             ] .
+
+:OGCResponseManifestation
+        a                    owl:Class ;
+        rdfs:comment         "Provides information about a file that is returned from a web service using OGC standards, including the container format."^^xsd:string ;
+        rdfs:label           "ogc response manifestation"^^xsd:string ;
+        rdfs:subClassOf      :FileManifestation ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onClass               :ContainerFormat ;
+                               owl:onProperty            :encodedInFormat ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] .
+
+:hasLeftLongitude  a        owl:DatatypeProperty ;
+        rdfs:domain         :BoxedGeographicRegion ;
+        rdfs:label          "has left longitude" ;
+        rdfs:range          xsd:double ;
+        rdfs:subPropertyOf  :hasLatitude .
+
+:hasFileDownloadURL  a  owl:DatatypeProperty ;
+        rdfs:domain  :FileManifestation ;
+        rdfs:label   "has file download url" ;
+        rdfs:range   rdfs:Literal .
+
+:WCSManifestation  a     owl:Class ;
+        rdfs:comment     "A WCS service, located in a specific URL, that will return a dataset."^^xsd:string ;
+        rdfs:label       "wcs service manifestation"^^xsd:string ;
+        rdfs:subClassOf  :OGCServiceManifestation .
+
+:hasLandingPageURL  a  owl:DatatypeProperty ;
+        rdfs:domain  :FileManifestation ;
+        rdfs:label   "has landing page url" ;
+        rdfs:range   rdfs:Literal .
+
+:ContainerFormat  a          owl:Class ;
+        rdfs:comment         "Describes how the data and metadata are included in a file."^^xsd:string ;
+        rdfs:label           "container format"^^xsd:string ;
+        rdfs:subClassOf      :Format ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onClass               :PayloadFormat ;
+                               owl:onProperty            :hasPayloadFormat ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] .
+
+:tiff-container  a         owl:NamedIndividual ;
+        :hasPayloadFormat  <http://provenanceweb.org/format/mime/image/tiff> .
+
+:hasEPSGCode  a      owl:DatatypeProperty ;
+        rdfs:domain  :Projection ;
+        rdfs:label   "has epsg code" ;
+        rdfs:range   xsd:int .
+
+:BoxedGeographicRegion
+        a                    owl:Class ;
+        rdfs:comment         "A geographic region that is specified by left longitude, lower latitude, right longitude and upper latitude."^^xsd:string ;
+        rdfs:label           "boxed geographic region"^^xsd:string ;
+        rdfs:subClassOf      :GeographicRegion ;
+        resource:example     "The region specified by the bounds (N,E,S,W): 49.39, -78.75, 32.25, -120.24"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasLeftLongitude ;
+                                                       owl:someValuesFrom  xsd:double
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasLowerLatitude ;
+                                                         owl:someValuesFrom  xsd:double
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasRightLongitude ;
+                                                           owl:someValuesFrom  xsd:double
+                                                         ] [ a                   owl:Restriction ;
+                                                             owl:onProperty      :hasUpperLatitude ;
+                                                             owl:someValuesFrom  xsd:double
+                                                           ] )
+                             ] .
+
+:hasUnits  a         owl:ObjectProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "has units" ;
+        rdfs:range   :Unit .
+
+:Entity  a                owl:Class ;
+        rdfs:comment      "Following the definition of OBOE and SIO, an entity denotes a concrete or conceptual object that has been observed (e.g., a tree, a community, an ecological process). "^^xsd:string ;
+        rdfs:label        "entity"^^xsd:string ;
+        resource:example  "Air"^^xsd:string .
+
+:DataBand  a                 owl:Class ;
+        rdfs:label           "data band"^^xsd:string ;
+        rdfs:subClassOf      :Band ;
+        resource:comment     "A databand will contain data about a specific characteristic of an entity. It uses a specific unit and resolution."^^xsd:string ;
+        resource:example     "A databand can capture air temperature in Farenheit degrees with a resolution of 250m."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                       owl:onClass               :Characteristic ;
+                                                       owl:onProperty            :capturesCharacteristic ;
+                                                       owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                     ] [ a                         owl:Restriction ;
+                                                         owl:onClass               :Unit ;
+                                                         owl:onProperty            :hasUnits ;
+                                                         owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                       ] [ a                         owl:Restriction ;
+                                                           owl:onClass               :Entity ;
+                                                           owl:onProperty            :representsEntity ;
+                                                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                         ] [ a                         owl:Restriction ;
+                                                             owl:onDataRange           xsd:double ;
+                                                             owl:onProperty            :hasMaximumValue ;
+                                                             owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                           ] [ a                         owl:Restriction ;
+                                                               owl:onDataRange           xsd:double ;
+                                                               owl:onProperty            :hasMinimumValue ;
+                                                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                             ] [ a                         owl:Restriction ;
+                                                                 owl:onDataRange           xsd:double ;
+                                                                 owl:onProperty            :hasNoDataValue ;
+                                                                 owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                               ] [ a                         owl:Restriction ;
+                                                                   owl:onDataRange           xsd:double ;
+                                                                   owl:onProperty            :hasResolution ;
+                                                                   owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                                 ] )
+                             ] .
+
+:hasDateTime  a      owl:DatatypeProperty ;
+        rdfs:domain  :Date ;
+        rdfs:label   "has date time" ;
+        rdfs:range   xsd:dateTime .
+
+:hasManifestation  a  owl:ObjectProperty ;
+        rdfs:domain  :GeospatialDataset ;
+        rdfs:label   "has manifestation" ;
+        rdfs:range   :DatasetManifestation .
+
+:Layer  a                    owl:Class ;
+        rdfs:comment         "A layer is a set of environmental information quantifying the value of a single characteristic through space, used to compose a climate scenario to generate a model."^^xsd:string ;
+        rdfs:label           "layer"^^xsd:string ;
+        resource:example     "A dataset that quanifies temperature at many spatial locations" ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :containsFeatureSet ;
+                               owl:someValuesFrom  :FeatureSet
+                             ] .
+
+:hasResolution  a    owl:DatatypeProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "has resolution" ;
+        rdfs:range   xsd:double .
+
+:FileManifestation  a        owl:Class ;
+        rdfs:comment         "A file manifestation provides the information required to retrieve a file over the web, including the format and the URL where the file is available."^^xsd:string ;
+        rdfs:label           "file manifestation"^^xsd:string ;
+        rdfs:subClassOf      :DatasetManifestation ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                       owl:onClass               :Format ;
+                                                       owl:onProperty            :encodedInFormat ;
+                                                       owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasLandingPageURL ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] [ a                owl:Restriction ;
+                                                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                                                           owl:onProperty   :hasFileDownloadURL
+                                                         ] )
+                             ] .
+
+:Instant  a               owl:Class ;
+        rdfs:label        "instant"^^xsd:string ;
+        rdfs:subClassOf   :TimePeriod ;
+        resource:comment  "A time period with the same start and end time."^^xsd:string .
+
+:Date   a                    owl:Class ;
+        rdfs:label           "date"^^xsd:string ;
+        rdfs:subClassOf      :Instant ;
+        resource:comment     "A period of time with the same start and end time."^^xsd:string ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onDataRange           xsd:dateTime ;
+                               owl:onProperty            :hasDateTime ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] .
+
+resource:example  a  owl:AnnotationProperty .
+
+:hasPayloadFormat  a  owl:ObjectProperty ;
+        rdfs:domain  :ContainerFormat ;
+        rdfs:label   "has payload format" ;
+        rdfs:range   :PayloadFormat .
+
+:encodedInFormat  a  owl:ObjectProperty ;
+        rdfs:domain  :DatasetManifestation ;
+        rdfs:label   "enconded in format" ;
+        rdfs:range   :Format .
+
+:WFSManifestation  a     owl:Class ;
+        rdfs:comment     "A WCS service, located in a specific URL, that will return a dataset."^^xsd:string ;
+        rdfs:label       "wfs service manifestation"^^xsd:string ;
+        rdfs:subClassOf  :OGCServiceManifestation .
+
+:GeospatialDataset  a        owl:Class ;
+        rdfs:comment         "A geospatial dataset contains data that covers a specified geographic region and specifies how a measured characteristic varies across that region, for a specific date range. It has a specific manifestation, a theme, and a geospatial projection"^^xsd:string ;
+        rdfs:label           "geospatial dataset"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :coversRegion ;
+                                                       owl:someValuesFrom  :BoxedGeographicRegion
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasManifestation ;
+                                                         owl:someValuesFrom  :DatasetManifestation
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasTheme ;
+                                                           owl:someValuesFrom  :Theme
+                                                         ] [ a                         owl:Restriction ;
+                                                             owl:onClass               :DateRange ;
+                                                             owl:onProperty            :coversTimePeriod ;
+                                                             owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                           ] [ a                         owl:Restriction ;
+                                                               owl:onClass               :Projection ;
+                                                               owl:onProperty            :hasGeospatialProjection ;
+                                                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                             ] )
+                             ] .
+
+:Band   a                    owl:Class ;
+        rdfs:comment         "A band is one component of a multi-characteristic dataset."^^xsd:string ;
+        rdfs:label           "band"^^xsd:string ;
+        resource:example     "A satellite image composed of more than one measured value at different wavelengths of the electromagnetic spectrum for each pixel in the image."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasBandIdentification ;
+                               owl:someValuesFrom  :BandIdentification
+                             ] .
+
+:hasLowerLatitude  a        owl:DatatypeProperty ;
+        rdfs:domain         :BoxedGeographicRegion ;
+        rdfs:label          "has lower latitude" ;
+        rdfs:range          xsd:double ;
+        rdfs:subPropertyOf  :hasLongitude .
+
+<http://provenanceweb.org/format/mime/image/png>
+        a       :PayloadFormat , owl:NamedIndividual .
+
+:esri-shapefile  a  :PayloadFormat , owl:NamedIndividual .
+
+:hdf5   a       :PayloadFormat , owl:NamedIndividual .
+
+:WFSResponse  a              owl:Class ;
+        rdfs:label           "wfs vector response"^^xsd:string ;
+        rdfs:subClassOf      :VectorDataset ;
+        resource:comment     "A specific vector dataset returned by calling a WFS service with specific parameters."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasManifestation ;
+                               owl:someValuesFrom  :WFSResponseManifestation
+                             ] .
+
+:WFSDataset  a               owl:Class ;
+        rdfs:label           "wfs vector dataset"^^xsd:string ;
+        rdfs:subClassOf      :VectorDataset ;
+        resource:comment     "A WFS vector dataset is composed by all possible datasets provided by a WFS service manifestation depending on the parameters set in a service call. "^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasManifestation ;
+                               owl:someValuesFrom  :WFSManifestation
+                             ] .
+
+:WCSResponse  a              owl:Class ;
+        rdfs:comment         "A specific raster dataset returned by calling a WCS service with specific parameters."^^xsd:string ;
+        rdfs:label           "wcs raster response"^^xsd:string ;
+        rdfs:subClassOf      :RasterDataset ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasManifestation ;
+                               owl:someValuesFrom  :WCSResponseManifestation
+                             ] .
+
+:Unit   a                 owl:Class ;
+        rdfs:comment      "A subclass of SIO's class unit of measurement. A unit is a a definite magnitude of a physical quantity."^^xsd:string ;
+        rdfs:label        "unit"^^xsd:string ;
+        resource:example  "Meter"^^xsd:string .
+
+<http://provenanceweb.org/format/mime/text/xml>
+        a       :MetadataFormat , owl:NamedIndividual .
+
+:ComplexDerivedUnit  a   owl:Class ;
+        rdfs:comment     "A unit that is calculated from defined operations."^^xsd:string ;
+        rdfs:label       "complexed derived unit"^^xsd:string ;
+        rdfs:subClassOf  :Unit .
+
+<http://provenanceweb.org/format/mime/image/vnd.wap.wbmp>
+        a       :PayloadFormat , owl:NamedIndividual .
+
+:hasTheme  a         owl:ObjectProperty ;
+        rdfs:domain  :GeospatialDataset ;
+        rdfs:label   "has theme" .
+
+:Projection  a               owl:Class ;
+        rdfs:comment         "Processing of datasets, where a set of rules generated by a model are applied onto a climate scenario of related environmental layers."^^xsd:string ;
+        rdfs:label           "projection"^^xsd:string ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onDataRange           xsd:integer ;
+                               owl:onProperty            :hasEPSGCode ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] .
+
+<http://provenanceweb.org/format/mime/image/jpeg>
+        a       :PayloadFormat , owl:NamedIndividual .
+
+:ServiceManifestation
+        a                owl:Class ;
+        rdfs:comment     "A service manifestation provides the information required to execute a service over the web. In particular, a service that will return a dataset."^^xsd:string ;
+        rdfs:label       "service manifestation"^^xsd:string ;
+        rdfs:subClassOf  :DatasetManifestation .
+
+:PayloadFormat  a         owl:Class ;
+        rdfs:label        "payload format"^^xsd:string ;
+        rdfs:subClassOf   :Format ;
+        resource:comment  "Describes the format of a payload."^^xsd:string ;
+        resource:example  "tiff, hdf5"^^xsd:string .
+
+:FeatureSet  a               owl:Class ;
+        rdfs:comment         "A set of geometric features or characteristics observed from an entity. This class is equivalent to the notion of an ArcGIS feature"^^xsd:string ;
+        rdfs:label           "feature set"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :representsEntity ;
+                               owl:someValuesFrom  :Entity
+                             ] .
+
+:hasMinimumValue  a  owl:DatatypeProperty ;
+        rdfs:domain  :DataBand ;
+        rdfs:label   "has minimum value" ;
+        rdfs:range   xsd:double .
+
+:containsFeatureSet  a  owl:ObjectProperty ;
+        rdfs:domain  :Layer ;
+        rdfs:label   "contains feature set" ;
+        rdfs:range   :FeatureSet .
+
+:NamedGeographicRegion
+        a                 owl:Class ;
+        rdfs:comment      "A geographic region specified by a name."^^xsd:string ;
+        rdfs:label        "named geographic region"^^xsd:string ;
+        rdfs:subClassOf   :GeographicRegion ;
+        resource:example  "North America, Great Lakes, Indonesia"^^xsd:string .
+
+:TimePeriod  a            owl:Class ;
+        rdfs:label        "time period"^^xsd:string ;
+        resource:comment  "Following DCAT's descriptions, a time period is a temporal period that the dataset covers."^^xsd:string .
+
+:WCSDataset  a               owl:Class ;
+        rdfs:comment         "A WCS raster dataset is composed by all possible datasets provided by a WCS service manifestation depending on the parameters set in a service call. "^^xsd:string ;
+        rdfs:label           "wcs raster dataset"^^xsd:string ;
+        rdfs:subClassOf      :RasterDataset ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasManifestation ;
+                               owl:someValuesFrom  :WCSManifestation
+                             ] .
+
+:hasRightLongitude  a       owl:DatatypeProperty ;
+        rdfs:domain         :BoxedGeographicRegion ;
+        rdfs:label          "has right longitude" ;
+        rdfs:range          xsd:double ;
+        rdfs:subPropertyOf  :hasLatitude .
+
+:DateRange  a                owl:Class ;
+        rdfs:comment         "Time period defined by an start and end date."^^xsd:string ;
+        rdfs:label           "date range"^^xsd:string ;
+        rdfs:subClassOf      :Duration ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                       owl:onClass               :Date ;
+                                                       owl:onProperty            :hasEndDate ;
+                                                       owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                     ] [ a                         owl:Restriction ;
+                                                         owl:onClass               :Date ;
+                                                         owl:onProperty            :hasStartDate ;
+                                                         owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                       ] )
+                             ] .
+
+:GeographicRegion  a      owl:Class ;
+        rdfs:label        "geographic region"^^xsd:string ;
+        resource:comment  "A geographic region, aligned to DCAT location, is a spatial region or named place."^^xsd:string ;
+        resource:example  "America"^^xsd:string .
+
+:hasLatitude  a     owl:DatatypeProperty ;
+        rdfs:label  "has latitude" .
+
+:coversTimePeriod  a  owl:ObjectProperty ;
+        rdfs:domain  :GeospatialDataset ;
+        rdfs:label   "covers time period" ;
+        rdfs:range   :TimePeriod .
+
+:hasBandIdentification
+        a            owl:ObjectProperty ;
+        rdfs:domain  :Band ;
+        rdfs:label   "has band identification" ;
+        rdfs:range   :BandIdentification .
+
+<http://provenanceweb.org/format/mime/image/tiff>
+        a       :PayloadFormat , owl:NamedIndividual .
+
+:DatasetManifestation
+        a                 owl:Class ;
+        rdfs:comment      "A dataset manifestation, that follows the description of a DCAT Distribution, provides the information to retrieve a dataset, including the fomat, endpoint, etc."^^xsd:string ;
+        rdfs:label        "dataset manifestation"^^xsd:string ;
+        resource:example  "A donwnloadable RGIS WCS data set."^^xsd:string .
+
+:BandIdentification  a       owl:Class ;
+        rdfs:label           "band identification"^^xsd:string ;
+        resource:comment     "An identifier used to identify a specific band."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasBandName ;
+                               owl:someValuesFrom  rdfs:Literal
+                             ] .
+
+:hasEndDate  a              owl:ObjectProperty ;
+        rdfs:domain         :DateRange ;
+        rdfs:label          "has end date" ;
+        rdfs:range          :Date ;
+        rdfs:subPropertyOf  :hasDate .

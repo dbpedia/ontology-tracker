@@ -1,0 +1,275 @@
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ns0:   <http://purl.org/vocab/vann/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+<http://data.ign.fr/def/geofla#superficieHa>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Superficie de la commune en hectares."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label    "area in hectares"@en , "superficie en hectares"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://data.ign.fr/def/geofla#UniteAdministrative>
+        a                 owl:Class ;
+        rdfs:comment      "Objet géographique résultant du découpage administratif du territoire français."@fr ;
+        rdfs:isDefinedBy  <http://data.ign.fr/def/geofla> ;
+        rdfs:label        "Unité administrative"@fr , "Administrative subdivision"@en ;
+        rdfs:subClassOf   <http://data.ign.fr/def/topo#EntiteTopographique> .
+
+<http://data.semanticweb.org/person/bernard-vatant>
+        a       foaf:Person .
+
+<http://data.ign.fr/def/geofla#region>
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Région à laquelle appartient l'unité administrative."@fr ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( <http://data.ign.fr/def/geofla#Canton> <http://data.ign.fr/def/geofla#Commune> <http://data.ign.fr/def/geofla#Arrondissement> <http://data.ign.fr/def/geofla#Departement> )
+                      ] ;
+        rdfs:label    "belongs to region"@en , "appartient à la région"@fr ;
+        rdfs:range    <http://data.ign.fr/def/geofla#Region> .
+
+<http://data.ign.fr/def/geofla#codeReg>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Code géographique de la région (texte de deux caractères)."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Region> ;
+        rdfs:label    "geographic code of the region"@en , "code géographique de la région"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://data.ign.fr/def/topo#EntiteTopographique>
+        a           owl:Class ;
+        rdfs:label  "Topographic entity"@en , "Entité topographique"@fr .
+
+<http://data.ign.fr/def/geofla#numInsee>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Il s'agit d'un numéro de 5 caractères : le code du département suivi du code géographique de la commune. Pour les DOM, le 3ème caractère est commun au numéro de département et au numéro de commune."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label    "insee identifier of the commune"@en , "numéro insee de la commune"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://data.ign.fr/def/geofla#chefLieu>
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Chef-lieu de l'unité administrative lorsqu'il existe (un canton ne possède pas toujours de chef-lieu. Cela arrive dans le cas de cantons situés à la périphérie d'une ville importante constituant à elle seule un canton non précisé.)"@fr ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( <http://data.ign.fr/def/geofla#Canton> <http://data.ign.fr/def/geofla#Departement> <http://data.ign.fr/def/geofla#Arrondissement> )
+                      ] ;
+        rdfs:label    "capital of the administrative subdivision"@en , "chef-lieu de l'unité administrative"@fr ;
+        rdfs:range    <http://data.ign.fr/def/geofla#Commune> .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/ChefLieuDeCanton>
+        a                skos:Concept ;
+        skos:definition  "Chef-lieu d'un canton français."@fr ;
+        skos:inScheme    <http://data.ign.fr/id/codes/geofla/typedecommune/liste> ;
+        skos:prefLabel   "township capital"@en , "chef-lieu de canton"@fr .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/liste>
+        a             skos:ConceptScheme ;
+        rdfs:comment  "Liste des différents rôles pouvant être joués par une commune dans l'organisation administrative française, représentés comme une liste de concepts SKOS."@fr ;
+        rdfs:label    "type of commune"@en , "type de commune"@fr .
+
+<http://data.ign.fr/def/geofla#codeDpt>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Code géographique du département (texte de deux caractères)."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Departement> ;
+        rdfs:label    "geographic code of the department"@en , "code géographique du département"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://data.ign.fr/def/geofla>
+        a                             owl:Ontology , <http://purl.org/vocommons/voaf#Vocabulary> ;
+        cc:license                    <http://www.data.gouv.fr/Licence-Ouverte-Open-Licence> , <http://opendatacommons.org/licenses/by/> , <http://creativecommons.org/licenses/by/2.0/> ;
+        dc:contributor                <http://www.eurecom.fr/~troncy/> , <http://recherche.ign.fr/labos/cogit/cv.php?prenom=Bénédicte&nom=Bucher> , <http://data.semanticweb.org/person/bernard-vatant> ;
+        dc:creator                    <http://recherche.ign.fr/labos/cogit/cv.php?prenom=Nathalie&nom=Abadie> , <http://www.eurecom.fr/~atemezin/> ;
+        dc:description                "Ontologie décrivant le découpage administratif de la France métropolitaine, des départements d'outre-mer, ou de la collectivité  départementale de Mayotte, représentée comme une hiérarchie de classes OWL"@fr ;
+        dc:issued                     "2013-06-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+        dc:modified                   "2014-08-22"^^<http://www.w3.org/2001/XMLSchema#date> ;
+        dc:publisher                  <http://fr.dbpedia.org/resource/Institut_national_de_l%27information_g%C3%A9ographique_et_foresti%C3%A8re> ;
+        dc:rights                     "Copyright 2014, IGN" ;
+        dc:title                      "Ontologie des unités administratives de l'IGN"@fr ;
+        ns0:preferredNamespacePrefix  "geofla" ;
+        ns0:preferredNamespaceUri     <http://data.ign.fr/def/geofla#> ;
+        owl:versionInfo               "Version 1.0 - 2014-08-22" .
+
+<http://data.ign.fr/def/geofla#Departement>
+        a                    owl:Class ;
+        rdfs:comment         "Cette classe contient l'ensemble des départements."@fr ;
+        rdfs:isDefinedBy     <http://data.ign.fr/def/geofla> ;
+        rdfs:label           "Department"@en , "Département"@fr ;
+        rdfs:subClassOf      <http://data.ign.fr/def/geofla#UniteAdministrative> ;
+        rdfs:subClassOf      [ a               owl:Restriction ;
+                               owl:hasValue    <http://www.geonames.org/ontology#A.ADM2> ;
+                               owl:onProperty  <http://www.geonames.org/ontology#featureCode>
+                             ] ;
+        owl:equivalentClass  <http://rdf.insee.fr/def/geo#Departement> .
+
+<http://data.ign.fr/def/geofla#Canton>
+        a                    owl:Class ;
+        rdfs:comment         "Les cantons contenus dans les différentes bases de données de l'IGN sont des cantons au sens INSEE du terme, appelés pseudo-cantons. Un pseudo-canton, quant à lui, est un regroupement d'une ou plusieurs communes entières."@fr ;
+        rdfs:isDefinedBy     <http://data.ign.fr/def/geofla> ;
+        rdfs:label           "Canton"@fr , "Canton"@en ;
+        rdfs:subClassOf      <http://data.ign.fr/def/geofla#UniteAdministrative> ;
+        owl:equivalentClass  <http://rdf.insee.fr/def/geo#CantonOuVille> .
+
+<http://data.ign.fr/def/geofla#Arrondissement>
+        a                    owl:Class ;
+        rdfs:comment         "Cette classe contient l'ensemble des arrondissements (ce sont les arrondissements au sens INSEE, et non les arrondissements municipaux)."@fr ;
+        rdfs:isDefinedBy     <http://data.ign.fr/def/geofla> ;
+        rdfs:label           "Arrondissement"@fr , "Arrondissement"@en ;
+        rdfs:subClassOf      <http://data.ign.fr/def/geofla#UniteAdministrative> ;
+        rdfs:subClassOf      [ a               owl:Restriction ;
+                               owl:hasValue    <http://www.geonames.org/ontology#A.ADM3> ;
+                               owl:onProperty  <http://www.geonames.org/ontology#featureCode>
+                             ] ;
+        owl:equivalentClass  <http://rdf.insee.fr/def/geo#Arrondissement> .
+
+<http://data.ign.fr/def/geofla#arr>
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Arrondissement auquel appartient l'unité administrative."@fr ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( <http://data.ign.fr/def/geofla#Canton> <http://data.ign.fr/def/geofla#Commune> )
+                      ] ;
+        rdfs:label    "belongs to arrondisssement"@en , "appartient à l'arrondisssement"@fr ;
+        rdfs:range    <http://data.ign.fr/def/geofla#Arrondissement> .
+
+<http://data.ign.fr/def/geofla#cant>
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Canton auquel appartient l'unité administrative."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label    "belongs to canton"@en , "appartient au canton"@fr ;
+        rdfs:range    <http://data.ign.fr/def/geofla#Canton> .
+
+<http://www.eurecom.fr/~troncy/>
+        a       foaf:Person .
+
+<http://data.ign.fr/def/geofla#TypeDeCommune>
+        a                owl:Class ;
+        rdfs:label       "Type of commune"@en , "Type de commune"@fr ;
+        rdfs:subClassOf  skos:Concept .
+
+<http://data.ign.fr/def/geofla#statut>
+        a            owl:ObjectProperty ;
+        rdfs:domain  <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label   "status"@en , "statut"@fr ;
+        rdfs:range   [ a               owl:Restriction ;
+                       owl:hasValue    <http://data.ign.fr/codes/geonto/typedecommune/liste> ;
+                       owl:onProperty  skos:inScheme
+                     ] .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/PrefectureDeRegion>
+        a                skos:Concept ;
+        skos:definition  "Chef-lieu d'une région française."@fr ;
+        skos:inScheme    <http://data.ign.fr/id/codes/geofla/typedecommune/liste> ;
+        skos:prefLabel   "regional prefecture"@en , "préfecture de région"@fr .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/CommuneSimple>
+        a                skos:Concept ;
+        skos:definition  "Commune sans rôle administratif particulier."@fr ;
+        skos:inScheme    <http://data.ign.fr/id/codes/geofla/typedecommune/liste> ;
+        skos:prefLabel   "simple commune"@en , "commune simple"@fr .
+
+<http://data.ign.fr/def/geofla#codeCant>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Il s'agit du code géographique permettant d'identifier le canton dans son département d'appartenance (texte de deux caractères)."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Canton> ;
+        rdfs:label    "geographic code of the canton"@en , "code géographique du canton"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://recherche.ign.fr/labos/cogit/cv.php?prenom=Bénédicte&nom=Bucher>
+        a       foaf:Person .
+
+<http://data.ign.fr/def/geofla#Region>
+        a                    owl:Class ;
+        rdfs:comment         "Cette classe contient l'ensemble des régions."@fr ;
+        rdfs:isDefinedBy     <http://data.ign.fr/def/geofla> ;
+        rdfs:label           "Région"@fr , "Region"@en ;
+        rdfs:subClassOf      <http://data.ign.fr/def/geofla#UniteAdministrative> ;
+        rdfs:subClassOf      [ a               owl:Restriction ;
+                               owl:hasValue    <http://www.geonames.org/ontology#A.ADM1> ;
+                               owl:onProperty  <http://www.geonames.org/ontology#featureCode>
+                             ] ;
+        owl:equivalentClass  <http://rdf.insee.fr/def/geo#Region> .
+
+<http://data.ign.fr/def/geofla#siegeDuChefLieu>
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Point qui représente la localisation du siège du chef-lieu de l'unité administrative."@fr ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( <http://data.ign.fr/def/geofla#Canton> <http://data.ign.fr/def/geofla#Departement> <http://data.ign.fr/def/geofla#Arrondissement> <http://data.ign.fr/def/geofla#Commune> )
+                      ] ;
+        rdfs:label    "head office of the capital"@en , "siège du chef-lieu"@fr ;
+        rdfs:range    <http://data.ign.fr/def/geometrie#Point> .
+
+<http://data.ign.fr/def/geofla#population>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Chiffre de population sans doubles comptes au dernier recensement, en milliers d'habitants, à une décimale. "@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label    "population"@en , "population"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#double> .
+
+<http://recherche.ign.fr/labos/cogit/cv.php?prenom=Nathalie&nom=Abadie>
+        a       foaf:Person .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/PrefectureDeDepartement>
+        a                skos:Concept ;
+        skos:definition  "Chef-lieu d'un département français."@fr ;
+        skos:inScheme    <http://data.ign.fr/id/codes/geofla/typedecommune/liste> ;
+        skos:prefLabel   "préfecture de département"@fr , "prefecture"@en .
+
+<http://data.ign.fr/def/geofla#zMoyen>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Altitude moyenne de la commune en mètres."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#ArrondissementMunicipal> , <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label    "mean altitude"@en , "altitude moyenne"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://data.ign.fr/def/geofla#codeArr>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Code géographique de l'arrondissement (texte d'un caractère)."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Arrondissement> ;
+        rdfs:label    "code géographique de l'arrondissement"@fr , "geographic code of the arrondissement"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://data.ign.fr/def/geofla#Commune>
+        a                    owl:Class ;
+        rdfs:comment         "Cette classe contient l'ensemble des communes métropolitaines, des 5 départements d'outre-mer (Guadeloupe, Martinique, Guyane, La Réunion et Mayotte)."@fr ;
+        rdfs:isDefinedBy     <http://data.ign.fr/def/geofla> ;
+        rdfs:label           "Commune"@fr , "Commune"@en ;
+        rdfs:subClassOf      <http://data.ign.fr/def/geofla#UniteAdministrative> ;
+        rdfs:subClassOf      [ a               owl:Restriction ;
+                               owl:hasValue    <http://www.geonames.org/ontology#A.ADM4> ;
+                               owl:onProperty  <http://www.geonames.org/ontology#featureCode>
+                             ] ;
+        owl:equivalentClass  <http://rdf.insee.fr/def/geo#Commune> .
+
+<http://data.ign.fr/def/geofla#codeComm>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Il s'agit du code géographique permettant d'identifier la commune dans son département d'appartenance (texte de trois caractères)."@fr ;
+        rdfs:domain   <http://data.ign.fr/def/geofla#Commune> ;
+        rdfs:label    "geographic code of the commune"@en , "code géographique de la commune"@fr ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/CapitaleDEtat>
+        a                skos:Concept ;
+        skos:definition  "Commune principale d'un état, siège du gouvernement et de l'administration."@fr ;
+        skos:inScheme    <http://data.ign.fr/id/codes/geofla/typedecommune/liste> ;
+        skos:prefLabel   "state capital"@en , "capitale d'état"@fr .
+
+<http://data.ign.fr/id/codes/geofla/typedecommune/SousPrefecture>
+        a                skos:Concept ;
+        skos:definition  "Chef-lieu d'un arrondissement français."@fr ;
+        skos:inScheme    <http://data.ign.fr/id/codes/geofla/typedecommune/liste> ;
+        skos:prefLabel   "subprefecture"@en , "sous-préfecture"@fr .
+
+<http://www.eurecom.fr/~atemezin/>
+        a       foaf:Person .
+
+<http://data.ign.fr/def/geofla#dpt>
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Département auquel appartient l'unité administrative"@fr ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( <http://data.ign.fr/def/geofla#Canton> <http://data.ign.fr/def/geofla#Commune> <http://data.ign.fr/def/geofla#Arrondissement> )
+                      ] ;
+        rdfs:label    "belongs to department"@en , "appartient au département"@fr ;
+        rdfs:range    <http://data.ign.fr/def/geofla#Departement> .

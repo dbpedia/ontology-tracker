@@ -1,0 +1,163 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix pnc: <http://data.press.net/ontology/classification/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix pnt: <http://data.press.net/ontology/tag/> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix pna: <http://data.press.net/ontology/asset/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://data.press.net/ontology/asset/> a owl:Ontology ;
+	dcterms:title "SNaP Asset Ontology"@en ;
+	dcterms:created "2011-07-28"^^xsd:date ;
+	dcterms:modified "2012-01-11"^^xsd:date ;
+	dcterms:license <http://creativecommons.org/licenses/by-nd/3.0/> ;
+	rdfs:comment "The Asset Ontology describes news assets (text, images, video, data, etc), the relationships between them and how assets can be classified and semantically annotated." ;
+	foaf:maker <http://uk.linkedin.com/in/jarredmcginnis> .
+
+<http://uk.linkedin.com/in/jarredmcginnis> a foaf:Person ;
+	foaf:name "Jarred McGinnis" .
+
+<http://data.press.net/ontology/asset/> foaf:maker <http://uk.linkedin.com/in/paulwilton> .
+
+<http://uk.linkedin.com/in/paulwilton> a foaf:Person ;
+	foaf:name "Paul Wilton" .
+
+<http://data.press.net/ontology/asset/> foaf:maker <http://uk.linkedin.com/in/pauliharman> .
+
+<http://uk.linkedin.com/in/pauliharman> a foaf:Person ;
+	foaf:name "Paul Harman" .
+
+<http://data.press.net/ontology/asset/> owl:versionInfo "0.3.1"^^xsd:string .
+
+pna:Asset a owl:Class ;
+	rdfs:subClassOf pnc:Classifiable , pnt:Taggable ;
+	rdfs:label "Generic Asset Class"@en ;
+	rdfs:comment "Generic News Asset Class"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:associatedAsset a owl:ObjectProperty ;
+	rdfs:domain pna:Asset ;
+	rdfs:range pna:Asset ;
+	rdfs:label "Property that associates one asset with another asset"@en ;
+	rdfs:comment "Property that associates one asset with another asset"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:hasThumbnail a owl:ObjectProperty ;
+	rdfs:subPropertyOf pna:associatedAsset ;
+	rdfs:domain pna:Asset ;
+	rdfs:range pna:Image .
+
+pna:Image a owl:Class ;
+	rdfs:subClassOf pna:Asset , dcmitype:StillImage ;
+	owl:seeAlso <http://cv.iptc.org/newscodes/ninature/picture> ;
+	rdfs:label "Image Asset Class"@en ;
+	rdfs:comment "Image Asset Class"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:hasThumbnail rdfs:label "Property that associates a thumbnail image with an asset"@en ;
+	rdfs:comment "Property that associates a thumbnail image with an asset"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:derivedFrom a owl:ObjectProperty ;
+	rdfs:subPropertyOf pna:associatedAsset ;
+	rdfs:domain pna:Asset ;
+	rdfs:range pna:Asset ;
+	rdfs:label "Relates an asset to an asset that it is derived from"@en ;
+	rdfs:comment "Relates an asset to an asset that it is derived from"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:hasTranscript a owl:ObjectProperty ;
+	rdfs:subPropertyOf pna:associatedAsset ;
+	rdfs:domain pna:Video .
+
+pna:Video a owl:Class ;
+	rdfs:subClassOf pna:Asset , dcmitype:MovingImage ;
+	owl:seeAlso <http://cv.iptc.org/newscodes/ninature/video> ;
+	rdfs:label "Video Asset Class"@en ;
+	rdfs:comment "Video Asset Class"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:hasTranscript rdfs:range pna:Text .
+
+pna:Text a owl:Class ;
+	rdfs:subClassOf pna:Asset , dcmitype:Text ;
+	owl:seeAlso <http://cv.iptc.org/newscodes/ninature/text> ;
+	rdfs:label "Text Asset Class"@en ;
+	rdfs:comment "Text Asset Class"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:hasTranscript rdfs:label "The text transcript of a Video"@en ;
+	rdfs:comment "Property that associates a Text transcript with a Video"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:title a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:title ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:string ;
+	rdfs:label "Asset title"@en ;
+	rdfs:comment "The title of a news Asset"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:byline a owl:DatatypeProperty ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:string ;
+	rdfs:label "Asset byline"@en ;
+	rdfs:comment "The byline of a news Asset"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:summary a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:abstract ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:string ;
+	rdfs:label "Asset summary"@en ;
+	rdfs:comment "The summary text of a news Asset"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:created a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:created ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:dateTime ;
+	rdfs:label "Asset created dateTime"@en ;
+	rdfs:comment "The date and time a news Asset was created"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:modified a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:modified ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:dateTime ;
+	rdfs:label "Asset modified dateTime"@en ;
+	rdfs:comment "The date and time a news Asset was modified"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:published a owl:DatatypeProperty ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:dateTime ;
+	rdfs:label "Asset published dateTime"@en ;
+	rdfs:comment "The date and time a news Asset was published"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .
+
+pna:embargoedUntil a owl:DatatypeProperty ;
+	rdfs:domain pna:Asset ;
+	rdfs:range xsd:dateTime ;
+	rdfs:label "Asset embargoed until dateTime"@en ;
+	rdfs:comment "The date and time a news Asset is embargoedUntil"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/asset/> ;
+	vs:term_status "testing" .

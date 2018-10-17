@@ -1,0 +1,939 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix :      <http://purl.org/eem#> .
+@prefix cbv:   <http://purl.org/cbv#> .
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix eem:   <http://purl.org/eem#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix co:    <http://purl.org/co/> .
+@prefix swrl:  <http://www.w3.org/2003/11/swrl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+eem:SetofEPCs  a         owl:Class ;
+        rdfs:subClassOf  co:Set ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  eem:EPC ;
+                           owl:onProperty     co:element
+                         ] .
+
+eem:hasEPCID  a      owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:domain  eem:EPC ;
+        rdfs:range   xsd:string , xsd:anyURI .
+
+eem:hasInputQuantityList
+        a       owl:ObjectProperty .
+
+<urn:swrl#lng>  a  swrl:Variable .
+
+eem:quantity  a      owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:domain  eem:QuantityEvent ;
+        rdfs:range   xsd:integer .
+
+eem:eventTimeZoneOffset
+        a            owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:domain  eem:EPCISEvent ;
+        rdfs:range   xsd:dateTime .
+
+eem:associatedEPCAndTransaction
+        a       owl:ObjectProperty .
+
+eem:hasReadPointLocation
+        a           owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:range  eem:ReadPointLocation .
+
+eem:hasOutputQuantityList
+        a       owl:ObjectProperty .
+
+eem:logicalReaderID  a  owl:DatatypeProperty ;
+        rdfs:domain  eem:EPCReader .
+
+eem:TransactionEvent  a  owl:Class ;
+        rdfs:comment     "represents an event in which one or more entities \ndenoted by EPCs become associated\nor disassociated with one or more\nidentified business transactions. " ;
+        rdfs:subClassOf  eem:EPCISEvent ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                   owl:onProperty      eem:action ;
+                                                   owl:someValuesFrom  eem:Action
+                                                 ] [ a                   owl:Restriction ;
+                                                     owl:onProperty      eem:associatedWithEPCList ;
+                                                     owl:someValuesFrom  eem:SetofEPCs
+                                                   ] [ a                   owl:Restriction ;
+                                                       owl:onProperty      eem:associatedWithTransactionList ;
+                                                       owl:someValuesFrom  eem:SetOfTransactions
+                                                     ] )
+                         ] .
+
+eem:aggregationID  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:range  xsd:string .
+
+eem:SetOfTransactions
+        a                owl:Class ;
+        rdfs:subClassOf  co:Set ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  eem:Transaction ;
+                           owl:onProperty     co:element
+                         ] .
+
+<urn:swrl#e2>  a  swrl:Variable .
+
+<urn:swrl#list>  a  swrl:Variable .
+
+eem:eventOccurredAt  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:domain  eem:EPCISEvent ;
+        rdfs:range   xsd:dateTime .
+
+eem:OBSERVE  a        eem:Action , owl:NamedIndividual ;
+        rdfs:comment  "The entity in question has not been changed: it has neither been created, added to, destroyed, or removed from." .
+
+eem:associatedWithTransformationEvent
+        a       owl:TransitiveProperty , owl:SymmetricProperty , owl:ObjectProperty .
+
+eem:hasTransactionReference
+        a       owl:ObjectProperty .
+
+<urn:swrl#loc2>  a  swrl:Variable .
+
+eem:ADD  a            eem:Action , owl:NamedIndividual ;
+        rdfs:comment  "The entity in question has been created or added to" .
+
+eem:AggregationID  a     owl:Class ;
+        rdfs:comment     "A concept represent the aggregation identifier of a packagaing unit" ;
+        rdfs:subClassOf  eem:EPC .
+
+eem:hasBusinessStepType
+        a            owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:domain  eem:EPCISEvent ;
+        rdfs:range   cbv:BusinessStep .
+
+eem:EPCReader  a         owl:Class ;
+        rdfs:subClassOf  <http://purl.oclc.org/NET/ssnx/ssn#SensingDevice> ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                   owl:onDataRange           xsd:anyURI ;
+                                                   owl:onProperty            eem:logicalReaderID ;
+                                                   owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                 ] [ a                         owl:Restriction ;
+                                                     owl:onDataRange           xsd:anyURI ;
+                                                     owl:onProperty            eem:physicalReaderID ;
+                                                     owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                   ] )
+                         ] .
+
+eem:hasTransactionType
+        a            owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:domain  eem:Transaction ;
+        rdfs:range   cbv:TransactionType .
+
+eem:Transaction  a       owl:Class ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                            owl:Restriction ;
+                                                   owl:minQualifiedCardinality  "0"^^xsd:nonNegativeInteger ;
+                                                   owl:onClass                  cbv:TransactionType ;
+                                                   owl:onProperty               eem:hasTransactionType
+                                                 ] [ a                         owl:Restriction ;
+                                                     owl:onDataRange           xsd:anyURI ;
+                                                     owl:onProperty            eem:transactionID ;
+                                                     owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                   ] )
+                         ] .
+
+<urn:swrl#pdm>  a  swrl:Variable .
+
+eem:physicalReaderID  a  owl:DatatypeProperty ;
+        rdfs:domain  eem:EPCReader .
+
+eem:Action  a         owl:Class ;
+        rdfs:comment  "The Action type says how an event relates to the lifecycle of the entity being described." .
+
+eem:EPCClass  a          owl:Class ;
+        rdfs:comment     "A class-level identifier for the class to which the specified quantity of objects belongs." ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                   owl:onProperty      eem:associatedWithItem ;
+                                                   owl:someValuesFrom  <http://www.loa-cnr.it/ontologies/DUL.owl#Collection>
+                                                 ] [ a                  owl:Restriction ;
+                                                     owl:allValuesFrom  <http://www.loa-cnr.it/ontologies/DUL.owl#Collection> ;
+                                                     owl:onProperty     eem:associatedWithItem
+                                                   ] )
+                         ] .
+
+eem:eventRecordedAt  a  owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:domain  eem:EPCISEvent ;
+        rdfs:range   xsd:dateTime .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:TransactionEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          eem:ADD ;
+                                         swrl:propertyPredicate  eem:action
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#list> ;
+                                                      swrl:propertyPredicate  eem:associatedWithEPCList
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#e> ;
+                                                                   swrl:argument2          <urn:swrl#transaction> ;
+                                                                   swrl:propertyPredicate  eem:associatedWithTransactionList
+                                                                 ] ;
+                                                      rdf:rest   ()
+                                                    
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                            swrl:argument1          <urn:swrl#list> ;
+                            swrl:argument2          <urn:swrl#transaction> ;
+                            swrl:propertyPredicate  eem:associatedEPCAndTransaction
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:DestinationLocation
+        a                owl:Class ;
+        rdfs:comment     "Added in version 1.1" ;
+        rdfs:subClassOf  <http://purl.org/goodrelations/v1#Location> .
+
+<urn:swrl#id>  a  swrl:Variable .
+
+eem:associatedWithItem
+        a            owl:ObjectProperty ;
+        rdfs:domain  eem:EPC ;
+        rdfs:range   <http://schema.org/Product> .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:ObjectEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          eem:ADD ;
+                                         swrl:propertyPredicate  eem:action
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#set> ;
+                                                      swrl:propertyPredicate  eem:associatedWithEPCList
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#e> ;
+                                                                   swrl:argument2          cbv:commissioning ;
+                                                                   swrl:propertyPredicate  eem:hasBusinessStepType
+                                                                 ] ;
+                                                      rdf:rest   ()
+                                                    
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                            swrl:argument1          <urn:swrl#e> ;
+                            swrl:argument2          <urn:swrl#set> ;
+                            swrl:propertyPredicate  eem:commissioned
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:associatedWithAggregationID
+        a            owl:DatatypeProperty ;
+        rdfs:domain  eem:SetofEPCs ;
+        rdfs:range   xsd:string , xsd:anyURI .
+
+eem:TransformationEvent
+        a                owl:Class ;
+        rdfs:comment     "Added in version 1.1. Represents an event in which input\nobjects are fully or partially consumed and output objects are produced, such that any of the input objects may have contributed to all of the output objects." ;
+        rdfs:subClassOf  [ a            owl:Class ;
+                           owl:unionOf  ( [ a                   owl:Class ;
+                                            owl:intersectionOf  ( eem:EPCISEvent [ a            owl:Class ;
+                                                                                   owl:unionOf  ( [ a            owl:Class ;
+                                                                                                    owl:unionOf  ( [ a                  owl:Restriction ;
+                                                                                                                     owl:allValuesFrom  eem:SetofEPCs ;
+                                                                                                                     owl:onProperty     eem:associatedWithInputEPCList
+                                                                                                                   ] [ a                  owl:Restriction ;
+                                                                                                                       owl:allValuesFrom  eem:InputQuantityList ;
+                                                                                                                       owl:onProperty     eem:hasInputQuantityList
+                                                                                                                     ] )
+                                                                                                  ] [ a            owl:Class ;
+                                                                                                      owl:unionOf  ( [ a                  owl:Restriction ;
+                                                                                                                       owl:allValuesFrom  eem:SetofEPCs ;
+                                                                                                                       owl:onProperty     eem:associatedWithOutputEPCList
+                                                                                                                     ] [ a                  owl:Restriction ;
+                                                                                                                         owl:allValuesFrom  eem:OutputQuantityList ;
+                                                                                                                         owl:onProperty     eem:hasOutputQuantityList
+                                                                                                                       ] )
+                                                                                                    ] )
+                                                                                 ] [ a                   owl:Restriction ;
+                                                                                     owl:onProperty      eem:associatedWithTransformationEvent ;
+                                                                                     owl:someValuesFrom  eem:TransformationEvent
+                                                                                   ] )
+                                          ] [ a                   owl:Class ;
+                                              owl:intersectionOf  ( eem:EPCISEvent [ a            owl:Class ;
+                                                                                     owl:unionOf  ( [ a                   owl:Restriction ;
+                                                                                                      owl:onProperty      eem:associatedWithInputEPCList ;
+                                                                                                      owl:someValuesFrom  eem:SetofEPCs
+                                                                                                    ] [ a                   owl:Restriction ;
+                                                                                                        owl:onProperty      eem:hasInputQuantityList ;
+                                                                                                        owl:someValuesFrom  eem:InputQuantityList
+                                                                                                      ] )
+                                                                                   ] [ a            owl:Class ;
+                                                                                       owl:unionOf  ( [ a                   owl:Restriction ;
+                                                                                                        owl:onProperty      eem:associatedWithOutputEPCList ;
+                                                                                                        owl:someValuesFrom  eem:SetofEPCs
+                                                                                                      ] [ a                   owl:Restriction ;
+                                                                                                          owl:onProperty      eem:hasOutputQuantityList ;
+                                                                                                          owl:someValuesFrom  eem:OutputQuantityList
+                                                                                                        ] )
+                                                                                     ] )
+                                            ] )
+                         ] .
+
+eem:decommissioned  a  owl:ObjectProperty ;
+        rdfs:comment  "The EPC(s) named in the event have been decommissioned as part of this event; that is, the EPC(s) do not exist subsequent to the event and should not be observed again" .
+
+<urn:swrl#lat>  a  swrl:Variable .
+
+eem:ReadPointLocation
+        a                owl:Class ;
+        rdfs:subClassOf  <http://purl.org/goodrelations/v1#Location> .
+
+eem:associatedWithInputEPCList
+        a                   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:subPropertyOf  eem:associatedWithEPCList .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:EPCISEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          <urn:swrl#loc2> ;
+                                         swrl:propertyPredicate  eem:hasBusinessLocation
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#loc1> ;
+                                                      swrl:propertyPredicate  eem:hasReadPointLocation
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#loc2> ;
+                                                                   swrl:argument2          <urn:swrl#adr2> ;
+                                                                   swrl:propertyPredicate  vcard:adr
+                                                                 ] ;
+                                                      rdf:rest   [ a          swrl:AtomList ;
+                                                                   rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                swrl:argument1          <urn:swrl#loc1> ;
+                                                                                swrl:argument2          <urn:swrl#lat> ;
+                                                                                swrl:propertyPredicate  geo:lat
+                                                                              ] ;
+                                                                   rdf:rest   [ a          swrl:AtomList ;
+                                                                                rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                             swrl:argument1          <urn:swrl#loc1> ;
+                                                                                             swrl:argument2          <urn:swrl#lng> ;
+                                                                                             swrl:propertyPredicate  vcard:long
+                                                                                           ] ;
+                                                                                rdf:rest   [ a          swrl:AtomList ;
+                                                                                             rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                          swrl:argument1          <urn:swrl#loc2> ;
+                                                                                                          swrl:argument2          <urn:swrl#lat> ;
+                                                                                                          swrl:propertyPredicate  vcard:long
+                                                                                                        ] ;
+                                                                                             rdf:rest   [ a          swrl:AtomList ;
+                                                                                                          rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                                       swrl:argument1          <urn:swrl#loc2> ;
+                                                                                                                       swrl:argument2          <urn:swrl#lng> ;
+                                                                                                                       swrl:propertyPredicate  vcard:long
+                                                                                                                     ] ;
+                                                                                                          rdf:rest   ()
+                                                                                                        
+                                                                                                        ]
+                                                                                           ]
+                                                                              ]
+                                                                 ]
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                            swrl:argument1          <urn:swrl#loc1> ;
+                            swrl:argument2          <urn:swrl#adr2> ;
+                            swrl:propertyPredicate  vcard:adr
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:SourceLocation  a    owl:Class ;
+        rdfs:comment     "Added in version 1.1" ;
+        rdfs:subClassOf  <http://purl.org/goodrelations/v1#Location> .
+
+eem:associatedWithOutputEPCList
+        a                   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:subPropertyOf  eem:associatedWithEPCList .
+
+<urn:swrl#adr1>  a  swrl:Variable .
+
+eem:hasChildAddress  a  owl:ObjectProperty ;
+        rdfs:range  vcard:Address .
+
+geo:lat  a      owl:DatatypeProperty .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:AggregationEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          eem:ADD ;
+                                         swrl:propertyPredicate  eem:action
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#set> ;
+                                                      swrl:propertyPredicate  eem:associatedWithEPCList
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#e> ;
+                                                                   swrl:argument2          <urn:swrl#id> ;
+                                                                   swrl:propertyPredicate  eem:aggregationID
+                                                                 ] ;
+                                                      rdf:rest   ()
+                                                    
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                            swrl:argument1          <urn:swrl#set> ;
+                            swrl:argument2          <urn:swrl#id> ;
+                            swrl:propertyPredicate  eem:associatedWithAggregationID
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:AggregationEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          eem:DELETE ;
+                                         swrl:propertyPredicate  eem:action
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#set> ;
+                                                      swrl:propertyPredicate  eem:associatedWithEPCList
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#e> ;
+                                                                   swrl:argument2          <urn:swrl#id> ;
+                                                                   swrl:propertyPredicate  eem:aggregationID
+                                                                 ] ;
+                                                      rdf:rest   ()
+                                                    
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                            swrl:argument1          <urn:swrl#set> ;
+                            swrl:argument2          <urn:swrl#id> ;
+                            swrl:propertyPredicate  eem:disassociatedWithAggregationID
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:hasDispositionType
+        a           owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:range  cbv:Disposition .
+
+eem:action  a       owl:ObjectProperty ;
+        rdfs:range  eem:Action .
+
+eem:commissioned  a  owl:ObjectProperty .
+
+eem:recordedByReader  a  owl:ObjectProperty ;
+        rdfs:domain  eem:EPCISEvent ;
+        rdfs:range   eem:EPCReader .
+
+eem:hasEPCClass  a   owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:domain  eem:QuantityEvent ;
+        rdfs:range   xsd:anyURI .
+
+eem:SetOfEvents  a       owl:Class ;
+        rdfs:subClassOf  co:Set ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  eem:EPCISEvent ;
+                           owl:onProperty     co:element
+                         ] .
+
+eem:EPC  a               owl:Class ;
+        rdfs:comment     "A class for encapsulating the EPC for a physical thing through the datatype property\nhasEPCValue. " ;
+        rdfs:label       "Electronic Product Code" ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                   owl:onProperty      eem:associatedWithItem ;
+                                                   owl:someValuesFrom  <http://purl.org/goodrelations/v1#Individual>
+                                                 ] [ a                owl:Restriction ;
+                                                     owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                                                     owl:onProperty   eem:associatedWithItem
+                                                   ] )
+                         ] .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:EPCISEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          <urn:swrl#loc2> ;
+                                         swrl:propertyPredicate  eem:hasBusinessLocation
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#loc1> ;
+                                                      swrl:propertyPredicate  eem:hasReadPointLocation
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#loc1> ;
+                                                                   swrl:argument2          <urn:swrl#adr1> ;
+                                                                   swrl:propertyPredicate  vcard:adr
+                                                                 ] ;
+                                                      rdf:rest   [ a          swrl:AtomList ;
+                                                                   rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                                swrl:argument1          <urn:swrl#loc2> ;
+                                                                                swrl:argument2          <urn:swrl#adr2> ;
+                                                                                swrl:propertyPredicate  vcard:adr
+                                                                              ] ;
+                                                                   rdf:rest   [ a          swrl:AtomList ;
+                                                                                rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                             swrl:argument1          <urn:swrl#loc1> ;
+                                                                                             swrl:argument2          <urn:swrl#lat> ;
+                                                                                             swrl:propertyPredicate  geo:lat
+                                                                                           ] ;
+                                                                                rdf:rest   [ a          swrl:AtomList ;
+                                                                                             rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                          swrl:argument1          <urn:swrl#loc1> ;
+                                                                                                          swrl:argument2          <urn:swrl#lng> ;
+                                                                                                          swrl:propertyPredicate  geo:long
+                                                                                                        ] ;
+                                                                                             rdf:rest   [ a          swrl:AtomList ;
+                                                                                                          rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                                       swrl:argument1          <urn:swrl#loc2> ;
+                                                                                                                       swrl:argument2          <urn:swrl#lat> ;
+                                                                                                                       swrl:propertyPredicate  geo:long
+                                                                                                                     ] ;
+                                                                                                          rdf:rest   [ a          swrl:AtomList ;
+                                                                                                                       rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                                                    swrl:argument1          <urn:swrl#loc2> ;
+                                                                                                                                    swrl:argument2          <urn:swrl#lng> ;
+                                                                                                                                    swrl:propertyPredicate  geo:long
+                                                                                                                                  ] ;
+                                                                                                                       rdf:rest   ()
+                                                                                                                     
+                                                                                                                     ]
+                                                                                                        ]
+                                                                                           ]
+                                                                              ]
+                                                                 ]
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a               swrl:SameIndividualAtom ;
+                            swrl:argument1  <urn:swrl#adr1> ;
+                            swrl:argument2  <urn:swrl#adr2>
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:hasBusinessLocation
+        a           owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:range  eem:BusinessLocation .
+
+eem:BusinessLocation  a  owl:Class ;
+        rdfs:subClassOf  <http://purl.org/goodrelations/v1#Location> .
+
+eem:ObjectEvent  a       owl:Class ;
+        rdfs:comment     "An ObjectEvent captures information about an event pertaining to one or more\nphysical objects identified by EPCs. " ;
+        rdfs:subClassOf  eem:EPCISEvent ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                   owl:onProperty      eem:action ;
+                                                   owl:someValuesFrom  eem:Action
+                                                 ] [ a                   owl:Restriction ;
+                                                     owl:onProperty      eem:associatedWithEPCList ;
+                                                     owl:someValuesFrom  eem:SetofEPCs
+                                                   ] )
+                         ] .
+
+eem:QuantityElement  a   owl:Class ;
+        rdfs:comment     "Added in version 1.1" ;
+        rdfs:subClassOf  co:Item ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                   owl:onDataRange           xsd:anyURI ;
+                                                   owl:onProperty            eem:hasEPCClass ;
+                                                   owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                 ] [ a                         owl:Restriction ;
+                                                     owl:onDataRange           xsd:integer ;
+                                                     owl:onProperty            eem:quantity ;
+                                                     owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                   ] )
+                         ] .
+
+eem:EPCISEvent  a        owl:Class ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:dateTime ;
+                           owl:onProperty               eem:eventRecordedAt
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:dateTime ;
+                           owl:onProperty            eem:eventTimeZoneOffset ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:dateTime ;
+                           owl:onProperty            eem:eventOccurredAt ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+eem:associatedWithTransactionList
+        a            owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:domain  eem:TransactionEvent ;
+        rdfs:range   eem:SetOfTransactions .
+
+<urn:swrl#e1>  a  swrl:Variable .
+
+<urn:swrl#e>  a  swrl:Variable .
+
+eem:associatedWithEPCList
+        a           owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:range  eem:SetofEPCs .
+
+eem:OutputQuantityList
+        a                owl:Class ;
+        rdfs:comment     "Added in version 1.1" ;
+        rdfs:subClassOf  co:Bag ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      co:element ;
+                           owl:someValuesFrom  eem:QuantityElement
+                         ] .
+
+[ a            owl:AllDisjointClasses ;
+  owl:members  ( eem:AggregationEvent eem:ObjectEvent eem:QuantityEvent eem:TransactionEvent )
+] .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:EPCISEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          <urn:swrl#loc2> ;
+                                         swrl:propertyPredicate  eem:hasBusinessLocation
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#loc1> ;
+                                                      swrl:propertyPredicate  eem:hasReadPointLocation
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#loc1> ;
+                                                                   swrl:argument2          <urn:swrl#adr1> ;
+                                                                   swrl:propertyPredicate  vcard:adr
+                                                                 ] ;
+                                                      rdf:rest   [ a          swrl:AtomList ;
+                                                                   rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                swrl:argument1          <urn:swrl#loc1> ;
+                                                                                swrl:argument2          <urn:swrl#lat> ;
+                                                                                swrl:propertyPredicate  geo:lat
+                                                                              ] ;
+                                                                   rdf:rest   [ a          swrl:AtomList ;
+                                                                                rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                             swrl:argument1          <urn:swrl#loc1> ;
+                                                                                             swrl:argument2          <urn:swrl#lng> ;
+                                                                                             swrl:propertyPredicate  geo:long
+                                                                                           ] ;
+                                                                                rdf:rest   [ a          swrl:AtomList ;
+                                                                                             rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                          swrl:argument1          <urn:swrl#loc2> ;
+                                                                                                          swrl:argument2          <urn:swrl#lat> ;
+                                                                                                          swrl:propertyPredicate  geo:long
+                                                                                                        ] ;
+                                                                                             rdf:rest   [ a          swrl:AtomList ;
+                                                                                                          rdf:first  [ a                       swrl:DatavaluedPropertyAtom ;
+                                                                                                                       swrl:argument1          <urn:swrl#loc2> ;
+                                                                                                                       swrl:argument2          <urn:swrl#lng> ;
+                                                                                                                       swrl:propertyPredicate  geo:long
+                                                                                                                     ] ;
+                                                                                                          rdf:rest   ()
+                                                                                                        
+                                                                                                        ]
+                                                                                           ]
+                                                                              ]
+                                                                 ]
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                            swrl:argument1          <urn:swrl#loc2> ;
+                            swrl:argument2          <urn:swrl#adr1> ;
+                            swrl:propertyPredicate  vcard:adr
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:DELETE  a         eem:Action , owl:NamedIndividual ;
+        rdfs:comment  "The entity in question has been removed from or destroyed\naltogether. " .
+
+<urn:swrl#loc1>  a  swrl:Variable .
+
+geo:long  a     owl:DatatypeProperty .
+
+eem:AggregationEvent  a  owl:Class ;
+        rdfs:comment     "Represents an event that happened to one or more entities denoted by EPCs that are phys\nically aggregated together (physically constrained to be in the same place at the same time, as when cases are aggregated to a pallet). " ;
+        rdfs:subClassOf  eem:EPCISEvent ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                   owl:onProperty      eem:action ;
+                                                   owl:someValuesFrom  eem:Action
+                                                 ] [ a                   owl:Restriction ;
+                                                     owl:onProperty      eem:associatedWithEPCList ;
+                                                     owl:someValuesFrom  eem:SetofEPCs
+                                                   ] [ a                         owl:Restriction ;
+                                                       owl:onDataRange           xsd:string ;
+                                                       owl:onProperty            eem:aggregationID ;
+                                                       owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                     ] )
+                         ] .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e1> ;
+                            swrl:classPredicate  eem:EPCISEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                    swrl:ClassAtom ;
+                                         swrl:argument1       <urn:swrl#e2> ;
+                                         swrl:classPredicate  eem:EPCISEvent
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e1> ;
+                                                      swrl:argument2          <urn:swrl#list> ;
+                                                      swrl:propertyPredicate  eem:associatedWithEPCList
+                                                    ] ;
+                                         rdf:rest   [ a          swrl:AtomList ;
+                                                      rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                   swrl:argument1          <urn:swrl#e2> ;
+                                                                   swrl:argument2          <urn:swrl#list> ;
+                                                                   swrl:propertyPredicate  eem:associatedWithEPCList
+                                                                 ] ;
+                                                      rdf:rest   [ a          swrl:AtomList ;
+                                                                   rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                                swrl:argument1          <urn:swrl#e1> ;
+                                                                                swrl:argument2          <urn:swrl#pdm> ;
+                                                                                swrl:propertyPredicate  eem:associatedWithItem
+                                                                              ] ;
+                                                                   rdf:rest   [ a          swrl:AtomList ;
+                                                                                rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                                                             swrl:argument1          <urn:swrl#e1> ;
+                                                                                             swrl:argument2          <urn:swrl#e2> ;
+                                                                                             swrl:propertyPredicate  <http://www.loa-cnr.it/ontologies/DUL.owl#directlyPrecedes>
+                                                                                           ] ;
+                                                                                rdf:rest   ()
+                                                                              
+                                                                              ]
+                                                                 ]
+                                                    ]
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                            swrl:argument1          <urn:swrl#e2> ;
+                            swrl:argument2          <urn:swrl#pdm> ;
+                            swrl:propertyPredicate  eem:associatedWithItem
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:associatedWithEPC
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "A product is associated with an EPC" ;
+        rdfs:domain         <http://schema.org/Product> ;
+        rdfs:range          eem:EPC ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+<urn:swrl#set>  a  swrl:Variable .
+
+vcard:long  a   owl:DatatypeProperty .
+
+eem:directlyPrecedesEvent
+        a                   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:domain         eem:EPCISEvent ;
+        rdfs:range          eem:EPCISEvent ;
+        rdfs:subPropertyOf  <http://www.loa-cnr.it/ontologies/DUL.owl#directlyPrecedes> .
+
+eem:InputQuantityList
+        a                owl:Class ;
+        rdfs:comment     "Added in version 1.1" ;
+        rdfs:subClassOf  co:Bag ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      co:element ;
+                           owl:someValuesFrom  eem:QuantityElement
+                         ] .
+
+eem:locationType  a  owl:ObjectProperty ;
+        rdfs:domain  eem:ReadPointLocation , eem:BusinessLocation .
+
+<urn:swrl#transaction>
+        a       swrl:Variable .
+
+eem:directlyFollowsEvent
+        a                   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:subPropertyOf  <http://www.loa-cnr.it/ontologies/DUL.owl#directlyFollows> ;
+        owl:inverseOf       eem:directlyPrecedesEvent .
+
+<urn:swrl#adr2>  a  swrl:Variable .
+
+<http://purl.org/eem>
+        a                owl:Ontology ;
+        rdfs:seeAlso     "http://www.gs1.org/gsmp/kc/epcglobal/epcis/epcis_1_0_1-standard-20070921.pdf" ;
+        dc:creator       "Monika Solanki" ;
+        dc:title         "The EPCIS Event Model" ;
+        terms:created    "16/07/2013" ;
+        owl:imports      <http://www.w3.org/2006/vcard/ns> , <http://purl.oclc.org/NET/ssnx/ssn> , cbv: , <http://purl.org/goodrelations/v1> , <http://purl.org/co> ;
+        owl:versionInfo  "1.1" .
+
+eem:disassociatedWithAggregationID
+        a                   owl:DatatypeProperty ;
+        rdfs:domain         eem:SetofEPCs ;
+        rdfs:range          xsd:string , xsd:anyURI ;
+        rdfs:subPropertyOf  owl:topDataProperty .
+
+eem:hasClassLevelMasterData
+        a            owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:domain  eem:EPC .
+
+eem:transactionID  a  owl:FunctionalProperty , owl:DatatypeProperty .
+
+[ a          swrl:Imp ;
+  swrl:body  [ a          swrl:AtomList ;
+               rdf:first  [ a                    swrl:ClassAtom ;
+                            swrl:argument1       <urn:swrl#e> ;
+                            swrl:classPredicate  eem:ObjectEvent
+                          ] ;
+               rdf:rest   [ a          swrl:AtomList ;
+                            rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                         swrl:argument1          <urn:swrl#e> ;
+                                         swrl:argument2          eem:DELETE ;
+                                         swrl:propertyPredicate  eem:action
+                                       ] ;
+                            rdf:rest   [ a          swrl:AtomList ;
+                                         rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                                                      swrl:argument1          <urn:swrl#e> ;
+                                                      swrl:argument2          <urn:swrl#set> ;
+                                                      swrl:propertyPredicate  eem:associatedWithEPCList
+                                                    ] ;
+                                         rdf:rest   ()
+                                       
+                                       ]
+                          ]
+             ] ;
+  swrl:head  [ a          swrl:AtomList ;
+               rdf:first  [ a                       swrl:IndividualPropertyAtom ;
+                            swrl:argument1          <urn:swrl#e> ;
+                            swrl:argument2          <urn:swrl#set> ;
+                            swrl:propertyPredicate  eem:decommissioned
+                          ] ;
+               rdf:rest   ()
+             
+             ]
+] .
+
+eem:QuantityEvent  a     owl:Class ;
+        rdfs:comment     "represents an event concerned with a specific\nquantity of entities sharing a common EPC class" ;
+        rdfs:subClassOf  eem:EPCISEvent ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                   owl:onDataRange           xsd:anyURI ;
+                                                   owl:onProperty            eem:hasEPCClass ;
+                                                   owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                 ] [ a                         owl:Restriction ;
+                                                     owl:onDataRange           xsd:integer ;
+                                                     owl:onProperty            eem:quantity ;
+                                                     owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                   ] )
+                         ] .

@@ -1,0 +1,124 @@
+@prefix timeindexedsituation: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix timeinterval: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix cpannotationschema: <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix situation: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+
+<http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> a owl:Ontology ;
+	owl:versionInfo """1.0
+- Revised, and added annotations for ODP publishing
+0.1
+- Created by Aldo Gangemi"""^^xsd:string , "1.1 added rdfs:isDefinedBy for all named entities"^^xsd:string ;
+	rdfs:comment "A generic pattern usable for all situations that require a temporal indexing."^^rdf:PlainLiteral ;
+	cpannotationschema:hasAuthor "Aldo Gangemi"^^rdf:PlainLiteral ;
+	cpannotationschema:coversRequirements "At what time did a certain situation occur?,What situations occurred at a certain time?"^^rdf:PlainLiteral ;
+	cpannotationschema:scenarios "Mustafa's address in 2005 was in Brussels"^^rdf:PlainLiteral ;
+	cpannotationschema:hasUnitTest """SELECT ?x ?e ?t
+WHERE {
+?x :forEntity ?e .
+?x :atTime ?t }"""^^rdf:PlainLiteral ;
+	cpannotationschema:isSpecializationOf "Situation"^^rdf:PlainLiteral ;
+	cpannotationschema:relatedCPs "Time indexed participation,TimeIndexedClassification"^^rdf:PlainLiteral ;
+	cpannotationschema:hasComponent "TimeInterval"^^rdf:PlainLiteral ;
+	cpannotationschema:hasIntent "To represent time indexed situations."^^rdf:PlainLiteral ;
+	cpannotationschema:hasConsequences """We can represent situations that have an explicit time parameter.
+In principle, this can be done already with the Situation pattern, but this provides a handy composition with the TimeInterval pattern."""^^rdf:PlainLiteral ;
+	owl:imports <http://www.ontologydesignpatterns.org/cp/owl/situation.owl> , <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl> , <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl> .
+
+cpannotationschema:hasAuthor a owl:AnnotationProperty .
+
+cpannotationschema:scenarios a owl:AnnotationProperty .
+
+cpannotationschema:hasConsequences a owl:AnnotationProperty .
+
+cpannotationschema:hasUnitTest a owl:AnnotationProperty .
+
+cpannotationschema:hasComponent a owl:AnnotationProperty .
+
+cpannotationschema:coversRequirements a owl:AnnotationProperty .
+
+cpannotationschema:hasIntent a owl:AnnotationProperty .
+
+cpannotationschema:isSpecializationOf a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+rdfs:isDefinedBy a owl:AnnotationProperty .
+
+cpannotationschema:relatedCPs a owl:AnnotationProperty .
+
+situation:hasSetting a owl:ObjectProperty .
+
+situation:isSettingFor a owl:ObjectProperty .
+
+timeindexedsituation:atTime a owl:ObjectProperty ;
+	rdfs:label "at time"@en ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> ;
+	rdfs:subPropertyOf situation:isSettingFor ;
+	rdfs:domain timeindexedsituation:TimeIndexedSituation ;
+	rdfs:range timeinterval:TimeInterval .
+
+timeindexedsituation:forEntity a owl:ObjectProperty ;
+	rdfs:label "for entity"@en ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> ;
+	rdfs:subPropertyOf situation:isSettingFor ;
+	rdfs:domain timeindexedsituation:TimeIndexedSituation ;
+	rdfs:range owl:Thing .
+
+timeindexedsituation:hasTimeIndexedSetting a owl:ObjectProperty ;
+	rdfs:label "has time indexed setting"@en ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> ;
+	rdfs:subPropertyOf situation:hasSetting ;
+	rdfs:range timeindexedsituation:TimeIndexedSituation ;
+	owl:inverseOf timeindexedsituation:forEntity ;
+	rdfs:domain owl:Thing .
+
+timeindexedsituation:isTimeIndexFor a owl:ObjectProperty ;
+	rdfs:label "is time index for"@en ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> ;
+	rdfs:subPropertyOf situation:hasSetting ;
+	rdfs:range timeindexedsituation:TimeIndexedSituation ;
+	owl:inverseOf timeindexedsituation:atTime ;
+	rdfs:domain timeinterval:TimeInterval .
+
+situation:Situation a owl:Class .
+
+timeindexedsituation:TimeIndexedSituation a owl:Class ;
+	rdfs:label "Time indexed situation"@en ;
+	rdfs:subClassOf situation:Situation , _:node17995pon9x1 .
+
+_:node17995pon9x1 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:atTime ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+timeindexedsituation:TimeIndexedSituation rdfs:subClassOf _:node17995pon9x2 .
+
+_:node17995pon9x2 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:forEntity ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+timeindexedsituation:TimeIndexedSituation rdfs:comment "A Situation that is explicitly indexed at some time for at least one entity." ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> .
+
+timeinterval:TimeInterval a owl:Class .
+
+owl:Thing a owl:Class .
+
+timeindexedsituation:TimeIndexedSituation rdfs:subClassOf _:node17995pon9x3 .
+
+_:node17995pon9x3 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:atTime ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+timeindexedsituation:TimeIndexedSituation rdfs:subClassOf _:node17995pon9x4 .
+
+_:node17995pon9x4 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:forEntity ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .

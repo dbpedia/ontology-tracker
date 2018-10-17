@@ -1,0 +1,382 @@
+@prefix : <http://purl.org/spar/c4o/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix biro: <http://purl.org/spar/biro/> .
+@prefix owlapi: <http://www.semanticweb.org/owlapi#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix co: <http://purl.org/co/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix collections: <http://swan.mindinformatics.org/ontologies/1.2/collections/> .
+
+<http://purl.org/spar/c4o> a owl:Ontology ;
+	owl:versionInfo "1.1.1"^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:date "2013-05-11" ;
+	dc:title "C4O, the Citation Counting and Context Characterization Ontology"@en ;
+	dc:description """C4O, the Citation Counting and Context Characterization Ontology (C4O) allows the characterization of bibliographic citations in terms of their number and their context.
+
+It provides the ontological structures to permit the number of in-text citations of a cited source (i.e. the number of in-text reference pointers to a single reference in the citing articleâ€™s reference list) to be recorded, and also the number of citations a cited entity has received globally, as determined by a bibliographic information resource such as Google Scholar, Scopus or Web of Knowledge on a particular date. 
+
+Moreover, it enables ontological descriptions of the context within the citing document in which an in-text reference pointer appears, and permits that context to be related to relevant textual passages in the cited document."""@en ;
+	rdfs:comment "The Citation Counting and Context Characterization Ontology (C4O) is an ontology for characterizing the number and contexts of bibliographic citations.  It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies."@en , "This ontology is available at http://purl.org/spar/c4o, and uses the namespace prefix c4o.  Other SPAR ontologies are described at http://purl.org/spar/."@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://purl.org/spar/biro> ;
+	dc:description <https://svn.code.sf.net/p/sempublishing/code/C4O/CitationCounting%20module.png> .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+vann:preferredNamespaceURI a owl:AnnotationProperty ;
+	rdfs:label "http://purl.org/vocab/vann/preferredNamespaceURI" .
+
+owlapi:nodeID a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+xsd:date a rdfs:Datatype .
+
+:denotes a owl:ObjectProperty ;
+	rdfs:label "denotes"@en ;
+	rdfs:comment "A property used to assert the connection between an in-text reference pointer and the bibliographic reference it points to."@en ;
+	rdfs:range biro:BibliographicReference ;
+	rdfs:domain :InTextReferencePointer ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:hasContext a owl:ObjectProperty ;
+	rdfs:label "has context"@en ;
+	dc:description "Any FRBR expression that constitutes the range of this property can have at most one particular literal textual content specified through the property c4o:hasContent."@en ;
+	rdfs:comment "This property is used to indicate the textual context (e.g. a sentence or a paragraph) of a particular in-text reference pointer, this context providing the rhetorical motivation for the existence of that citation."@en ;
+	rdfs:domain :InTextReferencePointer ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:range _:node17umiq0krx1 .
+
+_:node17umiq0krx1 a owl:Class ;
+	owl:intersectionOf _:node17umiq0krx2 .
+
+_:node17umiq0krx2 rdf:first frbr:Expression ;
+	rdf:rest _:node17umiq0krx4 .
+
+_:node17umiq0krx4 rdf:first _:node17umiq0krx3 .
+
+_:node17umiq0krx3 a owl:Restriction ;
+	owl:onProperty :hasContent ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17umiq0krx4 rdf:rest rdf:nil .
+
+:hasGlobalCitationFrequency a owl:ObjectProperty ;
+	rdfs:label "has global citation frequency"@en ;
+	rdfs:comment "A property linking a publication entity to the property c40:GlobalCitationCount that specify how many times a work has been cited by others, according to a particular information source on a particular date."@en ;
+	rdfs:range :GlobalCitationCount ;
+	rdfs:domain frbr:Endeavour ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:hasGlobalCountSource a owl:ObjectProperty ;
+	rdfs:label "has global count source"@en ;
+	rdfs:comment "A property linking the property c40:GlobalCitationCount to the bibliographic information source providing the global citation count information for a particular publication on a particular date."@en ;
+	rdfs:range :BibliographicInformationSource ;
+	rdfs:domain :GlobalCitationCount ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:isDenotedBy a owl:ObjectProperty ;
+	rdfs:label "is denoted by"@en ;
+	rdfs:comment "A property used to assert the connection between a bibliographic reference and the in-text reference pointer that points to it."@en ;
+	rdfs:domain biro:BibliographicReference ;
+	rdfs:range :InTextReferencePointer ;
+	owl:inverseOf :denotes ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:isRelevantTo a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "is relevant to"@en ;
+	rdfs:comment "A property allowing one FRBR expression to be declared to be of rhetorical relevance to another, for instance that the textual context of a particular in-text reference pointer in one document is relevant to a section of text within the published document that is referenced by the bibliographic reference denoted by the in-text reference pointer, and vice versa that the converse relevance also exists."@en ;
+	rdfs:domain frbr:Expression ;
+	rdfs:range frbr:Expression ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:pertainsTo a owl:ObjectProperty ;
+	rdfs:label "pertains to"@en ;
+	rdfs:comment "The property linking an in-text reference pointer list to the bibliographic reference or references denoted by the in-text reference pointers within that list."@en ;
+	rdfs:range biro:BibliographicReference ;
+	rdfs:domain :InTextReferencePointerList ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+owl:topObjectProperty a owl:ObjectProperty .
+
+:hasContent a owl:DatatypeProperty ;
+	rdfs:label "has content"@en ;
+	rdfs:comment "It is used to specify the textual content of a particular FRBR expression."@en ;
+	rdfs:domain frbr:Expression ;
+	rdfs:range rdfs:Literal ;
+	rdfs:subPropertyOf owl:topDataProperty .
+
+:hasGlobalCountDate a owl:DatatypeProperty ;
+	rdfs:label "has global count date"@en ;
+	rdfs:comment "The date on which the global citation count of the cited entity was recorded from a named bibliographic information source."@en ;
+	rdfs:domain :GlobalCitationCount ;
+	rdfs:range xsd:date .
+
+:hasGlobalCountValue a owl:DatatypeProperty ;
+	rdfs:label "has global count value"@en ;
+	rdfs:comment "An integer defining the value of the global citation count of a cited entity recorded from a named bibliographic information source on a particular date."@en ;
+	rdfs:domain :GlobalCitationCount ;
+	rdfs:range xsd:nonNegativeInteger .
+
+:hasInTextCitationFrequency a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has in text citation frequency"@en ;
+	rdfs:comment "This property allows one to specify how many separate in-text reference pointers exist within the text of a citing document that all denote the same single bibliographic reference to a cited document (i.e how many distinct textual contexts exist within the citing document from which a citation is made to a particular document)."@en ;
+	rdfs:domain biro:BibliographicReference ;
+	rdfs:range xsd:nonNegativeInteger .
+
+owl:topDataProperty a owl:DatatypeProperty .
+
+biro:BibliographicReference a owl:Class .
+
+:BibliographicInformationSource a owl:Class ;
+	rdfs:label "bibliographic information source"@en ;
+	owl:disjointWith :GlobalCitationCount , :InTextReferencePointer ;
+	rdfs:comment "A source of information about bibliographic citations, such as Google Scholar, Web of Science or Scopus."@en .
+
+:GlobalCitationCount a owl:Class ;
+	rdfs:label "global citation count"@en ;
+	owl:disjointWith :InTextReferencePointer ;
+	rdfs:comment "The number of times a work has been cited globally, as determined from a particular bibliographic information source on a particular date."@en .
+
+:InTextReferencePointer a owl:Class ;
+	rdfs:label "in-text reference pointer"@en ;
+	rdfs:subClassOf frbr:Expression , _:node17umiq0krx5 .
+
+_:node17umiq0krx5 a owl:Restriction ;
+	owl:onProperty :hasContext ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:InTextReferencePointer rdfs:subClassOf _:node17umiq0krx6 .
+
+_:node17umiq0krx6 a owl:Restriction ;
+	owl:onProperty :denotes ;
+	owl:onClass biro:BibliographicReference ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:InTextReferencePointer dc:description "An in-text reference pointer is a textual device denoting a single bibliographic reference that is embedded in the text of a document within the context of a particular sentence."@en ;
+	rdfs:comment """The in-text reference pointer is a textual element, usually embedded at the end of a phrase or sentence within the text of a document, that denotes a specific bibliographic reference present in the reference list of that document. For example, if the item in the reference list is: 
+
+4.  Ko AI, Reis MG, Ribeiro Dourado CM, Johnson WD Jr, Riley LW (1999). Urban epidemic of severe leptospirosis in Brazil. Salvador Leptospirosis Study Group. Lancet 354: 820-825.
+
+the in-text reference pointer to this paper in a journal article may be manifested in a number of ways:	
+
+Numerically, for example by using the numeral 4 in superscript or between square brackets, thus: [4].  Such numerical in-text 
+reference pointers are frequently aggregated, e.g. [4, 5, 6-9].  In such cases, the missing pointers to references 7 and 8 are inferred (and should be added explicitly to the XML mark-up at this point in the text!). 
+
+Or by use of the author names (or the first author's name plus et al.) and the publication year in parentheses, thus: (Ko et al., 1999). 
+
+Or, less commonly, by the use of a code, e.g. by specifying the first surname letter of the first three author of the cited work followed by the last two digits of the year of publication, this string of characters being enclosed within square brackets, thus: [KRR99]."""@en ;
+	dc:description <https://svn.code.sf.net/p/sempublishing/code/C4O/InTextReferencePointer%20module.png> .
+
+:InTextReferencePointerList a owl:Class ;
+	rdfs:label "in-text reference pointer list"@en ;
+	rdfs:subClassOf co:List , _:node17umiq0krx7 .
+
+_:node17umiq0krx7 a owl:Restriction ;
+	owl:onProperty co:item ;
+	owl:allValuesFrom :InTextReferencePointerListItem .
+
+:InTextReferencePointerList rdfs:subClassOf _:node17umiq0krx8 .
+
+_:node17umiq0krx8 a owl:Restriction ;
+	owl:onProperty :pertainsTo ;
+	owl:someValuesFrom biro:BibliographicReference .
+
+:InTextReferencePointerList rdfs:comment "A list containing only in-text reference pointers denoting the specific bibliographic references to which the list pertains."@en ;
+	dc:description "An in-text reference pointer list can contains only in-text reference pointer list items and it always pertains to one or more bibliographic references."@en .
+
+:InTextReferencePointerListItem a owl:Class ;
+	rdfs:label "in-text reference pointer list item"@en ;
+	rdfs:subClassOf co:ListItem , _:node17umiq0krx9 .
+
+_:node17umiq0krx9 a owl:Restriction ;
+	owl:onProperty co:itemContent ;
+	owl:allValuesFrom :InTextReferencePointer .
+
+:InTextReferencePointerListItem dc:description """An in-text reference pointer list item can contain only a single in-text reference pointer.
+
+Note that, as specified through the hasKey assertion, such a list cannot contain more than one item containing the same in-text reference pointer entity."""@en ;
+	rdfs:comment "This class describes all the list items that must be used in the context of an in-text reference pointer list."@en .
+
+:SingleReferencePointerList a owl:Class ;
+	rdfs:label "single reference pointer list"@en ;
+	rdfs:subClassOf :InTextReferencePointerList , _:node17umiq0krx10 .
+
+_:node17umiq0krx10 a owl:Restriction ;
+	owl:onProperty :pertainsTo ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:SingleReferencePointerList dc:description """A single reference pointer list pertains only to one bibliographic reference.
+
+Note that this semantic constraint is handled by the combined use of a particular restriction of this class, i.e. that the list pertains to exactly one owl:Thing, and that the following SWRL rule applies:
+
+c4o:InTextReferencePointerList(?l), c4o:denotes(?p, ?r), swan:item(?l, ?i), swan:itemContent(?i, ?p) -> c4o:pertainsTo(?l, ?r)"""@en ;
+	rdfs:comment "An in-text reference pointer list that pertains to exactly one bibliographic reference."@en .
+
+frbr:Endeavour a owl:Class .
+
+frbr:Expression a owl:Class .
+
+owl:Thing a owl:Class .
+
+<urn:swrl#l> a swrl:Variable .
+
+<urn:swrl#p> a swrl:Variable .
+
+<urn:swrl#r> a swrl:Variable .
+
+_:node17umiq0krx11 a swrl:Imp ;
+	swrl:head _:node17umiq0krx12 .
+
+_:node17umiq0krx12 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17umiq0krx13 .
+
+_:node17umiq0krx13 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :pertainsTo ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#r> .
+
+_:node17umiq0krx11 swrl:body _:node17umiq0krx14 .
+
+_:node17umiq0krx14 a swrl:AtomList ;
+	rdf:first _:node17umiq0krx15 .
+
+_:node17umiq0krx15 a swrl:ClassAtom ;
+	swrl:classPredicate :InTextReferencePointerList ;
+	swrl:argument1 <urn:swrl#l> .
+
+_:node17umiq0krx14 rdf:rest _:node17umiq0krx16 .
+
+_:node17umiq0krx16 a swrl:AtomList ;
+	rdf:rest _:node17umiq0krx17 .
+
+_:node17umiq0krx17 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17umiq0krx18 .
+
+_:node17umiq0krx18 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :denotes ;
+	swrl:argument1 <urn:swrl#p> ;
+	swrl:argument2 <urn:swrl#r> .
+
+_:node17umiq0krx16 rdf:first _:node17umiq0krx19 .
+
+_:node17umiq0krx19 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate co:element ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#p> .
+
+:hasContext rdfs:range _:node17umiq0krx20 .
+
+_:node17umiq0krx20 a owl:Class ;
+	owl:intersectionOf _:node17umiq0krx21 .
+
+_:node17umiq0krx21 rdf:first frbr:Expression ;
+	rdf:rest _:node17umiq0krx23 .
+
+_:node17umiq0krx23 rdf:first _:node17umiq0krx22 .
+
+_:node17umiq0krx22 a owl:Restriction ;
+	owl:onProperty :hasContent ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17umiq0krx23 rdf:rest rdf:nil .
+
+:InTextReferencePointer rdfs:subClassOf _:node17umiq0krx24 .
+
+_:node17umiq0krx24 a owl:Restriction ;
+	owl:onProperty :hasContext ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:InTextReferencePointer rdfs:subClassOf _:node17umiq0krx25 .
+
+_:node17umiq0krx25 a owl:Restriction ;
+	owl:onProperty :denotes ;
+	owl:onClass biro:BibliographicReference ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:InTextReferencePointerList rdfs:subClassOf _:node17umiq0krx26 .
+
+_:node17umiq0krx26 a owl:Restriction ;
+	owl:onProperty co:item ;
+	owl:allValuesFrom :InTextReferencePointerListItem .
+
+:InTextReferencePointerList rdfs:subClassOf _:node17umiq0krx27 .
+
+_:node17umiq0krx27 a owl:Restriction ;
+	owl:onProperty :pertainsTo ;
+	owl:someValuesFrom biro:BibliographicReference .
+
+:InTextReferencePointerListItem rdfs:subClassOf _:node17umiq0krx28 .
+
+_:node17umiq0krx28 a owl:Restriction ;
+	owl:onProperty co:itemContent ;
+	owl:allValuesFrom :InTextReferencePointer .
+
+:SingleReferencePointerList rdfs:subClassOf _:node17umiq0krx29 .
+
+_:node17umiq0krx29 a owl:Restriction ;
+	owl:onProperty :pertainsTo ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17umiq0krx30 a swrl:Imp ;
+	swrl:head _:node17umiq0krx31 .
+
+_:node17umiq0krx31 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17umiq0krx32 .
+
+_:node17umiq0krx32 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :pertainsTo ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#r> .
+
+_:node17umiq0krx30 swrl:body _:node17umiq0krx33 .
+
+_:node17umiq0krx33 a swrl:AtomList ;
+	rdf:first _:node17umiq0krx34 .
+
+_:node17umiq0krx34 a swrl:ClassAtom ;
+	swrl:classPredicate :InTextReferencePointerList ;
+	swrl:argument1 <urn:swrl#l> .
+
+_:node17umiq0krx33 rdf:rest _:node17umiq0krx35 .
+
+_:node17umiq0krx35 a swrl:AtomList ;
+	rdf:rest _:node17umiq0krx36 .
+
+_:node17umiq0krx36 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17umiq0krx37 .
+
+_:node17umiq0krx37 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :denotes ;
+	swrl:argument1 <urn:swrl#p> ;
+	swrl:argument2 <urn:swrl#r> .
+
+_:node17umiq0krx35 rdf:first _:node17umiq0krx38 .
+
+_:node17umiq0krx38 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate co:element ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#p> .

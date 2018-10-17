@@ -1,0 +1,214 @@
+@prefix :      <http://biohackathon.org/resource/faldo#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ns1:   <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix spin:  <http://spinrdf.org/spin#> .
+
+:end    a              owl:ObjectProperty ;
+        rdfs:comment   "The inclusive end of the position."^^xsd:string ;
+        rdfs:label     "end"^^xsd:string ;
+        rdfs:range     :Position ;
+        owl:inverseOf  :endOf .
+
+:beginOf  a            owl:ObjectProperty ;
+        rdfs:comment   "This is the inverse of the begin:property. It is included to make it easier to write a number of OWL axioms. You should rarely use this in your raw data."^^xsd:string ;
+        rdfs:label     "beginOf"^^xsd:string ;
+        owl:inverseOf  :begin .
+
+:N-TerminalPosition  a    owl:Class ;
+        rdfs:comment      "The position of the starting amino-acid a protein or polypeptide terminated by an amino acid with a free amine group (-NH2). The convention for writing peptide sequences is to put the N-terminus on the left and write the sequence from N- to C-terminus. Instances of this class are often used when the reference sequence is not complete "^^xsd:string ;
+        rdfs:seeAlso      <http://en.wikipedia.org/wiki/N-terminus> ;
+        rdfs:subClassOf   :ExactPosition ;
+        owl:disjointWith  :C-TerminalPosition .
+
+:InBetweenPosition  a     owl:Class ;
+        rdfs:comment      "This indicates that a feature is between two other positions that are both known exactly and that are next to each other. An example is a restriction enzyme cutting site. The cut is after one position and before the other position (hence, in between)."^^xsd:string ;
+        rdfs:label        "In between positions"^^xsd:string ;
+        rdfs:subClassOf   :Position ;
+        rdfs:subClassOf   [ a                   owl:Class ;
+                            owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                    owl:onClass               :ExactPosition ;
+                                                    owl:onProperty            :before ;
+                                                    owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                  ] [ a                         owl:Restriction ;
+                                                      owl:onClass               :ExactPosition ;
+                                                      owl:onProperty            :after ;
+                                                      owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                    ] )
+                          ] ;
+        owl:disjointWith  :OneOfPosition , :InRangePosition , :ExactPosition .
+
+:BothStrandsPosition  a   owl:Class ;
+        rdfs:comment      "The 'both strands position' indicates a region that is best described as being on 'both' strands of a double-stranded sequence, rather than one or the other."^^xsd:string ;
+        rdfs:label        "Both strands position"^^xsd:string ;
+        rdfs:subClassOf   :StrandedPosition ;
+        owl:disjointWith  :ReverseStrandPosition , :ForwardStrandPosition .
+
+:BagOfRegions  a         owl:Class ;
+        rdfs:comment     "Used to describe a location that consists of a number of Regions but where the order is not known. e.g. the oddly named order() keyword in a INSDC file."^^xsd:string ;
+        rdfs:label       "Bag of regions"^^xsd:string ;
+        rdfs:seeAlso     <http://www.insdc.org/files/feature_table.html> ;
+        rdfs:subClassOf  rdf:Bag , :CollectionOfRegions .
+
+:OneOfPosition  a         owl:Class ;
+        rdfs:comment      "The position is known to be one of the more detailed positions listed by the location predicate."^^xsd:string ;
+        rdfs:label        "One of positions"^^xsd:string ;
+        rdfs:subClassOf   :FuzzyPosition ;
+        owl:disjointWith  :InRangePosition , :InBetweenPosition , :ExactPosition .
+
+:after  a             owl:ObjectProperty ;
+        rdfs:comment  "This predicate is used when you want to describe a non-inclusive range. Only used in the InBetweenPosition to say it is after a nucleotide, but before the next one."^^xsd:string ;
+        rdfs:domain   :InBetweenPosition ;
+        rdfs:label    "after"^^xsd:string ;
+        rdfs:range    :ExactPosition .
+
+:InRangePosition  a       owl:Class ;
+        rdfs:comment      "Use when you have an idea of the range in which you can find the position, but you cannot be sure about the exact position."^^xsd:string ;
+        rdfs:label        "Indeterminate position within a range"^^xsd:string ;
+        rdfs:subClassOf   :FuzzyPosition ;
+        rdfs:subClassOf   [ a                   owl:Class ;
+                            owl:intersectionOf  ( [ a                            owl:Restriction ;
+                                                    owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                                                    owl:onClass                  :Position ;
+                                                    owl:onProperty               :begin
+                                                  ] [ a                            owl:Restriction ;
+                                                      owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                                                      owl:onClass                  :Position ;
+                                                      owl:onProperty               :end
+                                                    ] )
+                          ] ;
+        owl:disjointWith  :StrandedPosition , :OneOfPosition , :InBetweenPosition , :ExactPosition .
+
+:before  a            owl:ObjectProperty ;
+        rdfs:comment  "This predicate is used to indicate that the feature is found before the exact position. Use to indicate, for example, a cleavage site. The cleavage happens between two amino acids before one and after the other."^^xsd:string ;
+        rdfs:domain   :InBetweenPosition ;
+        rdfs:label    "before"^^xsd:string ;
+        rdfs:range    :ExactPosition .
+
+:ReverseStrandPosition
+        a                 owl:Class ;
+        rdfs:comment      "The position is on the reverse (complement, 3' to 5') strand of the sequence. Shown as '-' in GTF and GFF3."^^xsd:string ;
+        rdfs:label        "Negative/reverse strand position"^^xsd:string ;
+        rdfs:subClassOf   :StrandedPosition ;
+        owl:disjointWith  :ForwardStrandPosition , :BothStrandsPosition .
+
+:location  a          owl:ObjectProperty ;
+        rdfs:comment  "This is the link between the concept whose location you are annotating and its range or position. For example, when annotating the region that describes an exon, the exon would be the subject and the region would be the object of the triple or: 'active site' 'location' [is] 'position 3'."^^xsd:string ;
+        rdfs:label    "location"^^xsd:string ;
+        rdfs:range    [ a            owl:Class ;
+                        owl:unionOf  ( :CollectionOfRegions :Region :Position )
+                      ] .
+
+:ForwardStrandPosition
+        a                 owl:Class ;
+        rdfs:comment      "The position is on the forward (positive, 5' to 3') strand. Shown as a '+' in GFF3 and GTF."^^xsd:string ;
+        rdfs:label        "Forward/positive strand position"^^xsd:string ;
+        rdfs:subClassOf   :StrandedPosition ;
+        owl:disjointWith  :ReverseStrandPosition , :BothStrandsPosition .
+
+:begin  a              owl:ObjectProperty ;
+        rdfs:comment   "The inclusive beginning of a position. Also known as start."^^xsd:string ;
+        rdfs:domain    [ a            owl:Class ;
+                         owl:unionOf  ( :Region :InRangePosition )
+                       ] ;
+        rdfs:label     "begin"^^xsd:string ;
+        rdfs:range     :Position ;
+        owl:inverseOf  :beginOf .
+
+:ListOfRegions  a        owl:Class ;
+        rdfs:comment     "Should be used when the location of a region is defined by an ordered list of Regions. However, try to avoid using these types in favor of using more explicit semantics about why the order is important."^^xsd:string , "As an ordered list of regions (but the list might not be complete)."^^xsd:string ;
+        rdfs:label       "List of regions"^^xsd:string ;
+        rdfs:seeAlso     <http://www.insdc.org/files/feature_table.html> ;
+        rdfs:subClassOf  rdf:Seq , :CollectionOfRegions .
+
+:StrandedPosition  a     owl:Class ;
+        rdfs:comment     "Part of the coordinate system denoting on which strand the feature can be found. If you do not yet know which stand the feature is on, you should tag the position with just this class. If you know more you should use one of the subclasses. This means a region described with a '.' in GFF3. A GFF3 unstranded position does not have this type in FALDO -- those are just a 'position'."^^xsd:string ;
+        rdfs:label       "Stranded position"^^xsd:string ;
+        rdfs:subClassOf  :Position .
+
+<http://biohackathon.org/resource/faldo>
+        a                owl:Ontology ;
+        ns1:license      <http://creativecommons.org/publicdomain/zero/1.0/> ;
+        spin:imports     <http://topbraid.org/spin/spinowl> , <http://topbraid.org/spin/rdfsplus> , <http://topbraid.org/spin/owlrl-all> ;
+        owl:versionInfo  "Created at the Biohackathon 2012 and 2013"^^xsd:string .
+
+:reference  a         owl:ObjectProperty ;
+        rdfs:comment  "The reference is the resource that the position value is anchored to.  For example, a contig or chromosome in a genome assembly."^^xsd:string ;
+        rdfs:label    "reference"^^xsd:string .
+
+:position  a          owl:DatatypeProperty ;
+        rdfs:comment  "The position value is the offset along the reference where this position is found. Thus the only the position value in combination with the reference determines where a position is."^^xsd:string , "Denoted in 1-based closed coordinates, i.e. the position on the first amino acid or nucleotide of a sequence has the value 1. For nucleotide sequences we count from the 5'end of the sequence, while for Aminoacid sequences we start counting from the N-Terminus."^^xsd:string ;
+        rdfs:domain   :ExactPosition ;
+        rdfs:label    "position"^^xsd:string ;
+        rdfs:range    [ a                     rdfs:Datatype ;
+                        owl:onDatatype        xsd:integer ;
+                        owl:withRestrictions  ( [ xsd:minInclusive
+                                          1 ] )
+                      ] .
+
+:ExactPosition  a         owl:Class ;
+        rdfs:comment      "A position that is exactly known."^^xsd:string ;
+        rdfs:label        "Exact position"^^xsd:string ;
+        rdfs:subClassOf   :Position ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   :position
+                          ] ;
+        owl:disjointWith  :OneOfPosition , :InRangePosition , :InBetweenPosition ;
+        owl:hasKey        ( :position :reference ) .
+
+:C-TerminalPosition  a    owl:Class ;
+        rdfs:comment      "The C-terminus is the end of an amino acid chain (protein or polypeptide), terminated by a free carboxyl group (-COOH)."^^xsd:string ;
+        rdfs:label        "C-Terminal position"^^xsd:string ;
+        rdfs:seeAlso      <http://en.wikipedia.org/wiki/C-terminus> ;
+        rdfs:subClassOf   :ExactPosition ;
+        owl:disjointWith  :N-TerminalPosition .
+
+:CollectionOfRegions  a  owl:Class ;
+        rdfs:comment     "Sometimes a location of a feature is defined by a collection of regions e.g. join() and order() in INSDC records. One should always try to model the semantics more accurately than this, these are fallback options to encode legacy data."^^xsd:string ;
+        rdfs:label       "Collection of regions"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( :Region :CollectionOfRegions )
+                                              ] ;
+                           owl:onProperty     rdfs:member
+                         ] .
+
+:FuzzyPosition  a        owl:Class ;
+        rdfs:comment     "A position that lacks exact data."^^xsd:string ;
+        rdfs:label       "Fuzzy position"^^xsd:string ;
+        rdfs:subClassOf  :Position .
+
+:Region  a               owl:Class ;
+        rdfs:comment     "A region describes a length of sequence with a start position and end position that represents a feature on a sequence, e.g. a gene."^^xsd:string ;
+        rdfs:label       "Region"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                   owl:Class ;
+                           owl:intersectionOf  ( [ a                         owl:Restriction ;
+                                                   owl:onClass               :Position ;
+                                                   owl:onProperty            :begin ;
+                                                   owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                 ] [ a                         owl:Restriction ;
+                                                     owl:onClass               :Position ;
+                                                     owl:onProperty            :end ;
+                                                     owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                   ] )
+                         ] ;
+        owl:hasKey       ( :begin :end ) .
+
+:Position  a             owl:Class ;
+        rdfs:comment     "Superclass for the general concept of a position on a sequence. The sequence is designated with the reference predicate."^^xsd:string ;
+        rdfs:label       "Position"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   :reference
+                         ] .
+
+:endOf  a              owl:ObjectProperty ;
+        rdfs:comment   "This is the inverse of the begin:end. It is included to make it easier to write a number of OWL axioms. You should rarely use this in your raw data."^^xsd:string ;
+        rdfs:label     "endOf"^^xsd:string ;
+        owl:inverseOf  :end .

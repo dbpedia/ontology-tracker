@@ -1,0 +1,694 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix geom: <http://data.ign.fr/def/geometrie#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix sf: <http://www.opengis.net/ont/sf#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix qudt: <http://qudt.org/schema/qudt#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf: <http://purl.org/vocommons/voaf#> .
+@prefix ignf: <http://data.ign.fr/def/ignf#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+
+<http://data.ign.fr/def/ignf> a owl:Ontology ;
+	dcterms:description "Codes pour la description de systèmes de référence de coordonnées conforme ISO TC/211. Les traductions françaises des termes et leurs définitions sont pour la plupart issues du glossaire multilingue ISO/TC 211 disponible ici: http://www.isotc211.org/Terminology.htm"@fr ;
+	dcterms:title "Ontologie des systèmes de coordonnées"@fr ;
+	cc:license <http://creativecommons.org/licenses/by/3.0/> ;
+	dcterms:creator <http://recherche.ign.fr/labos/cogit/cv.php?prenom=Nathalie&nom=Abadie> , <http://www.eurecom.fr/~atemezin/> ;
+	dcterms:contributor <http://www.eurecom.fr/~troncy/> ;
+	dcterms:issued "2014-04-09"^^xsd:date ;
+	dcterms:publisher <http://fr.dbpedia.org/resource/Institut_national_de_l%27information_g%C3%A9ographique_et_foresti%C3%A8re> ;
+	vann:preferredNamespacePrefix "ignf" ;
+	vann:preferredNamespaceUri <http://data.ign.fr/def/ignf#> ;
+	cc:license <http://www.data.gouv.fr/Licence-Ouverte-Open-Licence> ;
+	rdfs:seeAlso <http://librairies.ignf.fr/geoportail/resources/IGNF.xml> ;
+	owl:versionInfo "1.1 - 2014-04-09" .
+
+<http://www.eurecom.fr/~atemezin/> a foaf:Person .
+
+<http://www.eurecom.fr/~troncy/> a foaf:Person .
+
+<http://recherche.ign.fr/labos/cogit/cv.php?prenom=Nathalie&nom=Abadie> a foaf:Person .
+
+ignf:CRS a owl:Class ;
+	rdfs:label "Coordinates reference system"@en , "Système de référence de coordonnées"@fr ;
+	rdfs:comment "Métadonnées permettant de préciser, selon la dimension spatiale des coordonnées 1D, 2D ou 3D, les éléments de définition associés au jeu de coordonnées: le Système de Référence Terrestre, l'ellipsoïde géodésique, le méridien origine, le type de coordonnées (cartésiennes géocentriques, planes, géographiques,...), les unités dans lesquelles sont exprimées les coordonnées, la projection cartographique, le référentiel altimétrique.(http://geodesie.ign.fr/index.php?page=glossaire)"@fr .
+
+_:node18u544mf6x60 a owl:Restriction ;
+	owl:someValuesFrom ignf:Extent ;
+	owl:onProperty ignf:domainOfValidity .
+
+ignf:CRS rdfs:subClassOf _:node18u544mf6x60 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:CoordinateSystem a owl:Class ;
+	rdfs:label "Coordinate system"@en , "Systeme de coordonnees"@fr ;
+	rdfs:comment "Ensemble d'axes couvrant un espace de coordonnées, et de règles mathématiques permettant l'affectation de coordonnées à un point."@fr .
+
+_:node18u544mf6x61 a owl:Restriction ;
+	owl:onClass ignf:CoordinateSystemAxis ;
+	owl:onProperty ignf:axis ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+ignf:CoordinateSystem rdfs:subClassOf _:node18u544mf6x61 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:SingleCRS a owl:Class ;
+	rdfs:label "single CRS"@en , "SRC simple"@fr ;
+	rdfs:comment "CRS composé d'un système de coordonnées et d'un référentiel."@fr ;
+	rdfs:subClassOf ignf:CRS .
+
+_:node18u544mf6x62 a owl:Class .
+
+_:node18u544mf6x63 a owl:Restriction ;
+	owl:onClass ignf:Datum ;
+	owl:onProperty ignf:datum ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x64 rdf:first _:node18u544mf6x63 ;
+	rdf:rest _:node18u544mf6x65 .
+
+_:node18u544mf6x66 a owl:Restriction ;
+	owl:onClass ignf:CoordinateSystem ;
+	owl:onProperty ignf:coordinateSystem ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x65 rdf:first _:node18u544mf6x66 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x62 owl:intersectionOf _:node18u544mf6x64 .
+
+ignf:SingleCRS rdfs:subClassOf _:node18u544mf6x62 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:GeodeticCRS a owl:Class , rdfs:Class ;
+	rdfs:label "Geodetic CRS"@en , "Système de coordonnées de référence geodésique"@fr ;
+	rdfs:comment "Système de référence de coordonnées associé à un référentiel géodésique."@fr ;
+	rdfs:subClassOf ignf:SingleCRS .
+
+_:node18u544mf6x67 a owl:Restriction ;
+	owl:allValuesFrom ignf:GeodeticDatum ;
+	owl:onProperty ignf:datum .
+
+ignf:GeodeticCRS rdfs:subClassOf _:node18u544mf6x67 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:ProjectedCRS a owl:Class , rdfs:Class ;
+	rdfs:label "Projected CRS"@en , "Système de coordonnées de référence projeté"@fr ;
+	rdfs:comment "Système de coordonnées de référence dérivé par projection cartographique d'un système de coordonnées de référence bidimentionnel."@fr ;
+	rdfs:subClassOf ignf:SingleCRS .
+
+_:node18u544mf6x68 a owl:Restriction ;
+	owl:allValuesFrom ignf:GeodeticCRS ;
+	owl:onProperty ignf:baseCRS .
+
+ignf:ProjectedCRS rdfs:subClassOf _:node18u544mf6x68 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:CompoundCRS a owl:Class , rdfs:Class ;
+	rdfs:label "Compound CRS"@en , "Système de coordonnées de référence combiné"@fr ;
+	rdfs:comment "Système de référence de coordonnées utilisant deux systèmes de référence de coordonnées simples."@fr ;
+	rdfs:subClassOf ignf:CRS .
+
+_:node18u544mf6x69 a owl:Restriction ;
+	owl:onClass ignf:SingleCRS ;
+	owl:onProperty ignf:includesSingleCRS ;
+	owl:minCardinality "2"^^xsd:nonNegativeInteger .
+
+ignf:CompoundCRS rdfs:subClassOf _:node18u544mf6x69 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:VerticalCRS a owl:Class , rdfs:Class ;
+	rdfs:label "Vertical CRS"@en , "Système de coordonnées de référence vertical"@fr ;
+	rdfs:comment "Système de référence de coordonnées à une dimension, associé à un référentiel vertical."@fr ;
+	rdfs:subClassOf ignf:SingleCRS .
+
+_:node18u544mf6x70 a owl:Class .
+
+_:node18u544mf6x71 a owl:Restriction ;
+	owl:allValuesFrom ignf:VerticalDatum ;
+	owl:onProperty ignf:datum .
+
+_:node18u544mf6x72 rdf:first _:node18u544mf6x71 ;
+	rdf:rest _:node18u544mf6x73 .
+
+_:node18u544mf6x74 a owl:Restriction ;
+	owl:allValuesFrom ignf:VerticalCS ;
+	owl:onProperty ignf:coordinateSystem .
+
+_:node18u544mf6x73 rdf:first _:node18u544mf6x74 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x70 owl:intersectionOf _:node18u544mf6x72 .
+
+ignf:VerticalCRS rdfs:subClassOf _:node18u544mf6x70 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:Extent a owl:Class , rdfs:Class ;
+	rdfs:label "Extent"@en , "Région de validité"@fr ;
+	rdfs:comment "Zone ou intervalle de temps dans lequel la référence est valide."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:Datum a owl:Class , rdfs:Class ;
+	rdfs:label "Datum"@en , "Référentiel"@fr ;
+	rdfs:comment "Paramètre ou ensemble de paramètres définissant la position de l'origine, l'échelle et l'orientation d'un système de coordonnées."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:GeodeticDatum a owl:Class , rdfs:Class ;
+	rdfs:label "Geodetic datum"@en , "Référentiel géodésique"@fr ;
+	rdfs:comment "Référentiel décrivant la relation entre un système de coordonnées à deux ou trois dimensions et la Terre."@fr ;
+	rdfs:subClassOf ignf:Datum .
+
+_:node18u544mf6x75 a owl:Class .
+
+_:node18u544mf6x76 a owl:Restriction ;
+	owl:onClass ignf:Ellipsoid ;
+	owl:onProperty ignf:ellipsoid ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x77 rdf:first _:node18u544mf6x76 ;
+	rdf:rest _:node18u544mf6x78 .
+
+_:node18u544mf6x79 a owl:Restriction ;
+	owl:onClass ignf:PrimeMeridian ;
+	owl:onProperty ignf:primeMeridian ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x78 rdf:first _:node18u544mf6x79 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x75 owl:intersectionOf _:node18u544mf6x77 .
+
+ignf:GeodeticDatum rdfs:subClassOf _:node18u544mf6x75 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:VerticalDatum a owl:Class , rdfs:Class ;
+	rdfs:label "Vertical datum"@en , "Référentiel vertical"@fr ;
+	rdfs:comment "Référentiel décrivant la relation entre les hauteurs ou les profondeurs relatives à la gravité et la Terre."@fr ;
+	rdfs:subClassOf ignf:Datum ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:VerticalCS a owl:Class , rdfs:Class ;
+	rdfs:label "Vertical CS"@en , "Système de coordonnées vertical"@fr ;
+	rdfs:comment "Système de coordonnée à une dimension utilisé pour les mesures de hauteur ou de profondeur relatives à la gravité."@fr ;
+	rdfs:subClassOf ignf:CoordinateSystem ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:CartesianCS a owl:Class , rdfs:Class ;
+	rdfs:label "Cartesian CS"@en , "Système cartésien de coordonnées"@fr ;
+	rdfs:comment "Système de coordonnées donnant la position des points relativement à n axes perpendiculaires deux à deux."@fr ;
+	rdfs:subClassOf ignf:CoordinateSystem ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:EllipsoidalCS a owl:Class , rdfs:Class ;
+	rdfs:label "Ellipsoidal CS"@en , "Système de coordonnées ellipsoïdal"@fr ;
+	rdfs:comment "Système de coordonnées dans lequel la position est spécifiée par la latitude géodésique, la longitude géodésique et (dans le cas tridimensionnel) la hauteur ellipsoïdale."@fr ;
+	rdfs:subClassOf ignf:CoordinateSystem ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:CoordinateSystemAxis a owl:Class , rdfs:Class ;
+	rdfs:label "Axis"@en , "Axe"@fr ;
+	rdfs:comment "Axe par rapport auquel une coordonnées d'un point est spécifiée dans un système de coordonnées."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:Ellipsoid a owl:Class , rdfs:Class ;
+	rdfs:label "Ellipsoid"@en , "Ellipsoïde"@fr ;
+	rdfs:comment "Surface de révolution engendrée par une ellipse tournant autour de son petit axe, définie par le rayon équatorial et un paramètre d'aplatissement, et sensiblement géocentrique. Note : Il s'agit d'un modèle mathématique du géoïde, c'est-à-dire de la Terre débarrassée de son relief. Il existe de nombreux ellipsoïdes géodésiques."@fr .
+
+_:node18u544mf6x80 a owl:Class .
+
+_:node18u544mf6x81 a owl:Restriction ;
+	owl:onClass qudt:QuantityValue ;
+	owl:onProperty ignf:semiMajorAxis ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x82 rdf:first _:node18u544mf6x81 ;
+	rdf:rest _:node18u544mf6x83 .
+
+_:node18u544mf6x84 a owl:Class .
+
+_:node18u544mf6x85 a owl:Restriction ;
+	owl:onClass qudt:QuantityValue ;
+	owl:onProperty ignf:semiMinorAxis ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x86 rdf:first _:node18u544mf6x85 ;
+	rdf:rest _:node18u544mf6x87 .
+
+_:node18u544mf6x88 a owl:Restriction ;
+	owl:onClass qudt:QuantityValue ;
+	owl:onProperty ignf:inverseFlattening ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x87 rdf:first _:node18u544mf6x88 ;
+	rdf:rest _:node18u544mf6x89 .
+
+_:node18u544mf6x90 a owl:Restriction ;
+	owl:onDataRange xsd:boolean ;
+	owl:onProperty ignf:isSphere ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x89 rdf:first _:node18u544mf6x90 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x84 owl:unionOf _:node18u544mf6x86 .
+
+_:node18u544mf6x83 rdf:first _:node18u544mf6x84 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x80 owl:intersectionOf _:node18u544mf6x82 .
+
+ignf:Ellipsoid rdfs:subClassOf _:node18u544mf6x80 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:PrimeMeridian a owl:Class , rdfs:Class ;
+	rdfs:label "Prime meridian"@en , "Méridien origine"@fr ;
+	rdfs:comment "Méridien à partir duquel les longitudes d'autres méridiens sont mesurées."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:GeographicBoundingBox a owl:Class , rdfs:Class ;
+	rdfs:label "Geographic bounding box"@en , "Cadre englobant géographique"@fr ;
+	rdfs:comment "Cadre délimitant une zone d'intérêt."@fr .
+
+_:node18u544mf6x91 a owl:Class .
+
+_:node18u544mf6x92 a owl:Restriction ;
+	owl:onDataRange xsd:double ;
+	owl:onProperty ignf:westBoundLongitude ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x93 rdf:first _:node18u544mf6x92 ;
+	rdf:rest _:node18u544mf6x94 .
+
+_:node18u544mf6x95 a owl:Restriction ;
+	owl:onDataRange xsd:double ;
+	owl:onProperty ignf:eastBoundLongitude ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x94 rdf:first _:node18u544mf6x95 ;
+	rdf:rest _:node18u544mf6x96 .
+
+_:node18u544mf6x97 a owl:Restriction ;
+	owl:onDataRange xsd:double ;
+	owl:onProperty ignf:southBoundLatitude ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x96 rdf:first _:node18u544mf6x97 ;
+	rdf:rest _:node18u544mf6x98 .
+
+_:node18u544mf6x99 a owl:Restriction ;
+	owl:onDataRange xsd:double ;
+	owl:onProperty ignf:northBoundLatitude ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node18u544mf6x98 rdf:first _:node18u544mf6x99 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x91 owl:intersectionOf _:node18u544mf6x93 .
+
+ignf:GeographicBoundingBox rdfs:subClassOf _:node18u544mf6x91 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:CoordinateOperation a owl:Class , rdfs:Class ;
+	rdfs:label "Coordinate operation"@en , "Opération sur les coordonnées"@fr ;
+	rdfs:comment "Opération mathématique sur des coordonnées dans un SRC source en vue de les convertir vers un SRC cible."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:SingleOperation a owl:Class , rdfs:Class ;
+	rdfs:label "Single coordinate operation"@en , "Opération simple sur les coordonnées"@fr ;
+	rdfs:comment "Opération non concaténée sur des coordonnées."@fr ;
+	rdfs:subClassOf ignf:CoordinateOperation ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:Transformation a owl:Class , rdfs:Class ;
+	rdfs:label "Transformation"@en , "Transformation"@fr ;
+	rdfs:comment "Opération par laquelle des coordonnées en entrée et en sortie sont associées à différents référentiels."@fr ;
+	rdfs:subClassOf ignf:SingleOperation ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:Conversion a owl:Class , rdfs:Class ;
+	rdfs:label "Conversion"@en , "Conversion"@fr ;
+	rdfs:comment "Opération par laquelle les coordonnées en sortie sont associées au même référentiel que les données en entrée (ex: projection cartographique)."@fr ;
+	rdfs:subClassOf ignf:SingleOperation ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:OperationMethod a owl:Class , rdfs:Class ;
+	rdfs:label "Operation method"@en , "Méthode"@fr ;
+	rdfs:comment "Méthode utilisée pour faire une opération sur des coordonnées."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:OperationParameter a owl:Class , rdfs:Class ;
+	rdfs:label "Operation parameter"@en , "Paramètre"@fr ;
+	rdfs:comment "Paramètre utilisé par une méthode pour faire une opération sur des coordonnées."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:OperationParameterValue a owl:Class , rdfs:Class ;
+	rdfs:label "Operation parameter value"@en , "Valeur de paramètre"@fr ;
+	rdfs:comment "Valeur d'un paramètre utilisé par une méthode pour faire une opération sur des coordonnées."@fr ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:CompoundCRS owl:disjointWith ignf:GeodeticCRS .
+
+ignf:VerticalCS owl:disjointWith ignf:VerticalCRS .
+
+ignf:CartesianCS owl:disjointWith ignf:GeodeticCRS .
+
+ignf:EllipsoidalCS owl:disjointWith ignf:GeodeticCRS .
+
+ignf:PrimeMeridian owl:disjointWith ignf:Ellipsoid .
+
+ignf:CRS owl:disjointWith ignf:CoordinateSystem .
+
+ignf:domainOfValidity a owl:ObjectProperty ;
+	rdfs:label "domain of validity"@en , "domaine de validité"@fr ;
+	rdfs:comment "Zone ou intervalle de temps dans lequel un SRC est valide."@fr ;
+	rdfs:range ignf:Extent ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:includesSingleCRS a owl:ObjectProperty ;
+	rdfs:label "includes single CRS"@en , "inclut un simple SRC"@fr ;
+	rdfs:comment "Désigne les SRC simples qui composent un SRC composé."@fr ;
+	rdfs:domain ignf:CompoundCRS ;
+	rdfs:range ignf:SingleCRS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:baseCRS a owl:ObjectProperty ;
+	rdfs:label "base CRS"@en , "SRC de base"@fr ;
+	rdfs:comment "Désigne le SRC géodésique sur lequel repose un SRC projeté."@fr ;
+	rdfs:domain ignf:ProjectedCRS ;
+	rdfs:range ignf:GeodeticCRS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:coordinateSystem a owl:ObjectProperty ;
+	rdfs:label "uses coordinate system"@en , "utilise le système de coordonnées"@fr ;
+	rdfs:comment "Désigne le système de coordonnées utilisé par un SRC."@fr ;
+	rdfs:domain ignf:SingleCRS ;
+	rdfs:range ignf:CoordinateSystem ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:ellipsoidalCS a owl:ObjectProperty ;
+	rdfs:label "uses ellipsoidal CS"@en , "utilise le système de coordonnées ellipsoïdal"@fr ;
+	rdfs:comment "Désigne le système de coordonnées ellipsoïdal utilisé par un SRC géodésique."@fr ;
+	rdfs:subPropertyOf ignf:coordinateSystem ;
+	rdfs:domain ignf:GeodeticCRS ;
+	rdfs:range ignf:EllipsoidalCS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:cartesianCS a owl:ObjectProperty ;
+	rdfs:label "uses Cartesian CS"@en , "utilise le système cartesien de coordonnées"@fr ;
+	rdfs:comment "Désigne le système de coordonnées cartésien utilisé par un SRC géodésique ou projeté."@fr ;
+	rdfs:subPropertyOf ignf:coordinateSystem .
+
+_:node18u544mf6x100 a owl:Class .
+
+_:node18u544mf6x101 rdf:first ignf:GeodeticCRS ;
+	rdf:rest _:node18u544mf6x102 .
+
+_:node18u544mf6x102 rdf:first ignf:ProjectedCRS ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x100 owl:unionOf _:node18u544mf6x101 .
+
+ignf:cartesianCS rdfs:domain _:node18u544mf6x100 ;
+	rdfs:range ignf:CartesianCS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:verticalCS a owl:ObjectProperty ;
+	rdfs:label "uses Vertical CS"@en , "utilise le système vertical de coordonnées"@fr ;
+	rdfs:comment "Désigne le système de coordonnées vertical utilisé par un SRC vertical."@fr ;
+	rdfs:subPropertyOf ignf:coordinateSystem ;
+	rdfs:domain ignf:VerticalCRS ;
+	rdfs:range ignf:VerticalCS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:datum a owl:ObjectProperty ;
+	rdfs:label "uses datum"@en , "utilise le référentiel"@fr ;
+	rdfs:comment "Désigne le référentiel utilisé par un SRC simple."@fr ;
+	rdfs:domain ignf:SingleCRS ;
+	rdfs:range ignf:Datum ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:geodeticDatum a owl:ObjectProperty ;
+	rdfs:label "uses geodetic datum"@en , "utilise le référentiel géodésique"@fr ;
+	rdfs:comment "Désigne le référentiel géodésique utilisé par un SRC géodésique."@fr ;
+	rdfs:subPropertyOf ignf:datum ;
+	rdfs:domain ignf:GeodeticCRS ;
+	rdfs:range ignf:GeodeticDatum ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:verticalDatum a owl:ObjectProperty ;
+	rdfs:label "uses vertical datum"@en , "utilise le référentiel vertical"@fr ;
+	rdfs:comment "Désigne le référentiel vertical utilisé par un SRC vertical."@fr ;
+	rdfs:subPropertyOf ignf:datum ;
+	rdfs:domain ignf:VerticalCRS ;
+	rdfs:range ignf:VerticalDatum ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:axis a owl:ObjectProperty ;
+	rdfs:label "uses Axis"@en , "utilise l'axe"@fr ;
+	rdfs:comment "Désigne un axe utilisé par un système de coordonnées ellipsoïdal ou cartésien."@fr ;
+	rdfs:domain ignf:CoordinateSystem ;
+	rdfs:range ignf:CoordinateSystemAxis ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:primeMeridian a owl:ObjectProperty ;
+	rdfs:label "uses prime meridian"@en , "utilise le méridien origine"@fr ;
+	rdfs:comment "Désigne le méridien origine d'un référentiel géodésique."@fr ;
+	rdfs:domain ignf:GeodeticDatum ;
+	rdfs:range ignf:PrimeMeridian ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:ellipsoid a owl:ObjectProperty ;
+	rdfs:label "uses ellipsoid"@en , "utilise l'ellipsoïde"@fr ;
+	rdfs:comment "Désigne l'ellipsoïde utilisé par un référentiel géodésique."@fr ;
+	rdfs:domain ignf:GeodeticDatum ;
+	rdfs:range ignf:Ellipsoid ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:geographicElement a owl:ObjectProperty ;
+	rdfs:label "geographic element"@en , "élément géographique"@fr ;
+	rdfs:comment "Désigne le cadre englobant géographique d'une région de validité."@fr ;
+	rdfs:domain ignf:Extent ;
+	rdfs:range ignf:GeographicBoundingBox ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:semiMajorAxis a owl:ObjectProperty ;
+	rdfs:label "semi major axis"@en , "demi grand axe"@fr ;
+	rdfs:comment "Désigne la longueur du demi grand axe d'un ellipsoïde."@fr ;
+	rdfs:domain ignf:Ellipsoid .
+
+_:node18u544mf6x103 a owl:Class .
+
+_:node18u544mf6x104 rdf:first qudt:QuantityValue ;
+	rdf:rest _:node18u544mf6x105 .
+
+_:node18u544mf6x106 a owl:Restriction ;
+	owl:allValuesFrom qudt:LengthUnit ;
+	owl:onProperty qudt:unit .
+
+_:node18u544mf6x105 rdf:first _:node18u544mf6x106 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x103 owl:intersectionOf _:node18u544mf6x104 .
+
+ignf:semiMajorAxis rdfs:range _:node18u544mf6x103 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:semiMinorAxis a owl:ObjectProperty ;
+	rdfs:label "semi minor axis"@en , "demi petit axe"@fr ;
+	rdfs:comment "Désigne la longueur du demi petit axe d'un ellipsoïde."@fr ;
+	rdfs:domain ignf:Ellipsoid .
+
+_:node18u544mf6x107 a owl:Class .
+
+_:node18u544mf6x108 rdf:first qudt:QuantityValue ;
+	rdf:rest _:node18u544mf6x109 .
+
+_:node18u544mf6x110 a owl:Restriction ;
+	owl:allValuesFrom qudt:LengthUnit ;
+	owl:onProperty qudt:unit .
+
+_:node18u544mf6x109 rdf:first _:node18u544mf6x110 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x107 owl:intersectionOf _:node18u544mf6x108 .
+
+ignf:semiMinorAxis rdfs:range _:node18u544mf6x107 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:inverseFlattening a owl:ObjectProperty ;
+	rdfs:label "inverse flattening"@en , "aplatissement inverse"@fr ;
+	rdfs:comment "Désigne la valeur d'aplatissement inverse d'un ellipsoïde, exprimée sous la forme d'un nombre ou d'un ratio (pourcentage, parties par million, etc.)."@fr ;
+	rdfs:domain ignf:Ellipsoid .
+
+_:node18u544mf6x111 a owl:Class .
+
+_:node18u544mf6x112 rdf:first qudt:QuantityValue ;
+	rdf:rest _:node18u544mf6x113 .
+
+_:node18u544mf6x114 a owl:Restriction ;
+	owl:allValuesFrom qudt:CountingUnit ;
+	owl:onProperty qudt:unit .
+
+_:node18u544mf6x113 rdf:first _:node18u544mf6x114 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x111 owl:intersectionOf _:node18u544mf6x112 .
+
+ignf:inverseFlattening rdfs:range _:node18u544mf6x111 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:greenwichLongitude a owl:ObjectProperty ;
+	rdfs:label "greenwich longitude"@en , "longitude par rapport à Greenwich"@fr ;
+	rdfs:comment "Désigne la longitude par rapport au méridien de Greenwich."@fr ;
+	rdfs:domain ignf:PrimeMeridian .
+
+_:node18u544mf6x115 a owl:Class .
+
+_:node18u544mf6x116 rdf:first qudt:QuantityValue ;
+	rdf:rest _:node18u544mf6x117 .
+
+_:node18u544mf6x118 a owl:Restriction ;
+	owl:allValuesFrom qudt:AngleUnit ;
+	owl:onProperty qudt:unit .
+
+_:node18u544mf6x117 rdf:first _:node18u544mf6x118 ;
+	rdf:rest rdf:nil .
+
+_:node18u544mf6x115 owl:intersectionOf _:node18u544mf6x116 .
+
+ignf:greenwichLongitude rdfs:range _:node18u544mf6x115 ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:usesMethod a owl:ObjectProperty ;
+	rdfs:label "uses method"@en , "utilise la méthode"@fr ;
+	rdfs:comment "Désigne la méthode utilisée par une opération sur des coordonnées."@fr ;
+	rdfs:domain ignf:CoordinateOperation ;
+	rdfs:range ignf:OperationMethod ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:usesValue a owl:ObjectProperty ;
+	rdfs:label "uses value"@en , "utilise la valeur"@fr ;
+	rdfs:comment "Désigne une valeur utilisée par une opération sur des coordonnées."@fr ;
+	rdfs:domain ignf:CoordinateOperation ;
+	rdfs:range ignf:OperationParameterValue ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:usesParameter a owl:ObjectProperty ;
+	rdfs:label "uses parameter"@en , "utilise le paramètre"@fr ;
+	rdfs:comment "Désigne un paramètre utilisé par une méthode pour faire une opération sur des coordonnées."@fr ;
+	rdfs:domain ignf:OperationMethod ;
+	rdfs:range ignf:OperationParameter ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:parameter a owl:ObjectProperty ;
+	rdfs:label "parameter"@en , "paramètre"@fr ;
+	rdfs:comment "Désigne le paramètre auquel est associée une valeur."@fr ;
+	rdfs:domain ignf:OperationParameterValue ;
+	rdfs:range ignf:OperationParameter ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:sourceCRS a owl:ObjectProperty ;
+	rdfs:label "source CRS"@en , "SRC source"@fr ;
+	rdfs:comment "Désigne le SRC des données en entrée d'une opération."@fr ;
+	rdfs:domain ignf:CoordinateOperation ;
+	rdfs:range ignf:CRS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:targetCRS a owl:ObjectProperty ;
+	rdfs:label "target CRS"@en , "SRC cible"@fr ;
+	rdfs:comment "Désigne le SRC des données en sortie d'une opération."@fr ;
+	rdfs:domain ignf:CoordinateOperation ;
+	rdfs:range ignf:CRS ;
+	rdfs:isDefinedBy <http://data.ign.fr/def/ignf> .
+
+ignf:westBoundLongitude a owl:DatatypeProperty ;
+	rdfs:domain ignf:GeographicBoundingBox ;
+	rdfs:label "west bound longitude"@en , "longitude ouest minimale"@fr ;
+	rdfs:comment "Désigne la longitude ouest minimale du cadre englobant."@fr ;
+	rdfs:range xsd:double .
+
+ignf:eastBoundLongitude a owl:DatatypeProperty ;
+	rdfs:domain ignf:GeographicBoundingBox ;
+	rdfs:label "east bound longitude"@en , "longitude est maximale"@fr ;
+	rdfs:comment "Désigne la longitude est maximale du cadre englobant."@fr ;
+	rdfs:range xsd:double .
+
+ignf:southBoundLatitude a owl:DatatypeProperty ;
+	rdfs:domain ignf:GeographicBoundingBox ;
+	rdfs:label "south bound latitude"@en , "latitude sud minimale"@fr ;
+	rdfs:comment "Désigne la latitude sud minimale du cadre englobant."@fr ;
+	rdfs:range xsd:double .
+
+ignf:northBoundLatitude a owl:DatatypeProperty ;
+	rdfs:domain ignf:GeographicBoundingBox ;
+	rdfs:label "north bound longitude"@en , "latitude nord maximale"@fr ;
+	rdfs:comment "Désigne la latitude nord maximale du cadre englobant."@fr ;
+	rdfs:range xsd:double .
+
+ignf:scope a owl:DatatypeProperty ;
+	rdfs:label "scope"@en , "portée"@fr ;
+	rdfs:comment "Désigne la portée de la référence."@fr ;
+	rdfs:range xsd:string .
+
+ignf:codeSpace a owl:DatatypeProperty ;
+	rdfs:label "code space"@en , "espace de codage"@fr ;
+	rdfs:comment "Désigne la règle ou l'autorité dont résulte la valeur de la référence."@fr ;
+	rdfs:range xsd:string .
+
+ignf:conversion a owl:DatatypeProperty ;
+	rdfs:label "defined by conversion"@en , "défini par conversion"@fr ;
+	rdfs:comment "Désigne la conversion utilisée pour définir un SRC projeté."@fr ;
+	rdfs:domain ignf:ProjectedCRS ;
+	rdfs:range xsd:anyURI .
+
+ignf:axisAbbrev a owl:DatatypeProperty ;
+	rdfs:label "axis abbreviation"@en , "abréviation utilisée pour désigner l'axe"@fr ;
+	rdfs:comment "Désigne l'abréviation utilisée pour désigner l'axe."@fr ;
+	rdfs:domain ignf:CoordinateSystemAxis ;
+	rdfs:range xsd:string .
+
+ignf:axisDirection a owl:DatatypeProperty ;
+	rdfs:label "axis direction"@en , "direction de l'axe"@fr ;
+	rdfs:comment "Désigne la direction de l'axe."@fr ;
+	rdfs:domain ignf:CoordinateSystemAxis ;
+	rdfs:range xsd:string .
+
+ignf:isSphere a owl:DatatypeProperty ;
+	rdfs:label "is sphere"@en , "est une sphère"@fr ;
+	rdfs:comment "Indique si l'ellipsoïde est une sphère."@fr ;
+	rdfs:domain ignf:Ellipsoid ;
+	rdfs:range xsd:boolean .
+
+ignf:epsgID a owl:DatatypeProperty ;
+	rdfs:label "espg identifier"@en , "identifiant epsg"@fr ;
+	rdfs:comment "Indique l'identifiant EPSG de la ressource."@fr ;
+	rdfs:range xsd:string .
+
+ignf:operationVersion a owl:DatatypeProperty ;
+	rdfs:label "operation version"@en , "version de l'opération"@fr ;
+	rdfs:comment "Indique la version d'une opération appliquée sur des coordonnées."@fr ;
+	rdfs:domain ignf:CoordinateOperation ;
+	rdfs:range xsd:string .
+
+ignf:methodFormula a owl:DatatypeProperty ;
+	rdfs:label "method formula"@en , "formule de la méthode"@fr ;
+	rdfs:comment "Indique la formule utilisée par une méthode pour faire opération sur des coordonnées."@fr ;
+	rdfs:domain ignf:OperationMethod ;
+	rdfs:range xsd:string .
+
+ignf:sourceDimension a owl:DatatypeProperty ;
+	rdfs:label "source CRS dimension"@en , "dimension du SRC source"@fr ;
+	rdfs:comment "Indique la dimension du SRC des données en entrée d'une opération."@fr ;
+	rdfs:domain ignf:OperationMethod ;
+	rdfs:range xsd:integer .
+
+ignf:targetDimension a owl:DatatypeProperty ;
+	rdfs:label "target CRS dimension"@en , "dimension du SRC cible"@fr ;
+	rdfs:comment "Indique la dimension du SRC des données en sortie d'une opération."@fr ;
+	rdfs:domain ignf:OperationMethod ;
+	rdfs:range xsd:integer .

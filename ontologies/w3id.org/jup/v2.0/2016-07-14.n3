@@ -1,0 +1,3575 @@
+@prefix jup: <http://w3id.org/charta77/jup/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix voaf: <http://purl.org/vocommons/voaf#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rov: <http://www.w3.org/ns/regorg#>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix vann: <http://purl.org/vocab/vann/>.
+@prefix schema: <http://schema.org/>.
+@prefix ruian: <http://ruian.linked.opendata.cz/ontology>.
+@prefix adms: <http://www.w3.org/ns/adms>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix lgdo: <http://linkedgeodata.org/ontology/>.
+@prefix sioc: <http://rdfs.org/sioc/ns#>.
+@prefix dbr: <http://dbpedia.org/resource/>.
+@prefix dbo: <http://dbpedia.org/ontology/>.
+@prefix wde: <https://www.wikidata.org/entity/>.
+@prefix cc: <http://creativecommons.org/ns#>.
+@prefix org: <http://www.w3.org/ns/org#>.
+
+<http://w3id.org/charta77/jup> a voaf:Vocabulary, owl:Ontology;
+	dcterms:title "Slovnik pristupnosti budov"@cs,"Ontology of Building Accessibility"@en;
+	dcterms:description "Slovnik prisupnosti budov vznikl v ramci projektu Mapy bez barier, ktery realizuje Nadace Charty 77 - Konto Bariery. Vychazi z Metodiky kategorizace pristupnosti objektu, je vsak doplnen i o entity vyplyvajici z pozadavku projektu. Tento slovnik je i tematem diplomove prace Ontologie pristupnosti budov. Projekt je spolufinancovan z prostredku Evropske unie, Evropskeho fondu pro regionalni rozvoj."@cs,"The vocabulary of building accessibility was created within the project Maps without Barriers realized under Charta 77 Foundation – Barriers Account. It is based on the Object Accessibility Categorization Methodology, however, it is completed with entities arising from the needs of the project. This vocabulary is also part of a diploma thesis entitled Ontology of Building Accessibility. The project is co-financed from resources provided by the European Union and European Regional Development Fund."@en;
+	dcterms:created "2014-07-01"^^xsd:date;
+	dcterms:issued "2016-02-18"^^xsd:date;
+	dcterms:modified "2016-07-14"^^xsd:date;
+	dcterms:creator [ foaf:familyName "Hazuza";
+					  foaf:firstName "Petr";
+					  foaf:mbox "petr.hazuza@bariery.cz"];
+	vann:preferredNamespacePrefix "jup";
+	cc:license <http://opendatacommons.org/licenses/odbl/1.0/>;
+	owl:versionInfo "2.0";
+	rdfs:seeAlso <http://www.presbariery.cz/prilohy/metodika-metodika-kategorizace-pristupnosti-objektu.pdf>, <http://www.mapybezbarier.cz>, <https://mapybezbarier.cz/download/turtle/mapybezbarier.ttl.zip>, <http://lod.mapybezbarier.cz/sparql>, <http://rdf.pth.name/example.ttl>, <http://rdf.pth.name/data.ttl>
+.
+
+#Annotation properties############################
+dcterms:title a owl:AnnotationProperty.
+dcterms:created a owl:AnnotationProperty.
+dcterms:modified a owl:AnnotationProperty.
+dcterms:creator a owl:AnnotationProperty.
+
+jup:hasForm a owl:AnnotationProperty;
+	rdfs:label "Entita je popsana formularem"@cs,"Entity described by a form"@en;
+	
+.
+
+#Classes##########################################
+
+jup:MappableEntity rdfs:subClassOf owl:Thing; a owl:Class;
+	rdfs:label "Mapovatelna entita"@cs,"Mappable entity"@en;
+.
+
+jup:PhysicalEntity rdfs:subClassOf owl:Thing; a owl:Class;
+	rdfs:label "Fyzicka entita"@cs,"Physical entity"@en;
+.
+
+jup:AddressableEntity rdfs:subClassOf owl:Thing; a owl:Class;
+	rdfs:label "Entita majici adresu"@cs,"Addressable entity"@en;
+.
+
+jup:AssessableEntity rdfs:subClassOf owl:Thing; a owl:Class;
+	rdfs:label "Ohodnotitelna entita"@cs,"Assessable entity"@en;
+	rdfs:comment "ohodnoceni z hlediska pristupnosti"@cs,"accessibility evaluation"@cs
+.
+
+jup:Form rdfs:subClassOf owl:Thing; a owl:Class;
+	rdfs:label "Formular mapujici entitu"@cs,"Form mapping entity"@en;
+.
+
+jup:Mapper rdfs:subClassOf foaf:Person;
+	rdfs:label "Osoba mapujici pristupnost objektu"@cs,"Person mapping object accessibility"@en;
+.
+
+##################################################
+
+jup:Organization rdfs:subClassOf org:Organization, jup:AddressableEntity;
+	rdfs:label "Organizace"@cs,"Organization"@en;
+	rdfs:comment "napr. Sprava prazskeho hradu"@cs,"e.g. Prague Castle Administration"@en;
+	rdfs:isDefinedBy <https://en.wikipedia.org/wiki/Organization>
+.
+
+jup:Complex rdfs:subClassOf org:Site, jup:AddressableEntity, jup:PhysicalEntity;
+	rdfs:label "Komplex budov"@cs,"Building complex"@en;
+	rdfs:comment "napr. Prazsky hrad"@cs,"e.g. Prague Castle"@en;
+	owl:sameAs wde:Q19622166;
+	rdfs:isDefinedBy <http://www.thefreedictionary.com/building+complex>
+.
+
+##################################################
+
+jup:Object rdfs:subClassOf org:Site, jup:MappableEntity, jup:AddressableEntity, jup:PhysicalEntity, jup:AssessableEntity;
+	rdfs:label "Mapovany objekt"@cs,"Mapped object"@en;
+	rdfs:comment "Objektem nemusi byt pouze cela budova, ale take jen jeji urcita logicka cast (napr. jeden obchod v multifunkcnim dome). Na jedne adrese tak muze byt vice objektu. "@cs,
+		"An object may not be represented by an entire building, it can stand for its particular logic part (e.g. one department store in a multifunctional building). One address can thus comprise multiple objects."@en;
+	jup:hasForm jup:ObjectMKPOForm
+.
+
+jup:Elevator rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Vytah"@cs,"Elevator"@en;
+	
+	owl:sameAs dbr:Elevator, wde:Q132911, lgdo:Elevator;
+	jup:hasForm jup:ElevatorMKPOForm
+.
+
+jup:Platform rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Plosina"@cs,"Platform"@en;
+	
+	owl:sameAs dbr:Wheelchair_lift, wde:Q2164387;
+	jup:hasForm jup:PlatformMKPOForm
+.
+
+jup:RampSkids rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Rampa / Liziny"@cs,"Ramp / Skids"@en;
+	
+	jup:hasForm jup:RampSkidsMKPOForm
+.
+
+	jup:Ramp rdfs:subClassOf jup:RampSkids;
+		rdfs:label "Rampa"@cs,"Ramp"@en;
+		
+		owl:sameAs dbr:Wheelchair_ramp, wde:Q12072818
+	.
+
+	jup:Skids rdfs:subClassOf jup:RampSkids;
+		rdfs:label "Liziny"@cs,"Skids"@en;
+		
+	.
+
+jup:WC rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Upravene WC"@cs,"Adapted WC"@en;
+	rdfs:comment "Umisteni zarizovacich predmetu se hodnoti z pohledu od vstupu do kabiny"@cs,
+		"Placement of equipment objects is viewed from the entrance into the room"@en;
+	owl:sameAs dbr:Public_toilet, wde:Q20892071, lgdo:Toilets;
+	jup:hasForm jup:WCMKPOForm
+.
+
+##################################################
+
+jup:AOB rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Akusticky orientacni majacek"@cs,"Acoustic orientation beacon"@en;
+	
+	jup:seeAlso <http://bariery.centrumpronevidome.cz/bariery/akusticke.htm>, <http://www.dinasys.cz/en/products-profiles/acoustic-guiding-beacons.html>;
+	jup:hasForm jup:ObjectMKPOForm, jup:ElevatorMKPOForm
+.
+
+jup:Bannister rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Zabradli"@cs,"Bannister"@en;
+
+	jup:hasForm jup:ObjectMKPOForm
+.
+
+jup:Bell rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Zvonek"@cs,"Bell"@en;
+	
+	owl:sameAs dbr:Doorbell, wde:Q384459;
+	jup:hasForm jup:ObjectMKPOForm, jup:PlatformMKPOForm
+.
+
+jup:ContrastMarking rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Kontrastni znaceni prosklenych ploch"@cs,"Contrast marking of glass surfaces"@en;
+	
+	jup:seeAlso <http://bariery.centrumpronevidome.cz/bariery/vizualni.htm>;
+	jup:hasForm jup:ObjectMKPOForm
+.
+
+jup:Door rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Dvere"@cs,"Door"@en;
+	
+	owl:sameAs dbr:Door, wde:Q36794;
+	jup:hasForm jup:ObjectMKPOForm, jup:WCMKPOForm
+.
+
+	jup:LobbyDoor rdfs:subClassOf jup:Door;
+		rdfs:label "Dvere zadveri"@cs,"Lobby door"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm		
+	.
+
+	jup:ElevatorShaftDoor rdfs:subClassOf jup:Door;
+		rdfs:label "Dvere sachty vytahu"@cs,"Elevator shaft door"@en;
+		
+		jup:hasForm jup:ElevatorMKPOForm
+	.
+
+	jup:ElevatorCageDoor rdfs:subClassOf jup:Door;
+		rdfs:label "Dvere klece vytahu"@cs,"Elevator cage door"@en;
+		
+		jup:hasForm jup:ElevatorMKPOForm
+	.
+
+jup:Entrance rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Vstup"@cs,"Entrance"@en;
+	
+	owl:sameAs dbr:Entrance, lgdo:Entrance
+.
+
+	jup:MainEntrance rdfs:subClassOf jup:Entrance;
+		rdfs:label "Vstup hlavni"@cs,"Main entrance"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm
+	.
+
+	jup:SideEntrance rdfs:subClassOf jup:Entrance;
+		rdfs:label "Vstup vedlejsi"@cs,"Side entrance"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm
+	.
+
+jup:EntryArea rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Nastupni plocha"@cs,"Entry area"@en;
+	
+.
+
+	jup:BottomEntryArea rdfs:subClassOf jup:EntryArea;
+		rdfs:label "Dolni nastupni plocha, vstup a dojezd"@cs,"Bottom entry area, entry and exit"@en;
+		
+		jup:hasForm jup:PlatformMKPOForm, jup:RampSkidsMKPOForm
+	.
+
+	jup:TopEntryArea rdfs:subClassOf jup:EntryArea;
+		rdfs:label "Horni nastupni plocha, vstup a dojezd"@cs,"Top entry area, entry and exit"@en;
+		
+		jup:hasForm jup:PlatformMKPOForm, jup:RampSkidsMKPOForm
+	.
+
+	jup:LandingsEntryArea rdfs:subClassOf jup:EntryArea;
+		rdfs:label "Podesta"@cs,"Landings"@en;
+		
+		jup:hasForm jup:RampSkidsMKPOForm
+	.
+
+jup:Handle rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Madlo"@cs,"Handle"@en;
+	
+	owl:sameAs dbr:Grab_bar, wde:Q5590561;
+	jup:hasForm jup:ElevatorMKPOForm
+.
+
+	jup:WashBasinHandle rdfs:subClassOf jup:Handle;
+		rdfs:label "Madlo u umyvadla"@cs,"WashBasin handle"@en;
+		
+		jup:hasForm jup:WCMKPOForm
+	.
+
+	jup:WCBasinLeftHandle rdfs:subClassOf jup:Handle;
+		rdfs:label "Leve madlo u WC"@cs,"WC basin left handle"@en;
+		
+		jup:hasForm jup:WCMKPOForm
+	.
+
+	jup:WCBasinRightHandle rdfs:subClassOf jup:Handle;
+		rdfs:label "Prave madlo u WC"@cs,"WC basin right handle"@en;
+		
+		jup:hasForm jup:WCMKPOForm
+	.
+
+	jup:ElevatorCageHandle rdfs:subClassOf jup:Handle;
+		rdfs:label "Madlo ve vytahove kleci"@cs,"Elevator cage handle"@en;
+		
+		jup:hasForm jup:ElevatorMKPOForm
+	.
+	
+	jup:RampHandle rdfs:subClassOf jup:Handle;
+		rdfs:label "Madlo (zabradli)u rampy"@cs,"Ramp handle (bannister)"@en;
+		
+		jup:hasForm jup:RampSkidsMKPOForm
+	.
+
+jup:Hallway rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Predsin"@cs,"Hallway"@en;
+	
+	owl:sameAs dbr:Antechamber, wde:Q4771130
+.
+
+	jup:WCHallway rdfs:subClassOf jup:Hallway;
+		rdfs:label "Predsin upraveneho WC"@cs,"Adapted WC hallway"@en;
+		rdfs:comment "V pripade, ze je kabina pristupna přes predsine"@cs,"In case that the WC is accessible through hallways"@en;
+		jup:hasForm jup:WCMKPOForm
+	.
+
+jup:NarrowedPassage rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Zuzeny pruchod (mene nez 800mm)"@cs,"Narrowed passage (less than 80 cm)"@en;
+	jup:hasForm jup:ObjectMKPOForm
+.
+
+jup:NavigationSystem rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Navigacni system pro osoby se zrakovym omezenim"@cs,"Navigation system for visually handicapped persons"@en;
+	jup:hasForm jup:ObjectMKPOForm
+.
+	
+jup:TouristGuide rdfs:subClassOf jup:MappableEntity;
+	rdfs:label "Prohlidkovy okruh"@cs,"Tourist guide"@en;
+	
+	owl:sameAs dbr:Tour_guide
+.
+
+jup:RampLeg rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Rameno rampy"@cs,"Ramp leg"@en;
+	
+	jup:hasForm jup:RampSkidsMKPOForm
+.
+
+jup:Steps rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Schody, Schodiste"@cs,"Steps, Stairs"@en;
+	rdfs:comment "Schodiste je chapano jako schody spojujici patra"@cs,"Stairs is understood as connecting different floors"@en;
+	owl:sameAs dbr:Steps, lgdo:Steps
+.
+
+	jup:EntranceSteps rdfs:subClassOf jup:Steps;
+		rdfs:label "Schody pred vstupem"@cs,"Steps before entrance"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm
+	.
+
+	jup:LobbySteps rdfs:subClassOf jup:Steps;
+		rdfs:label "Schody v zadveri"@cs,"Steps in lobby"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm
+	.
+
+	jup:InteriorSteps rdfs:subClassOf jup:Steps;
+		rdfs:label "Schody v interieru"@cs,"Steps inside the interior"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm
+	.
+
+	jup:InteriorStairs rdfs:subClassOf jup:Steps;
+		rdfs:label "Schodiste v interieru"@cs,"Stairs inside the interior"@en;
+		
+		jup:hasForm jup:ObjectMKPOForm
+	.
+	
+jup:Tap rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Baterie"@cs,"Tap"@en;
+	
+	owl:sameAs <http://dbpedia.org/resource/Tap_(valve)>, wde:Q208443
+.
+
+	jup:WashBasinTap rdfs:subClassOf jup:Tap;
+		rdfs:label "Baterie u umyvadla"@cs,"WashBasin tap"@en;
+		
+		jup:hasForm jup:WCMKPOForm
+	.
+
+jup:Tourniquet rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Turniket"@cs,"Tourniquet"@en;
+		
+	jup:hasForm jup:ObjectMKPOForm
+.
+
+	
+jup:WashBasin rdfs:subClassOf jup:MappableEntity, jup:PhysicalEntity;
+	rdfs:label "Umyvadlo"@cs,"WashBasin"@en;
+	
+	owl:sameAs dbr:WashBasin;
+	jup:hasForm jup:WCMKPOForm
+.
+
+#AssessableEntity###########################################
+
+jup:accessibility a owl:FunctionalProperty;
+	rdfs:label "Pristupnost ohodnotitelne entity"@cs,"Assessable entity accessibility"@en;
+	rdfs:domain jup:AssessableEntity
+.
+
+#MappableEntity schemes###########################################
+
+jup:MappableEntityForm a rdfs:Class;
+	rdfs:label "Formulare mapujici entity"@cs,"Forms mapping entities"@en;
+	
+.
+
+jup:MappableEntityMKPOFormsScheme a skos:ConceptScheme;
+	rdfs:label "Schema pro formulare Metodiky Kategorizace Pristupnosti Objektu"@cs,"A scheme for Object Accessibility Categorization Methodology forms"@en;
+	
+.
+
+jup:ObjectMKPOForm a skos:Concept, jup:MappableEntityForm;
+    skos:prefLabel "Formular pro objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Object form based on Object Accessibility Categorization Methodology"@en;
+    skos:inScheme jup:MappableEntityMKPOFormsScheme
+.
+
+jup:ElevatorMKPOForm a skos:Concept, jup:MappableEntityForm;
+    skos:prefLabel "Priloha c.1 - VYTAH k formulari pro objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Appendix 1 - ELEVATOR supplementing the object form based on Object Accessibility Categorization Methodology"@en;
+    skos:inScheme jup:MappableEntityMKPOFormsScheme
+.
+
+jup:PlatformMKPOForm a skos:Concept, jup:MappableEntityForm;
+    skos:prefLabel "Priloha c.2 - PLOSINA k formulari pro objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Appendix 2 - PLATFORM supplementing the object form based on Object Accessibility Categorization Methodology"@en;
+    skos:inScheme jup:MappableEntityMKPOFormsScheme
+.
+
+jup:RampSkidsMKPOForm a skos:Concept, jup:MappableEntityForm;
+    skos:prefLabel "Priloha c.3 - RAMPA/LIZINY k formulari pro objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Appendix 3 - RAMP/SKIDS supplementing the object form based on Object Accessibility Categorization Methodology"@en;
+    skos:inScheme jup:MappableEntityMKPOFormsScheme
+.
+
+jup:WCMKPOForm a skos:Concept, jup:MappableEntityForm;
+    skos:prefLabel "Priloha c.4 - UPRAVENE WC k formulari pro objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Appendix 4 - ADDAPTED WC supplementing the object form based on Object Accessibility Categorization Methodology"@en;
+    skos:inScheme jup:MappableEntityMKPOFormsScheme
+.
+
+
+jup:MappableEntityAccess a rdfs:Class;
+	rdfs:label "Typy pristupu k mapovatelne entite"@cs,"Types of accessibility to the mappable entity"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list was copied based on forms compliant with Object Accessibility Categorization Methodology"@en
+.
+
+jup:MappableEntityAccessesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu pristupu k mapovatelne entite"@cs,"A type of accessibility scheme to the mappable entity"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:ElevatorMKPOForm, jup:PlatformMKPOForm, jup:WCMKPOForm; 
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list was copied based on forms compliant with Object Accessibility Categorization Methodology"@en
+.
+
+jup:FreelyAccessibleMappableEntityAccess a skos:Concept, jup:MappableEntityAccess;
+    skos:prefLabel "Volne pristupna"@cs,"Freely accessible"@en;
+    skos:inScheme jup:MappableEntityAccessesScheme
+.
+
+jup:LockedMappableEntityAccess a skos:Concept, jup:MappableEntityAccess;
+    skos:prefLabel "Uzamcena"@cs,"Locked"@en;
+    skos:inScheme jup:MappableEntityAccessesScheme
+.
+
+#MappableEntity###########################################
+
+jup:thresholdHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska prahu v cm"@cs,"Threshold height in cm"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:passageWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka pruchodu v cm"@cs,"Passage width in cm"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+.
+
+jup:mirrorHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni spodni hrany zrcadla v cm"@cs,"Lower mirror edge height in cm"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:controlHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni ovladace v cm"@cs,"Control placement height in cm"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:switchHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni vypinace v cm"@cs,"Switch placement height in cm"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:seatHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni sedatka v cm"@cs,"Seat placement height in cm"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:brailleLabelled a owl:FunctionalProperty;
+	rdfs:label "Oznaceni Braillovym pismem"@cs,"Braille labelling"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean
+.
+
+jup:contrastMarked a owl:FunctionalProperty;
+	rdfs:label "Kontrastni znaceni"@cs,"Contrast marking"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean
+.
+
+jup:access a owl:FunctionalProperty;
+	rdfs:label "Pristup k mapovatelne entite"@cs,"Access to the mappable entity"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range skos:Concept, jup:MappableEntityAccess
+.
+
+jup:accessProvidedBy a rdf:Property;
+	rdfs:label "Pristup ke vstupu mapovatelne entity zajisti"@cs,"Access to entrance to the mappable entity provided by"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range rdf:langString
+.
+
+jup:localization a rdf:Property;
+	rdfs:label "Lokalizace mapovatelne entity"@cs,"Localization of mappable entity"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range rdf:langString
+.
+
+jup:createdBy a owl:FunctionalProperty;
+	rdfs:label "Identifikator osoby, ktera vytvorila zaznam"@cs,"Person ID of the entry creator"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range adms:Identifier
+.
+
+jup:createdDate a owl:FunctionalProperty;
+	rdfs:label "Datum vytvoreni zaznamu"@cs,"Entry creation date"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:date
+.
+
+jup:certifiedRecord a owl:FunctionalProperty;
+	rdfs:label "Zaznam byl vytvoreny certifikovanou osobou"@cs,"Entry created by a certified person"@en;
+	rdfs:comment "Certifikovana osoba vklada profesionalne (odborne) namerene udaje. K ziskani certifikace je nutne skoleni, zkouska, apod."@cs,"A certified person enters professionally taken data. To become a certified person a special training, examination etc. is required."@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean
+.
+
+jup:upToDateRecord a owl:FunctionalProperty;
+	rdfs:label "Aktualni zaznam"@cs,"Current entry"@en;
+	rdfs:comment "Starsi zaznamy o stejne mapovatelne entite maji nastaveny priznak na false"@cs,"Older entries describing the same mappable entity are assigned the false value."@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean
+.
+
+jup:hasPart rdfs:subPropertyOf dcterms:hasPart;
+	rdfs:label "Vztah mapovatelnych entit"@cs,"Mappable entities relationship"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range jup:MappableEntity
+.
+
+jup:partOf a rdf:Property;
+	rdfs:label "Vztah mapovatelnych entit"@cs,"Mappable entities relationship"@en;
+	
+	rdfs:domain jup:MappableEntity;
+	rdfs:range jup:MappableEntity
+.
+
+jup:hasNotes a rdf:Property;
+	rdfs:label "Poznamky k mapovatelne entite"@cs,"Mappable entity notes"@en;
+	rdfs:comment "Upravene WC: spatne ukotveni madel, madlo kotvene na bocni stene,..."@cs,
+		"Adapted WC: poor anchorage of handles, handle attached to side wall,..."@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range rdf:langString
+.
+
+#PhysicalEntity##########################################
+
+#AddressableEntity##########################################
+
+jup:hasPlace a owl:FunctionalProperty;
+	rdfs:label "Adresni misto podle RUIAN"@cs,"RUIAN address points"@en;
+	rdfs:comment "http://ruian.linked.opendata.cz/"@cs,"http://ruian.linked.opendata.cz/"@en;
+	rdfs:domain jup:AddressableEntity;
+	rdfs:range ruian:AdresniMisto
+.
+
+jup:hasIdentifier a owl:FunctionalProperty;
+	rdfs:label "Jednoznacny identifikator v danem kontextu"@cs,"Unique ID in the particular context"@en;
+	rdfs:comment "napr. pro organizace IC"@cs,"e.g. for IC organizations"@en;
+	owl:sameAs org:identifier;
+	rdfs:domain jup:AddressableEntity;
+	rdfs:range dcterms:Identifier
+.
+
+jup:belongsTo rdfs:subPropertyOf org:hasSite;
+	rdfs:label "Objekt je soucasti komplexu budov"@cs,""@en;
+	rdfs:domain jup:Object;
+	rdfs:range jup:Complex
+.
+
+#Object schemes##########################################
+
+jup:ObjectCategorizationMKPO a rdfs:Class;
+	rdfs:label "Tristupnovy system ohodnoceni pristupnosti objektu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Three degree evaluation system for object accessibility based on Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+	
+.
+
+jup:ObjectCategorizationsMKPOScheme a skos:ConceptScheme;
+	rdfs:label "Schema ohodnoceni pristupnosti objektu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Evaluation scheme for object accessibility based on Object Accessibility Categorization Methodology"@en;
+	
+.
+
+jup:AccessibleObjectMKPO a skos:Concept, jup:ObjectCategorizationMKPO;
+    skos:prefLabel "Pristupny objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Accessible object as compliant with Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+    skos:inScheme jup:ObjectCategorizationsMKPOScheme
+.
+
+jup:PartlyAccessibleObjectMKPO a skos:Concept, jup:ObjectCategorizationMKPO;
+    skos:prefLabel "Castecne pristupny objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Partly accessible object as compliant with Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+    skos:inScheme jup:ObjectCategorizationsMKPOScheme
+.
+
+jup:InaccessibleObjectMKPO a skos:Concept, jup:ObjectCategorizationMKPO;
+    skos:prefLabel "Obtizne pristupny nebo nepristupny objekt podle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Object accessible with difficulties as compliant with Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+    skos:inScheme jup:ObjectCategorizationsMKPOScheme
+. 
+
+jup:ObjectCategory a rdfs:Class;
+	rdfs:label "Kategorizace budov"@cs,"Building categorization"@en;
+	
+.
+
+jup:ObjectCategoriesScheme a skos:ConceptScheme;
+	rdfs:label "Schema kategorizace budov"@cs,"Building categorization scheme"@en;
+	
+.
+
+jup:GalleryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Galerie"@cs,"Gallery"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:tourism%3Dgallery>;
+	skos:exactMatch lgdo:Gallery;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:BasilicaObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Bazilika"@cs,"Basilica"@en;
+	rdfs:isDefinedBy <http://en.wikipedia.org/wiki/Basilica>;
+	skos:exactMatch wde:Q163687;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:TheatreObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Divadlo"@cs,"Theatre"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dtheatre>;
+	skos:exactMatch lgdo:Theatre;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:PubObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Hospoda"@cs,"Pub"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dpub>;
+	skos:exactMatch lgdo:Pub;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:ChapelObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Kaple"@cs,"Chapel"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:building%3Dchapel>;
+	skos:exactMatch lgdo:Chapel;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:LibraryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Knihovna"@cs,"Library"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dlibrary>;
+	skos:exactMatch lgdo:Library;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:MuseumObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Muzeum"@cs,"Museum"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:tourism%3Dmuseum>;
+	skos:exactMatch lgdo:Museum;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:ChurchObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Kostel"@cs,"Church"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:building%3Dchurch>;
+	skos:exactMatch lgdo:BuildingChurch;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:MonumentObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Památník"@cs,"Monument"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:historic%3Dmonument>;
+	skos:exactMatch lgdo:Monument;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:FortObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Pevnost"@cs,"Fort"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:historic%3Dfort>;
+	skos:exactMatch lgdo:Fort;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:BreweryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Pivovar"@cs,"Brewery"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:craft%3Dbrewery>;
+	skos:exactMatch lgdo:Brewery;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:MonasteryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Klášter"@cs,"Monastery"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dmonastery>;
+	skos:exactMatch lgdo:BuildingMonastery;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:ObservatoryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Hvězdárna"@cs,"Planetarium"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dplanetarium>;
+	skos:exactMatch lgdo:Planetarium;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:TowerObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Rozhledna"@cs,"Observation tower"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:man_made%3Dtower>;
+	skos:exactMatch lgdo:Tower;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:TempleObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Chrám"@cs,"Temple"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:building%3Dtemple>;
+	skos:exactMatch lgdo:Temple;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:CathedralObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Katedrála"@cs,"Cathedral"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:building%3Dcathedral>;
+	skos:exactMatch lgdo:Cathedral;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:SynagogueObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Synagoga"@cs,"Synagogue"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:building%3Dsynagogue>;
+	skos:exactMatch lgdo:Synagogue;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:DefensiveCastleObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Hrad"@cs,"Defensive castle"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Key:castle_type>;
+	skos:exactMatch	[a owl:Class ;
+						owl:intersectionOf(
+	                		lgdo:Castle
+	               		 	[a owl:Restriction ;
+								owl:onProperty lgdo:castleType ;
+								owl:hasValue "defensive"])];
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:StatelyHomeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zámek"@cs,"Stately home"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Key:castle_type>;
+	skos:exactMatch	[a owl:Class ;
+						owl:intersectionOf(
+	                		lgdo:Castle
+	               		 	[a owl:Restriction ;
+								owl:onProperty lgdo:castleType ;
+								owl:hasValue "stately"])];
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:FortressObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Tvrz"@cs,"Fortress"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Key:castle_type>;
+	skos:exactMatch	[a owl:Class ;
+						owl:intersectionOf(
+	                		lgdo:Castle
+	               		 	[a owl:Restriction ;
+								owl:onProperty lgdo:castleType ;
+								owl:hasValue "fortress"])];
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:TownhallObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Radnice"@cs,"Townhall"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Tag:amenity%3Dtownhall>;
+	skos:exactMatch lgdo:Townhall;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:PalaceObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Palác"@cs,"Palace"@en;
+	rdfs:isDefinedBy <http://wiki.openstreetmap.org/wiki/Key:castle_type>;
+	owl:sameAs [ a lgdo:Castle;
+				 lgdo:castleType "palace"];
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:LoretoObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Loreta"@cs,"Loreto"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:OtheroObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Jiné"@cs,"Other"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+jup:WaterParkObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Aquapark"@cs,"Water park"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:BusStationObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Autobusové Nádraží"@cs,"Bus station"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:BankObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Banka"@cs,"Bank"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:BarObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Bar"@cs,"Bar"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:BotanicGardenObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Botanická Zahrada"@cs,"Botanic garden"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PastryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Cukrárna, Kavárna, Čajovna"@cs,"Pastry"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:GasStationObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Čerpací Stanice"@cs,"Gas station"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:FarmObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Farma, Statek"@cs,"Farm"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:TaxOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Finanční Úřad"@cs,"Tax office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:StadiumObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Fotbalové Hřiště, Stadion"@cs,"Stadium"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:GuestHouseObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Penzion"@cs,"Guest house"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HotelObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Hotel"@cs,"Hotel"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PubObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Hospoda"@cs,"Pub"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:FunerallHallObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Smuteční Síň"@cs,"Funerall hall"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HypermarketObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Hypermarket"@cs,"Hypermarket"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:InformationCenterObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Informační Centrum"@cs,"Information center"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:CampObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Kemp"@cs,"Camp"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:CinemaObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Kino"@cs,"Cinema"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:ConcertHallObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Koncertní Síň"@cs,"Concert hall"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:ContactSocialServiceObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Sociální Kontaktní Služby"@cs,"Contact social service"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SwimmingObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Koupaliště"@cs,"Swimming"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:IndoorSwimmingPoolObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Krytý Plavecký Bazén"@cs,"Indoor swimmingpool"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SpaHouseObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Lázeňský Dům"@cs,"Spa house"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:WellnessObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Wellness"@cs,"Wellness"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PharmacyObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Lékárna"@cs,"Pharmacy"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:DoctorObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Lékař"@cs,"Doctor"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:MedicalEmergencyObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Lékařská Pohotovost"@cs,"Medical emergency"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:DentalEmergencyObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zubní Pohotovost"@cs,"Dental emergency"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:AirportObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Letiště"@cs,"Airport"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:FolkArchitectureObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Lidová Architektura"@cs,"Folk architecture"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:CityHallObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Magistrát"@cs,"City hall"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:KindergartenObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Mateřská Škola"@cs,"Kinder garten"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:MunicipalityObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Městský Úřad"@cs,"Municipality"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:MosqueObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Mešita"@cs,"Mosque"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HospitalObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Nemocnice"@cs,"Hospital"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HealthCenterObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Poliklinika"@cs,"Health center"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:MunicipalOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Obecní Úřad"@cs,"Municipal office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:StoreObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Obchod"@cs,"Store"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:DepartmentStoreObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Obchodní Dům, Nákupní Centrum"@cs,"Department store"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:OpticianShopObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Optika"@cs,"Optician shop"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:BreweryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Pivovar"@cs,"Brewery"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:ResidentialSocialServiceObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Sociální Pobytové Služby"@cs,"Residential social service"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:InsuranceOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Pojišťovna"@cs,"Insurance office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PoliceObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Policie Čr"@cs,"Police"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:MetropolitanPoliceObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Policie Městská"@cs,"Metropolitan police"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PostOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Pošta"@cs,"Post office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:CarDealerObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Prodejce Automobilů"@cs,"Car dealer"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HarborObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Přístav"@cs,"Harbor"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:RecreationalFacilityObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Rekreační Zařízení"@cs,"Recreational facility"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:RestaurantObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Restaurace A Pohostinství"@cs,"Restaurant"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:FastFoodObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Rychlé Občerstvení"@cs,"FastFood"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:ServiceObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Služby"@cs,"Service"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SocialOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Sociální Zabezpečení"@cs,"Social office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:CourtObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Soud"@cs,"Court"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SportsFacilityObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Sportovní Zařízení"@cs,"Sports facility"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:AdministrativeOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Správní Úřad"@cs,"Administrative office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SubwayStationObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Stanice Metra"@cs,"Subway station"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PublicProsecutorObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Státní Zastupitelství"@cs,"Public prosecutor"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HighSchoolObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Střední Škola"@cs,"High school"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SupermarketObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Supermarket"@cs,"Supermarket"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:WeddingHallObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Svatební Síň"@cs,"Wedding hall"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SchoolObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Škola"@cs,"School"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:EmploymentOfficeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Úřad Práce"@cs,"Employment office"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:PublicToiletObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Veřejné Wc"@cs,"Public toilet"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:VeterinarySurgeryObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Veterinární Ordinace"@cs,"Veterinary surgery"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:ViticultureObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Vinařství"@cs,"Viticulture"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:TrainStationObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Vlaková Stanice"@cs,"Train station"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:CollegeObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Vysoká Škola, Univerzita"@cs,"College"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:SchoolObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Základní Škola"@cs,"School"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:EmbassyObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zastupitelský Úřad, Ambasáda"@cs,"Embassy"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:HealthInsuranceCompanyObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zdravotní Pojišťovna"@cs,"Health insurance company"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:MedicalSupplyObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zdravotnické Potřeby"@cs,"Medical supply"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:WinterStadiumObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zimní Stadion"@cs,"Winter stadium"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+jup:ZooObjectCategory a skos:Concept, jup:ObjectCategory;
+    skos:prefLabel "Zoologická Zahrada"@cs,"Zoo"@en;
+    skos:inScheme jup:ObjectCategoriesScheme
+.
+
+
+
+jup:ObjectInteriorAccessibility a rdfs:Class;
+	rdfs:label "Typy pristupnosti interieru"@cs,"Interior accessiblity types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ObjectInteriorAccessibilitiesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu pristupnosti interieru"@cs,"Interior accessibility type scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:EntireObjectInteriorAccessibility a skos:Concept, jup:ObjectInteriorAccessibility;
+    skos:prefLabel "Cely interier nebo jeho vetsi cast"@cs,"Entire interior or its larger part"@en;
+    skos:inScheme jup:ObjectInteriorAccessibilitiesScheme
+.
+
+jup:PartObjectInteriorAccessibility a skos:Concept, jup:ObjectInteriorAccessibility;
+    skos:prefLabel "Pouze cast interieru"@cs,"Part of interior only"@en;
+    skos:inScheme jup:ObjectInteriorAccessibilitiesScheme
+.
+
+jup:InaccessibleObjectInteriorAccessibility a skos:Concept, jup:ObjectInteriorAccessibility;
+    skos:prefLabel "Nepristupny interier"@cs,"Inaccessible interior"@en;
+    skos:inScheme jup:ObjectInteriorAccessibilitiesScheme
+.
+
+#Object##########################################
+
+jup:objectAccessibilityMKPO rdfs:subPropertyOf jup:accessibility;
+	rdfs:label "Ohodnoceni pristupnosti objektu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Object accessibility evaluation scheme based on Object Accessibility Categorization Methodology"@en;
+	
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+	rdfs:domain jup:Object;
+	rdfs:range skos:Concept, jup:ObjectCategorizationMKPO
+.
+
+jup:objectCategory a owl:FunctionalProperty;
+	rdfs:label "Kategorie budovy"@cs,"Object category"@en;
+	
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+	rdfs:domain jup:Object;
+	rdfs:range skos:Concept, jup:ObjectCategory
+.
+
+jup:hasSummary a rdf:Property;
+	rdfs:label "Textovy popis objektu"@cs,"Text desciption of an object"@en;
+	rdfs:comment "Strucny, pro laiky srozumitelny, formatovany text shrnujici udaje z formularu"@cs,"Short and formated description summarizing form data, understandable to the wide public"@en;
+	rdfs:domain jup:Object;
+	rdfs:range rdf:langString
+.
+
+jup:objectInteriorAccessibility a owl:FunctionalProperty;
+	rdfs:label "Pristupnost interieru"@cs,"Accessibility of interior"@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range skos:Concept, jup:ObjectInteriorAccessibility
+.
+
+#Entrance schemes##########################################
+
+jup:EntranceGuidingLine a rdfs:Class;
+	rdfs:label "Typy vodicich linii"@cs,"Guiding line types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:EntranceGuidingLinesScheme a skos:ConceptScheme;
+	rdfs:label "Schema vodici linie"@cs,"Guiding line scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:MissingEntranceGuidingLine a skos:Concept, jup:EntranceGuidingLine;
+    skos:prefLabel "Chybi"@cs,"Missing"@en;
+    skos:inScheme jup:EntranceGuidingLinesScheme
+.
+
+jup:NaturalEntranceGuidingLine a skos:Concept, jup:EntranceGuidingLine;
+    skos:prefLabel "Prirozena"@cs,"Natural"@en;
+    skos:inScheme jup:EntranceGuidingLinesScheme
+.
+
+jup:ArtificialEntranceGuidingLine a skos:Concept, jup:EntranceGuidingLine;
+    skos:prefLabel "Umela"@cs,"Artificial"@en;
+    skos:inScheme jup:EntranceGuidingLinesScheme
+.
+
+jup:EntranceAccessibility a rdfs:Class;
+	rdfs:label "Typy pristupnosti vstupu"@cs,"Entrance accessibility types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:EntranceAccessibilitiesScheme a skos:ConceptScheme;
+	rdfs:label "Schema pristupnosti vsupu"@cs,"Entrance accessibility scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:NoElevationEntranceAccessibility a skos:Concept, jup:EntranceAccessibility;
+    skos:prefLabel "Bez prevyseni"@cs,"No elevation"@en;
+    skos:inScheme jup:EntranceAccessibilitiesScheme
+.
+
+jup:OneStepEntranceAccessibility a skos:Concept, jup:EntranceAccessibility;
+    skos:prefLabel "Jeden schod"@cs,"One step"@en;
+    skos:inScheme jup:EntranceAccessibilitiesScheme
+.
+
+jup:MoreStepsEntranceAccessibility a skos:Concept, jup:EntranceAccessibility;
+    skos:prefLabel "Vice schodu"@cs,"More steps"@en;
+    skos:inScheme jup:EntranceAccessibilitiesScheme
+.
+
+jup:RampEntranceAccessibility a skos:Concept, jup:EntranceAccessibility;
+    skos:prefLabel "Rampa"@cs,"Ramp"@en;
+	rdfs:comment "Priloha c.3"@cs,"Appendix 3"@en;
+	owl:sameAs jup:Ramp;
+    skos:inScheme jup:EntranceAccessibilitiesScheme
+.
+
+jup:PlatformEntranceAccessibility a skos:Concept, jup:EntranceAccessibility;
+    skos:prefLabel "Plosina"@cs,"Platform"@en;
+	rdfs:comment "Priloha c.2"@cs,"Appendix 2"@en;
+	owl:sameAs jup:Platform;
+    skos:inScheme jup:EntranceAccessibilitiesScheme
+.
+
+#Entrance##########################################
+
+jup:entranceIsSideEntranceMarked a owl:FunctionalProperty;
+	rdfs:label "Vedlejsi vstup vyznacen"@cs,"Side entrance marked"@en;
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean
+.
+
+jup:entranceSideEntranceDescribed a owl:FunctionalProperty;
+	rdfs:label "Informace o vedlejsim vstupu u vstupu hlavniho"@cs,"Information about the side entrance by the main entrance"@en;
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean
+.
+
+jup:entranceLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace vstupu"@cs,"Entrance localization"@en;
+	
+	rdfs:domain jup:Entrance
+.
+
+jup:entranceNumberOfReservedParking a owl:FunctionalProperty;
+	rdfs:label "Pocet vyhrazenych parkovacich stani"@cs,"Number of reserved parking places"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entranceReservedParkingLocalization a rdf:Property;
+	rdfs:label "Lokalizace vyhrazeneho parkovaciho stani"@cs,"Reserved parking places localization"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range rdf:langString
+.
+
+jup:entranceReservedParkingAccessDescription a rdf:Property;
+	rdfs:label "Pristup od vyhrazeneho parkovaciho stani ke vstupu objektu (bezbarierovy, obrubnik bez najezdu, zuzeni…)"@cs,"Access from reserved parking places to the building entrance: (barrier-free, curb without a ramp, narrowing…)"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range rdf:langString
+.
+
+jup:entranceLongitudinalInclination a owl:FunctionalProperty;
+	rdfs:label "Sklon podelny v %"@cs,"Longitudinal inclination in %"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:decimal
+.
+
+jup:entranceLongitudinalInclinationLocalization a rdf:Property;
+	rdfs:label "Lokalizace podelneho sklonu (pristupova komunikace, prostor pred vstupem,...)"@cs,"Longitudinal inclination localization: (access communication, area before the entrance)"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:langString
+.
+
+jup:entranceTransverseInclination a owl:FunctionalProperty;
+	rdfs:label "Sklon pricny v %"@cs,"Transverse inclination in %"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:decimal
+.
+
+jup:entranceTransverseInclinationLocalization a rdf:Property;
+	rdfs:label "Lokalizace pricneho sklonu (pristupova komunikace, prostor pred vstupem,...)"@cs,"Transverse inclination localization: (access communication, area before the entrance)"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:langString
+.
+
+jup:entranceDifficultSurfaceDescription a rdf:Property;
+	rdfs:label "Typ obtizneho povrchu (hruba historicka dlazba, popraskany asfalt…)"@cs,"Type of difficult surface: (rough historical pavement, cracked tarmac…)"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range rdf:langString
+.
+
+jup:entranceGuidingLine a owl:FunctionalProperty;
+	rdfs:label "Vodici linie"@cs,"Guiding line"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range skos:Concept, jup:EntranceGuidingLine
+.
+
+jup:entranceAccessibility a owl:FunctionalProperty;
+	rdfs:label "Pristupnost vstupu"@cs,"Accessibility of entrance"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range skos:Concept, jup:EntranceAccessibility
+.
+
+jup:entranceAccess rdfs:subPropertyOf jup:access;
+	rdfs:label "Pristup ke vstupu"@cs,"Access to entrance"@en;
+	
+	rdfs:domain jup:Entrance
+.
+
+jup:entranceAccessProvidedBy rdfs:subPropertyOf jup:accessProvidedBy;
+	rdfs:label "Pristup ke vstupu zajisti"@cs,"Access to entrance provided by"@en;
+	
+	rdfs:domain jup:Entrance
+.
+
+jup:entranceAreaBeforeDoorWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka plochy pred dvermi v cm"@cs,"Width of area before the door in cm"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entranceAreaBeforeDoorDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka plochy pred dvermi v cm"@cs,"Depth of area before the door in cm"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entranceLobbyWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka zadveri v cm"@cs,"Lobby width in cm"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entranceLobbyDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka zadveri v cm"@cs,"Lobby depth in cm"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:positiveInteger
+.
+
+#Door schemes############################################
+
+jup:DoorType a rdfs:Class;
+	rdfs:label "Typy dveri"@cs,"Door types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:DoorTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu dveri"@cs,"Door type scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:SinglePanelledDoorType a skos:Concept, jup:DoorType;
+    skos:prefLabel "Jednokridle"@cs,"Single panelled"@en;
+    skos:inScheme jup:DoorTypesScheme
+.
+
+jup:DoublePanelledDoorType a skos:Concept, jup:DoorType;
+    skos:prefLabel "Dvoukridle"@cs,"Double panelled"@en;
+    skos:inScheme jup:DoorTypesScheme
+.
+
+jup:CarouselDoorType a skos:Concept, jup:DoorType;
+    skos:prefLabel "Karuselove"@cs,"Carousel"@en;
+    skos:inScheme jup:DoorTypesScheme
+.
+
+
+jup:DoorOpening a rdfs:Class;
+	rdfs:label "Typy otevirani dveri"@cs,"Door openings types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:DoorOpeningsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu otevirani dveri"@cs,"Door openings type scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:ElevatorMKPOForm, jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:AutomaticDoorOpening a skos:Concept, jup:DoorOpening;
+    skos:prefLabel "Automaticke"@cs,"Automatic"@en;
+    skos:inScheme jup:DoorOpeningsScheme
+.
+
+jup:MechanicalDoorOpening a skos:Concept, jup:DoorOpening;
+    skos:prefLabel "Mechanicke"@cs,"Mechanical"@en;
+    skos:inScheme jup:DoorOpeningsScheme
+.
+
+jup:SlidingDoorOpening a skos:Concept, jup:DoorOpening;
+    skos:prefLabel "Posuvne"@cs,"Sliding"@en;
+    skos:inScheme jup:DoorOpeningsScheme
+.
+
+jup:SwingingDoorOpening a skos:Concept, jup:DoorOpening;
+    skos:prefLabel "Kyvne"@cs,"Swinging"@en;
+    skos:inScheme jup:DoorOpeningsScheme
+.
+
+jup:DoorOpeningDirection a rdfs:Class;
+	rdfs:label "Typy orientace otevirani dveri"@cs,"Door opening direction types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:DoorOpeningDirectionsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu orientace otevirani dveri"@cs,"Door opening direction type scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:ElevatorMKPOForm, jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:InwardsDoorOpeningDirection a skos:Concept, jup:DoorOpeningDirection;
+    skos:prefLabel "Dovnitr"@cs,"Inwards"@en;
+    rdfs:comment "do kabiny"@cs,"to the interior of the cabine"@en;
+    skos:inScheme jup:DoorOpeningDirectionsScheme
+.
+
+jup:OutwardsDoorOpeningDirection a skos:Concept, jup:DoorOpeningDirection;
+    skos:prefLabel "Ven"@cs,"Outwards"@en;
+    rdfs:comment "z kabiny"@cs,"to the exterior of the cabine"@en;
+    skos:inScheme jup:DoorOpeningDirectionsScheme
+.
+
+jup:SidesDoorOpeningDirection a skos:Concept, jup:DoorOpeningDirection;
+    skos:prefLabel "Do stran"@cs,"Sides"@en;
+    skos:inScheme jup:DoorOpeningDirectionsScheme
+.
+
+jup:OneSideDoorOpeningDirection a skos:Concept, jup:DoorOpeningDirection;
+    skos:prefLabel "Do strany"@cs,"One side"@en;
+    skos:inScheme jup:DoorOpeningDirectionsScheme
+.
+
+#Door############################################
+
+jup:doorWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka dveri v cm"@cs,"Door width in cm"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range xsd:positiveInteger
+.		
+
+jup:doorMainPanelWidth a owl:FunctionalProperty;
+	rdfs:label "Prujezdna sirka hlavniho kridla v cm"@cs,"Drive-through width of main panel in cm"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:doorSidePanelWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka vedlejsiho kridla v cm"@cs,"Width of side panel in cm"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:doorType a owl:FunctionalProperty;
+	rdfs:label "Typ dveri"@cs,"Type of door"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range skos:Concept, jup:DoorType
+.
+
+jup:doorOpening a owl:FunctionalProperty;
+	rdfs:label "Typ otevirani dveri"@cs,"Door opening type"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range skos:Concept, jup:DoorOpening
+.
+
+jup:doorOpeningDirection a owl:FunctionalProperty;
+	rdfs:label "Smer otevirani dveri"@cs,"Door opening direction"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range skos:Concept, jup:DoorOpeningDirection
+.
+
+jup:doorMarked a owl:FunctionalProperty;
+	rdfs:label "Oznaceni na dverich"@cs,"Marking on door"@en;
+	
+	rdfs:domain jup:Door;
+	rdfs:range xsd:boolean
+.
+
+jup:doorBrailleLabelled rdfs:subPropertyOf jup:brailleLabelled;
+	rdfs:label "Oznaceni na dverich v Braillove pisme"@cs,"Braille labelling on door"@en;
+	
+	rdfs:domain jup:Door
+.
+
+jup:doorStepHeight rdfs:subPropertyOf jup:thresholdHeight;
+	rdfs:label "Vyska prahu v cm"@cs,"Height of doorstep in cm"@en;
+	
+	rdfs:domain jup:Door
+.
+
+#Steps scheme############################################
+
+jup:StepsStairsType a rdfs:Class;
+	rdfs:label "Typy schodiste"@cs,"Stair types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:StepsStairsTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu schodiste"@cs,"Stair type scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:DirectObjectStairsType a skos:Concept, jup:StepsStairsType;
+    skos:prefLabel "Prime schodiste"@cs,"Direct stairs"@en;
+    skos:inScheme jup:StepsStairsTypesScheme
+.
+
+jup:SpiralObjectStairsType a skos:Concept, jup:StepsStairsType;
+    skos:prefLabel "Tocite schodiste"@cs,"Spiral stairs"@en;
+    skos:inScheme jup:StepsStairsTypesScheme
+.
+
+jup:NotConnectingObjectStairsType a skos:Concept, jup:StepsStairsType;
+    skos:prefLabel "Schody nespojujici patra"@cs,"Stairs not connecting floors"@en;
+    skos:inScheme jup:StepsStairsTypesScheme
+.
+
+
+#Steps############################################
+
+jup:stepsNumberOf a owl:FunctionalProperty;
+	rdfs:label "Pocet schodu"@cs,"Number of steps"@en;
+	
+	rdfs:domain jup:Steps;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:stepsLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace schodu nebo schodiste"@cs,"Localization of steps or stairs"@en;
+	rdfs:comment "Podlazi (-1.NP, 1.NP, 2, 1-2,...)"@cs,""@en;
+	rdfs:domain jup:Steps
+.
+
+jup:stepsType a owl:FunctionalProperty;
+	rdfs:label "Typ schodiste nebo schodu"@cs,"Type of stairs or steps"@en;
+	
+	rdfs:domain jup:Steps;
+	rdfs:range skos:Concept, jup:StepsStairsType
+.
+
+jup:stepsHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska schodu v cm"@cs,"Height of step in cm"@en;
+	
+	rdfs:domain jup:Steps;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:stepsWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka schodu v cm"@cs,"Width of step in cm"@en;
+	
+	rdfs:domain jup:Steps;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:stepsDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka schodu v cm"@cs,"Depth of step in cm"@en;
+	
+	rdfs:domain jup:Steps;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:stepsContrastMarked rdfs:subPropertyOf jup:contrastMarked;
+	rdfs:label "Prvni a posledni schod kontrastne vyznacen"@cs,"First and last step marked"@en;
+	
+	rdfs:domain jup:Steps
+.
+
+#Bell scheme############################################
+
+jup:BellType a rdfs:Class;
+	rdfs:label "Typy zvonku"@cs,"Bell types"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:BellTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu zvonku"@cs,"Bell type scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:PlatformMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:MissingBellType a skos:Concept, jup:BellType;
+    skos:prefLabel "Chybi"@cs,"Missing"@en;
+    skos:inScheme jup:BellTypesScheme
+.
+
+jup:RingOnlyBellType a skos:Concept, jup:BellType;
+    skos:prefLabel "Pouze zvoneni"@cs,"Ring only"@en;
+    skos:inScheme jup:BellTypesScheme
+.
+
+jup:IntercomBellType a skos:Concept, jup:BellType;
+    skos:prefLabel "Intercom"@cs,"Intercom"@en;
+    skos:inScheme jup:BellTypesScheme
+.
+
+#Bell############################################
+
+jup:bellType a owl:FunctionalProperty;
+	rdfs:label "Typ zvonku"@cs,"Bell type"@en;
+	
+	rdfs:domain jup:Bell;
+	rdfs:range skos:Concept, jup:BellType
+.
+
+jup:bellHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni zvonku v cm"@cs,"Height of bell in cm"@en;
+	
+	rdfs:domain jup:Bell;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:bellIndentation a owl:FunctionalProperty;
+	rdfs:label "Odsazeni zvonku od rohu v cm"@cs,"Bell distance from corner in cm"@en;
+	
+	rdfs:domain jup:Bell;
+	rdfs:range xsd:positiveInteger
+.
+
+#AOB Schemes############################################
+
+jup:AOBAnnouncement a rdfs:Class;
+	rdfs:label "Typy hlaseni AOB"@cs,"Types of AOB announcements"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:AOBAnnouncementsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu hlaseni AOB"@cs,"Type of AOB announcements scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:PhraseAOBAnnouncement a skos:Concept, jup:AOBAnnouncement;
+    skos:prefLabel "Fraze"@cs,"Phrase"@en;
+    skos:inScheme jup:AOBAnnouncementsScheme
+.
+
+jup:JingleAOBAnnouncement a skos:Concept, jup:AOBAnnouncement;
+    skos:prefLabel "Trylek"@cs,"Jingle"@en;
+    skos:inScheme jup:AOBAnnouncementsScheme
+.
+
+#AOB############################################
+
+jup:aobLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace AOB v pripade, ze neni nad osou dveri"@cs,"Localization of AOB in the case that not placed above the door axis"@en;
+	
+	rdfs:domain jup:AOB
+.
+
+jup:aobAboveDoor a owl:FunctionalProperty;
+	rdfs:label "Nad osou vstupnich dveri"@cs,"Above the front door axis"@en;
+	
+	rdfs:domain jup:AOB;
+	rdfs:range xsd:boolean
+.
+
+jup:aobAnnouncement a owl:FunctionalProperty;
+	rdfs:label "Typ hlaseni"@cs,"AOB announcement type"@en;
+	
+	rdfs:domain jup:AOB;
+	rdfs:range skos:Concept, jup:AOBAnnouncement
+.
+
+#ContrastMarking Schemes############################################
+
+jup:ContrastMarkingLocalization a rdfs:Class;
+	rdfs:label "Typy umisteni kontrastniho znaceni prosklenych ploch"@cs,"Types of contrast marking of glass surfaces"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ContrastMarkingLocalizationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu umisteni kontrastniho znaceni prosklenych ploch"@cs,"Types of contrast marking of glass surfaces scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:BottomContrastMarkingLocalization a skos:Concept, jup:ContrastMarkingLocalization;
+    skos:prefLabel "Ve spodni vyskove urovni"@cs,"At bottom level"@en;
+    skos:inScheme jup:ContrastMarkingLocalizationsScheme
+.
+
+jup:TopContrastMarkingLocalization a skos:Concept, jup:ContrastMarkingLocalization;
+    skos:prefLabel "V horni vyskove urovni"@cs,"At top level"@en;
+    skos:inScheme jup:ContrastMarkingLocalizationsScheme
+.
+
+jup:MissingContrastMarkingLocalization a skos:Concept, jup:ContrastMarkingLocalization;
+    skos:prefLabel "Chybi"@cs,"Missing"@en;
+    skos:inScheme jup:ContrastMarkingLocalizationsScheme
+.
+
+#ContrastMarking############################################
+
+jup:contrastMarkingGlassSurfacesMarked rdfs:subPropertyOf jup:contrastMarked;
+	rdfs:label "Prosklene plochy (proskleni nize nez 80 cm nad podlahu)"@cs,"Glass surfaces (glass lower than 80 cm above floor level)"@en;
+	
+	rdfs:domain jup:ContrastMarking
+.
+
+jup:contrastMarkingLocalization a owl:FunctionalProperty;
+	rdfs:label "Umisteni"@cs,"Localization of contrast marking"@en;
+	
+	rdfs:domain jup:ContrastMarking;
+	rdfs:range skos:Concept, jup:ContrastMarkingLocalization
+.
+
+#Hallway###########################################
+
+jup:hallwayWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka predsine v cm"@cs,"Width of hallway in cm"@en;
+	
+	rdfs:domain jup:Hallway;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:hallwayDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka predsine v cm"@cs,"Depth of hallway in cm"@en;
+	
+	rdfs:domain jup:Hallway;
+	rdfs:range xsd:positiveInteger
+.
+
+#Tap schemes###########################################
+
+jup:TapType a rdfs:Class;
+	rdfs:label "Typy baterii"@cs,"Types of taps"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:TapTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu baterii"@cs,"Tap type scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:LevelTap a skos:Concept, jup:TapType;
+    skos:prefLabel "Pakova baterie"@cs,"Level tap"@en;
+    skos:inScheme jup:TapTypesScheme
+.
+
+jup:TouchFreeTap a skos:Concept, jup:TapType;
+    skos:prefLabel "Bezdotykova baterie"@cs,"Touch-free tap"@en;
+    skos:inScheme jup:TapTypesScheme
+.
+
+jup:ValveTap a skos:Concept, jup:TapType;
+    skos:prefLabel "Ventil (kohoutek)"@cs,"Valve"@en;
+    skos:inScheme jup:TapTypesScheme
+.
+
+#Tap###########################################
+
+jup:tapHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni baterie od podlahy v cm"@cs,"Height of tap in cm"@en;
+	
+	rdfs:domain jup:Tap;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:tapType a owl:FunctionalProperty;
+	rdfs:label "Typ baterie"@cs,"Type of tap"@en;
+	
+	rdfs:domain jup:Tap;
+	rdfs:range skos:Concept, jup:TapType
+.
+
+#Handle schemes############################################
+
+jup:HandleType a rdfs:Class;
+	rdfs:label "Typy madel"@cs,"Types of handels"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:HandleTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu madla"@cs,"Handle type scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:FoldingHandleType a skos:Concept, jup:HandleType;
+    skos:prefLabel "Sklopne"@cs,"Folding"@en;
+    skos:inScheme jup:HandleTypesScheme
+.
+
+jup:FixedHandleType a skos:Concept, jup:HandleType;
+    skos:prefLabel "Pevne"@cs,"Fixed"@en;
+    skos:inScheme jup:HandleTypesScheme
+.
+
+jup:HandlePosition a rdfs:Class;
+	rdfs:label "Pozice madel"@cs,"Positions of handels"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:HandlePositionsScheme a skos:ConceptScheme;
+	rdfs:label "Schema pozic madla"@cs,"Position of handles scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:InsideHandlePosition a skos:Concept, jup:HandlePosition;
+    skos:prefLabel "Uvnitr"@cs,"Inside"@en;
+    skos:inScheme jup:HandlePositionsScheme
+.
+
+jup:OutsideHandlePosition a skos:Concept, jup:HandlePosition;
+    skos:prefLabel "Vne"@cs,"Outside"@en;
+    skos:inScheme jup:HandlePositionsScheme
+.
+
+jup:MissingHandlePosition a skos:Concept, jup:HandlePosition;
+    skos:prefLabel "Chybi"@cs,"Missing"@en;
+    skos:inScheme jup:HandlePositionsScheme
+.
+
+jup:HandleLocalization a rdfs:Class;
+	rdfs:label "Umisteni madel"@cs,"Localization of handels"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:HandleLocalizationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema umisteni madla"@cs,"Localization of handles scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm, jup:ElevatorMKPOForm, jup:RampSkidsMKPOForm, jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:FrontWallHandleLocalization a skos:Concept, jup:HandleLocalization;
+    skos:prefLabel "Celni stena"@cs,"Front wall"@en;
+    skos:inScheme jup:HandleLocalizationsScheme
+.
+
+jup:SideWallHandleLocalization a skos:Concept, jup:HandleLocalization;
+    skos:prefLabel "Bocni stena (jednostranne)"@cs,"Side wall"@en;
+    skos:inScheme jup:HandleLocalizationsScheme
+.
+
+jup:SideWallsHandleLocalization a skos:Concept, jup:HandleLocalization;
+    skos:prefLabel "Bocni steny (oboustranne)"@cs,"Side walls"@en;
+    skos:inScheme jup:HandleLocalizationsScheme
+.
+
+jup:HandleOrientation a rdfs:Class;
+	rdfs:label "Orientace madel"@cs,"Orientation of handels"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:HandleOrientationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema orientace madla"@cs,"Orientation of handles scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:VerticalHandleOrientation a skos:Concept, jup:HandleOrientation;
+    skos:prefLabel "Svisle"@cs,"Vertical"@en;
+    skos:inScheme jup:HandleOrientationsScheme
+.
+
+jup:HorizontalHandleOrientation a skos:Concept, jup:HandleOrientation;
+    skos:prefLabel "Vodorovne"@cs,"Horizontal"@en;
+    skos:inScheme jup:HandleOrientationsScheme
+.
+
+#Handle############################################
+
+jup:handleType a owl:FunctionalProperty;
+	rdfs:label "Typ madla"@cs,"Handle type"@en;
+	
+	rdfs:domain jup:Handle;
+	rdfs:range skos:Concept, jup:HandleType
+.
+
+jup:handlePosition a owl:FunctionalProperty;
+	rdfs:label "Pozice madla"@cs,"Handle position"@en;
+	
+	rdfs:domain jup:Handle;
+	rdfs:range skos:Concept, jup:HandlePosition
+.
+
+jup:handleLocalization a owl:FunctionalProperty;
+	rdfs:label "Umisteni madla"@cs,"Handle localization"@en;
+	
+	rdfs:domain jup:Handle;
+	rdfs:range skos:Concept, jup:HandleLocalization
+.
+
+jup:handleOrientation a owl:FunctionalProperty;
+	rdfs:label "Orientace madla"@cs,"Handle orientation"@en;
+	
+	rdfs:domain jup:Handle;
+	rdfs:range skos:Concept, jup:HandleOrientation
+.
+
+jup:handleHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni madla v cm"@cs,"Height of handle in cm"@en;
+	
+	rdfs:domain jup:Handle;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:handleLength a owl:FunctionalProperty;
+	rdfs:label "Delka madla v cm"@cs,"Length of handle in cm"@en;
+	
+	rdfs:domain jup:Handle;
+	rdfs:range xsd:positiveInteger
+.
+
+#WC schemes###########################################
+
+jup:WCCabinLocalization a rdfs:Class;
+	rdfs:label "Typy umisteni kabiny WC"@cs,"Localization of WC cabin"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:WCCabinLocalizationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu umisteni kabin"@cs,"Localization of WC cabins scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:GentsWCCabinLocalization a skos:Concept, jup:WCCabinLocalization;
+    skos:prefLabel "Kabina v oddeleni WC muzi"@cs,"Within Gents WC section"@en;
+    skos:inScheme jup:WCCabinLocalizationsScheme
+.
+
+jup:LadiesWCCabinLocalization a skos:Concept, jup:WCCabinLocalization;
+    skos:prefLabel "Kabina v oddeleni WC zeny"@cs,"Within Ladies WC section"@en;
+    skos:inScheme jup:WCCabinLocalizationsScheme
+.
+
+jup:SelfContainedWCCabinLocalization a skos:Concept, jup:WCCabinLocalization;
+    skos:prefLabel "Samostatna kabina"@cs,"Self-contained"@en;
+    skos:inScheme jup:WCCabinLocalizationsScheme
+.
+
+jup:WCSwitch a rdfs:Class;
+	rdfs:label "Typy vypinace"@cs,"Types of WC switches"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:WCSwitchesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu vypinacu"@cs,"Type of WC switches scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:AutomaticWCSwitch a skos:Concept, jup:WCSwitch;
+    skos:prefLabel "Automat"@cs,"Automatic"@en;
+    skos:inScheme jup:WCSwitchesScheme
+.
+
+jup:MissingWCSwitch a skos:Concept, jup:WCSwitch;
+    skos:prefLabel "Chybi"@cs,"Missing"@en;
+    skos:inScheme jup:WCSwitchesScheme
+.
+
+jup:YesWCSwitch a skos:Concept, jup:WCSwitch;
+    skos:prefLabel "Ano"@cs,"Yes"@en;
+    skos:inScheme jup:WCSwitchesScheme
+.
+
+jup:WCFlushing a rdfs:Class;
+	rdfs:label "Typy splachovani WC"@cs,"Types of WC flushings"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:WCFlushingsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu splachovani WC"@cs,"Type of WC flushings scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:AutomaticWCFlushing a skos:Concept, jup:WCFlushing;
+    skos:prefLabel "Automaticke"@cs,"Automatic"@en;
+    skos:inScheme jup:WCFlushingsScheme
+.
+
+jup:MechanicalWCFlushing a skos:Concept, jup:WCFlushing;
+    skos:prefLabel "Mechanicke"@cs,"Mechanical"@en;
+    skos:inScheme jup:WCFlushingsScheme
+.
+
+jup:WCFlushingDifficulty a rdfs:Class;
+	rdfs:label "Typy obtiznosti splachovani WC"@cs,"Types of WC flushing difficulties"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:WCFlushingDifficultiesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu obtiznosti splachovani WC"@cs,"Type of WC flushing difficulties scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:OKWCFlushingDifficulty a skos:Concept, jup:WCFlushingDifficulty;
+    skos:prefLabel "V poradku"@cs,"OK"@en;
+    skos:inScheme jup:WCFlushingDifficultiesScheme
+.
+
+jup:DifficultWCFlushingDifficulty a skos:Concept, jup:WCFlushingDifficulty;
+    skos:prefLabel "Obtizne"@cs,"Difficult"@en;
+    skos:inScheme jup:WCFlushingDifficultiesScheme
+.
+
+jup:WCChangingDesk a rdfs:Class;
+	rdfs:label "Typy prebalovacich pultu"@cs,"Types of changing desks"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:WCChangingDesksScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu prebalovacich pultu"@cs,"Type of changing desks scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:FoldingWCChangingDesk a skos:Concept, jup:WCChangingDesk;
+    skos:prefLabel "Sklopny"@cs,"Folding"@en;
+    skos:inScheme jup:WCChangingDesksScheme
+.
+
+jup:MobileWCChangingDesk a skos:Concept, jup:WCChangingDesk;
+    skos:prefLabel "Mobilni"@cs,"Mobile"@en;
+    skos:inScheme jup:WCChangingDesksScheme
+.
+
+jup:WCBasinSpace a rdfs:Class;
+	rdfs:label "Typy prostoru pro vozik vedle WC misy"@cs,"Types of wheelchair space next to closet"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:WCBasinSpacesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu prostoru pro vozik vedle WC misy"@cs,"Type of wheelchair space next to closet scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:FreeWCBasinSpace a skos:Concept, jup:WCBasinSpace;
+    skos:prefLabel "Volny"@cs,"Free"@en;
+    skos:inScheme jup:WCBasinSpacesScheme
+.
+
+jup:BlockedByMobileWCBasinSpace a skos:Concept, jup:WCBasinSpace;
+    skos:prefLabel "Blokovany mobilnim prvkem"@cs,"Blocked by a mobile element"@en;
+    skos:inScheme jup:WCBasinSpacesScheme
+.
+
+jup:BlockedByFixedWCBasinSpace a skos:Concept, jup:WCBasinSpace;
+    skos:prefLabel "Blokovany pevnym prvkem"@cs,"Blocked by a fixed element"@en;
+    skos:inScheme jup:WCBasinSpacesScheme
+.
+
+jup:WCCabinDisposition a rdfs:Class;
+	rdfs:label "Typy dispozic kabiny WC"@cs,"Dispositions of WC cabin"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en;
+.
+
+jup:WCCabinDispositionsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu dispozic kabiny WC"@cs,"Disposition of WC cabin scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	
+.
+
+jup:TopLeftWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Nahore vlevo"@cs,"Top-Left"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:TopRightWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Nahore vpravo"@cs,"Top-Right"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:LeftTopWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Vlevo nahore"@cs,"Left-Top"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:LeftBottomWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Vlevo dole"@cs,"Left-Bottom"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:BottomLeftWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Dole vlevo"@cs,"Bottom-Left"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:BottomRightWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Dole vpravo"@cs,"Bottom-Right"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:RightTopWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Vpravo nahore"@cs,"Right-Top"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:RightBottomWCCabinDisposition a skos:Concept, jup:WCCabinDisposition;
+    skos:prefLabel "Vpravo dole"@cs,"Right-Bottom"@en;
+    skos:inScheme jup:WCCabinDispositionsScheme
+.
+
+jup:WCCategorizationMKPO a rdfs:Class;
+	rdfs:label "Tristupnovy system ohodnoceni pristupnosti toalet dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Three degree evaluation system for bathroom accessibility based on Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+	
+.
+
+jup:WCCategorizationsMKPOScheme a skos:ConceptScheme;
+	rdfs:label "Schema ohodnoceni pristupnosti toalet dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Bathroom accessibility evaluation scheme based on Object Accessibility Categorization Methodology"@en;
+	
+.
+
+jup:AccessibleWCMKPO a skos:Concept, jup:WCCategorizationMKPO;
+    skos:prefLabel "Pristupna toaleta (WC I.) dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Accessible bathroom (WC I.) based on Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+    skos:inScheme jup:WCCategorizationsMKPOScheme
+.
+jup:PartlyAccessibleWCMKPO a skos:Concept, jup:WCCategorizationMKPO;
+    skos:prefLabel "Castecne pristupna toaleta (WC II.) dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Partly accessible bathroom (WC II.) based on Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+    skos:inScheme jup:WCCategorizationsMKPOScheme
+.
+jup:InaccessibleWCMKPO a skos:Concept, jup:WCCategorizationMKPO;
+    skos:prefLabel "Obtizne pristupna nebo nepristupna toaleta (Bezne WC) dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Bathroom accessible with difficulties or inaccessible bathroom (Regular WC) based on Object Accessibility Categorization Methodology"@en;
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+    skos:inScheme jup:WCCategorizationsMKPOScheme
+. 
+
+#WC##########################################
+
+jup:wcAccessibilityMKPO rdfs:subPropertyOf jup:accessibility;
+	rdfs:label "Ohodnoceni pristupnosti toalety dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Bathroom accessibility evaluation system based on Object Accessibility Categorization Methodology"@en;
+	
+	rdfs:isDefinedBy <http://www.presbariery.cz/prilohy/metodika_kategorizace_pristupnosti.pdf>;
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCCategorizationMKPO
+.
+
+jup:wcLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace WC"@cs,"Localization of WC"@en;
+	
+	rdfs:domain jup:WC
+.
+
+jup:wcCabinAccess rdfs:subPropertyOf jup:access;
+	rdfs:label "Pristup do upravene WC kabiny"@cs,"Accessibility to adpted WC cabin"@en;
+	
+	rdfs:domain jup:WC
+.
+
+jup:wcCabinLocalization a owl:FunctionalProperty;
+	rdfs:label "Typ upravene WC kabiny"@cs,"Type of adapted WC cabin"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCCabinLocalization
+.
+
+jup:wcSwitch a owl:FunctionalProperty;
+	rdfs:label "Typ vypinace"@cs,"Switch type"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCSwitch
+.
+
+jup:wcSwitchHeight rdfs:subPropertyOf jup:switchHeight;
+	rdfs:label "Vyska umisteni vypinace v cm"@cs,"Height of switch in cm"@en;
+	
+	rdfs:domain jup:WC
+.
+
+jup:wcCabinWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka kabiny v cm"@cs,"Width of WC cabin in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcCabinDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka kabiny v cm"@cs,"Depth of WC cabin in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcFlushingBackHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni splachovani vzadu v cm"@cs,"Height of toilet flushing at the back in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcFlushingSideHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni splachovani z boku v cm"@cs,"Height of toilet flushing from side in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcFlushingSideDistance a owl:FunctionalProperty;
+	rdfs:label "Vzdalenost splachovani od rohu mistnosti v cm"@cs,"Distance from corner of toilet flushing from side in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcFlushing a owl:FunctionalProperty;
+	rdfs:label "Typ splachovani"@cs,"Type of flushing"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCFlushing
+.
+
+jup:wcFlushingDifficulty a owl:FunctionalProperty;
+	rdfs:label "Obtiznost splachovani"@cs,"Difficulty of flushing"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCFlushingDifficulty
+.
+
+jup:wcBasinLeftDistance a owl:FunctionalProperty;
+	rdfs:label "Vzdalenost od leveho boku misy k leve stene v cm"@cs,"Distance from left side of basin to the left wall in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcBasinRightDistance a owl:FunctionalProperty;
+	rdfs:label "Vzdalenost od praveho boku misy k prave stene v cm"@cs,"Distance from right side of basin to the right wall in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcBasinBackIndentation a owl:FunctionalProperty;
+	rdfs:label "Vzdalenost odsazeni cela misy od zadni steny v cm"@cs,"Indentation of WC basin from back wall in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcBasinSeatHeight rdfs:subPropertyOf jup:seatHeight;
+	rdfs:label "Vyska umisteni sedatka v cm"@cs,"Height of seat in cm"@en;
+	
+	rdfs:domain jup:WC
+.
+
+jup:wcBasinPaperWithinReach a owl:FunctionalProperty;
+	rdfs:label "Toaletni papir v dosahu z misy"@cs,"Toilet paper within a reach of the WC basin"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean
+.
+
+jup:wcBasinSpace a owl:FunctionalProperty;
+	rdfs:label "Prostor pro vozik vedle WC misy"@cs,"Space for wheelchair next to the WC basin"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCBasinSpace
+.
+
+jup:wcHandlesDistance a owl:FunctionalProperty;
+	rdfs:label "Osova vydalenost madel v cm"@cs,"Axis distance of handles in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcChangingDeskInstalled a owl:FunctionalProperty;
+	rdfs:label "Prebalovaci pult"@cs,"Changing desk"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean
+.
+
+jup:wcChangingDeskObstructs a owl:FunctionalProperty;
+	rdfs:label "Prekazi prebalovaci pult pri obsluze WC"@cs,"Changing desk obstructs the use of WC"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean
+.
+
+jup:wcChangingDesk a owl:FunctionalProperty;
+	rdfs:label "Typ prebalovaciho pultu"@cs,"Type of changing desk"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCChangingDesk
+.
+
+jup:wcAlarmButtonInstalled a owl:FunctionalProperty;
+	rdfs:label "Signalizacni tlacitko"@cs,"Alarm button"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean
+.
+
+jup:wcAlarmButtonTopHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska signalizacniho tlacitka v horni urovni v cm"@cs,"Height of alarm at top level in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcAlarmButtonBottomHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska signalizacniho tlacitka ve spodni urovni v cm"@cs,"Height of alarm at bottom level in cm"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:wcRegularWC a owl:FunctionalProperty;
+	rdfs:label "Bezne WC v budove"@cs,"Regular WC in building"@en;
+	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean
+.
+
+jup:wcRegularWCBrailleLabelled rdfs:subPropertyOf jup:brailleLabelled;
+	rdfs:label "Oznaceni bezneho WC Braillovym pismem"@cs,"Braille marking of regular WC in building"@en;
+	
+	rdfs:domain jup:WC
+.
+
+jup:wcCabinDoorDisposition a owl:FunctionalProperty;
+	rdfs:label "Dispozice dveri v kabine WC"@cs,"Cabin door disposition"@en;
+	rdfs:comment "pridat sken nakresu"@cs,""@en;
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCCabinDisposition
+.
+
+jup:wcCabinWCBasinDisposition a owl:FunctionalProperty;
+	rdfs:label "Dispozice WC misy v kabine WC"@cs,"Cabin WC basin disposition"@en;
+	rdfs:comment "pridat sken nakresu"@cs,""@en;
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCCabinDisposition
+.
+
+jup:wcCabinWashBasinDisposition a owl:FunctionalProperty;
+	rdfs:label "Dispozice umyvadla v kabine WC"@cs,"Cabin washBasin disposition"@en;
+	rdfs:comment "pridat sken nakresu"@cs,""@en;
+	rdfs:domain jup:WC;
+	rdfs:range skos:Concept, jup:WCCabinDisposition
+.
+
+#WashBasin schemes###########################################
+
+jup:WashBasinUnderpass a rdfs:Class;
+	rdfs:label "Typy podjezdu umyvadla"@cs,"Types of wash basin underpasses"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en;
+.
+
+jup:WashBasinUnderpassesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu podjezdu umyvadla"@cs,"Type of wash basin underpasses scheme"@en;
+	jup:seeAlso jup:WCMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:SufficientWashBasinUnderpass a skos:Concept, jup:WashBasinUnderpass;
+    skos:prefLabel "Dostatecny"@cs,"Sufficient"@en;
+    skos:inScheme jup:WashBasinUnderpassesScheme
+.
+
+jup:InsufficientWashBasinUnderpass a skos:Concept, jup:WashBasinUnderpass;
+    skos:prefLabel "Nedostatecny"@cs,"Insufficient"@en;
+    skos:inScheme jup:WashBasinUnderpassesScheme
+.
+
+#WashBasin##########################################
+
+jup:washBasinHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni umyvadla v cm"@cs,"Height of wash basin in cm"@en;
+	
+	rdfs:domain jup:WashBasin;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:washBasinUnderpass a owl:FunctionalProperty;
+	rdfs:label "Podjezd umyvadla v hloubce 200mm od hrany umyvadla"@cs,"Wash basin underpass 20 cm below the side of basin"@en;
+	
+	rdfs:domain jup:WashBasin;
+	rdfs:range skos:Concept, jup:WashBasinUnderpass;
+.
+
+#Elevator schemes###########################################
+
+jup:ElevatorType a rdfs:Class;
+	rdfs:label "Typy vytahu"@cs,"Types of elevators"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ElevatorTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu vytahu"@cs,"Type of elevators scheme"@en;
+	jup:seeAlso jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:PersonalElevatorType a skos:Concept, jup:ElevatorType;
+    skos:prefLabel "Osobni vytah"@cs,"Personal"@en;
+    skos:inScheme jup:ElevatorTypesScheme
+.
+
+jup:CargoElevatorType a skos:Concept, jup:ElevatorType;
+    skos:prefLabel "Nakladni vytah"@cs,"Cargo"@en;
+    skos:inScheme jup:ElevatorTypesScheme
+.
+
+jup:ElevatorDriveOff a rdfs:Class;
+	rdfs:label "Typy dojezdu vytahu"@cs,"Types of elevator drive-offs"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ElevatorDriveOffsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu dojezdu vytahu"@cs,"Type of elevator drive-offs scheme"@en;
+	jup:seeAlso jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:LandingsElevatorDriveOff a skos:Concept, jup:ElevatorDriveOff;
+    skos:prefLabel "Dojezd na hlavnich podestach"@cs,"Drive-off at main landings"@en;
+    skos:inScheme jup:ElevatorDriveOffsScheme
+.
+
+jup:MezzaninesElevatorDriveOff a skos:Concept, jup:ElevatorDriveOff;
+    skos:prefLabel "Dojezd v mezipatrech"@cs,"Drive-off at mezzanines"@en;
+    skos:inScheme jup:ElevatorDriveOffsScheme
+.
+
+jup:ElevatorControlReliefMarking a rdfs:Class;
+	rdfs:label "Typy reliefu oznaceni ovladace vytahu"@cs,"Types of elevator control reliefs"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ElevatorControlReliefMarkingsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu reliefu oznaceni ovladace vytahu"@cs,"Type of elevator control reliefs scheme"@en;
+	jup:seeAlso jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:EngravedElevatorControlReliefMarking a skos:Concept, jup:ElevatorControlReliefMarking;
+    skos:prefLabel "Ryty relief"@cs,"Engraved"@en;
+    skos:inScheme jup:ElevatorControlReliefMarkingsScheme
+.
+
+jup:ProtrudingElevatorControlReliefMarking a skos:Concept, jup:ElevatorControlReliefMarking;
+    skos:prefLabel "Vystouply relief"@cs,"Protruding"@en;
+    skos:inScheme jup:ElevatorControlReliefMarkingsScheme
+.
+
+jup:ElevatorControlFlatMarking a rdfs:Class;
+	rdfs:label "Typy plochych oznaceni ovladace vytahu"@cs,"Types of elevator control flat markings"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ElevatorControlFlatMarkingsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu plochych oznaceni ovladace vytahu"@cs,"Type of elevator control flat markings scheme"@en;
+	jup:seeAlso jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:GraphicElevatorControlFlatMarking a skos:Concept, jup:ElevatorControlFlatMarking;
+    skos:prefLabel "Graficky"@cs,"Graphic"@en;
+    skos:inScheme jup:ElevatorControlFlatMarkingsScheme
+.
+
+jup:DigitalElevatorControlFlatMarking a skos:Concept, jup:ElevatorControlFlatMarking;
+    skos:prefLabel "Digitalni (dotykovy)"@cs,"Digital (touch)"@en;
+    skos:inScheme jup:ElevatorControlFlatMarkingsScheme
+.
+
+jup:ElevatorCageSecondDoorLocalization a rdfs:Class;
+	rdfs:label "Typy umisteni druhych dveri pruchozi klece"@cs,"Types of second door placement in pass-through cage"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ElevatorCageSecondDoorLocalizationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu umisteni druhych dveri pruchozi klece"@cs,"Scheme for types of second door placement in pass-through cage"@en;
+	jup:seeAlso jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:FrontElevatorCageSecondDoorLocalization a skos:Concept, jup:ElevatorCageSecondDoorLocalization;
+    skos:prefLabel "Na celni stene"@cs,"On front wall"@en;
+    skos:inScheme jup:ElevatorCageSecondDoorLocalizationsScheme
+.
+
+jup:SideElevatorCageSecondDoorLocalization a skos:Concept, jup:ElevatorCageSecondDoorLocalization;
+    skos:prefLabel "Na bocni stene"@cs,"On side wall"@en;
+    skos:inScheme jup:ElevatorCageSecondDoorLocalizationsScheme
+.
+
+jup:ElevatorCageMirrorLocalization a rdfs:Class;
+	rdfs:label "Typy umisteni zrcadla"@cs,"Types of elevator cage mirror localizations"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:ElevatorCageMirrorLocalizationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu umisteni zrcadla"@cs,"Type of elevator cage mirror localizations scheme"@en;
+	jup:seeAlso jup:ElevatorMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"The list copied from the form based on Object Accessibility Categorization Methodology"@en
+.
+
+jup:SideWallElevatorCageMirrorLocalization a skos:Concept, jup:ElevatorCageMirrorLocalization;
+    skos:prefLabel "Bocni stena"@cs,"Side wall"@en;
+    skos:inScheme jup:ElevatorCageMirrorLocalizationsScheme
+.
+
+jup:SideWallsElevatorCageMirrorLocalization a skos:Concept, jup:ElevatorCageMirrorLocalization;
+    skos:prefLabel "Bocni steny"@cs,"Side walls"@en;
+    skos:inScheme jup:ElevatorCageMirrorLocalizationsScheme
+.
+
+jup:FrontWallElevatorCageMirrorLocalization a skos:Concept, jup:ElevatorCageMirrorLocalization;
+    skos:prefLabel "Celni stena"@cs,"Front wall"@en;
+    skos:inScheme jup:ElevatorCageMirrorLocalizationsScheme
+.
+#Elevator###########################################
+
+jup:elevatorLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace vytahu"@cs,"Localization of elevator"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorAccess rdfs:subPropertyOf jup:access;
+	rdfs:label "Pristup k vytahu"@cs,"Access to elevator"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorAccessProvidedBy rdfs:subPropertyOf jup:accessProvidedBy;
+	rdfs:label "Pristup k vytahu zajisti"@cs,"Access to elevator provided by"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorType a owl:FunctionalProperty;
+	rdfs:label "Typ vytahu"@cs,"Type of elevator"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorType
+.
+
+jup:elevatorConnectsFloors a rdf:Property;
+	rdfs:label "Vytah spojuje patra"@cs,"Elevator connects floors"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range rdf:langString
+.
+
+jup:elevatorDriveOff a owl:FunctionalProperty;
+	rdfs:label "Dojezd vytahu na hlavnich podestach nebo v mezipatrech"@cs,"Elevator drive-off at main landings or at mezzanines"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorDriveOff
+.
+
+jup:elevatorControlMaxHeight rdfs:subPropertyOf jup:controlHeight;
+	rdfs:label "Vyska umisteni horniho tlacitka ovladace na nastupnich mistech ve vsech patrech (maximalne) v cm"@cs,"Height of upper button of controls at places of entry in all floors (max) in cm"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorControlReliefMarking a owl:FunctionalProperty;
+	rdfs:label "Typ reliefu oznaceni ovladace na nastupnich mistech"@cs,"Type of relief marking of controls at places of entry"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorControlReliefMarking
+.
+
+jup:elevatorControlFlatMarking a owl:FunctionalProperty;
+	rdfs:label "Typ plocheho oznaceni ovladace na nastupnich mistech"@cs,"Type of flat marking of controls at places of entry"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorControlFlatMarking
+.
+
+jup:elevatorControlBrailleLabelled rdfs:subPropertyOf jup:brailleLabelled;
+	rdfs:label "Oznaceni ovladace na nastupnich mistech Braillovym pismem"@cs,"Braille marking of controls at places of entry"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorCagePassthrough a owl:FunctionalProperty;
+	rdfs:label "Pruchozi klec vytahu"@cs,"Pass-through elevator cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+
+jup:elevatorCageWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka klece vytahu v cm"@cs,"Width of elevator cage in cm"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:elevatorCageDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka klece vytahu v cm"@cs,"Depth of elevator cage in cm"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:elevatorCageSecondDoorLocalization a owl:FunctionalProperty;
+	rdfs:label "Umisteni druhych dveri pruchozi klece"@cs,"Localization of elevator cage second door"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorCageSecondDoorLocalization
+.
+
+jup:elevatorCageControlDistance a owl:FunctionalProperty;
+	rdfs:label "Vzdalenost ovladace uvnitr klece od nejblizsiho rohu v cm"@cs,"Distance of control inside the cage from the nearest corner in cm"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:elevatorCageControlHeight rdfs:subPropertyOf jup:controlHeight;
+	rdfs:label "Vyska umisteni horniho tlacitka ovladace uvnitr klece v cm"@cs,"Height of control inside the cage in cm"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorCageControlReliefMarking a owl:FunctionalProperty;
+	rdfs:label "Typ reliefu oznaceni ovladace uvnitr klece"@cs,"Type of relief marking of control inside the cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorControlReliefMarking
+
+.
+
+jup:elevatorCageControlFlatMarking a owl:FunctionalProperty;
+	rdfs:label "Typ plocheho oznaceni ovladace ovladace uvnitr klece"@cs,"Type of flat marking of control inside the cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorControlFlatMarking
+.
+
+jup:elevatorCageControlBrailleLabelled rdfs:subPropertyOf jup:brailleLabelled;
+	rdfs:label "Oznaceni ovladace uvnitr klece Braillovym pismem"@cs,"Braille relief marking of control inside the cage"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorCageControlAnnouncementAcoustic a owl:FunctionalProperty;
+	rdfs:label "Akusticke hlaseni ovladace uvnitr klece"@cs,"Acoustic announcement of control inside the cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+
+jup:elevatorCageControlAnnouncementPhonetic a owl:FunctionalProperty;
+	rdfs:label "Foneticke hlaseni ovladace uvnitr klece"@cs,"Phonetic announcement of control inside the cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+
+jup:elevatorCageMirrorInstalled a owl:FunctionalProperty;
+	rdfs:label "Zrcadlo uvnitr klece"@cs,"Mirror inside the cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+
+jup:elevatorCageMirrorLocalization a owl:FunctionalProperty;
+	rdfs:label "Umisteni zrcadla"@cs,"Mirror localization"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range skos:Concept, jup:ElevatorCageMirrorLocalization
+.
+
+jup:elevatorCageMirrorHeight rdfs:subPropertyOf jup:mirrorHeight;
+	rdfs:label "Vyska umisteni spodni hrany zrcadla v cm"@cs,"Height of bottom side of mirror in cm"@en;
+	
+	rdfs:domain jup:Elevator
+.
+
+jup:elevatorCageSeatInstalled a owl:FunctionalProperty;
+	rdfs:label "Sedatko uvnitr klece"@cs,"Seat inside the cage"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+
+jup:elevatorCageSeatWithinReach a owl:FunctionalProperty;
+	rdfs:label "Ovladani v dosahu sedatka"@cs,"Control within reach of seat"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+
+jup:elevatorCageSeatFunctional a owl:FunctionalProperty;
+	rdfs:label "Sedatko je funkcni ve vsech polohach"@cs,"Seat is functional in all positions"@en;
+	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean
+.
+#EntryArea schemes###########################################
+
+jup:EntryAreaEntry a rdfs:Class;
+	rdfs:label "Typy vstupu na nastupni plochu"@cs,"Types of entry area entries"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:EntryAreaEntriesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu vstupu na nastupni plochu"@cs,"Type of entry area entries scheme"@en;
+	jup:seeAlso jup:ObjectMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:SideEntryAreaEntry a skos:Concept, jup:EntryAreaEntry;
+    skos:prefLabel "Nastup z boku"@cs,"Entry from side"@en;
+    skos:inScheme jup:EntryAreaEntriesScheme
+.
+
+jup:FrontEntryAreaEntry a skos:Concept, jup:EntryAreaEntry;
+    skos:prefLabel "Nastup celni"@cs,"Entry from front"@en;
+    skos:inScheme jup:EntryAreaEntriesScheme
+.
+
+#EntryArea###########################################
+
+jup:entryAreaEntry a owl:FunctionalProperty;
+	rdfs:label "Vstup na nastuni plochu"@cs,"Entry to entry aree"@en;
+	
+	rdfs:domain jup:EntryArea;
+	rdfs:range skos:Concept, jup:EntryAreaEntry
+.
+
+jup:entryAreaEntryClosing a owl:FunctionalProperty;
+	rdfs:label "Zavirani (dvirka, zabrana) vstupu"@cs,"closing (doors, barriers) of entry area"@en;
+	
+	rdfs:domain jup:EntryArea;
+	rdfs:range xsd:boolean
+.
+
+jup:entryAreaEntryWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka vstupu na nastuni plochu v cm"@cs,"Width of entry to entry area in cm"@en;
+	
+	rdfs:domain jup:EntryArea;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entryAreaWidth a owl:FunctionalProperty; 
+	rdfs:label "Sirka nastupni plochy v cm"@cs,"Width of entry area in cm"@en;
+	
+	rdfs:domain jup:EntryArea;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entryAreaDepth a owl:FunctionalProperty; 
+	rdfs:label "Hloubka nastupni plochy v cm"@cs,"Depth of entry area in cm"@en;
+	
+	rdfs:domain jup:EntryArea;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:entryAreaHeightElevation a owl:FunctionalProperty;
+	rdfs:label "Vyska prevyseni mezi podlahou klece/plosiny a nastupistem v cm"@cs,"Height elevation difference between platform floor and entry area in cm"@en;
+	
+	rdfs:domain jup:EntryArea;
+	rdfs:range xsd:positiveInteger
+.
+
+#Platform schemes##########################################
+
+jup:PlatformType a rdfs:Class;
+	rdfs:label "Typy plosiny"@cs,"Types of platforms"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:PlatformTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu plosiny"@cs,"Type of platforms scheme"@en;
+	jup:seeAlso jup:PlatformMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:VerticalPlatformType a skos:Concept, jup:PlatformType;
+    skos:prefLabel "Vertikalni"@cs,"Vertical"@en;
+    skos:inScheme jup:PlatformTypesScheme
+.
+
+jup:InclinedPlatformType a skos:Concept, jup:PlatformType;
+    skos:prefLabel "Sikma"@cs,"Inclined"@en;
+    skos:inScheme jup:PlatformTypesScheme
+.
+
+#Platform##########################################
+
+jup:platformLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace plosiny"@cs,"Platform localization"@en;
+	
+	rdfs:domain jup:Platform
+.
+
+jup:platformAccess rdfs:subPropertyOf jup:access;
+	rdfs:label "Pristup k plosine"@cs,"Access to platform"@en;
+	rdfs:comment "Pokud je plosina uzamcena, pristup zajisten obsluhou."@cs,"Access enabled by attendants if the platform is locked"@en;
+	rdfs:domain jup:Platform
+.
+
+jup:platformType a owl:FunctionalProperty;
+	rdfs:label "Typ plosiny"@cs,"Type of platform"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range skos:Concept, jup:PlatformType
+.
+
+jup:platformMaxLoad a owl:FunctionalProperty;
+	rdfs:label "Nosnost v kg"@cs,"Maximum load in kg"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:platformWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka plosiny ve smeru jizdy v cm"@cs,"Width of platform in direction of motion in cm"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:platformDepth a owl:FunctionalProperty;
+	rdfs:label "Hloubka plosiny ve smeru jizdy v cm"@cs,"Depth of platform in direction of motion in cm"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:platformMinParameters  a owl:FunctionalProperty;
+	rdfs:label "Min. rozmer 70 x 90 cm, min. nosnost 150 kg"@cs,"Min. dimensions 70 x 90 cm, min. load capacity 150 kg"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:boolean
+.
+
+jup:platformNumberOfSteps a owl:FunctionalProperty;
+	rdfs:label "Pocet schodu"@cs,"Number of steps"@en;
+	rdfs:comment "Prevyseni prekonavane plosinou"@cs,"Elevation difference surmounted by platform"@en;
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:platformNumberOfFloors a owl:FunctionalProperty;
+	rdfs:label "Pocet podlazi"@cs,"Number of floors"@en;
+	rdfs:comment "Prevyseni prekonavane plosinou"@cs,"Elevation difference surmounted by platform"@en;
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:platformOutsideBottomControlHeight rdfs:subPropertyOf jup:controlHeight;
+	rdfs:label "Vyska umisteni ovladacu vne plosiny dole v cm"@cs,"Height of control outside the platform bottom in cm"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:platformOutsideTopControlHeight rdfs:subPropertyOf jup:controlHeight;
+	rdfs:label "Vyska umisteni ovladacu vne plosiny nahore v cm"@cs,"Height of control outside the platform top in cm"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+jup:platformInsideControlHeight rdfs:subPropertyOf jup:controlHeight;
+	rdfs:label "Vyska umisteni ovladacu uvnitr plosiny v cm"@cs,"Height of control inside the platform in cm"@en;
+	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:positiveInteger
+.
+
+#RampLeg##########################################
+
+jup:rampLegWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka ramena v cm"@cs,"Width of rampLeg in cm"@en;
+	
+	rdfs:domain jup:RampLeg;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:rampLegLength a owl:FunctionalProperty;
+	rdfs:label "Delka ramena v cm"@cs,"Length of rampLeg in cm"@en;
+	
+	rdfs:domain jup:RampLeg;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:rampLegInclination a owl:FunctionalProperty;
+	rdfs:label "Sklon ramena v %"@cs,"Indentation of rampLeg in cm"@en;
+	
+	rdfs:domain jup:RampLeg;
+	rdfs:range xsd:decimal
+.
+
+#RampSkids schemes##########################################
+
+jup:RampType a rdfs:Class;
+	rdfs:label "Typy ramp"@cs,"Types of ramp"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:RampTypesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu ramp"@cs,"Type of ramp scheme"@en;
+	jup:seeAlso jup:RampSkidsMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:DirectRampType a skos:Concept, jup:RampType;
+    skos:prefLabel "Prima"@cs,"Direct"@en;
+    skos:inScheme jup:RampTypesScheme
+.
+jup:BentRampType a skos:Concept, jup:RampType;
+    skos:prefLabel "Zalomena"@cs,"Bent"@en;
+    skos:inScheme jup:RampTypesScheme;
+.
+jup:SpiralRampType a skos:Concept, jup:RampType;
+    skos:prefLabel "Tocita"@cs,"Spiral"@en;
+    skos:inScheme jup:RampTypesScheme
+. 
+
+jup:RampSurface a rdfs:Class;
+	rdfs:label "Typy povrchu rampy"@cs,"Types of ramp surfaces"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:RampSurfacesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu povrchu rampy"@cs,"Type of ramp surfaces scheme"@en;
+	jup:seeAlso jup:RampSkidsMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:SlipperyRampSurface a skos:Concept, jup:RampSurface;
+    skos:prefLabel "Kluzky"@cs,"Slippery"@en;
+    skos:inScheme jup:RampSurfacesScheme
+.
+
+jup:NonslipperyRampSurface a skos:Concept, jup:RampSurface;
+    skos:prefLabel "Nekluzky"@cs,"Nonslippery"@en;
+    skos:inScheme jup:RampSurfacesScheme
+.
+
+jup:RampSkidsMobility a rdfs:Class;
+	rdfs:label "Typy mobility rampy/lizin"@cs,"Mobility types of ramps/skids"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:RampSkidsMobilitiesScheme a skos:ConceptScheme;
+	rdfs:label "Schema typu mobility rampy/lizin"@cs,"Mobility type of ramps/skids scheme"@en;
+	jup:seeAlso jup:RampSkidsMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:FixedRampSkidsMobility a skos:Concept, jup:RampSkidsMobility;
+    skos:prefLabel "Pevna"@cs,"Fixed"@en;
+    skos:inScheme jup:RampSkidsMobilitiesScheme
+.
+
+jup:MobileRampSkidsMobility a skos:Concept, jup:RampSkidsMobility;
+    skos:prefLabel "Mobilni"@cs,"Mobile"@en;
+    skos:inScheme jup:RampSkidsMobilitiesScheme
+.
+
+jup:RampSkidsLocalization a rdfs:Class;
+	rdfs:label "Lokalizace rampy/lizin"@cs,"Localization of ramps/skids"@en;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:RampSkidsLocalizationsScheme a skos:ConceptScheme;
+	rdfs:label "Schema lokalizace rampy/lizin"@cs,"Localisation of ramps/skids scheme"@en;
+	jup:seeAlso jup:RampSkidsMKPOForm;
+	rdfs:comment "Vycet prevzat z formularu dle Metodiky Kategorizace Pristupnosti Objektu"@cs,"Types of elevator cage mirror localizations"@en
+.
+
+jup:EntranceRampSkidsLocalization a skos:Concept, jup:RampSkidsLocalization;
+    skos:prefLabel "Pred vstupnimi dvermi"@cs,"Before entrance door"@en;
+    skos:inScheme jup:RampSkidsLocalizationsScheme
+.
+
+jup:LobbyRampSkidsLocalization a skos:Concept, jup:RampSkidsLocalization;
+    skos:prefLabel "V zadveri"@cs,"In lobby"@en;
+    skos:inScheme jup:RampSkidsLocalizationsScheme
+.
+
+jup:InteriorRampSkidsLocalization a skos:Concept, jup:RampSkidsLocalization;
+    skos:prefLabel "V interieru"@cs,"In interior"@en;
+    skos:inScheme jup:RampSkidsLocalizationsScheme
+.
+
+#RampSkids##########################################
+
+jup:rampSkidsLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace rampy/lizin"@cs,"Localization of ramp/skids"@en;
+	
+	rdfs:domain jup:RampSkids;
+	rdfs:range skos:Concept, jup:RampSkidsLocalization
+.
+
+jup:rampSkidsMobility a owl:FunctionalProperty;
+	rdfs:label "Mobilita rampy/lizin"@cs,"Ramp/skids mobility"@en;
+	
+	rdfs:domain jup:RampSkids;
+	rdfs:range skos:Concept, jup:RampSkidsMobility
+.
+
+jup:rampSkidsInteriorLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace rampy/lizin v interieru"@cs,"Ramp/skids localization in interior"@en;
+	
+	rdfs:domain jup:RampSkids
+.
+
+jup:rampType a owl:FunctionalProperty;
+	rdfs:label "Typ rampy"@cs,"Type of ramp"@en;
+	
+	rdfs:domain jup:Ramp;
+	rdfs:range skos:Concept, jup:RampType
+.
+
+jup:rampAccessProvidedBy a rdf:Property;
+	rdfs:label "Pristup k rampe zajisti"@cs,"Access to the ramp provided by"@en;
+	
+	rdfs:domain jup:Ramp;
+	rdfs:range rdf:langString
+.
+
+jup:rampNumberOfLegs a owl:FunctionalProperty;
+	rdfs:label "Pocet ramen (useku)"@cs,"Number of rampLegs (sections)"@en;
+	
+	rdfs:domain jup:Ramp;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:rampSurface a owl:FunctionalProperty;
+	rdfs:label "Povrch rampy"@cs,"Ramp surface"@en;
+	
+	rdfs:domain jup:Ramp;
+	rdfs:range skos:Concept, jup:RampSurface
+.
+
+jup:skidsInclination a owl:FunctionalProperty;
+	rdfs:label "Sklon lizin v %"@cs,"Skids inclination in %"@en;
+	
+	rdfs:domain jup:Skids;
+	rdfs:range xsd:positiveInteger
+.
+
+jup:skidsLength a owl:FunctionalProperty;
+	rdfs:label "Delka lizin v cm"@cs,"Length of skids in cm"@en;
+	
+	rdfs:domain jup:Skids;
+	rdfs:range xsd:positiveInteger
+.
+
+#NarrowedPassage##########################################
+
+jup:navigationSystemDescription a rdf:Property;
+	rdfs:label "Hapticky, elektronicky…"@cs,"Haptic, electronic,..."@en;
+	rdfs:domain jup:NavigationSystem;
+	rdfs:range rdf:langString
+.
+
+#NarrowedPassage##########################################
+
+jup:narrowedPassageWidth rdfs:subPropertyOf jup:passageWidth;
+	rdfs:label "Sirka zuzeneho pruchodu v cm"@cs,"Narrowed passage width in cm"@en;
+	rdfs:domain jup:NarrowedPassage	
+.
+
+jup:objectNarrowedPassageLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace zuzeneho pruchodu"@cs,"Narrowed passage localization"@en;
+	rdfs:domain jup:NarrowedPassage	
+.
+
+#Tourniquet##########################################
+
+jup:tourniquetLocalization rdfs:subPropertyOf jup:localization;
+	rdfs:label "Lokalizace turniketu"@cs,"Tourniquet localization"@en;
+	rdfs:domain jup:Tourniquet
+.
+
+#Mapper##########################################
+
+jup:mapperCertified a owl:FunctionalProperty;
+	rdfs:label "Cerifikovana osoba"@cs,"Certified person"@en;
+	rdfs:comment "Certifikovana osoba vklada profesionalne (odborne) namerene udaje. K ziskani certifikace je nutne skoleni, zkouska, apod."@cs,"A certified person enters professionally taken data. To become a certified person a special training, examination etc. is required."@en;
+	rdfs:domain jup:Mapper;
+	rdfs:range xsd:boolean
+.
+
+#Form##########################################
+
+jup:formMaps a rdf:Property;
+	rdfs:label "entita, kterou formular mapuje"@cs,"entity mapped by the form"@en;
+	
+	rdfs:domain jup:Form;
+	rdfs:range jup:MappableEntity
+.
+
+jup:formType a rdf:Property;
+	rdfs:label "Typ formulare mapujici entitu"@cs,"Type of form mapping entity"@en;
+	
+	rdfs:domain jup:Form;
+	rdfs:range skos:Concept, jup:MappableEntityForm
+.
+
+#Deprecated##########################################
+#<--aliasy
+jup:seeAlso a owl:AnnotationProperty;
+	rdfs:label "Odkaz na zdroj informaci o entite"@cs,"Entity information source reference"@en;
+	rdfs:comment "Definovano z duvodu uplnosti slovniku"@cs,"Defined to complete the vocabulary"@en;
+	owl:sameAs rdfs:seeAlso;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:license a rdf:Property;
+	rdfs:label "Licence, pod kterou jsou data o mapovatelne entite uvolnena"@cs,"Open licence to mappable entity data"@en;
+	rdfs:comment "Pro uplnost slovniku"@cs,"To complete the vocabulary"@en;
+	owl:sameAs dbo:license;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:source a rdf:Property;
+	rdfs:label "Zdroj dat o mapovatelne entite"@cs,"Mappable entity data source"@en;
+	rdfs:comment "Pro uplnost slovniku"@cs,"To complete the vocabulary"@en;
+	owl:sameAs dcterms:source;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:hasDescription a rdf:Property;
+	rdfs:label "Slovni popis useku"@cs,"Verbal section description"@en;
+	owl:sameAs dcterms:description;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:hasAttachment a rdf:Property;
+	rdfs:label "Priloha"@cs,"Attachment"@en;
+	rdfs:comment "Pro uplnost slovniku"@cs,"To complete the vocabulary"@en;
+	owl:sameAs sioc:attachment;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:sameAs a rdf:Property;
+	rdfs:label "Rovnost individui"@cs,"Equality of individuals"@en;
+	rdfs:comment "Pro uplnost slovniku"@cs,"To complete the vocabulary"@en;
+	owl:sameAs owl:sameAs;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:hasName a rdf:Property;
+	rdfs:label "Oficialni nazev"@cs,"Official name"@en;
+	owl:sameAs rov:legalName,schema:name;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:hasLongitude a rdf:Property;
+	rdfs:label "Zemepisna delka adresovatelne entity"@cs,"Addressable entity longitude"@en;
+	owl:sameAs schema:Longitude;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:hasLatitude a rdf:Property;
+	rdfs:label "Zemepisna sirka adresovatelne entity"@cs,"Addressable entity latitude"@en;
+	owl:sameAs schema:Latitude;
+	owl:deprecated "true"^^xsd:boolean
+.
+jup:mapperNick a owl:FunctionalProperty;
+	rdfs:label "Uzivatelske jmeno"@cs,"Username"@en;
+	owl:sameAs foaf:nick;
+	owl:deprecated "true"^^xsd:boolean
+.
+#<--nahrazeno odpovidajici tridou Steps
+jup:objectIsStairs a owl:FunctionalProperty;
+	rdfs:label "Schodiste v interieru"@cs,"Stairs inside the interior"@en;
+	rdfs:comment "Spojujici patra budovy"@cs,""@en;
+	rdfs:domain jup:Object;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:objectStairsType a owl:FunctionalProperty;
+	rdfs:label "Typ schodiste"@cs,"Stair type"@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range skos:Concept, jup:ObjectStairsType;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:objectStairsWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka schodiste v cm"@cs,"Stairs width in cm"@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+#<--nahrazeno odpovidajici tridou Bannister
+jup:objectStairsIsBannister a owl:FunctionalProperty;
+	rdfs:label "Zabradli u schodiste"@cs,"Stairway with bannister"@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean	
+.
+#<--nahrazeno odpovidajici tridou NarrowedPassage
+jup:objectIsNarrowedPassage a owl:FunctionalProperty;
+	rdfs:label "Zuzeny pruchod (mene nez 800mm)"@cs,"Narrowed passage (less than 80 cm)"@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:objectNarrowedPassageWidth rdfs:subPropertyOf jup:passageWidth;
+	rdfs:label "Sirka zuzeneho pruchodu v cm"@cs,"Narrowed passage width in cm"@en;
+	rdfs:domain jup:Object;
+	owl:deprecated "true"^^xsd:boolean	
+.
+
+jup:objectNarrowedPassageLocalization a rdf:Property;
+	rdfs:label "Lokalizace zuzeneho pruchodu"@cs,"Narrowed passage localization"@en;
+	rdfs:domain jup:Object;
+	rdfs:range rdf:langString;
+	owl:deprecated "true"^^xsd:boolean	
+.
+#<--nahrazeno odpovidajici tridou Tourniquet
+jup:objectIsTourniquet a owl:FunctionalProperty;
+	rdfs:label "Turnikety"@cs,"Tourniquets"@en;
+	rdfs:domain jup:Object;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean	
+.
+
+jup:objectTourniquetLocalization a rdf:Property;
+	rdfs:label "Lokalizace turniketu"@cs,"Tourniquet localization"@en;
+	rdfs:domain jup:Object;
+	rdfs:range rdf:langString;
+	owl:deprecated "true"^^xsd:boolean		
+.
+
+#<--nahrazeno odpovidajici tridou NavigationSystem
+jup:objectIsNavigationSystem a owl:FunctionalProperty;
+	rdfs:label "Navigacni system pro osoby se zrakovym omezenim"@cs,"Navigation system for visually handicapped persons"@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean		
+.
+
+jup:objectNavigationSystemDescription a rdf:Property;
+	rdfs:label "Hapticky, elektronicky…"@cs,"Haptic, electronic,..."@en;
+	
+	rdfs:domain jup:Object;
+	rdfs:range rdf:langString;
+	owl:deprecated "true"^^xsd:boolean		
+.
+
+#<--nadbytecne
+jup:entranceIsReservedParking a owl:FunctionalProperty;
+	rdfs:label "Vyhrazene parkovaci stani"@cs,"Reserved parking places"@en;
+	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entranceIsLongitudinalInclination a owl:FunctionalProperty;
+	rdfs:label "Sklon podelny"@cs,"Longitudinal inclination"@en;
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entranceIsTransverseInclination a owl:FunctionalProperty;
+	rdfs:label "Sklon pricny"@cs,"Transverse inclination"@en;
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entranceIsDifficultSurface a owl:FunctionalProperty;
+	rdfs:label "Obtizny povrch"@cs,"Difficult surface"@en;
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entranceIsStepContrastMarked rdfs:subPropertyOf jup:contrastMarked;
+	rdfs:label "Prvni a posledni schod kontrastne vyznacen"@cs,"First and last step marked"@en;
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+#<--zkraceny nazev (odstraneno "mappableEntity"), odstraneno "Is"
+jup:mappableEntityAccessibility a owl:FunctionalProperty;
+	rdfs:label "Pristupnost mapovatelne entity"@cs,"Mappable entity accessibility"@en;	
+	rdfs:domain jup:MappableEntity;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityThresholdHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska prahu v cm"@cs,"Threshold height in cm"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityPassageWidth a owl:FunctionalProperty;
+	rdfs:label "Sirka pruchodu v cm"@cs,"Passage width in cm"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityMirrorHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni spodni hrany zrcadla v cm"@cs,"Lower mirror edge height in cm"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityControlHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni ovladace v cm"@cs,"Control placement height in cm"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntitySwitchHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni vypinace v cm"@cs,"Switch placement height in cm"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntitySeatHeight a owl:FunctionalProperty;
+	rdfs:label "Vyska umisteni sedatka v cm"@cs,"Seat placement height in cm"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:positiveInteger;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityIsBrailleMarking a owl:FunctionalProperty; #jup:brailleMarked
+	rdfs:label "Oznaceni Braillovym pismem"@cs,"Braille labelling"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityIsContrastMarking a owl:FunctionalProperty; #jup:contrastMarked
+	rdfs:label "Kontrastni znaceni"@cs,"Contrast marking"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityAccess a owl:FunctionalProperty;
+	rdfs:label "Pristup k mapovatelne entite"@cs,"Access to the mappable entity"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range skos:Concept, jup:MappableEntityAccess;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityAccessProvidedBy a rdf:Property;
+	rdfs:label "Pristup ke vstupu mapovatelne entity zajisti"@cs,"Access to entrance to the mappable entity provided by"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range rdf:langString;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mappableEntityLocalization a rdf:Property;
+	rdfs:label "Lokalizace mapovatelne entity"@cs,"Localization of mappable entity"@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range rdf:langString;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+#<--odstraneno "Is", popr. upraveny nazev
+
+jup:isCertifiedRecord a owl:FunctionalProperty;
+	rdfs:label "Zaznam byl vytvoreny certifikovanou osobou"@cs,"Entry created by a certified person"@en;
+	rdfs:comment "Certifikovana osoba vklada profesionalne (odborne) namerene udaje. K ziskani certifikace je nutne skoleni, zkouska, apod."@cs,"A certified person enters professionally taken data. To become a certified person a special training, examination etc. is required."@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:isUpToDateRecord a owl:FunctionalProperty;
+	rdfs:label "Aktualni zaznam"@cs,"Current entry"@en;
+	rdfs:comment "Starsi zaznamy o stejne mapovatelne entite maji nastaveny priznak na false"@cs,"Older entries describing the same mappable entity are assigned the false value."@en;
+	rdfs:domain jup:MappableEntity;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entranceIsSideEntranceMarked a owl:FunctionalProperty;
+	rdfs:label "Vedlejsi vstup vyznacen"@cs,"Side entrance marked"@en;	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entranceIsSideEntranceInformation a owl:FunctionalProperty;
+	rdfs:label "Informace o vedlejsim vstupu u vstupu hlavniho"@cs,"Information about the side entrance by the main entrance"@en;	
+	rdfs:domain jup:Entrance;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:doorIsMarked a owl:FunctionalProperty;
+	rdfs:label "Oznaceni na dverich"@cs,"Marking on door"@en;	
+	rdfs:domain jup:Door;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:doorIsBrailleLabelled rdfs:subPropertyOf jup:brailleLabelled;
+	rdfs:label "Oznaceni na dverich v Braillove pisme"@cs,"Braille labelling on door"@en;	
+	rdfs:domain jup:Door;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:stepsIsContrastMarked rdfs:subPropertyOf jup:contrastMarked;
+	rdfs:label "Prvni a posledni schod kontrastne vyznacen"@cs,"First and last step marked"@en;	
+	rdfs:domain jup:Steps;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:aobIsAboveDoor a owl:FunctionalProperty;
+	rdfs:label "Nad osou vstupnich dveri"@cs,"Above the front door axis"@en;
+	rdfs:domain jup:AOB;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:contrastMarkingIsGlassSurfacesMarked rdfs:subPropertyOf jup:contrastMarked;
+	rdfs:label "Prosklene plochy (proskleni nize nez 80 cm nad podlahu)"@cs,"Glass surfaces (glass lower than 80 cm above floor level)"@en;
+	rdfs:domain jup:ContrastMarking;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:wcBasinIsPaperReach a owl:FunctionalProperty; #jup:wcBasinPaperWithinReach
+	rdfs:label "Toaletni papir v dosahu z misy"@cs,"Toilet paper within a reach of the WC basin"@en;	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:wcIsChangingDesk a owl:FunctionalProperty; #jup:wcChangingDeskInstalled
+	rdfs:label "Prebalovaci pult"@cs,"Changing desk"@en;
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:wcIsChangingDeskObstructs a owl:FunctionalProperty;
+	rdfs:label "Prekazi prebalovaci pult pri obsluze WC"@cs,"Changing desk obstructs the use of WC"@en;	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:wcIsAlarmButton a owl:FunctionalProperty;
+	rdfs:label "Signalizacni tlacitko"@cs,"Alarm button"@en;	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:wcIsRegularWC a owl:FunctionalProperty;
+	rdfs:label "Bezne WC v budove"@cs,"Regular WC in building"@en;	
+	rdfs:domain jup:WC;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:wcIsRegularWCBrailleMarking rdfs:subPropertyOf jup:brailleLabelled; #jup:wcRegularWCBrailleMarked
+	rdfs:label "Oznaceni bezneho WC Braillovym pismem"@cs,"Braille marking of regular WC in building"@en;	
+	rdfs:domain jup:WC;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsControlBrailleMarking rdfs:subPropertyOf jup:brailleLabelled; #jup:elevatorControlBrailleMarked
+	rdfs:label "Oznaceni ovladace na nastupnich mistech Braillovym pismem"@cs,"Braille marking of controls at places of entry"@en;	
+	rdfs:domain jup:Elevator;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCagePassthrough a owl:FunctionalProperty;
+	rdfs:label "Pruchozi klec vytahu"@cs,"Pass-through elevator cage"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageControlBrailleMarking rdfs:subPropertyOf jup:brailleLabelled; #jup:elevatorCageControlBrailleMarked
+	rdfs:label "Oznaceni ovladace uvnitr klece Braillovym pismem"@cs,"Braille relief marking of control inside the cage"@en;	
+	rdfs:domain jup:Elevator;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageControlAnnouncementAcoustic a owl:FunctionalProperty;
+	rdfs:label "Akusticke hlaseni ovladace uvnitr klece"@cs,"Acoustic announcement of control inside the cage"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageControlAnnouncementPhonetic a owl:FunctionalProperty;
+	rdfs:label "Foneticke hlaseni ovladace uvnitr klece"@cs,"Phonetic announcement of control inside the cage"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageMirror a owl:FunctionalProperty; #jup:elevatorCageMirrorInstalled
+	rdfs:label "Zrcadlo uvnitr klece"@cs,"Mirror inside the cage"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageSeat a owl:FunctionalProperty; #jup:elevatorCageSeatInstalled
+	rdfs:label "Sedatko uvnitr klece"@cs,"Seat inside the cage"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageSeatWithinReach a owl:FunctionalProperty;
+	rdfs:label "Ovladani v dosahu sedatka"@cs,"Control within reach of seat"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:elevatorIsCageSeatFunctional a owl:FunctionalProperty;
+	rdfs:label "Sedatko je funkcni ve vsech polohach"@cs,"Seat is functional in all positions"@en;	
+	rdfs:domain jup:Elevator;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:entryAreaIsEntryClosing a owl:FunctionalProperty;
+	rdfs:label "Zavirani (dvirka, zabrana) vstupu"@cs,"closing (doors, barriers) of entry area"@en;	
+	rdfs:domain jup:EntryArea;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:platformIsMinParameters  a owl:FunctionalProperty;
+	rdfs:label "Min. rozmer 70 x 90 cm, min. nosnost 150 kg"@cs,"Min. dimensions 70 x 90 cm, min. load capacity 150 kg"@en;	
+	rdfs:domain jup:Platform;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+
+jup:mapperIsCertified a owl:FunctionalProperty;
+	rdfs:label "Cerifikovana osoba"@cs,"Certified person"@en;
+	rdfs:comment "Certifikovana osoba vklada profesionalne (odborne) namerene udaje. K ziskani certifikace je nutne skoleni, zkouska, apod."@cs,"A certified person enters professionally taken data. To become a certified person a special training, examination etc. is required."@en;
+	rdfs:domain jup:Mapper;
+	rdfs:range xsd:boolean;
+	owl:deprecated "true"^^xsd:boolean
+.
+

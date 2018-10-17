@@ -1,0 +1,246 @@
+@prefix :      <http://securitytoolbox.appspot.com/securityMain#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix assurance: <http://www.kim.com/NRLOntologyFiles/securityAssurance.owl#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix credentials: <http://www.kim.com/NRLOntologyFiles/credentials.owl#> .
+@prefix security: <http://securitytoolbox.appspot.com/securityMain#> .
+@prefix algorithms: <http://securitytoolbox.appspot.com/securityAlgorithms#> .
+
+security:XML-dsig  a  security:SignatureProtocol .
+
+security:SecurityMechanism
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityConcept .
+
+security:NetworkMechanism
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityMechanism .
+
+security:SecurityProtocol
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityConcept .
+
+security:OnionRouter  a  security:NetworkMechanism ;
+        security:supportsSecurityObjectives
+                security:Confidentiality , security:Anonymity .
+
+security:MessageAuthentication
+        a             security:SecurityObjective ;
+        rdfs:comment  "\nProvides guarantee that message came from whoever claimed to have sent it.\n" .
+
+security:reqCredential
+        a            owl:ObjectProperty ;
+        rdfs:domain  security:SecurityProtocol ;
+        rdfs:range   credentials:Credential .
+
+security:hasAlgorithm
+        a            owl:ObjectProperty ;
+        rdfs:domain  security:SecurityProtocol ;
+        rdfs:range   algorithms:Algorithm .
+
+security:ApplicationMechanism
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityMechanism .
+
+security:XML-enc  a  security:EncryptionProtocol .
+
+security:SoapFirewall
+        a       security:ServiceMechanism ;
+        security:supportsSecurityobjectives
+                security:Authorization .
+
+security:Availability
+        a             security:SecurityObjective ;
+        rdfs:comment  "\nProvides guarantee that resource is available to authorized users at any\nauthorized time.\n" .
+
+security:ReplayPrevention
+        a             security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective) Protect against replay attacks\n" .
+
+security:EncryptionProtocol
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityProtocol ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    security:Confidentiality ;
+                           owl:onProperty  security:supportsSecurityObjectives
+                         ] .
+
+security:VMM  a  security:HostMechanism ;
+        security:supportsSecurityObjectives
+                security:HostTrust .
+
+security:TrafficHiding
+        a             security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective) Pad traffic with bogus data to hide traffic patterns\n" .
+
+security:SecurityConcept
+        a       owl:Class .
+
+security:hasAssurance
+        a            owl:ObjectProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( security:SecurityProtocol security:SecurityMechanism )
+                     ] ;
+        rdfs:range   assurance:Assurance .
+
+security:LoginProtocol
+        a       security:AuthenticationProtocol .
+
+security:CovertChannelPrevention
+        a             security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective) Prevent or limit the existance of covert channels\n" .
+
+security:SecurityObjective
+        a       owl:Class .
+
+security:Separation  a  security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective)\n" .
+
+security:supportsSecurityObjectives
+        a             owl:ObjectProperty ;
+        rdfs:comment  "\nAny SecurityConcept can support one or more of the Security Objectives defined\nin the SecurityObjective class\n" ;
+        rdfs:domain   security:SecurityConcept ;
+        rdfs:range    security:SecurityObjective .
+
+[ a             owl:Ontology ;
+  rdfs:comment  "\nA security ontology to annotate resources with security-related information\n"
+] .
+
+security:SecurityPolicy
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityConcept ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    <http://securitytoolbox.appspot.com/Authorization> ;
+                           owl:onProperty  <http://securitytoolbox.appspot.com/supportsSecurityObjectives>
+                         ] .
+
+security:MLSPump  a  security:NetworkMechanism ;
+        security:supportsSecurityObjectives
+                security:CovertChannelPrevention .
+
+security:AuthenticationProtocol
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityProtocol ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    security:UserAuthentication ;
+                           owl:onProperty  security:supportsSecurityObjectives
+                         ] .
+
+security:HostTrust  a  security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective) How to trust host or platform. Is relevant to Common\ncriteria, etc.\n" .
+
+security:SSH  a  security:NetworkSecurityProtocol ;
+        security:supportsSecurityObjectives
+                security:MessageAuthentication , security:UserAuthentication , security:Confidentiality , security:Integrity .
+
+security:HostMechanism
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityMechanism .
+
+security:Kerberos  a  security:AuthenticationProtocol .
+
+security:MessageIntegrity
+        a             security:SecurityObjective ;
+        rdfs:comment  "\nData integrity or Message integrity; data cannot be changed, deleted,\nmodified, etc by unauthorized parties.\n" .
+
+security:Authorization
+        a             security:SecurityObjective ;
+        rdfs:comment  "\nOnly authorized entities are allowed to access resources in an authorized\nmanner.\n(Aka Access Control). If desired, user may create instance of AccessControl as\nwell.\n" .
+
+security:ChineseWall  a  security:CommercialPolicy .
+
+security:IPSec  a  security:NetworkSecurityProtocol ;
+        security:supportsSecurityObjectives
+                security:Confidentiality , security:Integrity , security:MessageAuthentication .
+
+security:Anonymity  a  security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective) Provides anonymity\n" .
+
+security:VPN  a  security:NetworkMechanism ;
+        security:supportsSecurityObjectives
+                security:Separation , security:Confidentiality .
+
+security:TLS  a     security:NetworkSecurityProtocol ;
+        security:supportsSecurityObjectives
+                security:Confidentiality , security:UserAuthentication ;
+        owl:sameAs  security:SSL .
+
+security:MilitaryPolicy
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityPolicy .
+
+security:hasEncryptionAlgorithm
+        a                   owl:ObjectProperty ;
+        rdfs:range          algorithms:EncryptionAlgorithm ;
+        rdfs:subPropertyOf  security:hasAlgorithm .
+
+security:SSL  a     security:NetworkSecurityProtocol ;
+        security:supportsSecurityObjectives
+                security:UserAuthentication , security:Confidentiality ;
+        owl:sameAs  security:TLS .
+
+security:CommercialPolicy
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityPolicy .
+
+security:KeyManagementProtocol
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityProtocol ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    security:KeyManagement ;
+                           owl:onProperty  security:supportsSecurityObjectives
+                         ] .
+
+security:ServiceMechanism
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityMechanism .
+
+security:UserAuthentication
+        a             security:SecurityObjective ;
+        rdfs:comment  "\nProvides assurance of the identity of a person or entity.\n" .
+
+security:SAML  a  security:AuthenticationProtocol .
+
+security:BLP  a       security:MilitaryPolicy ;
+        rdfs:comment  "\nBell La-Padula\n" .
+
+security:KeyManagement
+        a             security:SecurityObjective ;
+        rdfs:comment  "\n(SecondaryObjective) Securely manages keys for legitimate users.\n" .
+
+security:Confidentiality
+        a             security:SecurityObjective ;
+        rdfs:comment  "\nProtects against information being disclosed or revealed to unauthorized\nparties.\n" .
+
+security:hasSignatureAlgorithm
+        a                   owl:ObjectProperty ;
+        rdfs:range          algorithms:SignatureAlgorithm ;
+        rdfs:subPropertyOf  security:hasAlgorithm .
+
+security:ClarkWilson  a  security:CommercialPolicy .
+
+security:SignatureProtocol
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityProtocol ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    security:MessageAuthentication ;
+                           owl:onProperty  security:supportsSecurityObjectives
+                         ] .
+
+security:NetworkSecurityProtocol
+        a                owl:Class ;
+        rdfs:subClassOf  security:SecurityProtocol .
+
+security:RBAC  a      security:SecurityPolicy ;
+        rdfs:comment  "\nRole-based Access Control\n" .
+
+security:XKMS  a  security:KeyManagementProtocol .
+
+security:Trust  a     security:SecurityObjective ;
+        rdfs:comment  "\n(Secondary Objective) How to trust entity. Trust not only of identification,\nbut statements, claims, etc.\n" .
+
+security:Safehost  a  security:HostMechanism ;
+        security:supportsSecurityObjectives
+                security:HostTrust .

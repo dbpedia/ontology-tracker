@@ -28,6 +28,8 @@ public class LOVTestRunner {
 
     public static int tested = 0;
 
+    public static final String FORMATS = "application/rdf+xml, text/turtle";
+    
     private static String outdir = "/home/gpublio/ontology-tracker/lovresults";
 
     public static void main(String[] args) throws IOException
@@ -77,7 +79,7 @@ public class LOVTestRunner {
             httpConn.setReadTimeout(2000);
             httpConn.setConnectTimeout(2000); //read and connection timeout at 20s
             httpConn.setRequestProperty("Content-type", "application/rdf+xml");
-            httpConn.setRequestProperty("Accept", "application/rdf+xml");
+            httpConn.setRequestProperty("Accept", FORMATS);
 
             Map<String, List<String>> hdrs = httpConn.getHeaderFields();
             Set<String> hdrKeys = hdrs.keySet();
@@ -101,7 +103,7 @@ public class LOVTestRunner {
                         httpsConn.setReadTimeout(2000);
                         httpsConn.setConnectTimeout(2000); //read and connection timeout at 20s
                         httpsConn.setRequestProperty("Content-type", "application/rdf+xml");
-                        httpsConn.setRequestProperty("Accept", "application/rdf+xml");
+                        httpsConn.setRequestProperty("Accept", "application/rdf+xml, text/turtle");
                         hdrs = httpsConn.getHeaderFields();
                         hdrKeys = hdrs.keySet();
                         for (String k : hdrKeys) {
@@ -122,7 +124,7 @@ public class LOVTestRunner {
                         httpsConn.setReadTimeout(2000);
                         httpsConn.setConnectTimeout(2000); //read and connection timeout at 20s
                         httpsConn.setRequestProperty("Content-type", "application/rdf+xml");
-                        httpsConn.setRequestProperty("Accept", "application/rdf+xml");
+                        httpsConn.setRequestProperty("Accept", FORMATS);
                         hdrs = httpsConn.getHeaderFields();
                         hdrKeys = hdrs.keySet();
                         for (String k : hdrKeys) {

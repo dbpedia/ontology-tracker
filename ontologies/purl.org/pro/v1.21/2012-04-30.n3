@@ -1,0 +1,386 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix timeindexedsituation: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix : <http://purl.org/spar/pro/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix timeinterval: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/spar/pro> a owl:Ontology ;
+	owl:versionInfo "1.2.1"^^xsd:string ;
+	dc:date "2012-04-30"^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:description """The Publishing Roles Ontology (PRO) is an ontology written in OWL 2 DL for the characterization of the roles of agents (people, corporate bodies and computational agents; e.g. author, editor, reviewer, publisher, librarian) in the publication process, as they relate to bibliographic entities.
+
+PRO, the Publishing Roles Ontology, is an ontology written in OWL 2 DL for the characterization of the roles of agents \"people, corporate bodies and computational agents (e.g., author, editor, reviewer, publisher, librarian) \"in the publication process.  It permits one to specify how an agent has a role relating to a bibliographic entity, and the period of time during which that role is held.
+
+Because it is based on the Time-indexed situation ontology pattern (http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl), it is easy to extend the set of specified roles, simply by adding new individuals to the class pro:Role."""^^xsd:string ;
+	dc:title "PRO, the Publishing Roles Ontology"@en ;
+	rdfs:comment "PRO, the Publishing Roles Ontology, is an ontology for describing the role(s) in the publication process of a particular agent over a defined period of time. It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies.  Other SPAR ontologies are described at http://purl.org/spar/."@en , "This ontology is available at http://purl.org/spar/pro, and uses the namespace prefix pro."@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://purl.org/swan/2.0/foaf-essential/> , <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> .
+
+dc:creator a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+rdfs:seeAlso a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+:holdsRoleInTime a owl:ObjectProperty ;
+	rdfs:label "holds role in time"@en ;
+	rdfs:comment "A property relating an agent to a publishing role that the agent holds at a specific time."@en ;
+	rdfs:subPropertyOf timeindexedsituation:hasTimeIndexedSetting .
+
+:isDocumentContextFor a owl:ObjectProperty ;
+	rdfs:label "is document context for"@en ;
+	rdfs:comment "A property relating a document to the publishing role for which that document provides the context (e.g. relating a document to the role of author or peer-reviewer of that document)."@en ;
+	rdfs:subPropertyOf :isRelatedToRoleInTime ;
+	owl:inverseOf :relatesToDocument .
+
+:isOrganizationContextFor a owl:ObjectProperty ;
+	rdfs:label "is organization context for"@it ;
+	rdfs:comment "A property relating an organization to the publishing role for which that organization provides the context (e.g. relating an institution to the role of affiliate of a person)."@en ;
+	rdfs:subPropertyOf :isRelatedToRoleInTime ;
+	owl:inverseOf :relatesToOrganization .
+
+:isRelatedToRoleInTime a owl:ObjectProperty ;
+	rdfs:label "is related to role in time"@en ;
+	rdfs:comment "A property relating an entity to the publishing role for which that entity provides the context."@en ;
+	rdfs:subPropertyOf timeindexedsituation:hasTimeIndexedSetting .
+
+:isRoleHeldBy a owl:ObjectProperty ;
+	rdfs:label "is role held by"@en ;
+	rdfs:comment "A property relating a publishing role that an agent holds at a specific time to that agent."@en ;
+	rdfs:domain :RoleInTime ;
+	owl:inverseOf :holdsRoleInTime ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity ;
+	rdfs:range foaf:Agent .
+
+:isRoleIn a owl:ObjectProperty ;
+	rdfs:label "is role in"@en ;
+	rdfs:comment "The property relating the definition of a specific publishing role to the situation of an agent holding that publishing role at a specific time."@en ;
+	owl:inverseOf :withRole ;
+	rdfs:subPropertyOf timeindexedsituation:hasTimeIndexedSetting .
+
+:relatesTo a owl:ObjectProperty ;
+	rdfs:label "relates to"@en ;
+	rdfs:comment "A property relating a publishing role to an entity representing the context for that role."@en ;
+	rdfs:domain :RoleInTime ;
+	owl:inverseOf :isRelatedToRoleInTime ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity .
+
+:relatesToDocument a owl:ObjectProperty ;
+	rdfs:label "relates to document"@en ;
+	rdfs:comment "A property relating a publishing role to a document that represents the context for that role (e.g. relating the role of author or peer-reviewer to the document being authored or peer-reviewed)."@en ;
+	rdfs:subPropertyOf :relatesTo ;
+	rdfs:range foaf:Document .
+
+:relatesToOrganization a owl:ObjectProperty ;
+	rdfs:label "relates to organization"@en ;
+	rdfs:comment "A property relating a publishing role to an organization that represents the context for that role (e.g. relating the role of affiliate to the related institution)."@en ;
+	rdfs:subPropertyOf :relatesTo ;
+	rdfs:range foaf:Organization .
+
+:withRole a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "with role"@en ;
+	rdfs:comment "The property relating the holding of a publishing role by an agent at a specific time to the definition of that publishing role."@en ;
+	rdfs:range :Role ;
+	rdfs:domain :RoleInTime ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity .
+
+timeindexedsituation:atTime a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "at time"@en ;
+	rdfs:comment "A time interval during which a role is held by an agent."@en .
+
+timeindexedsituation:forEntity a owl:ObjectProperty .
+
+timeindexedsituation:hasTimeIndexedSetting a owl:ObjectProperty .
+
+timeinterval:hasIntervalDate a owl:DatatypeProperty .
+
+timeinterval:hasIntervalEndDate a owl:DatatypeProperty .
+
+timeinterval:hasIntervalStartDate a owl:DatatypeProperty .
+
+:Role a owl:Class ;
+	rdfs:label "role"@en ;
+	rdfs:comment "A role some agents may have."@en .
+
+:RoleInTime a owl:Class ;
+	rdfs:label "role in time"@en ;
+	rdfs:subClassOf timeindexedsituation:TimeIndexedSituation , _:node171hp8rjpx1 .
+
+_:node171hp8rjpx1 a owl:Restriction ;
+	owl:onProperty :relatesTo ;
+	owl:someValuesFrom owl:Thing .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx2 .
+
+_:node171hp8rjpx2 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:atTime ;
+	owl:allValuesFrom _:node171hp8rjpx3 .
+
+_:node171hp8rjpx3 a owl:Class ;
+	owl:intersectionOf _:node171hp8rjpx4 .
+
+_:node171hp8rjpx4 rdf:first timeinterval:TimeInterval ;
+	rdf:rest _:node171hp8rjpx6 .
+
+_:node171hp8rjpx6 rdf:first _:node171hp8rjpx5 .
+
+_:node171hp8rjpx5 a owl:Restriction ;
+	owl:onProperty timeinterval:hasIntervalDate ;
+	owl:allValuesFrom xsd:dateTime .
+
+_:node171hp8rjpx6 rdf:rest rdf:nil .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx7 .
+
+_:node171hp8rjpx7 a owl:Restriction ;
+	owl:onProperty :isRoleHeldBy ;
+	owl:onClass foaf:Agent ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx8 .
+
+_:node171hp8rjpx8 a owl:Restriction ;
+	owl:onProperty :withRole ;
+	owl:someValuesFrom :Role .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx9 .
+
+_:node171hp8rjpx9 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:atTime ;
+	owl:someValuesFrom timeinterval:TimeInterval .
+
+:RoleInTime rdfs:comment "A particular situation that describe a role some agents may have at a particular time."@en ;
+	dc:description """A role in time describes always:
+- a particular role R
+- a particular agent A holding R
+- a particular time interval T in which A holds R
+- a particular bibliographic entity or a specific institution that defines a context for R held by A"""@en .
+
+timeindexedsituation:TimeIndexedSituation a owl:Class .
+
+timeinterval:TimeInterval a owl:Class ;
+	rdfs:label "time interval"@en ;
+	rdfs:comment "Two (starting and ending) points in time that define a particular period of time."@en .
+
+foaf:Agent a owl:Class ;
+	rdfs:label "agent"@en ;
+	rdfs:comment "An abstract class defining any kind of agents, such as a person, a group, an organization or a software agent."@en .
+
+foaf:Document a owl:Class ;
+	rdfs:label "document"@en ;
+	rdfs:comment "An abstract class defining any kinds of publishing work."@en .
+
+:access-provider a owl:NamedIndividual , :Role ;
+	rdfs:label "access provider"@en ;
+	rdfs:comment "The role of an agent who manages or provides access to a resource, for example an online data repository."@en ;
+	rdfs:seeAlso :librarian .
+
+:achivist a owl:NamedIndividual , :Role ;
+	rdfs:label "achivist"@en ;
+	rdfs:comment "The role of a person who manages, undertakes and supervises the work of a archive."@en .
+
+:affiliate a owl:NamedIndividual , :Role ;
+	rdfs:label "affiliate"@en ;
+	dc:description """The organization/institution object of an affiliation, which can be specified by using the property tisit:forEntity:
+
+_:auth pro:holdsRoleInTime [ pro:withRole pro:affiliate ; tisit:forEntity _:aff ] .
+
+_:aff a foaf:Organization ; vcard:extended-address 'Dept. Computer Science, University of Bologna, Bologna, Italy' ."""@en ;
+	rdfs:comment "The role an agent has of being affiliated to some organization or institution in a context of some material (for example a document or a dataset)."@en .
+
+:author a owl:NamedIndividual , :Role ;
+	rdfs:label "author"@en ;
+	rdfs:comment "The role an agent has of authorship of some material (for example a document or a dataset)."@en .
+
+:authors-agent a owl:NamedIndividual , :Role ;
+	rdfs:label "author's agent"@en ;
+	rdfs:comment "A person who finds work for professional authors, manages their contracts, and works to advance their careers, charging their clients as fees for their services a percentage of the money made from the authors' writings."@en .
+
+:biographer a owl:NamedIndividual , :Role ;
+	rdfs:label "biographer"@en ;
+	rdfs:comment "The role of an author who writes biographies."@en .
+
+:blogger a owl:NamedIndividual , :Role ;
+	rdfs:label "blogger"@en ;
+	rdfs:comment "The role of an author who writes blog posts."@en .
+
+:commissioning-editor a owl:NamedIndividual , :Role ;
+	rdfs:label "commissioning editor"@en ;
+	rdfs:comment "The role of an editor who actively commissions authors to write books to be published by the publishing house for which the commissioning editor works."@en .
+
+:contact-person a owl:NamedIndividual , :Role ;
+	rdfs:label "contact-person"@en ;
+	rdfs:comment "The role of a person who serves as the primary contact and information provider for third parties wishing to find out more about an organization or an activity."@en .
+
+:contributor a owl:NamedIndividual , :Role ;
+	rdfs:label "contributor"@en ;
+	rdfs:comment "The role an agent has of contribution of some material (for example a document or a dataset)."@en .
+
+:copy-editor a owl:NamedIndividual , :Role ;
+	rdfs:label "copy editor"@en ;
+	rdfs:comment "The role of an editor who undertakes alterations to the text of a document submitted for publication to improve the formatting, style and accuracy of text, or to bring the text into the house style of the publisher (e.g. Americanization of British spelling), without intentionally altering the substance or meaning of the text."@en .
+
+:copyright-owner a owl:NamedIndividual , :Role ;
+	rdfs:label "copyright owner"@en ;
+	rdfs:comment "The role of owning the copyright to a publication, usually held by the author or by the publishing house that publishes the author's work."@en .
+
+:critic a owl:NamedIndividual , :Role ;
+	rdfs:label "critic"@en ;
+	rdfs:comment "The role of an author who writes evaluations and criticisms of, for example, plays or other works of art."@en ;
+	rdfs:seeAlso :reviewer .
+
+:curator a owl:NamedIndividual , :Role ;
+	rdfs:label "curator"@en ;
+	rdfs:comment "The role of an agent that documents, cares for and manages collections of object (for example in a museum) or of data (as in a data repository or database).  [A librarian is a type of curator specializing in textual publications.]"@en .
+
+:data-manager a owl:NamedIndividual , :Role ;
+	rdfs:label "data-manager"@en ;
+	rdfs:comment "The role of an agent who manages and cares of data for an organization, project, data repository or database.  [See also curator.]]"@en .
+
+:editor a owl:NamedIndividual , :Role ;
+	rdfs:label "editor"@en ;
+	rdfs:comment "The role of a person who selects and prepares for publication material written and submitted by authors."@en .
+
+:editor-in-chief a owl:NamedIndividual , :Role ;
+	rdfs:label "editor-in-chief"@en ;
+	rdfs:comment "The role of the person who has final responsibility for the editorial operations and policies for a particular publication."@en .
+
+:embargo-controller a owl:NamedIndividual , :Role ;
+	rdfs:label "embargo controller"@en ;
+	rdfs:comment "The role of the person who has responsibility for setting and lifting embargos that restrict access to a document or dataset for a specified period of time."@en .
+
+:ghost-writer a owl:NamedIndividual , :Role ;
+	rdfs:label "ghost writer"@en ;
+	rdfs:comment "The role of a professional writer who assists an aspiring author lacking authorship skills to write a book or article for publication, for example by helping the author to create grammatically correct and lucid prose, or who writes the book on behalf of the named author, without himself/herself claiming authorship."@en .
+
+:journalist a owl:NamedIndividual , :Role ;
+	rdfs:label "journalist"@en ;
+	rdfs:comment "The role of an author who writes newspaper or magazine news reports or articles."@en .
+
+:librarian a owl:NamedIndividual , :Role ;
+	rdfs:label "librarian"@en ;
+	rdfs:comment "The role of a person who manages, undertakes and supervises the work of a library."@en .
+
+:peer-reviewer a owl:NamedIndividual , :Role ;
+	rdfs:label "peer reviewer"@en ;
+	rdfs:comment "The role of an academic peer in evaluating a manuscript submitted by an author for publication as a journal article on behalf of the journal editor, or a conference paper on behalf of the conference programme committee, and in deciding whether it is suitable for acceptance, usually subject to revisions suggested by the peer-reviewer."@en ;
+	rdfs:seeAlso :reviewer .
+
+:printer a owl:NamedIndividual , :Role ;
+	rdfs:label "printer"@en ;
+	rdfs:comment "The role of an agent involved in printing documents, either a company providing printing services or an individual engaged in the process of printing documents."@en .
+
+:production-editor a owl:NamedIndividual , :Role ;
+	rdfs:label "production editor"@en ;
+	rdfs:comment "The role of an editor who takes responsibility for the passage of a document through the various stages of the publication workflow from the submitted manuscript to the final publication, including responsibility for scheduling and budget."@en .
+
+:proof-reader a owl:NamedIndividual , :Role ;
+	rdfs:label "proof reader"@en ;
+	rdfs:comment "The role of a person who reads the proofs of documents to detect any errors prior to final publication."@en .
+
+:publisher a owl:NamedIndividual , :Role ;
+	rdfs:label "publisher"@en ;
+	rdfs:comment "The role of a person or an organization that published material, or of a publisher's employee who has responsibility for such publications."@en .
+
+:reader a owl:NamedIndividual , :Role ;
+	rdfs:label "reader"@en ;
+	rdfs:comment "The role of a person who reads publications."@en .
+
+:reviewer a owl:NamedIndividual , :Role ;
+	rdfs:label "reviewer"@en ;
+	rdfs:comment "The role of a person who subjects a publication to a written review and critical analysis of its content, scope and quality."@en .
+
+:senior-editor a owl:NamedIndividual , :Role ;
+	rdfs:label "senior editor"@en ;
+	rdfs:comment "The role of the person who has senior responsibility for the editorial operations and policies for a particular publication, usually acting under the authority of the Editor-in-Chief."@en .
+
+:series-editor a owl:NamedIndividual , :Role ;
+	rdfs:label "series-editor"@en ;
+	rdfs:comment "The role of the person who has editorial responsibility for publication series, for example a book series."@en .
+
+:translator a owl:NamedIndividual , :Role ;
+	rdfs:label "translator"@en ;
+	rdfs:comment "The role of an agent that translates a document into another language."@en .
+
+_:node171hp8rjpx10 a owl:Restriction ;
+	rdfs:subClassOf _:node171hp8rjpx11 .
+
+_:node171hp8rjpx11 a owl:Restriction ;
+	owl:onProperty :relatesToOrganization ;
+	owl:someValuesFrom foaf:Organization .
+
+_:node171hp8rjpx10 owl:onProperty :withRole ;
+	owl:hasValue :affiliate .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx12 .
+
+_:node171hp8rjpx12 a owl:Restriction ;
+	owl:onProperty :relatesTo ;
+	owl:someValuesFrom owl:Thing .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx13 .
+
+_:node171hp8rjpx13 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:atTime ;
+	owl:allValuesFrom _:node171hp8rjpx14 .
+
+_:node171hp8rjpx14 a owl:Class ;
+	owl:intersectionOf _:node171hp8rjpx15 .
+
+_:node171hp8rjpx15 rdf:first timeinterval:TimeInterval ;
+	rdf:rest _:node171hp8rjpx17 .
+
+_:node171hp8rjpx17 rdf:first _:node171hp8rjpx16 .
+
+_:node171hp8rjpx16 a owl:Restriction ;
+	owl:onProperty timeinterval:hasIntervalDate ;
+	owl:allValuesFrom xsd:dateTime .
+
+_:node171hp8rjpx17 rdf:rest rdf:nil .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx18 .
+
+_:node171hp8rjpx18 a owl:Restriction ;
+	owl:onProperty :isRoleHeldBy ;
+	owl:onClass foaf:Agent ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx19 .
+
+_:node171hp8rjpx19 a owl:Restriction ;
+	owl:onProperty :withRole ;
+	owl:someValuesFrom :Role .
+
+:RoleInTime rdfs:subClassOf _:node171hp8rjpx20 .
+
+_:node171hp8rjpx20 a owl:Restriction ;
+	owl:onProperty timeindexedsituation:atTime ;
+	owl:someValuesFrom timeinterval:TimeInterval .
+
+_:node171hp8rjpx21 a owl:Restriction ;
+	rdfs:subClassOf _:node171hp8rjpx22 .
+
+_:node171hp8rjpx22 a owl:Restriction ;
+	owl:onProperty :relatesToOrganization ;
+	owl:someValuesFrom foaf:Organization .
+
+_:node171hp8rjpx21 owl:onProperty :withRole ;
+	owl:hasValue :affiliate .

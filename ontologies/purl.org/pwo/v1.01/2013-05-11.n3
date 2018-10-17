@@ -1,0 +1,306 @@
+@prefix : <http://purl.org/spar/pwo/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix error: <http://www.essepuntato.it/2009/10/error/> .
+@prefix swrlx: <http://www.w3.org/2003/11/swrlx#> .
+@prefix owlapi: <http://www.semanticweb.org/owlapi#> .
+@prefix owl2: <http://www.w3.org/2006/12/owl2#> .
+@prefix sit: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix seq: <http://www.ontologydesignpatterns.org/cp/owl/sequence.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix tisit: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix timeint: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix part: <http://www.ontologydesignpatterns.org/cp/owl/participation.owl#> .
+
+<http://purl.org/spar/pwo> a owl:Ontology ;
+	owl:versionInfo "1.0.1"^^xsd:string ;
+	dc:date "2013-05-11"^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:title "The Publishing Workflow Ontology (PWO)"^^xsd:string ;
+	dc:description "The Publishing Workflow Ontology (PWO) is a simple ontology written in OWL 2 DL for the characterization of the main stages in the workflow associated with the publication of a document (e.g. being written, under review, XML capture, page design, publication to the Web)."@en ;
+	rdfs:comment "The Publishing Workflow Ontology (PWO) is an ontology for describing the workflow associated with the publication of a document.  It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies."@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://www.essepuntato.it/2009/10/error> , <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> , <http://www.ontologydesignpatterns.org/cp/owl/sequence.owl> , <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> , <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl> ;
+	dc:description <https://svn.code.sf.net/p/sempublishing/code/PWO/pwo.png> .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+owlapi:nodeID a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+:hasFirstStep a owl:ObjectProperty ;
+	rdfs:label "has first step"@en ;
+	rdfs:comment "A workflow that starts with a particular step."@en ;
+	rdfs:subPropertyOf :hasStep ;
+	rdfs:range _:node18o2tui2dx34 .
+
+_:node18o2tui2dx34 a owl:Class ;
+	owl:complementOf _:node18o2tui2dx35 .
+
+_:node18o2tui2dx35 a owl:Restriction ;
+	owl:onProperty :hasPreviousStep ;
+	owl:someValuesFrom :Step .
+
+:hasNextStep a owl:ObjectProperty ;
+	rdfs:label "has next step"@en ;
+	rdfs:comment "A property linking a step in a workflow with the step that directly follows it."@en ;
+	rdfs:domain :Step ;
+	rdfs:range :Step ;
+	owl:inverseOf :hasPreviousStep ;
+	rdfs:subPropertyOf seq:directlyPrecedes .
+
+:hasPreviousStep a owl:ObjectProperty ;
+	rdfs:label "has previous step"@en ;
+	rdfs:comment "A property linking a step in a workflow with the step that directly precedes it."@en ;
+	rdfs:subPropertyOf seq:directlyFollows .
+
+:hasStep a owl:ObjectProperty ;
+	rdfs:label "has step"@en ;
+	rdfs:comment "The property linking a workflow to a component step."@en ;
+	rdfs:range :Step ;
+	rdfs:domain :Workflow ;
+	rdfs:subPropertyOf part:hasParticipant .
+
+:involvesEvent a owl:ObjectProperty ;
+	rdfs:label "involves event"@en ;
+	rdfs:comment "The property linking a step in a workflow to an event."@en ;
+	rdfs:domain :Step ;
+	rdfs:range part:Event ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+:isInvolvedInStep a owl:ObjectProperty ;
+	rdfs:label "is involved in step"@en ;
+	rdfs:comment "The property linking an event to a step in a workflow."@en ;
+	owl:inverseOf :involvesEvent ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:isNeededBy a owl:ObjectProperty ;
+	rdfs:label "is needed by"@en ;
+	rdfs:comment "The property linking a thing required to undertake a workflow step to the step itself."@en ;
+	owl:inverseOf :needs ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:isProducedBy a owl:ObjectProperty ;
+	rdfs:label "is produced by"@en ;
+	rdfs:comment "The property linking something to the workflow step that produces, creates or results in that thing."@en ;
+	owl:inverseOf :produces ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:isStepOf a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "is step of"@en ;
+	rdfs:comment "The property linking a step in a workflow to the workflow of which it is a component."@en ;
+	owl:inverseOf :hasStep ;
+	rdfs:subPropertyOf part:isParticipantIn .
+
+:needs a owl:ObjectProperty ;
+	rdfs:label "needs"@en ;
+	rdfs:comment "The property linking a workflow step to anything required to undertake that step."@en ;
+	rdfs:domain :Step ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+:produces a owl:ObjectProperty ;
+	rdfs:label "produces"@en ;
+	rdfs:comment "The property linking a workflow step to the thing that the step produces, creates or results in."@en ;
+	rdfs:domain :Step ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+part:hasParticipant a owl:ObjectProperty .
+
+part:isParticipantIn a owl:ObjectProperty .
+
+seq:directlyFollows a owl:ObjectProperty .
+
+seq:directlyPrecedes a owl:ObjectProperty .
+
+seq:precedes a owl:ObjectProperty .
+
+sit:isSettingFor a owl:ObjectProperty .
+
+tisit:atTime a owl:ObjectProperty ;
+	rdfs:label "at time"@en ;
+	rdfs:comment "A step is performed within a time interval."@en .
+
+tisit:forEntity a owl:ObjectProperty .
+
+tisit:hasTimeIndexedSetting a owl:ObjectProperty .
+
+error:hasError a owl:DatatypeProperty .
+
+timeint:hasIntervalDate a owl:DatatypeProperty .
+
+:Step a owl:Class ;
+	rdfs:label "step"@en ;
+	rdfs:subClassOf _:node18o2tui2dx36 .
+
+_:node18o2tui2dx36 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:allValuesFrom _:node18o2tui2dx37 .
+
+_:node18o2tui2dx37 a owl:Class ;
+	owl:intersectionOf _:node18o2tui2dx38 .
+
+_:node18o2tui2dx38 rdf:first timeint:TimeInterval ;
+	rdf:rest _:node18o2tui2dx39 .
+
+_:node18o2tui2dx39 rdf:first _:node18o2tui2dx40 .
+
+_:node18o2tui2dx40 a owl:Restriction ;
+	owl:onProperty timeint:hasIntervalDate ;
+	owl:allValuesFrom xsd:dateTime .
+
+_:node18o2tui2dx39 rdf:rest rdf:nil .
+
+:Step rdfs:subClassOf _:node18o2tui2dx41 .
+
+_:node18o2tui2dx41 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:onClass timeint:TimeInterval ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:Step rdfs:subClassOf _:node18o2tui2dx42 .
+
+_:node18o2tui2dx42 a owl:Class ;
+	owl:intersectionOf _:node18o2tui2dx43 .
+
+_:node18o2tui2dx43 rdf:first part:Object ;
+	rdf:rest _:node18o2tui2dx44 .
+
+_:node18o2tui2dx44 rdf:first _:node18o2tui2dx45 .
+
+_:node18o2tui2dx45 a owl:Restriction ;
+	owl:onProperty part:isParticipantIn ;
+	owl:allValuesFrom :Workflow .
+
+_:node18o2tui2dx44 rdf:rest rdf:nil .
+
+:Step rdfs:subClassOf _:node18o2tui2dx46 .
+
+_:node18o2tui2dx46 a owl:Class ;
+	owl:intersectionOf _:node18o2tui2dx47 .
+
+_:node18o2tui2dx47 rdf:first tisit:TimeIndexedSituation ;
+	rdf:rest _:node18o2tui2dx48 .
+
+_:node18o2tui2dx48 rdf:first _:node18o2tui2dx49 .
+
+_:node18o2tui2dx49 a owl:Restriction ;
+	owl:onProperty :involvesEvent ;
+	owl:someValuesFrom part:Event .
+
+_:node18o2tui2dx48 rdf:rest rdf:nil .
+
+:Step rdfs:comment "An atomic unit of a workflow, that may be characterized by a starting time and an ending time, and may be associated with one or more events.  A workflow step usually involves some input information, material or energy needed to complete the step, and some output information, material or energy produced by that step.  In the case of a publishing workflow, a step typically results in the creation of a publication entity, usually by the modification of another pre-existing publication entity, e.g. the creation of an edited paper from a rough draft, or of an HTML representation from an XML mark-up."@en .
+
+:Workflow a owl:Class ;
+	rdfs:label "workflow"@en ;
+	rdfs:subClassOf _:node18o2tui2dx50 .
+
+_:node18o2tui2dx50 a owl:Class ;
+	owl:intersectionOf _:node18o2tui2dx51 .
+
+_:node18o2tui2dx51 rdf:first part:Event ;
+	rdf:rest _:node18o2tui2dx52 .
+
+_:node18o2tui2dx52 rdf:first _:node18o2tui2dx53 .
+
+_:node18o2tui2dx53 a owl:Restriction ;
+	owl:onProperty :hasFirstStep ;
+	owl:someValuesFrom :Step .
+
+_:node18o2tui2dx52 rdf:rest rdf:nil .
+
+:Workflow rdfs:comment "A sequence of connected steps, representing a sequence of publishing operations undertaken by agents. A workflow may be seen as an abstract model of real work."@en .
+
+part:Event a owl:Class .
+
+part:Object a owl:Class .
+
+sit:Situation a owl:Class .
+
+tisit:TimeIndexedSituation a owl:Class .
+
+timeint:TimeInterval a owl:Class .
+
+<urn:swrl#si> a swrl:Variable .
+
+<urn:swrl#sj> a swrl:Variable .
+
+<urn:swrl#r> a swrl:Variable .
+
+_:node18o2tui2dx54 a swrl:Imp ;
+	swrl:head _:node18o2tui2dx55 .
+
+_:node18o2tui2dx55 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node18o2tui2dx56 .
+
+_:node18o2tui2dx56 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "A step cannot need a resource that will be produced by a following step"^^xsd:string ;
+	swrl:propertyPredicate error:hasError ;
+	swrl:argument1 <urn:swrl#si> .
+
+_:node18o2tui2dx54 swrl:body _:node18o2tui2dx57 .
+
+_:node18o2tui2dx57 a swrl:AtomList ;
+	rdf:first _:node18o2tui2dx58 .
+
+_:node18o2tui2dx58 a swrl:ClassAtom ;
+	swrl:classPredicate :Step ;
+	swrl:argument1 <urn:swrl#si> .
+
+_:node18o2tui2dx57 rdf:rest _:node18o2tui2dx59 .
+
+_:node18o2tui2dx59 a swrl:AtomList ;
+	rdf:rest _:node18o2tui2dx60 .
+
+_:node18o2tui2dx60 a swrl:AtomList ;
+	rdf:first _:node18o2tui2dx61 .
+
+_:node18o2tui2dx61 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :needs ;
+	swrl:argument2 <urn:swrl#r> ;
+	swrl:argument1 <urn:swrl#si> .
+
+_:node18o2tui2dx60 rdf:rest _:node18o2tui2dx62 .
+
+_:node18o2tui2dx62 a swrl:AtomList ;
+	rdf:first _:node18o2tui2dx63 .
+
+_:node18o2tui2dx63 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :produces ;
+	swrl:argument2 <urn:swrl#r> ;
+	swrl:argument1 <urn:swrl#sj> .
+
+_:node18o2tui2dx62 rdf:rest _:node18o2tui2dx64 .
+
+_:node18o2tui2dx64 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node18o2tui2dx65 .
+
+_:node18o2tui2dx65 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate seq:precedes ;
+	swrl:argument1 <urn:swrl#si> ;
+	swrl:argument2 <urn:swrl#sj> .
+
+_:node18o2tui2dx59 rdf:first _:node18o2tui2dx66 .
+
+_:node18o2tui2dx66 a swrl:ClassAtom ;
+	swrl:classPredicate :Step ;
+	swrl:argument1 <urn:swrl#sj> .

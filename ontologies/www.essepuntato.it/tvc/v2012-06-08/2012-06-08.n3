@@ -1,0 +1,270 @@
+@prefix timeindexedsituation: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.essepuntato.it/2012/04/tvc/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix timeinterval: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix situation: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+
+<http://www.essepuntato.it/2012/04/tvc> a owl:Ontology ;
+	rdfs:label "time-indexed value in context"@en ;
+	dc:creator "Silvio Peroni" ;
+	dc:date "2012-06-08" ;
+	dc:contributor "Fabio Vitali" , "David Shotton" ;
+	rdfs:comment "A pattern for the description of scenarios that involve entities having some value during a particular time and within a particular context."@en ;
+	dc:description """Sometimes, we need to describe scenarios in which someone (e.g., a person) has a value (e.g., a particular role) during a particular time and for a particular context. Four different things are involved in these kinds of scenarios:
+
+1. the entity having some value, e.g. a person or a document possessing a role or a status;
+
+2. the value had by someone, e.g. a role or a status;
+
+3. the time period during which the entity has that value, e.g. from April 2008 to September 2008;
+
+4. the particular context that characterises the act of having that value, e.g. being a member of an institution or an editor of a particular journal.
+
+Thought as natural extension of the Time-indexed Situation pattern (http://ontologydesignpatterns.org/wiki/Submissions:TimeIndexedSituation), this ontological pattern, called Time-indexed Value in Context (TVC), is able to describe these kinds of scenarios."""@en ;
+	dc:title "The Time-indexed Value in Context"@en ;
+	dc:description <http://dwellonit.svn.sourceforge.net/svnroot/dwellonit/TimeIndexedValueInContext/tvc.png> ;
+	owl:imports <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> , <http://www.w3.org/2006/time> .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+:atTime a owl:ObjectProperty ;
+	rdfs:label "at time" ;
+	rdfs:comment "It specifies the particular temporal instant or time period in which the situation takes place."@en ;
+	rdfs:domain :ValueInTime ;
+	rdfs:subPropertyOf situation:isSettingFor ;
+	rdfs:range time:TemporalEntity .
+
+:hasValue a owl:ObjectProperty ;
+	rdfs:label "has value"@en ;
+	rdfs:comment "It links an entity (e.g., a Person) to a particular ValueInTime situation;"@en ;
+	rdfs:range :ValueInTime ;
+	rdfs:subPropertyOf timeindexedsituation:hasTimeIndexedSetting ;
+	rdfs:domain owl:Thing .
+
+:withValue a owl:ObjectProperty ;
+	rdfs:label "with value"@en ;
+	rdfs:comment "It holds the value had by the entity taking part to the situation."@en ;
+	rdfs:domain :ValueInTime ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity ;
+	rdfs:range owl:Thing .
+
+:withinContext a owl:ObjectProperty ;
+	rdfs:label "within context"@en ;
+	rdfs:comment "It links to the specific context within which the fact of the entity having the value is relevant."@en ;
+	rdfs:domain :ValueInTime ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity ;
+	rdfs:range owl:Thing .
+
+:ValueInTime a owl:Class ;
+	rdfs:label "value in time"@en ;
+	rdfs:subClassOf timeindexedsituation:TimeIndexedSituation , _:node17915g50sx1 .
+
+_:node17915g50sx1 a owl:Restriction ;
+	owl:onProperty :withValue ;
+	owl:someValuesFrom owl:Thing .
+
+:ValueInTime rdfs:subClassOf _:node17915g50sx2 .
+
+_:node17915g50sx2 a owl:Restriction ;
+	owl:onProperty :atTime ;
+	owl:someValuesFrom _:node17915g50sx3 .
+
+_:node17915g50sx3 a owl:Class ;
+	owl:unionOf _:node17915g50sx4 .
+
+_:node17915g50sx4 rdf:first time:Instant ;
+	rdf:rest _:node17915g50sx5 .
+
+_:node17915g50sx5 rdf:first time:Interval ;
+	rdf:rest rdf:nil .
+
+:ValueInTime rdfs:subClassOf _:node17915g50sx6 .
+
+_:node17915g50sx6 a owl:Restriction ;
+	owl:onProperty :withinContext ;
+	owl:someValuesFrom owl:Thing .
+
+:ValueInTime dc:description "Having the role \"graduate student\" in a specific time (e.g., now) and context (e.g., \"University of Bologna\")."@en ;
+	rdfs:comment "It defines a particular kind of time-indexed situation that represents a hub linking the entity having a particular value, the value itself and the temporal and contextual extents from which the entity-value relationship depends."@en .
+
+timeinterval:TimeInterval owl:equivalentClass time:Interval .
+
+<urn:swrl#x> a swrl:Variable .
+
+<urn:swrl#t> a swrl:Variable .
+
+_:node17915g50sx7 a swrl:Imp ;
+	swrl:body _:node17915g50sx8 .
+
+_:node17915g50sx8 a swrl:AtomList ;
+	rdf:rest _:node17915g50sx9 .
+
+_:node17915g50sx9 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx10 .
+
+_:node17915g50sx10 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx8 rdf:first _:node17915g50sx11 .
+
+_:node17915g50sx11 a swrl:ClassAtom ;
+	swrl:classPredicate timeinterval:TimeInterval ;
+	swrl:argument1 <urn:swrl#t> .
+
+_:node17915g50sx7 swrl:head _:node17915g50sx12 .
+
+_:node17915g50sx12 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx13 .
+
+_:node17915g50sx13 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate timeindexedsituation:atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx14 a swrl:Imp ;
+	swrl:head _:node17915g50sx15 .
+
+_:node17915g50sx15 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx16 .
+
+_:node17915g50sx16 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx14 swrl:body _:node17915g50sx17 .
+
+_:node17915g50sx17 a swrl:AtomList ;
+	rdf:rest _:node17915g50sx18 .
+
+_:node17915g50sx18 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx19 .
+
+_:node17915g50sx19 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate timeindexedsituation:atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx17 rdf:first _:node17915g50sx20 .
+
+_:node17915g50sx20 a swrl:ClassAtom ;
+	swrl:classPredicate :ValueInTime ;
+	swrl:argument1 <urn:swrl#x> .
+
+:ValueInTime rdfs:subClassOf _:node17915g50sx21 .
+
+_:node17915g50sx21 a owl:Restriction ;
+	owl:onProperty :withValue ;
+	owl:someValuesFrom owl:Thing .
+
+:ValueInTime rdfs:subClassOf _:node17915g50sx22 .
+
+_:node17915g50sx22 a owl:Restriction ;
+	owl:onProperty :atTime ;
+	owl:someValuesFrom _:node17915g50sx23 .
+
+_:node17915g50sx23 a owl:Class ;
+	owl:unionOf _:node17915g50sx24 .
+
+_:node17915g50sx24 rdf:first time:Instant ;
+	rdf:rest _:node17915g50sx25 .
+
+_:node17915g50sx25 rdf:first time:Interval ;
+	rdf:rest rdf:nil .
+
+:ValueInTime rdfs:subClassOf _:node17915g50sx26 .
+
+_:node17915g50sx26 a owl:Restriction ;
+	owl:onProperty :withinContext ;
+	owl:someValuesFrom owl:Thing .
+
+_:node17915g50sx27 a swrl:Imp ;
+	swrl:body _:node17915g50sx28 .
+
+_:node17915g50sx28 a swrl:AtomList ;
+	rdf:rest _:node17915g50sx29 .
+
+_:node17915g50sx29 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx30 .
+
+_:node17915g50sx30 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx28 rdf:first _:node17915g50sx31 .
+
+_:node17915g50sx31 a swrl:ClassAtom ;
+	swrl:classPredicate timeinterval:TimeInterval ;
+	swrl:argument1 <urn:swrl#t> .
+
+_:node17915g50sx27 swrl:head _:node17915g50sx32 .
+
+_:node17915g50sx32 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx33 .
+
+_:node17915g50sx33 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate timeindexedsituation:atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx34 a swrl:Imp ;
+	swrl:head _:node17915g50sx35 .
+
+_:node17915g50sx35 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx36 .
+
+_:node17915g50sx36 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx34 swrl:body _:node17915g50sx37 .
+
+_:node17915g50sx37 a swrl:AtomList ;
+	rdf:rest _:node17915g50sx38 .
+
+_:node17915g50sx38 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node17915g50sx39 .
+
+_:node17915g50sx39 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate timeindexedsituation:atTime ;
+	swrl:argument2 <urn:swrl#t> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node17915g50sx37 rdf:first _:node17915g50sx40 .
+
+_:node17915g50sx40 a swrl:ClassAtom ;
+	swrl:classPredicate :ValueInTime ;
+	swrl:argument1 <urn:swrl#x> .

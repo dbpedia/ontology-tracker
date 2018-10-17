@@ -1,0 +1,65 @@
+@prefix : <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix cpannotationschema: <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.ontologydesignpatterns.org/cp/owl/situation.owl> a owl:Ontology ;
+	rdfs:label "situation" ;
+	owl:versionInfo "Created by Aldo Gangemi and Valentina Presutti"^^xsd:string ;
+	cpannotationschema:coversRequirements "What is the context or situation of something? What are the things present in this context or situation?" ;
+	cpannotationschema:scenarios "The lecture was held in January 1921 by Bela Fleck, with some physicians in the audience making questions, in a very relaxed athmosphere." ;
+	cpannotationschema:hasIntent "To represent contexts or situations, and the things that are contextualized." ;
+	cpannotationschema:extractedFrom "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl" ;
+	cpannotationschema:hasConsequences """We can contextualize things that have something in common, or are associated: a same place, time, view, causal link, systemic dependence, etc.
+We can also reify n-ary relations as situations.""" ;
+	cpannotationschema:hasAuthor "Aldo Gangemi" ;
+	owl:imports <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl> .
+
+cpannotationschema:hasIntent a owl:AnnotationProperty .
+
+cpannotationschema:extractedFrom a owl:AnnotationProperty .
+
+cpannotationschema:scenarios a owl:AnnotationProperty .
+
+cpannotationschema:hasAuthor a owl:AnnotationProperty .
+
+cpannotationschema:coversRequirements a owl:AnnotationProperty .
+
+cpannotationschema:hasConsequences a owl:AnnotationProperty .
+
+:hasSetting a owl:ObjectProperty ;
+	rdfs:label "has setting"@en ;
+	rdfs:comment "A relation between entities and situations, e.g. 'this morning I've prepared my coffee with a new fantastic Arabica' (i.e.: (an amount of) a new fantastic Arabica hasSetting the preparation of my coffee this morning)." ;
+	rdfs:range :Situation ;
+	owl:inverseOf :isSettingFor ;
+	rdfs:domain owl:Thing .
+
+:isSettingFor a owl:ObjectProperty ;
+	rdfs:label "is setting for"@en ;
+	rdfs:domain :Situation ;
+	rdfs:range owl:Thing .
+
+:Situation a owl:Class ;
+	rdfs:label "Situation"@en ;
+	rdfs:subClassOf _:node17994v78sx1 .
+
+_:node17994v78sx1 a owl:Restriction ;
+	owl:onProperty :isSettingFor ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:Situation rdfs:comment """A view on a set of entities. It can be seen as a 'relational context', reifying a relation.
+For example, a PlanExecution is a context including some actions executed by agents according to certain parameters and expected tasks to be achieved from a Plan; a DiagnosedSituation is a context of observed entities that is interpreted on the basis of a Diagnosis, etc.
+Situation is also able to represent reified n-ary relations, where isSettingFor is the top-level relation for all binary projections of the n-ary relation. If used in a transformation pattern for n-ary relations, the designer should take care of:
+- creating only one situation for each instance of an n-ary relation, otherwise the 'identification constraint' (Calvanese et al., IJCAI 2001) could be violated
+- adding an 'exact cardinality' restriction corresponding to the arity of the n-ary relation, otherwise the designer would actually represent a polymorphic relation.""" .
+
+owl:Thing a owl:Class .
+
+:Situation rdfs:subClassOf _:node17994v78sx2 .
+
+_:node17994v78sx2 a owl:Restriction ;
+	owl:onProperty :isSettingFor ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .

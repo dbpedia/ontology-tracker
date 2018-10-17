@@ -1,0 +1,126 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix tag: <http://www.holygoat.co.uk/owl/redwood/0.1/tags/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+rdfs:Resource a owl:Class .
+
+dc:contributor a owl:DatatypeProperty .
+
+dc:creator a owl:DatatypeProperty .
+
+dc:description a owl:DatatypeProperty .
+
+dc:title a owl:DatatypeProperty .
+
+dct:issued a owl:DatatypeProperty .
+
+tag:RestrictedTagging a owl:Class .
+
+tag:name a owl:DatatypeProperty .
+
+tag:Tag a owl:Class .
+
+foaf:Person a owl:Class .
+
+foaf:maker a owl:ObjectProperty .
+
+<http://moat-project.org/ns#> a owl:Ontology , owl:Thing ;
+	dc:creator "Alexandre Passant" ;
+	dc:contributor "Philippe Laublet" ;
+	foaf:maker <http://apassant.net/alex> .
+
+<http://apassant.net/alex> a foaf:Person .
+
+<http://moat-project.org/ns#> dct:issued "2008-01-15" ;
+	dc:title "MOAT ontology"@en ;
+	rdfs:label "An ontology for the MOAT project."@en ;
+	rdfs:comment "An ontology that let users define relationships between Tag objects and URIs of Semantic Web resources."@en ;
+	rdfs:seeAlso <http://moat-project.org/ontology> .
+
+<http://moat-project.org/ontology> rdfs:label "Human-redeable information about this ontology" .
+
+<http://moat-project.org/ns#Tag> a owl:Class ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "Tag URI" ;
+	rdfs:comment "A Tag URI, that provides an unique identifier for a label attached to a resource"@en ;
+	rdfs:subClassOf tag:Tag , _:node17168lti0x5 .
+
+_:node17168lti0x5 a owl:Restriction ;
+	owl:onProperty tag:name ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://moat-project.org/ns#Meaning> a owl:Class ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "Tag Meaning" ;
+	rdfs:comment "A reified object to define a potential meaning for a Tag. The meaning is a unique and explicitely defined Semantic Web resource and is related to the agent that defined it with foaf:maker"@en ;
+	rdfs:subClassOf _:node17168lti0x6 .
+
+_:node17168lti0x6 a owl:Restriction ;
+	owl:onProperty <http://moat-project.org/ns#meaningURI> ;
+	owl:cardinality "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://moat-project.org/ns#Meaning> rdfs:subClassOf _:node17168lti0x7 .
+
+_:node17168lti0x7 a owl:Restriction ;
+	owl:onProperty foaf:maker ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://moat-project.org/ns#hasMeaning> a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "tag meaning object - global context" ;
+	rdfs:comment "The link between a Tag and a Meaning object in a global context"@en ;
+	rdfs:domain <http://moat-project.org/ns#Tag> ;
+	rdfs:range <http://moat-project.org/ns#Meaning> .
+
+<http://moat-project.org/ns#meaningURI> a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "tag meaning URI - global context" ;
+	rdfs:comment "The link between a reified Meaning object and the URI that defines a meaning"@en ;
+	rdfs:domain <http://moat-project.org/ns#Meaning> ;
+	rdfs:range rdfs:Resource .
+
+<http://moat-project.org/ns#tagMeaning> a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "tag meaning - tagging context" ;
+	rdfs:comment "The link between a Tagging and a meaning (URI) of a tag in a given context (i.e. blog post)"@en ;
+	rdfs:domain tag:RestrictedTagging ;
+	rdfs:range rdfs:Resource .
+
+_:node17168lti0x8 a owl:Restriction ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	owl:onProperty <http://moat-project.org/ns#tagMeaning> ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://moat-project.org/ns#tagType> a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "tagging type" ;
+	rdfs:comment "The type of the tagging, i.e. automatic or has been validated"@en ;
+	rdfs:domain tag:RestrictedTagging ;
+	rdfs:range <http://moat-project.org/ns#TagType> .
+
+<http://moat-project.org/ns#TagType> a owl:Class ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> .
+
+<http://moat-project.org/ns#AutomatedTagging> rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	a <http://moat-project.org/ns#TagType> .
+
+<http://moat-project.org/ns#ValidatedTagging> rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	a <http://moat-project.org/ns#TagType> .
+
+<http://moat-project.org/ns#taggedWith> a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "tagged with" ;
+	rdfs:comment "The URI ised to 'tag' an item with MOAT"@en ;
+	rdfs:domain <http://rdfs.org/sioc/ns#Item> ;
+	rdfs:range rdfs:Resource .
+
+<http://moat-project.org/ns#localMeaning> a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://moat-project.org/ns#> ;
+	rdfs:label "local Meaning" ;
+	rdfs:comment "The URI used as a meaning for a local meaning of a Tag with MOAT"@en ;
+	rdfs:domain <http://moat-project.org/ns#Tag> ;
+	rdfs:range rdfs:Resource .

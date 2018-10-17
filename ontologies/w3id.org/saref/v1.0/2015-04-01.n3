@@ -1,0 +1,1281 @@
+@prefix :      <https://w3id.org/saref#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix om:    <http://www.wurvoc.org/vocabularies/om-1.8/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix saref: <https://w3id.org/saref#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+saref:hasState  a     owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the type of state of a device"^^xsd:string ;
+        rdfs:label    "has state"^^xsd:string .
+
+saref:hasSensorType  a  owl:DatatypeProperty ;
+        rdfs:comment  "A relationship identifying the sensing type of a sensor detection (i.e., emperature, Occupancy, Humidity, Motion , Smoke, Pressure or Other) "^^xsd:string ;
+        rdfs:label    "has sensor type"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+saref:OffState  a        saref:OffState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The state of a device that is ON"^^xsd:string ;
+        rdfs:label       "Off state"^^xsd:string ;
+        rdfs:subClassOf  saref:OnOffState .
+
+saref:OnCommand  a       saref:OnCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "On command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:OnOffState ;
+                           owl:onProperty     saref:actsUpon
+                         ] .
+
+geo:location  a     owl:ObjectProperty ;
+        rdfs:range  geo:SpatialThing .
+
+saref:Safety  a          saref:Safety , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of task for which a device is designed"^^xsd:string ;
+        rdfs:label       "Safety"^^xsd:string ;
+        rdfs:subClassOf  saref:Task .
+
+om:lux  a             saref:IlluminanceUnit , owl:NamedIndividual ;
+        rdfs:comment  "The lux is a unit of illuminance defined as lumen divided by square metre = candela times steradian divided by square metre."@en ;
+        rdfs:label    "lux"^^xsd:string .
+
+saref:hasFunction  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the type of function of a device"^^xsd:string ;
+        rdfs:label    "has function"^^xsd:string ;
+        rdfs:range    saref:Function .
+
+saref:StartCommand  a     saref:StartCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "A type of command"^^xsd:string ;
+        rdfs:label        "Start command"^^xsd:string ;
+        rdfs:subClassOf   saref:Command ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  saref:StartStopState ;
+                            owl:onProperty     saref:actsUpon
+                          ] ;
+        owl:disjointWith  saref:StopCommand .
+
+geo:SpatialThing  a      owl:Class ;
+        rdfs:comment     "Anything with spatial extent, i.e. size, shape, or position.\n e.g. people, places, bowling balls, as well as abstract areas like cubes.\n" ;
+        rdfs:label       "SpatialThing" ;
+        rdfs:subClassOf  rdfs:Resource .
+
+saref:NotifyCommand  a   saref:NotifyCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Notify command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command .
+
+saref:Actuator  a        saref:Actuator , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A device responsible for moving or controlling a mechanism or system"^^xsd:string ;
+        rdfs:label       "Actuator"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+saref:Energy  a          saref:Energy , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in an energy unit (Kilowatt_Hour or Watt_hour)  "^^xsd:string ;
+        rdfs:label       "Energy "^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:hasValue ;
+                           owl:someValuesFrom  xsd:float
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:EnergyUnit ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+time:DayOfWeek  rdfs:subClassOf  owl:Thing .
+
+saref:LevelControlFunction
+        a                 owl:NamedIndividual , saref:LevelControlFunction , owl:Class ;
+        rdfs:comment      "An actuating function that allows to do level adjustments of an actuator in a certain range (e.g., 0%-100%), such as dimming a light or set the speed of an electric motor. "^^xsd:string ;
+        rdfs:label        "Level control function"^^xsd:string ;
+        rdfs:subClassOf   saref:ActuatingFunction ;
+        saref:hasCommand  saref:SetRelativeLevelCommand , saref:StepUpCommand , saref:StepDownCommand , saref:SetAbsoluteLevelCommand .
+
+saref:HVACEnergy  a      owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "HVACEnergy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+saref:consistsOf  a   owl:ObjectProperty ;
+        rdfs:comment  "A relationship indicating a composite entity that consists of other entities (e.g., a temperature/humidity sensor that consists of a temperature sensor and a humidity sensor)"^^xsd:string ;
+        rdfs:label    "consists of"^^xsd:string .
+
+saref:GetMeterHistoryCommand
+        a                saref:GetMeterHistoryCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of get command"^^xsd:string ;
+        rdfs:label       "Get meter history command"^^xsd:string ;
+        rdfs:subClassOf  saref:GetCommand .
+
+saref:StartState  a      saref:StartState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The state of a device that is STARTED"^^xsd:string ;
+        rdfs:label       "Start state"^^xsd:string ;
+        rdfs:subClassOf  saref:StartStopState .
+
+saref:hasThreshold  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship associated with an event function to notify that a certain threshold value has been exceeded"^^xsd:string ;
+        rdfs:label    "has threshold"^^xsd:string .
+
+saref:hasPrice  a     owl:ObjectProperty ;
+        rdfs:comment  "A relationships indentifying the price associated to an entity"^^xsd:string ;
+        rdfs:label    "has price"^^xsd:string .
+
+saref:DoorSwitch  a        owl:NamedIndividual , saref:DoorSwitch , owl:Class ;
+        rdfs:comment       "A device that consists of a switch, has category saref:Actuator, performs the saref:OpenCloseFunction and is used for the purpose of controlling a building object of type saref:Door"^^xsd:string ;
+        rdfs:label         "Door switch"^^xsd:string ;
+        rdfs:subClassOf    saref:Device ;
+        saref:IsUsedFor    saref:Door ;
+        saref:consistsOf   saref:Switch ;
+        saref:hasCategory  saref:Actuator ;
+        saref:hasFunction  saref:OpenCloseFunction .
+
+saref:hasInputParameter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the input parameter of a service"^^xsd:string ;
+        rdfs:domain   saref:Service ;
+        rdfs:label    "has input parameter"^^xsd:string .
+
+saref:hasValue  a     owl:DatatypeProperty ;
+        rdfs:comment  "A relationship defining the value of a certain property, e.g., energy or power"^^xsd:string ;
+        rdfs:label    "has value"^^xsd:string .
+
+saref:Device  a          owl:Class ;
+        rdfs:comment     "A tangible object designed to accomplish a particular task in households, common public buildings or offices. In order to accomplish this task, the device performs one or more functions. For example, a washing machine is designed to wash (task) and to accomplish this task it performs the start and stop function."^^xsd:string ;
+        rdfs:label       "Device"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:DeviceCategory ;
+                           owl:onProperty     saref:hasCategory
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:BuildingObject saref:Commodity saref:Property )
+                                              ] ;
+                           owl:onProperty     saref:IsUsedFor
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Task ;
+                           owl:onProperty               saref:accomplishes
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:Energy saref:Power )
+                                              ] ;
+                           owl:onProperty     saref:hasTypicalConsumption
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Function ;
+                           owl:onProperty               saref:hasFunction
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   saref:hasManufacturer
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:BuildingSpace ;
+                           owl:onProperty     saref:isLocatedIn
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Profile ;
+                           owl:onProperty     saref:hasProfile
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      saref:hasDescription
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Service ;
+                           owl:onProperty     saref:offers
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:State ;
+                           owl:onProperty     saref:hasState
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Device ;
+                           owl:onProperty     saref:consistsOf
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   saref:hasModel
+                         ] .
+
+saref:StartStopState  a  owl:Class ;
+        rdfs:comment     "A type of state"^^xsd:string ;
+        rdfs:label       "Start stop state"^^xsd:string ;
+        rdfs:subClassOf  saref:State .
+
+saref:Motion  a          saref:Motion , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a unit of measure for motion"^^xsd:string ;
+        rdfs:label       "Motion"^^xsd:string ;
+        rdfs:subClassOf  saref:Property .
+
+saref:hasSpaceType  a  owl:DatatypeProperty ;
+        rdfs:comment  "A relationship that specifies the type of a building space"^^xsd:string ;
+        rdfs:label    "has space type"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+om:singular_unit  a  owl:ObjectProperty ;
+        rdfs:label  "singular unit"^^xsd:string .
+
+saref:Coal  a            saref:Coal , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of commodity"^^xsd:string ;
+        rdfs:label       "coal"^^xsd:string ;
+        rdfs:subClassOf  saref:Commodity .
+
+saref:SetAbsoluteLevelCommand
+        a                saref:SetAbsoluteLevelCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of set level command"^^xsd:string ;
+        rdfs:label       "Set absolute level command"^^xsd:string ;
+        rdfs:subClassOf  saref:SetLevelCommand .
+
+saref:Cleaning  a        saref:Cleaning , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of task for which a device is designed"^^xsd:string ;
+        rdfs:label       "Cleaning"^^xsd:string ;
+        rdfs:subClassOf  saref:Task .
+
+saref:hasProfile  a   owl:ObjectProperty ;
+        rdfs:comment  "A relationship associating a profile to a certain entity (e.g., a device)"^^xsd:string ;
+        rdfs:label    "has profile"^^xsd:string .
+
+saref:MinimunEnergy  a   owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "Minimun energy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+rdfs:Resource  a  owl:Class .
+
+saref:StopCommand  a     saref:StopCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Stop command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:StartStopState ;
+                           owl:onProperty     saref:actsUpon
+                         ] .
+
+saref:isMeasuredIn  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the unit of measure used for a certain entity."^^xsd:string ;
+        rdfs:label    "is measured in"^^xsd:string .
+
+saref:TemperatureUnit
+        a                    owl:Class ;
+        rdfs:comment         "The unit of measure for temperature"^^xsd:string ;
+        rdfs:label           "Temperature unit"^^xsd:string ;
+        rdfs:subClassOf      saref:UnitOfMeasure ;
+        owl:equivalentClass  [ a          owl:Class ;
+                               owl:oneOf  ( om:degree_Celsius om:degree_Fahrenheit om:kelvin )
+                             ] .
+
+om:kilowatt  a                 saref:PowerUnit , owl:NamedIndividual ;
+        rdfs:label             "kilowatt"^^xsd:string ;
+        saref:hasSingularUnit  om:watt .
+
+saref:State  a           owl:Class ;
+        rdfs:comment     "The state in which a device can be found, e.g, ON/OFF/STANDBY, or ONLINE/OFFLINE, etc. "^^xsd:string ;
+        rdfs:label       "State"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing .
+
+saref:Smoke  a           saref:Smoke , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a unit of measure for smoke"^^xsd:string ;
+        rdfs:label       "Smoke"^^xsd:string ;
+        rdfs:subClassOf  saref:Property .
+
+saref:Meter  a             saref:Meter , owl:NamedIndividual , owl:Class ;
+        rdfs:comment       "A device built to accurately detect and display an electrical quantity in a form readable by a human being. \nA device that has category saref:Meter and performs a saref:MeteringFunction."^^xsd:string ;
+        rdfs:label         "Meter"^^xsd:string ;
+        rdfs:subClassOf    saref:FunctionRelated , saref:Device ;
+        saref:hasCategory  saref:Meter ;
+        saref:hasFunction  saref:MeteringFunction .
+
+saref:WellBeing  a       saref:WellBeing , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of task for which a device is designed"^^xsd:string ;
+        rdfs:label       "Well being"^^xsd:string ;
+        rdfs:subClassOf  saref:Task .
+
+saref:Lighting  a        saref:Lighting , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A device used for illumination, irradiation, signaling, or projection"^^xsd:string ;
+        rdfs:label       "Lighting"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+saref:WashingMachine  a     owl:Class , owl:NamedIndividual , saref:WashingMachine ;
+        rdfs:comment        "A device that has category saref:Appliance, accomplishes the task saref:Washing and performs an actuating function of type saref:StartPauseFunction"^^xsd:string ;
+        rdfs:label          "Washing machine"^^xsd:string ;
+        rdfs:subClassOf     saref:Device ;
+        saref:accomplishes  saref:Washing ;
+        saref:hasCategory   saref:Appliance , saref:Load ;
+        saref:hasFunction   saref:StartStopFunction .
+
+saref:UnitOfMeasure  a    owl:Class ;
+        rdfs:comment      "The unit of measure is a standard for measurement of a quantity, such as a Property. For example,  Power is a property and Watt is a unit of power that represents a definite predetermined power: when we say 10 Watt, we actually mean 10 times the definite predetermined power called \"watt\". Our definition is based on the definition of unit of measure in the Ontology of units of Measure (OM). We propose here a list of some units of measure that are relevant for the purpose of the Smart Appliances ontology, but this list can be extended."^^xsd:string ;
+        rdfs:isDefinedBy  <http://www.wurvoc.org/vocabularies/om-1.6/Unit_of_measure> ;
+        rdfs:label        "Unit of measure"^^xsd:string ;
+        rdfs:subClassOf   owl:Thing .
+
+saref:Power  a           saref:Power , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a power unit (watt or kilowatt)"^^xsd:string ;
+        rdfs:label       "Power "^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:hasValue ;
+                           owl:someValuesFrom  xsd:float
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:PowerUnit ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+saref:Occupancy  a       saref:Occupancy , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a unit of measure for occupancy"^^xsd:string ;
+        rdfs:label       "Occupancy"^^xsd:string ;
+        rdfs:subClassOf  saref:Property .
+
+saref:EnergyUnit  a          owl:Class ;
+        rdfs:comment         "The unit of measure for energy"^^xsd:string ;
+        rdfs:label           "Energy unit"^^xsd:string ;
+        rdfs:subClassOf      saref:UnitOfMeasure ;
+        owl:equivalentClass  [ a          owl:Class ;
+                               owl:oneOf  ( om:kilowatt_hour saref:watt_hour )
+                             ] .
+
+saref:IsUsedFor  a    owl:ObjectProperty ;
+        rdfs:comment  "A relationship specifying the purpose for which a device is used for (e.g., controlling a Commodity, a Property or a BuildingObject)"^^xsd:string ;
+        rdfs:label    "Is used for"^^xsd:string .
+
+saref:hasSensingTime  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a sensing function and time identifying the time of a sensor detection"^^xsd:string ;
+        rdfs:label    "has sensing time"^^xsd:string ;
+        rdfs:range    saref:Time .
+
+time:DateTimeDescription
+        rdfs:subClassOf  owl:Thing .
+
+saref:OnState  a         saref:OnState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The state of a device that is OFF "^^xsd:string ;
+        rdfs:label       "On state"^^xsd:string ;
+        rdfs:subClassOf  saref:OnOffState .
+
+saref:Gas  a             saref:Gas , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of commodity"^^xsd:string ;
+        rdfs:label       "Gas"^^xsd:string ;
+        rdfs:subClassOf  saref:Commodity .
+
+saref:GetCurrentMeterValueCommand
+        a                saref:GetCurrentMeterValueCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of get command"^^xsd:string ;
+        rdfs:label       "Get current meter value command"^^xsd:string ;
+        rdfs:subClassOf  saref:GetCommand .
+
+saref:MicroRenewable  a  saref:MicroRenewable , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A device that generates renewable energy from natural resources such as teh sun, wind and water"^^xsd:string ;
+        rdfs:label       "Micro renewable"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+saref:watt_hour  a    saref:EnergyUnit , owl:NamedIndividual ;
+        rdfs:comment  "The Watt Hor is a unit of energy equivalent to one watt (1 W) of power expended for one hour (1 h) of time. An energy expenditure of 1 Wh represents 3600 joules "^^xsd:string ;
+        rdfs:label    "watt hour"^^xsd:string .
+
+saref:represents  a   owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a service and a function."^^xsd:string ;
+        rdfs:label    "represents"^^xsd:string .
+
+saref:contains  a     owl:ObjectProperty ;
+        rdfs:comment  "A relationship of containment between entities, for example between a building space and a device or building object."^^xsd:string ;
+        rdfs:label    "contains"^^xsd:string .
+
+saref:hasMeterReadingValue
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a metering function and a value identifying the reading value of a measurement"^^xsd:string ;
+        rdfs:label    "has meter reading"^^xsd:string .
+
+saref:hasManufacturer
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A relationship identifying the manufacturer of an entity (e.g., device)"^^xsd:string ;
+        rdfs:label    "has manufacturer"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+saref:hasModel  a     owl:DatatypeProperty ;
+        rdfs:comment  "A relationship identifying the model of an entity (e.g., device)"^^xsd:string ;
+        rdfs:label    "has model"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+saref:hasName  a      owl:DatatypeProperty ;
+        rdfs:comment  "A relationship providing the name of an entity (e.g., device)"^^xsd:string ;
+        rdfs:label    "has name"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+saref:StopState  a       saref:StopState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The state of a device that is STOPPED"^^xsd:string ;
+        rdfs:label       "Stop state"^^xsd:string ;
+        rdfs:subClassOf  saref:StartStopState .
+
+saref:OffCommand  a       saref:OffCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "A type of command"^^xsd:string ;
+        rdfs:label        "Off command"^^xsd:string ;
+        rdfs:subClassOf   saref:Command ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  saref:OnOffState ;
+                            owl:onProperty     saref:actsUpon
+                          ] ;
+        owl:disjointWith  saref:OnCommand .
+
+saref:StartStopFunction
+        a                 saref:StartStopFunction , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "An actuating function that allows to start and stop a device"^^xsd:string ;
+        rdfs:label        "start stopfunction"^^xsd:string ;
+        rdfs:subClassOf   saref:ActuatingFunction ;
+        saref:hasCommand  saref:ToggleCommand , saref:StopCommand , saref:StartCommand .
+
+saref:PauseCommand  a    saref:PauseCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Pause command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command .
+
+saref:PowerUnit  a           owl:Class ;
+        rdfs:comment         "The unit of measure for power"^^xsd:string ;
+        rdfs:label           "Power unit"^^xsd:string ;
+        rdfs:subClassOf      saref:UnitOfMeasure ;
+        owl:equivalentClass  [ a          owl:Class ;
+                               owl:oneOf  ( om:kilowatt om:watt )
+                             ] .
+
+om:bar  a             saref:PressureUnit , owl:NamedIndividual ;
+        rdfs:comment  "The bar is a unit of pressure defined as 100 000 pascal."@en ;
+        rdfs:label    "bar"^^xsd:string .
+
+saref:BuildingObject  a  owl:Class ;
+        rdfs:comment     "An object in the building that can be controlled by devices, such as a door or a window that can be automatically opened or closed by an actuator. "^^xsd:string ;
+        rdfs:label       "Building object"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing .
+
+saref:DeviceCategory  a  owl:Class ;
+        rdfs:comment     "Categories of devices that reflects different points of view, for example, the point of view of the user of the device vs. the device's manufacturer, or the domain in which the device is used (e.g., smart appliances vs. building domain vs. smart grid domain), etc."^^xsd:string ;
+        rdfs:label       "Device category"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing .
+
+saref:Service  a         owl:Class ;
+        rdfs:comment     "A service is a representation of a function to a network that makes the function discoverable, registerable, remotely controllable by other devices in the network. A service can represent one or more functions. A Service is offered by a device that wants (a certain set of) its function(s) to be discoverable, registerable, remotely controllable by other devices in the network. A Service must specify the device that is offering the service, the function(s) to be represented, and the (input and output) parameters necessary to operate the service. "^^xsd:string ;
+        rdfs:label       "Service"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Device ;
+                           owl:onProperty     saref:isOfferedBy
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:Property saref:State )
+                                              ] ;
+                           owl:onProperty     saref:hasInputParameter
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Device ;
+                           owl:onProperty               saref:isOfferedBy
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Function ;
+                           owl:onProperty     saref:represents
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Function ;
+                           owl:onProperty               saref:represents
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:Property saref:State )
+                                              ] ;
+                           owl:onProperty     saref:hasOutputParameter
+                         ] .
+
+saref:IlluminanceUnit
+        a                    owl:Class ;
+        rdfs:comment         "The unit of measure for light"^^xsd:string ;
+        rdfs:label           "Illuminance unit"^^xsd:string ;
+        rdfs:subClassOf      saref:UnitOfMeasure ;
+        owl:equivalentClass  [ a          owl:Class ;
+                               owl:oneOf  ( om:lux )
+                             ] .
+
+saref:Price  a           saref:Price , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured using saref:Currency"^^xsd:string ;
+        rdfs:label       "Price"^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:hasValue ;
+                           owl:someValuesFrom  xsd:float
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Currency ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+saref:Humidity  a        saref:Humidity , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a humidity unit "^^xsd:string ;
+        rdfs:label       "Humidity"^^xsd:string ;
+        rdfs:subClassOf  saref:Property .
+
+saref:isFlexible  a   owl:DatatypeProperty ;
+        rdfs:comment  "A relationship stating whether a profile of a certain device has the flexibility to be stopped once it started"^^xsd:string ;
+        rdfs:label    "is flexible"^^xsd:string ;
+        rdfs:range    xsd:boolean .
+
+saref:OpenCloseState  a  owl:Class ;
+        rdfs:comment     "A type of state"^^xsd:string ;
+        rdfs:label       "Open close state"^^xsd:string ;
+        rdfs:subClassOf  saref:State .
+
+saref:EnergyMeter  a       owl:Class , owl:NamedIndividual , saref:EnergyMeter ;
+        rdfs:comment       "An energy meter is a device that consists of a meter, has category saref:Meter, performs the saref:MeteringFunction and is used for the purpose of measuring the saref:Energy property"^^xsd:string ;
+        rdfs:label         "Energy meter"^^xsd:string ;
+        rdfs:subClassOf    saref:Device ;
+        saref:IsUsedFor    saref:Energy ;
+        saref:consistsOf   saref:Meter ;
+        saref:hasCategory  saref:Meter ;
+        saref:hasFunction  saref:MeteringFunction .
+
+om:pound_sterling  a  saref:Currency , owl:NamedIndividual ;
+        rdfs:label  "Great Britain pound sterling"^^xsd:string .
+
+saref:StepUpCommand  a   saref:StepUpCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Step up command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:MultiLevelState ;
+                           owl:onProperty     saref:actsUpon
+                         ] .
+
+saref:Sensor  a            saref:Sensor , owl:NamedIndividual , owl:Class ;
+        rdfs:comment       "A device that detects and responds to events or changes in the physical environment such as light, motion, or temperature changes.\nA device that has category saref:Sensor and performs a saref:SensingFunction."^^xsd:string ;
+        rdfs:label         "Sensor"^^xsd:string ;
+        rdfs:subClassOf    saref:FunctionRelated , saref:Device ;
+        saref:hasCategory  saref:Sensor ;
+        saref:hasFunction  saref:SensingFunction .
+
+saref:hasTask  a      owl:DatatypeProperty ;
+        rdfs:comment  "A relationship identifying the type of task for a certain profile of a device. It is used to identify recurring tasks, for example, specific types of washing cycles with certain parameters. "^^xsd:string ;
+        rdfs:label    "has task"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+saref:Command  a         owl:Class ;
+        rdfs:comment     "A directive that a device must support to perform a certain function. A command may act upon a state, but does not necessarily act upon a state. For example, the ON command acts upon the ON/OFF state, but the GET command does not act upon any state, it simply gives a directive to retrieve a certain value.   "^^xsd:string ;
+        rdfs:label       "Command"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Function ;
+                           owl:onProperty               saref:isCommandOf
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:State ;
+                           owl:onProperty     saref:actsUpon
+                         ] .
+
+saref:Currency  a            owl:Class ;
+        rdfs:comment         "The unit of measure for price"^^xsd:string ;
+        rdfs:label           "Currency"^^xsd:string ;
+        rdfs:subClassOf      saref:UnitOfMeasure ;
+        owl:equivalentClass  [ a          owl:Class ;
+                               owl:oneOf  ( om:United_States_dollar om:euro om:pound_sterling )
+                             ] .
+
+saref:ToggleCommand  a   saref:ToggleCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Toggle command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command .
+
+saref:Pressure  a        saref:Pressure , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a pressure unit (bar or pascal)"^^xsd:string ;
+        rdfs:label       "Pressure"^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:PressureUnit ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+saref:Temperature  a     saref:Temperature , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a temperature unit (degree_Celsius, degree_Fahrenheit, or degree_kelvin)"^^xsd:string ;
+        rdfs:label       "Temperature"^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:hasValue ;
+                           owl:someValuesFrom  xsd:float
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:TemperatureUnit ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+saref:hasTypicalConsumption
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the typical (energy or power) consumption of a device"^^xsd:string ;
+        rdfs:label    "has typical consumption"^^xsd:string .
+
+saref:Door  a            saref:Door , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A building object that can be controlled by devices, for example it can be automatically opened or closed by an actuator."^^xsd:string ;
+        rdfs:label       "Door"^^xsd:string ;
+        rdfs:subClassOf  saref:BuildingObject .
+
+saref:MaximumEnergy  a   owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "Maximum energy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+saref:EnergyRelated  a   owl:Class ;
+        rdfs:comment     "A category that considers devices based on energy consumption information and profiles to optimize energy efficiency."^^xsd:string ;
+        rdfs:label       "Energy related"^^xsd:string ;
+        rdfs:subClassOf  saref:DeviceCategory .
+
+saref:hasTime  a      owl:ObjectProperty ;
+        rdfs:comment  "A relationship to associate time information to an entity"^^xsd:string ;
+        rdfs:label    "has time"^^xsd:string .
+
+saref:FunctionRelated
+        a                owl:Class ;
+        rdfs:comment     "A category that considers devices, sensors and their specification in terms of functions, states and services"^^xsd:string ;
+        rdfs:label       "Function related"^^xsd:string ;
+        rdfs:subClassOf  saref:DeviceCategory .
+
+saref:Load  a            saref:Load , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of energy-related device that consumes energy"^^xsd:string ;
+        rdfs:label       "Load"^^xsd:string ;
+        rdfs:subClassOf  saref:EnergyRelated .
+
+saref:Storage  a         saref:Storage , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of energy-related device that stores energy"^^xsd:string ;
+        rdfs:label       "Storage"^^xsd:string ;
+        rdfs:subClassOf  saref:EnergyRelated .
+
+om:kelvin  a          saref:TemperatureUnit , owl:NamedIndividual ;
+        rdfs:comment  "The kelvin is a unit of temperature defined as 1/273.16 of the thermodynamic temperature of the triple point of water."@en ;
+        rdfs:label    "kelvin"^^xsd:string .
+
+saref:accomplishes  a  owl:ObjectProperty ;
+        rdfs:comment   "A relationship between a certain entity (e.g., a device) and the task it accomplishes"^^xsd:string ;
+        rdfs:label     "accomplishes"^^xsd:string ;
+        rdfs:range     saref:Task ;
+        owl:inverseOf  saref:isAccomplishedBy .
+
+saref:Function  a        owl:Class ;
+        rdfs:comment     "The functionality necessary to accomplish the task for which a Device is designed. A device can be designed to perform more than one function. "^^xsd:string ;
+        rdfs:label       "Function"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Command ;
+                           owl:onProperty               saref:hasCommand
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:FunctionCategory ;
+                           owl:onProperty     saref:hasCategory
+                         ] .
+
+saref:Washing  a         saref:Washing , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of task for which a device is designed"^^xsd:string ;
+        rdfs:label       "Washing"^^xsd:string ;
+        rdfs:subClassOf  saref:Task .
+
+time:TemporalUnit  rdfs:comment  "The unit of measure for time"^^xsd:string ;
+        rdfs:subClassOf  saref:UnitOfMeasure .
+
+<https://w3id.org/saref>
+        a                    owl:Ontology ;
+        dcterms:created      "10-02-2015"^^xsd:string ;
+        dcterms:creator      "Laura Daniele (laura.daniele@tno.nl)"^^xsd:string ;
+        dcterms:description  "The Smart Appliances REFerence (SAREF) ontology is a shared model of consensus that facilitates the matching of existing assets (standards/protocols/datamodels/etc.) in the smart appliances domain. The SAREF ontology provides building blocks that allow separation and recombination of different parts of the ontology depending on specific needs. The starting point of SAREF is the concept of device (e.g., a switch). Devices are tangible objects designed to accomplish a particular task in households, common public buildings or offices. In order to accomplish this task, the device performs one or more functions. For example, a washing machine is designed to wash (task) and to accomplish this task it performs the start and stop function. The SAREF ontology offers a lists of basic functions that can be eventually combined in order to have more complex functions in a single device. For example, a switch offers an actuating function of type switching on/off. Each function has some associated commands, which can also be picked up as building blocks from a list. For example, the switching on/off is associated with the commands switch on, switch off and toggle. Depending on the function(s) it accomplishes, a device can be found in some corresponding states that are also listed as building blocks. When connected to a network, a device offers a service, which  is a representation of a function to a network that makes the function discoverable, registerable and remotely controllable by other devices in the network. A service can represent one or more functions. A service is offered by a device that wants (a certain set of) its function(s) to be discoverable, registerable, remotely controllable by other devices in the network. A service must specify the device that is offering the service, the function(s) to be represented, and the (input and output) parameters necessary to operate the service. A device in the SAREF ontology is also characterized by an energy/power profile that can be used to optimize the energy efficiency in a home or office that are part of a building."^^xsd:string ;
+        dcterms:issued       "01-04-2015"^^xsd:string ;
+        dcterms:publisher    "TNO"^^xsd:string ;
+        dcterms:title        "SAREF: the Smart Appliances REFerence ontology"^^xsd:string ;
+        owl:imports          <http://www.w3.org/2006/time> ;
+        owl:versionInfo      "1.0"^^xsd:string .
+
+saref:LightingEnergy  a  owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "Lighting energy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+saref:isOfferedBy  a   owl:ObjectProperty ;
+        rdfs:comment   "A relationship between a service and a device that offers the service"^^xsd:string ;
+        rdfs:label     "is offered by"^^xsd:string ;
+        owl:inverseOf  saref:offers .
+
+saref:CloseCommand  a     saref:CloseCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "A type of command"^^xsd:string ;
+        rdfs:label        "Close command"^^xsd:string ;
+        rdfs:subClassOf   saref:Command ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  saref:OpenCloseState ;
+                            owl:onProperty     saref:actsUpon
+                          ] ;
+        owl:disjointWith  saref:OpenCommand .
+
+saref:isAccomplishedBy
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship indentifying the task accomplished by a certain entity (e.g., a device)"^^xsd:string ;
+        rdfs:domain   saref:Task ;
+        rdfs:label    "is accomplished by"^^xsd:string .
+
+time:DurationDescription
+        rdfs:subClassOf  owl:Thing .
+
+saref:OpenCommand  a     saref:OpenCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Open command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:OpenCloseState ;
+                           owl:onProperty     saref:actsUpon
+                         ] .
+
+saref:Entertainment  a   saref:Entertainment , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of task for which a device is designed"^^xsd:string ;
+        rdfs:label       "Entertainment"^^xsd:string ;
+        rdfs:subClassOf  saref:Task .
+
+saref:BuildingRelated
+        a                owl:Class ;
+        rdfs:comment     "A category that includes devices as described by building related data models, such as IFC and FIEMSER "^^xsd:string ;
+        rdfs:label       "Building related"^^xsd:string ;
+        rdfs:subClassOf  saref:DeviceCategory .
+
+saref:LightSwitch  a       saref:LightSwitch , owl:Class , owl:NamedIndividual ;
+        rdfs:comment       "A device that consists of a switch, has category saref:Actuator, performs the saref:OnOffFunction and is used for the purpose of controlling a property of type saref:Light"^^xsd:string ;
+        rdfs:label         "Light switch"^^xsd:string ;
+        rdfs:subClassOf    saref:Device ;
+        saref:IsUsedFor    saref:Light ;
+        saref:consistsOf   saref:Switch ;
+        saref:hasCategory  saref:Actuator ;
+        saref:hasFunction  saref:OnOffFunction ;
+        saref:offers       saref:SwitchOnService .
+
+saref:hasCategory  a   owl:ObjectProperty ;
+        rdfs:comment   "A relationship between an entity (such as device or function) and a corresponding category"^^xsd:string ;
+        rdfs:label     "has category"^^xsd:string ;
+        owl:inverseOf  saref:isCategoryOf .
+
+saref:Notify  rdfs:label  "Notify"^^xsd:string .
+
+saref:BuildingSpace  a   owl:Class ;
+        rdfs:comment     "An entity used to define the physical spaces of the building (in accordance with the FIEMSER definition). A building space contains devices or building objects."^^xsd:string ;
+        rdfs:label       "Building space"^^xsd:string ;
+        rdfs:subClassOf  geo:Point , owl:Thing ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:hasSpaceType ;
+                           owl:someValuesFrom  xsd:string
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:BuildingObject saref:Device )
+                                              ] ;
+                           owl:onProperty     saref:contains
+                         ] .
+
+om:euro  a          saref:Currency , owl:NamedIndividual ;
+        rdfs:label  "euro"@en .
+
+saref:isCategoryOf  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a category and an entity (such as device or function)"^^xsd:string ;
+        rdfs:label    "is category of"^^xsd:string .
+
+saref:hasMeterReadingType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A relationship identifying the reading type of a measurement (i.e., Water, Gas, Pressure , Energy , Power or Other)"^^xsd:string ;
+        rdfs:label    "has meter reading type"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+saref:isCommandOf  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a command and a function."^^xsd:string ;
+        rdfs:domain   saref:Command ;
+        rdfs:label    "is command of"^^xsd:string .
+
+saref:actsUpon  a     owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a command and a state"^^xsd:string ;
+        rdfs:label    "acts upon"^^xsd:string .
+
+saref:Property  a        owl:Class ;
+        rdfs:comment     "Anything that can be sensed, measured or controlled in households, common public buildings or offices."^^xsd:string ;
+        rdfs:label       "Property"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      saref:hasValue
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:UnitOfMeasure ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+saref:hasProduction  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the type of production of an entity"^^xsd:string ;
+        rdfs:label    "has production"^^xsd:string .
+
+saref:offers  a       owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a device and a service"^^xsd:string ;
+        rdfs:label    "offers"^^xsd:string .
+
+saref:SetLevelCommand
+        a                owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Set level command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:MultiLevelState ;
+                           owl:onProperty     saref:actsUpon
+                         ] .
+
+saref:Task  a            owl:Class ;
+        rdfs:comment     "The goal for which a device is designed (from a user perspective). For example, a washing machine is designed for the task of washing. "^^xsd:string ;
+        rdfs:label       "Task"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  saref:Device ;
+                           owl:onProperty               saref:isAccomplishedBy
+                         ] .
+
+saref:MultiLevelState
+        a                owl:Class ;
+        rdfs:comment     "A type of state"^^xsd:string ;
+        rdfs:label       "Multi level state"^^xsd:string ;
+        rdfs:subClassOf  saref:State .
+
+saref:Switch  a            saref:Switch , owl:NamedIndividual , owl:Class ;
+        rdfs:comment       "A device that has category saref:Actuator and performs an actuating function of type saref:OnOffFunction or saref:OpenCloseFunction"^^xsd:string ;
+        rdfs:label         "Switch"^^xsd:string ;
+        rdfs:subClassOf    saref:Device ;
+        saref:hasCategory  saref:Actuator ;
+        saref:hasFunction  saref:OpenCloseFunction , saref:OnOffFunction .
+
+saref:hasConsumption  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the type of consumption of an entity"^^xsd:string ;
+        rdfs:label    "has consumption"^^xsd:string .
+
+saref:GetMeterDataCommand
+        a                saref:GetMeterDataCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of get command"^^xsd:string ;
+        rdfs:label       "Get meter data command"^^xsd:string ;
+        rdfs:subClassOf  saref:GetCommand .
+
+saref:isLocatedIn  a  owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a device and the building space in which it is located. "^^xsd:string ;
+        rdfs:label    "is located in"^^xsd:string .
+
+saref:Multimedia  a      saref:Multimedia , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A device designed to display, store, record or play multimedia content such as audio, images, animation, video "^^xsd:string ;
+        rdfs:label       "Multimedia"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+saref:FunctionCategory
+        a                owl:Class ;
+        rdfs:comment     "Categories of functions that reflects different points of view, for example, considering the specific application area for which a function can be used (e.g., light, temperature, motion, heat, power, etc.), or the capability that a function can support (e.g., receive, reply, notify, etc.), and so forth. "^^xsd:string ;
+        rdfs:label       "Function category"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing .
+
+saref:hasDescription  a  owl:DatatypeProperty ;
+        rdfs:comment  "A relationship providing a description of an entity (e.g., device)"^^xsd:string ;
+        rdfs:label    "has description"^^xsd:string ;
+        rdfs:range    xsd:string .
+
+om:kilowatt_hour  a            saref:EnergyUnit , owl:NamedIndividual ;
+        rdfs:comment           "The kilowatt hour is a unit of energy equal to 1,000 watt-hours, or 3.6 megajoules."^^xsd:string ;
+        rdfs:label             "kilowatt hour"^^xsd:string ;
+        saref:hasSingularUnit  saref:watt_hour .
+
+saref:TotalEnergy  a     owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "Total energy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+<http://www.w3.org/2006/timezone#TimeZone>
+        rdfs:subClassOf  owl:Thing .
+
+saref:Time  a            owl:Class ;
+        rdfs:comment     "A saref:Property that allows to specify the time concept in terms of instants or intervals according to the imported W3C Time ontology. "^^xsd:string ;
+        rdfs:label       "Time"^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  time:TemporalUnit ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  time:TemporalEntity ;
+                           owl:onProperty     saref:consistsOf
+                         ] .
+
+saref:Light  a           saref:Light , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A saref:Property characterized by a certain value (saref:hasValue property) that is measured in a illuminance unit (lux)"^^xsd:string ;
+        rdfs:label       "Light"^^xsd:string ;
+        rdfs:subClassOf  saref:Property ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:IlluminanceUnit ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+om:degree_Celsius  a  saref:TemperatureUnit , owl:NamedIndividual ;
+        rdfs:comment  "The degree Celsius is a unit of temperature defined as 1 kelvin."@en ;
+        rdfs:label    "degree celsius "^^xsd:string , "degree Celsius"^^xsd:string .
+
+saref:OpenState  a       saref:OpenState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The state of a device that is OPEN "^^xsd:string ;
+        rdfs:label       "Open state"^^xsd:string ;
+        rdfs:subClassOf  saref:OpenCloseState .
+
+saref:Profile  a         owl:Class ;
+        rdfs:comment     "A specification of the production and consumption of a device for the purpose to optimize the energy efficiency in the home or office in which the device is located. The saref:Profile class allows to describe the energy (or power) production and consumption of a certain device using the saref: hasProduction and saref:hasConsumption properties. This production and consumption can be calculated over a time span (the saref:hasTime property) and, eventually, associated to some costs (the saref:hasPrice property). "^^xsd:string ;
+        rdfs:label       "Profile"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Time ;
+                           owl:onProperty     saref:hasTime
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:isFlexible ;
+                           owl:someValuesFrom  xsd:boolean
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Price ;
+                           owl:onProperty     saref:hasPrice
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:Profile ;
+                           owl:onProperty     saref:consistsOf
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      saref:isInterruptionPossible ;
+                           owl:someValuesFrom  xsd:boolean
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:Energy saref:Power )
+                                              ] ;
+                           owl:onProperty     saref:hasConsumption
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  [ a            owl:Class ;
+                                                owl:unionOf  ( saref:Energy saref:Power )
+                                              ] ;
+                           owl:onProperty     saref:hasProduction
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   saref:hasTask
+                         ] .
+
+saref:ActuatingFunction
+        a                owl:Class ;
+        rdfs:comment     "A function that allows to transmit data to actuators, such as level settings (e.g., temperature) or binary switching (e.g., open/close, on/off)"^^xsd:string ;
+        rdfs:label       "Actuating function"^^xsd:string ;
+        rdfs:subClassOf  saref:Function .
+
+saref:isInterruptionPossible
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A relationship stating whether a profile of a certain device can be interrupted once it started"^^xsd:string ;
+        rdfs:label    "is interruption possible"^^xsd:string ;
+        rdfs:range    xsd:boolean .
+
+saref:Generator  a       saref:Generator , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of energy-related device that generates energy"^^xsd:string ;
+        rdfs:label       "Generator"^^xsd:string ;
+        rdfs:subClassOf  saref:EnergyRelated .
+
+saref:hasOutputParameter
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship identifying the output parameter of a service"^^xsd:string ;
+        rdfs:domain   saref:Service ;
+        rdfs:label    "has output parameter"^^xsd:string .
+
+om:United_States_dollar
+        a           saref:Currency , owl:NamedIndividual ;
+        rdfs:label  "United States dollar"@en .
+
+saref:Window  a          saref:Window , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A building object that can be controlled by devices, for example it can be automatically opened or closed by an actuator."^^xsd:string ;
+        rdfs:label       "Window"^^xsd:string ;
+        rdfs:subClassOf  saref:BuildingObject .
+
+geo:Point  a             owl:Class ;
+        rdfs:comment     "A point, typically described using a coordinate system relative to Earth, such as WGS84.\n  " , " \nUniquely identified by lat/long/alt. i.e.\n\nspaciallyIntersects(P1, P2) :- lat(P1, LAT), long(P1, LONG), alt(P1, ALT),\n  lat(P2, LAT), long(P2, LONG), alt(P2, ALT).\n\nsameThing(P1, P2) :- type(P1, Point), type(P2, Point), spaciallyIntersects(P1, P2).\n  " ;
+        rdfs:label       "point" ;
+        rdfs:subClassOf  geo:SpatialThing .
+
+saref:OnOffFunction  a    saref:OnOffFunction , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "An actuating function that allows to switch on and off an actuator"^^xsd:string ;
+        rdfs:label        "On off function"^^xsd:string ;
+        rdfs:subClassOf   saref:ActuatingFunction ;
+        saref:hasCommand  saref:ToggleCommand , saref:OnCommand , saref:OffCommand .
+
+saref:Network  a         saref:Network , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A device used to connect other devices in a network, such as hub, switch or router in a Local Area Network (LAN). "^^xsd:string ;
+        rdfs:label       "Network"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+om:degree_Fahrenheit  a  saref:TemperatureUnit , owl:NamedIndividual ;
+        rdfs:comment  "The degree Fahrenheit is a unit of temperature defined as 5.555556e-1 kelvin."@en ;
+        rdfs:label    "degree Fahrenheit"^^xsd:string .
+
+saref:StepDownCommand
+        a                 saref:StepDownCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "A type of command"^^xsd:string ;
+        rdfs:label        "Step down command"^^xsd:string ;
+        rdfs:subClassOf   saref:Command ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  saref:MultiLevelState ;
+                            owl:onProperty     saref:actsUpon
+                          ] ;
+        owl:disjointWith  saref:StepUpCommand .
+
+saref:SensingFunction
+        a                 saref:SensingFunction , owl:Class , owl:NamedIndividual ;
+        rdfs:comment      "A function that allows to transmit data from sensors, such as measurement values (e.g., temperature) or sensing data (e.g., occupancy)"^^xsd:string ;
+        rdfs:label        "Sensing function"^^xsd:string ;
+        rdfs:subClassOf   saref:Function ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a          rdfs:Datatype ;
+                                                 owl:oneOf  [ a          rdf:List ;
+                                                              rdf:first  "Humidity"^^xsd:string ;
+                                                              rdf:rest   [ a          rdf:List ;
+                                                                           rdf:first  "Motion"^^xsd:string ;
+                                                                           rdf:rest   [ a          rdf:List ;
+                                                                                        rdf:first  "Occupancy"^^xsd:string ;
+                                                                                        rdf:rest   [ a          rdf:List ;
+                                                                                                     rdf:first  "Other"^^xsd:string ;
+                                                                                                     rdf:rest   [ a          rdf:List ;
+                                                                                                                  rdf:first  "Pressure"^^xsd:string ;
+                                                                                                                  rdf:rest   [ a          rdf:List ;
+                                                                                                                               rdf:first  "Smoke"^^xsd:string ;
+                                                                                                                               rdf:rest   [ a          rdf:List ;
+                                                                                                                                            rdf:first  "Temperature"^^xsd:string ;
+                                                                                                                                            rdf:rest   ()
+                                                                                                                                          
+                                                                                                                                          ]
+                                                                                                                             ]
+                                                                                                                ]
+                                                                                                   ]
+                                                                                      ]
+                                                                         ]
+                                                            ]
+                                               ] ;
+                            owl:onProperty     saref:hasSensorType
+                          ] ;
+        rdfs:subClassOf   [ a                            owl:Restriction ;
+                            owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass                  saref:Time ;
+                            owl:onProperty               saref:hasSensingTime
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      saref:hasSensingRange ;
+                            owl:someValuesFrom  saref:Property
+                          ] ;
+        saref:hasCommand  saref:GetSensingDataCommand .
+
+time:TemporalEntity  rdfs:subClassOf  owl:Thing .
+
+saref:PressureUnit  a        owl:Class ;
+        rdfs:comment         "The unit of measure for pressure"^^xsd:string ;
+        rdfs:label           "Pressure unit"^^xsd:string ;
+        rdfs:subClassOf      saref:UnitOfMeasure ;
+        owl:equivalentClass  [ a          owl:Class ;
+                               owl:oneOf  ( om:bar om:pascal )
+                             ] .
+
+saref:HotWaterEnergy  a  owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "Hot water energy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+saref:Water  a           saref:Water , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of commodity"^^xsd:string ;
+        rdfs:label       "Water"^^xsd:string ;
+        rdfs:subClassOf  saref:Commodity .
+
+saref:OpenCloseFunction
+        a                 saref:OpenCloseFunction , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "An actuating function that allows to open and close a device"^^xsd:string ;
+        rdfs:label        "Open close function"^^xsd:string ;
+        rdfs:subClassOf   saref:ActuatingFunction ;
+        saref:hasCommand  saref:OpenCommand , saref:CloseCommand .
+
+saref:hasSensingRange
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a sensing function and a property identifying the range of a sensor detection"^^xsd:string ;
+        rdfs:label    "has sensing range "^^xsd:string .
+
+saref:AverageEnergy  a   owl:Class ;
+        rdfs:comment     "A type of Energy"^^xsd:string ;
+        rdfs:label       "Average energy"^^xsd:string ;
+        rdfs:subClassOf  saref:Energy .
+
+saref:hasMeterReadingTime
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A relationship between a metering function and time identifying the reading time of a measurement"^^xsd:string ;
+        rdfs:label    "has meter reading time"^^xsd:string ;
+        rdfs:range    saref:Time .
+
+om:pascal  a          saref:PressureUnit , owl:NamedIndividual ;
+        rdfs:comment  "The pascal is a unit of pressure and stress defined as newton divided by square metre = joule divided by cubic metre = kilogram divided by metre second squared."@en ;
+        rdfs:label    "pascal"^^xsd:string .
+
+saref:SwitchOnService
+        a                         owl:Class , owl:NamedIndividual , saref:SwitchOnService ;
+        rdfs:comment              "A type of service that represents an on/off function to the network"^^xsd:string ;
+        rdfs:label                "Switch on service"^^xsd:string ;
+        rdfs:subClassOf           saref:Service ;
+        saref:hasInputParameter   saref:OffState ;
+        saref:hasOutputParameter  saref:OnState ;
+        saref:isOfferedBy         saref:LightSwitch ;
+        saref:represents          saref:OnOffFunction .
+
+saref:SmokeSensor  a       owl:NamedIndividual , saref:SmokeSensor , owl:Class ;
+        rdfs:comment       "A device that consists of a sensor, has category saref:Sensor, performs the saref:SensingFunction and saref:EventFunction, and is used for the purpose of sensing a property of type saref:Smoke and notifying that a certain threshold has been exceeded."^^xsd:string ;
+        rdfs:label         "Smoke sensor"^^xsd:string ;
+        rdfs:subClassOf    saref:Device ;
+        saref:IsUsedFor    saref:Smoke ;
+        saref:consistsOf   saref:Sensor ;
+        saref:hasCategory  saref:Sensor ;
+        saref:hasFunction  saref:SensingFunction , saref:EventFunction .
+
+saref:GetCommand  a      owl:Class ;
+        rdfs:comment     "A type of command"^^xsd:string ;
+        rdfs:label       "Get command"^^xsd:string ;
+        rdfs:subClassOf  saref:Command .
+
+saref:MeteringFunction
+        a                 saref:MeteringFunction , owl:Class , owl:NamedIndividual ;
+        rdfs:comment      "A function that allows to get data from a meter, such as current meter reading or instantaneous demand"^^xsd:string ;
+        rdfs:label        "Metering function"^^xsd:string ;
+        rdfs:subClassOf   saref:Function ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a            owl:Class ;
+                                                 owl:unionOf  ( saref:Commodity saref:Property )
+                                               ] ;
+                            owl:onProperty     saref:hasMeterReadingValue
+                          ] ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a          rdfs:Datatype ;
+                                                 owl:oneOf  [ a          rdf:List ;
+                                                              rdf:first  "Energy"^^xsd:string ;
+                                                              rdf:rest   [ a          rdf:List ;
+                                                                           rdf:first  "Gas"^^xsd:string ;
+                                                                           rdf:rest   [ a          rdf:List ;
+                                                                                        rdf:first  "Other"^^xsd:string ;
+                                                                                        rdf:rest   [ a          rdf:List ;
+                                                                                                     rdf:first  "Power"^^xsd:string ;
+                                                                                                     rdf:rest   [ a          rdf:List ;
+                                                                                                                  rdf:first  "Pressure"^^xsd:string ;
+                                                                                                                  rdf:rest   [ a          rdf:List ;
+                                                                                                                               rdf:first  "Water"^^xsd:string ;
+                                                                                                                               rdf:rest   ()
+                                                                                                                             
+                                                                                                                             ]
+                                                                                                                ]
+                                                                                                   ]
+                                                                                      ]
+                                                                         ]
+                                                            ]
+                                               ] ;
+                            owl:onProperty     saref:hasMeterReadingType
+                          ] ;
+        rdfs:subClassOf   [ a                            owl:Restriction ;
+                            owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass                  saref:Time ;
+                            owl:onProperty               saref:hasMeterReadingTime
+                          ] ;
+        saref:hasCommand  saref:GetMeterDataCommand , saref:GetCurrentMeterValueCommand , saref:GetMeterHistoryCommand .
+
+saref:OnOffState  a      owl:Class ;
+        rdfs:comment     "A type of state"^^xsd:string ;
+        rdfs:label       "On off state"^^xsd:string ;
+        rdfs:subClassOf  saref:State .
+
+saref:TemperatureSensor
+        a                  owl:Class , saref:TemperatureSensor , owl:NamedIndividual ;
+        rdfs:comment       "A device that consists of a sensor, has category saref:Sensor, performs the saref:SensingFunction and is used for the purpose of sensing a property of type saref:Temperature"^^xsd:string ;
+        rdfs:label         "Temperature sensor"^^xsd:string ;
+        rdfs:subClassOf    saref:Device ;
+        saref:IsUsedFor    saref:Temperature ;
+        saref:consistsOf   saref:Sensor ;
+        saref:hasCategory  saref:Sensor ;
+        saref:hasFunction  saref:SensingFunction .
+
+saref:Commodity  a       owl:Class ;
+        rdfs:comment     "A marketable item for which there is demand, but which is supplied without qualitative differentiation across a market. SAREF refers to energy commodities such as electricity, gas, coal and oil. "^^xsd:string ;
+        rdfs:label       "Commodity"^^xsd:string ;
+        rdfs:subClassOf  owl:Thing ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  saref:UnitOfMeasure ;
+                           owl:onProperty     saref:isMeasuredIn
+                         ] .
+
+saref:Drying  a          saref:Drying , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of task for which a device is designed"^^xsd:string ;
+        rdfs:label       "Drying"^^xsd:string ;
+        rdfs:subClassOf  saref:Task .
+
+om:watt  a            saref:PowerUnit , owl:NamedIndividual ;
+        rdfs:comment  "The watt is a unit of power defined as joule divided by second = newton times metre divided by second = volt times ampere = kilogram times square metre divided by second to the power 3."@en ;
+        rdfs:label    "watt"^^xsd:string .
+
+saref:GetSensingDataCommand
+        a                saref:GetSensingDataCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of get command"^^xsd:string ;
+        rdfs:label       "Get sensing data command"^^xsd:string ;
+        rdfs:subClassOf  saref:GetCommand .
+
+saref:Electricity  a     saref:Electricity , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of commodity"^^xsd:string ;
+        rdfs:label       "Electricity"^^xsd:string ;
+        rdfs:subClassOf  saref:Commodity .
+
+saref:hasSingularUnit
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "A relationship defining a singular unit as a sub-property of the om:singular_unit property"^^xsd:string ;
+        rdfs:domain         saref:UnitOfMeasure ;
+        rdfs:label          "has singular unit"^^xsd:string ;
+        rdfs:range          saref:UnitOfMeasure ;
+        rdfs:subPropertyOf  om:singular_unit .
+
+saref:SetRelativeLevelCommand
+        a                saref:SetRelativeLevelCommand , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "A type of set level command"^^xsd:string ;
+        rdfs:label       "Set relative level command"^^xsd:string ;
+        rdfs:subClassOf  saref:SetLevelCommand .
+
+saref:EventFunction  a    saref:EventFunction , owl:NamedIndividual , owl:Class ;
+        rdfs:comment      "A function that allows to notify another device that a certain threshold value has been exceeded"^^xsd:string ;
+        rdfs:label        "Event function"^^xsd:string ;
+        rdfs:subClassOf   saref:Function ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty      saref:hasThreshold
+                          ] ;
+        saref:hasCommand  saref:NotifyCommand .
+
+saref:Appliance  a       saref:Appliance , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "An electrical/mechanical machine that accomplish some household functions, such as cleaning or cooking"^^xsd:string ;
+        rdfs:label       "Appliance"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+saref:HVAC  a            saref:HVAC , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "Heating, Ventilation and Air Conditioning (HVAC) device that provides indoor environmental comfort"^^xsd:string ;
+        rdfs:label       "HVAC"^^xsd:string ;
+        rdfs:subClassOf  saref:FunctionRelated .
+
+saref:CloseState  a      saref:CloseState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The state of a device that is CLOSE"^^xsd:string ;
+        rdfs:label       "Close state"^^xsd:string ;
+        rdfs:subClassOf  saref:OpenCloseState .
+
+saref:hasCommand  a    owl:ObjectProperty ;
+        rdfs:comment   "A relationship between an entity (such as a function) and a command"^^xsd:string ;
+        rdfs:label     "has command"^^xsd:string ;
+        rdfs:range     saref:Command ;
+        owl:inverseOf  saref:isCommandOf .

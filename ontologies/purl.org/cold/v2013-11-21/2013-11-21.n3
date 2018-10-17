@@ -1,0 +1,258 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://purl.org/configurationontology#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+
+<http://purl.org/configurationontology> a owl:Ontology ;
+	rdfs:label "'Configuration as Linked Data' ontology"@en ;
+	rdfs:comment """Ontology for the description of customizable products. It models the configuration process as the traversal of a graph of partially defined products, or \"Configurations\".
+
+Ranges of customizable products are described rather effectively, for human users, by means of dedicated web applications called configurators. A configurator helps a user interactively define a product step by step, each step typically describing a valid partially defined product (or \"Configuration\"), with a start price and a list of remaining choices given all previous selections. Each of these choices links to another configuration until completion. Thus, the configuration process traverses a graph whose nodes are configurations. Now identify each configuration with a URI returning the list of the configurations it is linked to, among other relevant information: what you have is a description of the range as Linked Data.
+
+The main classes of this ontology are Configuration (a state of the configuration process), Specification (a possible value of a characteristic of the configured product) and ConfigurationLink (which models a change of the state of the configuration process)."""@en ;
+	vann:preferredNamespacePrefix "cold" ;
+	cc:license <http://creativecommons.org/licenses/by/3.0/> ;
+	dc:creator <http://data.semanticweb.org/person/edouard-chevalier> , <http://data.semanticweb.org/person/francois-paul-servant> , <http://dbpedia.org/resource/Renault> .
+
+:alternative a owl:ObjectProperty ;
+	rdfs:label "alternative"@en ;
+	rdfs:comment "Models the possibility to change a previous choice (links the configuration to a similar one, with one of the definingChoices removed or changed. This property may not be used when the chosen specification in question happens to be implied by the other choices"@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink ;
+	rdfs:subPropertyOf :link .
+
+:choiceSeq a owl:ObjectProperty ;
+	rdfs:label "choice sequence"@en ;
+	rdfs:comment "Choices are made one at a time and in a given order, which may matter. Of course it doesn’t impact the characteristics of the product in any way, but it can be used by some applications."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf :definingChoice ;
+	rdfs:range rdf:Seq .
+
+:chosenSpec a owl:ObjectProperty ;
+	rdfs:label "chosen specification"@en ;
+	rdfs:comment """A SubProperty of co:definingChoice listing the specifications selected by the user: 
+If two or more of the cold:chosenSpec of a Configuration correspond to the same cold:ConfigurationVariable, by convention they are to be interpreted as ORed (even XORed, by the way, as such specifications are alternative). 
+So:
+ex:AConf coold:chosenSpec ex:SimpleRadio, ex:RadioMP3.
+means that the car has either a ex:SimpleRadio, or a ex:RadioMP3, not both. """@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Specification ;
+	rdfs:subPropertyOf :definingChoice .
+
+:completed a owl:ObjectProperty ;
+	rdfs:label "completed"@en ;
+	rdfs:comment "Links a Configuration to a completely defined one (that is, a Completely Defined Configuration that matches the configuration in question). The price of the linked configuration may be higher than this configuration price. Configurations completed at the same price are given by the completedAtSamePrice property."@en ;
+	rdfs:domain :Configuration .
+
+:completedAtSamePrice a owl:ObjectProperty ;
+	rdfs:label "completed at the same price"@en ;
+	rdfs:comment "Links a Configuration to a completely defined one, which has the same price."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf :completed .
+
+:defaultSpec a owl:ObjectProperty ;
+	rdfs:label "default"@en ;
+	vs:term_status "unstable" ;
+	rdfs:comment "Specification included by default in a Completely Defined Product matching this configuration"@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Specification .
+
+:definingChoice a owl:ObjectProperty ;
+	rdfs:label "defining choice"@en ;
+	rdfs:comment "Parent to all properties specifying the choices that define the Configuration: a Configuration is defined by the list of triples it is the subject of, and which have a co:definingChoice as their predicates. "@en ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:hasValue a owl:ObjectProperty ;
+	rdfs:label "has value"@en ;
+	rdfs:comment "Used in a Lexicon to list the values (specifications) of a ConfigurationVariable. Alternatively, we could say that these specifications have rdf:type the ConfigurationVariable in question."@en ;
+	vs:term_status "unstable" ;
+	rdfs:domain :ConfigurationVariable ;
+	rdfs:range :Specification .
+
+:impliedSpec a owl:ObjectProperty ;
+	rdfs:label "implied specification"@en ;
+	rdfs:comment "A Specification that is implied by the conjunction of the definingChoice(s) of this Configuration."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Specification .
+
+:impossible a owl:ObjectProperty ;
+	rdfs:label "impossible"@en ;
+	rdfs:comment "Models a choice that conflicts with the definition of this configuration: when a specification is not compatible with a configuration, the configuration engine can nevertheless provide a way to select it - of course, at the cost of discarding some of the previous selections; there is a conflict, to be resolved by removing or changing some of the cold:definingChoice(s). "@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink ;
+	rdfs:subPropertyOf :link .
+
+:lexicon a owl:ObjectProperty ;
+	rdfs:label "lexicon"@en ;
+	rdfs:comment "Used to link a Configuration, a ConfigurationVariable or a Specification to a Lexicon."@en ;
+	rdfs:range :Lexicon .
+
+_:node189sshquhx13 a owl:Class .
+
+_:node189sshquhx14 rdf:first :Configuration ;
+	rdf:rest _:node189sshquhx15 .
+
+_:node189sshquhx15 rdf:first :ConfigurationVariable ;
+	rdf:rest _:node189sshquhx16 .
+
+_:node189sshquhx16 rdf:first :Specification ;
+	rdf:rest rdf:nil .
+
+_:node189sshquhx13 owl:unionOf _:node189sshquhx14 .
+
+:lexicon rdfs:domain _:node189sshquhx13 .
+
+:link a owl:ObjectProperty ;
+	rdfs:label "configuration link"@en ;
+	rdfs:comment """Parent property of all the properties linking a Configuration to another one in the configuration process.
+The HTML display of a cold:ConfigurationLink corresponds to an hypertext link, whose href is the value of the cold:linkedConf property. As for the text of this link, the rdfs:label of the cold:specToBeAdded value is quite adequate. It can be directly included in the RDF as the rdfs:label of the cold: ConfigurationLink"""@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink .
+
+:linkedConf a owl:ObjectProperty ;
+	rdfs:label "linked configuration"@en ;
+	rdfs:comment "the linked configuration that contains choices of current Configuration plus the specifications that will be added and listed in the configuration link it belongs to."@en ;
+	rdfs:range :Configuration ;
+	rdfs:domain :ConfigurationLink .
+
+:maxPrice a owl:ObjectProperty ;
+	rdfs:label "max price"@en ;
+	rdfs:comment "An upper limit set on the price of the configuration."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf :definingChoice ;
+	rdfs:range gr:UnitPriceSpecification .
+
+:possible a owl:ObjectProperty ;
+	rdfs:label "possible"@en ;
+	rdfs:comment "Models a choice (or a set of choices) that can be made without changing any of the previous choices done in the configuration: links to a Configuration whose list of definingChoice(s) contains the list of definingChoice(s) of this configuration."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink ;
+	rdfs:subPropertyOf :link .
+
+:proposedConf a owl:ObjectProperty ;
+	rdfs:label "proposal"@en ;
+	rdfs:comment "Links a Configuration to another one supposed to be of interest for a customer at this point in the configuration process. The semantics is rather vague, leaving open the possibility to link to a Configuration that matches the defining choices of the subject configuration, or not (to be used by marketing people for bargains, 'upselling', etc.)"@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Configuration .
+
+:specToBeAdded a owl:ObjectProperty ;
+	rdfs:label "added specification"@en ;
+	rdfs:comment "Specification to be added to a Configuration in a ConfigurationLink"@en ;
+	rdfs:domain :ConfigurationLink ;
+	rdfs:range :Specification .
+
+:specToBeRemoved a owl:ObjectProperty ;
+	rdfs:label "removed specification"@en ;
+	rdfs:comment "Specification to be removed from a Configuration in a ConfigurationLink"@en ;
+	rdfs:domain :ConfigurationLink ;
+	rdfs:range :Specification .
+
+:confVarId a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:comment "Code identifying a ConfigurationVariable within the Lexicon it belongs to."@en ;
+	vs:term_status "unstable"@en ;
+	rdfs:domain :ConfigurationVariable ;
+	rdfs:range rdfs:Literal .
+
+:specId a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:comment "Code identifying a Specification within the Lexicon it belongs to."@en ;
+	vs:term_status "unstable"@en ;
+	rdfs:domain :Specification ;
+	rdfs:range rdfs:Literal .
+
+:CompletelyDefinedConfiguration a owl:Class ;
+	rdfs:label "Completely defined configuration"@en ;
+	rdfs:subClassOf :Configuration ;
+	vs:term_status "unstable" .
+
+:Configuration a owl:Class ;
+	rdfs:label "Configuration"@en , "Configuration"@fr ;
+	rdfs:comment """A state of the configuration process, assumed to correspond to a valid partially defined product - valid in the sense that it can be completed into an existing fully specified product, one that can be ordered, without changing any of the current selections.
+
+A configuration is defined by a Lexicon (the set of the descriptive attributes of the configured product, cf. the \"lexicon\" property), and by the set of choices that have been made so far (typically  selected specifications), cf. the \"definingChoice\" property.
+
+Note: A configurator application may conceivably have to handle “invalid configurations”, that is, combinations of specifications that are impossible. This can happen, for instance, if the user is allowed to begin the configuration process by choosing features without any control of their compatibility; or if she is allowed to choose a feature incompatible with her previous selections. In this case, it is the responsibility of the configurator application to restore the consistency of the configuration, necessarily by excluding some of the previous user selections. This Configuration class excludes such invalid combinations. 
+
+Relation with GoodRelations and schema.org vocabularies :
+because a configuration mainly describes a Partially Defined Product, it can be seen as a GoodRelations \"ProductOrServiceModel\" (or a schema.org \"ProductModel): \"an intangible entity that specifies some characteristics of a group of similar, usually mass-produced products, in the sense of a prototype\". The suffix \"Model\" may seem misleading when used for a Configuration, as it suggests something such as \"Ford T\", and not \"Ford T with sunroof and climat control (itself not a completely defined product -  you still can choose, well, the color: it is a \"prototype of similar products\").
+
+On the other hand, a Configuration has a price (more precisely, a \"from price\" - the minimum of the \"suggested retail prices\" of all the matching completely defined products). As such, a Configuration may be seen as a commercial offer. It can also be used to represent a customer's wish list, constrained by the definition of the range. It could therefore be considered as a gr:Offering (or a schema:Offer) as well.
+
+But gr:ProductOrService and gr:Offering are disjoint classes: a given Configuration cannot be both. Depending on the use case, a publisher of configuration data may want to type her Configurations with either of these classes."""@en ;
+	vs:term_status "stable" .
+
+:ConfigurationLink a owl:Class ;
+	rdfs:label "Configuration Link"@en .
+
+_:node189sshquhx17 a owl:Restriction ;
+	owl:onProperty :linkedConf ;
+	owl:onClass :Configuration ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:ConfigurationLink rdfs:subClassOf _:node189sshquhx17 ;
+	vs:term_status "stable" ;
+	rdfs:comment "Models the link between a given Configuration and another one (a change of state in the configuration process): typically, the association of a Specification to be selected, and of a resulting Configuration."@en .
+
+_:node189sshquhx18 a owl:Axiom ;
+	rdfs:comment "A ConfigurationLink is used to define the link from one Configuration to another one that (typically) refines. This means that a given ConfigurationLink describes a link between a Configuration and one (and only one) Configuration"@en ;
+	owl:annotatedSource :ConfigurationLink ;
+	owl:annotatedProperty rdfs:subClassOf .
+
+_:node189sshquhx19 a owl:Restriction ;
+	owl:onProperty :linkedConf ;
+	owl:onClass :Configuration ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node189sshquhx18 owl:annotatedTarget _:node189sshquhx19 .
+
+:ConfigurationVariable a owl:Class ;
+	rdfs:label "Configuration variable"@en .
+
+_:node189sshquhx20 a owl:Restriction ;
+	owl:onProperty :lexicon ;
+	owl:onClass :Lexicon ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:ConfigurationVariable rdfs:subClassOf _:node189sshquhx20 ;
+	rdfs:comment "A variable in a Lexicon, eg. the fuel type, or the body color. Automotive ranges typically only use discrete variables: the possible values corresponding to one ConfigurationVariable are alternative specifications (for instance \"Diesel\", \"Gasoline\", etc.  for the fuel type variable)"@en .
+
+:Lexicon a owl:Class ;
+	rdfs:label "Lexicon"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "The set of specifications (and of their corresponding configuration variables) used in the configuration process: all the possible descriptive attributes of the configured product."@en .
+
+:Model a owl:Class ;
+	rdfs:label "Model specification"@en ;
+	rdfs:subClassOf :Specification .
+
+_:node189sshquhx21 a owl:Restriction ;
+	owl:onProperty :lexicon ;
+	owl:onClass :Lexicon ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:Model rdfs:subClassOf _:node189sshquhx21 ;
+	rdfs:comment "A specification that identifies a model (like \"Ford T\"). Corresponding configurations are supposed to share the same lexicon."@en .
+
+:Specification a owl:Class ;
+	rdfs:label "Specification"@en .
+
+_:node189sshquhx22 a owl:Class .
+
+_:node189sshquhx23 rdf:first gr:QualitativeValue ;
+	rdf:rest _:node189sshquhx24 .
+
+_:node189sshquhx24 rdf:first gr:QuantitativeValue ;
+	rdf:rest rdf:nil .
+
+_:node189sshquhx22 owl:unionOf _:node189sshquhx23 .
+
+:Specification rdfs:subClassOf _:node189sshquhx22 ;
+	rdfs:comment "Feature, option, any value of a characteristic of a product that can be chosen during the configuration process. For instance: \"Automatic gearbox\", \"Blue body color\", \"CO2 emission value < 100 g of CO2\""@en ;
+	vs:term_status "stable" .

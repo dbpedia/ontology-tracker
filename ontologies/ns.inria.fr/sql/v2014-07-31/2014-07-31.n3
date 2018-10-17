@@ -1,0 +1,705 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sql: <http://ns.inria.fr/ast/sql#> .
+@prefix ns0: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://ns.inria.fr/ast/sql#> a owl:Ontology ;
+	owl:versionInfo "0.3" ;
+	ns0:term_status "unstable" ;
+	rdfs:label "SQL Abstract Syntax Trees Vocabulary"@en ;
+	dcterms:description "A vocabulary that allows SQL code abstract syntax trees to be published in RDF."@en ;
+	dcterms:created "2013-12-09"^^xsd:date ;
+	dcterms:modified "2014-01-28"^^xsd:date ;
+	dcterms:title "SQL Abstract Syntax Trees Vocabulary"@en ;
+	dcterms:license <http://creativecommons.org/licenses/by/1.0/> ;
+	dcterms:creator "Corentin Follenfant" , "Olivier Corby" ;
+	vann:preferredNamespacePrefix "sql" ;
+	vann:preferredNamespaceUri "http://ns.inria.fr/ast/sql#" ;
+	rdfs:seeAlso <http://ns.inria.fr/ast/sql/index.html> , <http://spinrdf.org/sp> .
+
+sql:ASTNode a rdfs:Class ;
+	rdfs:label "Generic AST Node"@en ;
+	rdfs:comment "Abstract class subsumed by all AST node classes."@en ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Predicate a rdfs:Class ;
+	rdfs:label "Predicate"@en ;
+	rdfs:comment "Represents a collection of one or more expressions or subqueries, that may be combined with logical operators, and when evaluated returns one of the TRUE / FALSE / UNKNOWN truth values."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:JoinPredicate a rdfs:Class ;
+	rdfs:label "Join Predicate"@en ;
+	rdfs:comment "Binary predicate used join two or more tables."@en ;
+	rdfs:subClassOf sql:Predicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:CrossJoin a rdfs:Class ;
+	rdfs:label "Cross Join Predicate"@en ;
+	rdfs:comment "Join predicate used to perform the cross-product of two tables."@en ;
+	rdfs:subClassOf sql:JoinPredicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:InnerJoin a rdfs:Class ;
+	rdfs:label "Inner Join Predicate"@en ;
+	rdfs:subClassOf sql:JoinPredicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:OuterJoin a rdfs:Class ;
+	rdfs:label "Outer Join Predicate"@en ;
+	rdfs:subClassOf sql:JoinPredicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:RightOuterJoin a rdfs:Class ;
+	rdfs:label "Right Outer Join Predicate"@en ;
+	rdfs:subClassOf sql:OuterJoin ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:LeftOuterJoin a rdfs:Class ;
+	rdfs:label "Left Outer Join Predicate"@en ;
+	rdfs:subClassOf sql:OuterJoin ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:FullOuterJoin a rdfs:Class ;
+	rdfs:label "Full Outer Join Predicate"@en ;
+	rdfs:subClassOf sql:OuterJoin ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:IsNull a rdfs:Class ;
+	rdfs:label "Is Null predicate"@en ;
+	rdfs:comment "Unary predicate that compares the evaluated expression's value with NULL"@en ;
+	rdfs:subClassOf sql:Predicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Between a rdfs:Class ;
+	rdfs:label "Range predicate"@en ;
+	rdfs:comment "Ternary predicate used to assert whether a provided expression's value is within the range specified by two other expressions' values."@en ;
+	rdfs:subClassOf sql:Predicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:In a rdfs:Class ;
+	rdfs:label "In predicate"@en ;
+	rdfs:comment "Variadic predicate used to assert whether the first provided expression's value is within the set of following provided expressions' values."@en ;
+	rdfs:subClassOf sql:Predicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Exists a rdfs:Class ;
+	rdfs:label "Exists predicate"@en ;
+	rdfs:comment "Unary predicate that returns one of the TRUE or FALSE truth values depending on whether the evaluated subquery returns an empty result set."@en ;
+	rdfs:subClassOf sql:Predicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Like a rdfs:Class ;
+	rdfs:label "Like predicate"@en ;
+	rdfs:comment "Binary predicate that returns one of the TRUE or FALSE truth values depending on whether the string resulting in the evaluation of the first expression matches the lightweight regular expression described in the second expression."@en ;
+	rdfs:subClassOf sql:Predicate ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Operator a rdfs:Class ;
+	rdfs:label "Operator"@en ;
+	rdfs:comment "A SQL operator used to perform arithmetic calculations, comparisons or value assignments."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Alias a rdfs:Class ;
+	rdfs:label "Alias"@en ;
+	rdfs:comment "The SQL AS operator used to give an identifier to an expression."@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:All a rdfs:Class ;
+	rdfs:label "All"@en ;
+	rdfs:comment "The SQL '*' wildcard operator, substitutes to all the columns of the tables in the FROM clause."@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ArithmeticOperator a rdfs:Class ;
+	rdfs:label "Arithmetic Operator"@en ;
+	rdfs:comment "A SQL arithmetic operator used to perform arithmetic calculation."@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Negate a rdfs:Class ;
+	rdfs:label "Negation"@en ;
+	rdfs:comment "A unary arithmetic operator used to produce the negative of its operand."@en ;
+	rdfs:subClassOf sql:ArithmeticOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Plus a rdfs:Class ;
+	rdfs:label "Addition"@en ;
+	rdfs:subClassOf sql:ArithmeticOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Minus a rdfs:Class ;
+	rdfs:label "Subtraction"@en ;
+	rdfs:subClassOf sql:ArithmeticOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Mult a rdfs:Class ;
+	rdfs:label "Multiplication"@en ;
+	rdfs:subClassOf sql:ArithmeticOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Div a rdfs:Class ;
+	rdfs:label "Division"@en ;
+	rdfs:subClassOf sql:ArithmeticOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ComparisonOperator a rdfs:Class ;
+	rdfs:label "Comparison Operator"@en ;
+	rdfs:comment "A binary operator used to compare two values, and when evaluated returns one of the TRUE / FALSE / UNKNOWN truth values."@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:GreaterThan a rdfs:Class ;
+	rdfs:label "Greater than comparison"@en ;
+	rdfs:subClassOf sql:ComparisonOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:LessThan a rdfs:Class ;
+	rdfs:label "Less than comparison"@en ;
+	rdfs:subClassOf sql:ComparisonOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Equals a rdfs:Class ;
+	rdfs:label "Equality comparison"@en ;
+	rdfs:subClassOf sql:ComparisonOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:NotEquals a rdfs:Class ;
+	rdfs:label "Difference comparison"@en ;
+	rdfs:subClassOf sql:ComparisonOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:GreaterEquals a rdfs:Class ;
+	rdfs:label "Greater than or equal to comparison"@en ;
+	rdfs:subClassOf sql:ComparisonOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:LessEquals a rdfs:Class ;
+	rdfs:label "Less than or equal to comparison"@en ;
+	rdfs:subClassOf sql:ComparisonOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:LogicalOperator a rdfs:Class ;
+	rdfs:label "Logical Operator"@en ;
+	rdfs:comment "A SQL logical connective used to perform logical calculation."@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:And a rdfs:Class ;
+	rdfs:label "Logical Conjunction"@en ;
+	rdfs:subClassOf sql:LogicalOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Or a rdfs:Class ;
+	rdfs:label "Logical Disjunction"@en ;
+	rdfs:subClassOf sql:LogicalOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Not a rdfs:Class ;
+	rdfs:label "Logical Negation"@en ;
+	rdfs:comment "A SQL logical negation that can be used to negate any condition."@en ;
+	rdfs:subClassOf sql:LogicalOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:SetOperator a rdfs:Class ;
+	rdfs:label "Set Operator"@en ;
+	rdfs:comment "A SQL set operator used to perform set operation on the results of two or more queries."@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Union a rdfs:Class ;
+	rdfs:label "Union"@en ;
+	rdfs:comment "A SQL union operator used to return the combination of the result sets of two or more queries."@en ;
+	rdfs:subClassOf sql:SetOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:UnionAll a rdfs:Class ;
+	rdfs:label "Union All"@en ;
+	rdfs:comment "A SQL union operator used to return the combination of the result sets of two or more queries, including duplicate result rows."@en ;
+	rdfs:subClassOf sql:SetOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Intersect a rdfs:Class ;
+	rdfs:label "Intersection"@en ;
+	rdfs:comment "A SQL intersection operator used to return the common result rows of the combination of the result sets of two or more queries."@en ;
+	rdfs:subClassOf sql:SetOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Except a rdfs:Class ;
+	rdfs:label "Exclusion"@en ;
+	rdfs:comment "A SQL exclusion operator used to return the result set produced by removing the result rows of the second query that appear in the result set of the first query."@en ;
+	rdfs:subClassOf sql:SetOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:StringOperator a rdfs:Class ;
+	rdfs:label "String Operator"@en ;
+	rdfs:comment ""@en ;
+	rdfs:subClassOf sql:Operator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Concatenation a rdfs:Class ;
+	rdfs:label "Concatenation"@en ;
+	rdfs:comment "A SQL concatenation operator that returns the combination of two strings, expressions or values."@en ;
+	rdfs:subClassOf sql:StringOperator ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Expression a rdfs:Class ;
+	rdfs:label "Expression"@en ;
+	rdfs:comment "A SQL expression denotes any clause that when evaluated returns values."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:CaseExpression a rdfs:Class ;
+	rdfs:label "Case Expression"@en ;
+	rdfs:comment "A SQL case expression enables the use of the IF <condition> THEN <consequent> ELSE <alternative> logic within SQL statements."@en ;
+	rdfs:subClassOf sql:Expression ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:FunctionExpression a rdfs:Class ;
+	rdfs:label "Function Expression"@en ;
+	rdfs:comment "A SQL function expressions consists in the use of any built-in SQL function."@en ;
+	rdfs:subClassOf sql:Expression ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:AggregationExpression a rdfs:Class ;
+	rdfs:label "Aggregation Expression"@en ;
+	rdfs:comment "A SQL aggregation expression consists in the use of an aggregate function."@en ;
+	rdfs:subClassOf sql:Expression ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Function a rdfs:Class ;
+	rdfs:label "Function"@en ;
+	rdfs:comment "A SQL built-in function that performs calculation and returns a value. May be vendor-specific."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ScalarFunction a rdfs:Class ;
+	rdfs:label "Scalar Function"@en ;
+	rdfs:comment "A SQL scalar function returns a single value given the input values. The input value is of a SQL primitive data type."@en ;
+	rdfs:subClassOf sql:Function ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:AggregateFunction a rdfs:Class ;
+	rdfs:label "Aggregate Function"@en ;
+	rdfs:comment "A SQL aggregate function returns a single value given the values of multiple rows from a column."@en ;
+	rdfs:subClassOf sql:Function ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Sum a rdfs:Class ;
+	rdfs:label "Sum"@en ;
+	rdfs:comment "The SQL aggregate function that returns the sum of the given expression."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Avg a rdfs:Class ;
+	rdfs:label "Average"@en ;
+	rdfs:comment "The SQL aggregate function that returns the mean of the given expression."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Count a rdfs:Class ;
+	rdfs:label "Count"@en ;
+	rdfs:comment "The SQL aggregate function that returns the number of rows or non NULL values from the result set."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Min a rdfs:Class ;
+	rdfs:label "Minimum"@en ;
+	rdfs:comment "The SQL aggregate function that returns the minimum value of the given expression."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Max a rdfs:Class ;
+	rdfs:label "Maximum"@en ;
+	rdfs:comment "The SQL aggregate function that returns the maximum value of the given expression."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Var a rdfs:Class ;
+	rdfs:label "Variance"@en ;
+	rdfs:comment "The SQL aggregate function that returns the variance of the given expression."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:StdDev a rdfs:Class ;
+	rdfs:label "Standard Deviation"@en ;
+	rdfs:comment "The SQL aggregate function that returns the standard deviation (square root of the variance) of the given expression."@en ;
+	rdfs:subClassOf sql:AggregateFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:DataTypeConversionFunction a rdfs:Class ;
+	rdfs:label "Data Type Conversion Function"@en ;
+	rdfs:comment "A SQL scalar function."@en ;
+	rdfs:subClassOf sql:ScalarFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Cast a rdfs:Class ;
+	rdfs:label "Cast"@en ;
+	rdfs:comment "A SQL scalar function that converts an expression to a target data type"@en ;
+	rdfs:subClassOf sql:DataTypeConversionFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:DateTimeFunction a rdfs:Class ;
+	rdfs:label "Date Time Computation Function"@en ;
+	rdfs:comment "A SQL date time function returns a date or time value or performs a specific date or time value computation."@en ;
+	rdfs:subClassOf sql:ScalarFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Now a rdfs:Class ;
+	rdfs:label "Now"@en ;
+	rdfs:comment "A SQL now function is a nullary function that returns the current timestamp."@en ;
+	rdfs:subClassOf sql:DateTimeFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:TableFunction a rdfs:Class ;
+	rdfs:label "Table Function"@en ;
+	rdfs:comment "A SQL function that returns a virtual table."@en ;
+	rdfs:subClassOf sql:Function ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:NumberFunction a rdfs:Class ;
+	rdfs:label "Number Function"@en ;
+	rdfs:comment "A SQL number function that returns a numeric value and reads numeric values or string with numeric characters."@en ;
+	rdfs:subClassOf sql:ScalarFunction ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Statement a rdfs:Class ;
+	rdfs:label "Statement"@en ;
+	rdfs:comment "A SQL statement."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:DataDefinitionStatement a rdfs:Class ;
+	rdfs:label "Data Definition Statement"@en ;
+	rdfs:comment "A SQL data definition statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:DataManipulationStatement a rdfs:Class ;
+	rdfs:label "Data Manipulation Statement"@en ;
+	rdfs:comment "A SQL data manipulation statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ProceduralStatement a rdfs:Class ;
+	rdfs:label "Procedural Statement"@en ;
+	rdfs:comment "A SQL procedural statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:TransactionManagementStatement a rdfs:Class ;
+	rdfs:label "Transaction Management Statement"@en ;
+	rdfs:comment "A SQL transaction management statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:SessionManagementStatement a rdfs:Class ;
+	rdfs:label "Session Management Statement"@en ;
+	rdfs:comment "A SQL session management statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:AccessControlStatement a rdfs:Class ;
+	rdfs:label "Access Control Statement"@en ;
+	rdfs:comment "A SQL access control statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:IOStatement a rdfs:Class ;
+	rdfs:label "Import / Export Statement"@en ;
+	rdfs:comment "A SQL import or export statement."@en ;
+	rdfs:subClassOf sql:Statement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:AlterStatement a rdfs:Class ;
+	rdfs:label "Alter Statement"@en ;
+	rdfs:comment "A SQL ALTER statement."@en ;
+	rdfs:subClassOf sql:DataDefinitionStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:CreateStatement a rdfs:Class ;
+	rdfs:label "Create Statement"@en ;
+	rdfs:comment "A SQL CREATE statement."@en ;
+	rdfs:subClassOf sql:DataDefinitionStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:DropStatement a rdfs:Class ;
+	rdfs:label "Drop Statement"@en ;
+	rdfs:comment "A SQL DROP statement."@en ;
+	rdfs:subClassOf sql:DataDefinitionStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:SelectStatement a rdfs:Class ;
+	rdfs:label "Select Statement"@en ;
+	rdfs:comment "A SQL SELECT statement."@en ;
+	rdfs:subClassOf sql:DataManipulationStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:InsertStatement a rdfs:Class ;
+	rdfs:label "Insert Statement"@en ;
+	rdfs:comment "A SQL INSERT statement."@en ;
+	rdfs:subClassOf sql:DataManipulationStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:DeleteStatement a rdfs:Class ;
+	rdfs:label "Delete Statement"@en ;
+	rdfs:comment "A SQL DELETE statement."@en ;
+	rdfs:subClassOf sql:DataManipulationStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:UpdateStatement a rdfs:Class ;
+	rdfs:label "Update Statement"@en ;
+	rdfs:comment "A SQL UPDATE statement."@en ;
+	rdfs:subClassOf sql:DataManipulationStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:CallStatement a rdfs:Class ;
+	rdfs:label "Call Statement"@en ;
+	rdfs:comment "A SQL CALL statement."@en ;
+	rdfs:subClassOf sql:ProceduralStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:CommitStatement a rdfs:Class ;
+	rdfs:label "Commit Statement"@en ;
+	rdfs:comment "A SQL COMMIT statement."@en ;
+	rdfs:subClassOf sql:TransactionManagementStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:RollbackStatement a rdfs:Class ;
+	rdfs:label "Rollback Statement"@en ;
+	rdfs:comment "A SQL ROLLBACK statement."@en ;
+	rdfs:subClassOf sql:TransactionManagementStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:LockTableStatement a rdfs:Class ;
+	rdfs:label "Lock Table Statement"@en ;
+	rdfs:comment "A SQL LOCK TABLE statement."@en ;
+	rdfs:subClassOf sql:TransactionManagementStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ConnectStatement a rdfs:Class ;
+	rdfs:label "Connect Statement"@en ;
+	rdfs:comment "A SQL CONNECT statement."@en ;
+	rdfs:subClassOf sql:SessionManagementStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:SetStatement a rdfs:Class ;
+	rdfs:label "Set Statement"@en ;
+	rdfs:comment "Assigns a value to a session variable identifier."@en ;
+	rdfs:subClassOf sql:SessionManagementStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Grant a rdfs:Class ;
+	rdfs:label "Grant Statement"@en ;
+	rdfs:comment "A SQL GRANT statement used to give a set of privileges or roles to specified users that are actionable on specified database objects."@en ;
+	rdfs:subClassOf sql:AccessControlStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Revoke a rdfs:Class ;
+	rdfs:label "Revoke Statement"@en ;
+	rdfs:comment "A SQL REVOKE statement used to revoke a set of privileges or roles to specified users from specified database objects."@en ;
+	rdfs:subClassOf sql:AccessControlStatement ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:args a rdf:Property ;
+	rdfs:label "AST Node Arguments"@en ;
+	rdfs:comment "The generic predicate used to attach an ordered list of children to any AST node."@en ;
+	rdfs:domain sql:ASTNode ;
+	rdfs:range rdf:List .
+
+sql:clause a rdf:Property ;
+	rdfs:label "Clause"@en ;
+	rdfs:comment "A SQL clause is a part of a statement."@en ;
+	rdfs:domain sql:Statement ;
+	rdfs:range sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:select a rdf:Property ;
+	rdfs:label "SELECT clause"@en ;
+	rdfs:comment "The SQL clause that specifies the projected tables of a SELECT statement."@en ;
+	rdfs:domain sql:SelectStatement ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:from a rdf:Property ;
+	rdfs:label "FROM clause"@en ;
+	rdfs:comment "The SQL clause that specifies the target sources (tables, views, subqueries) of a SELECT statement."@en ;
+	rdfs:range rdf:List ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:where a rdf:Property ;
+	rdfs:label "WHERE clause"@en ;
+	rdfs:comment "The SQL clause that specifies the filtering predicates to apply on the inputs of the FROM clause."@en ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:groupBy a rdf:Property ;
+	rdfs:label "GROUP BY clause"@en ;
+	rdfs:comment "The SQL clause that specifies the columns whose values will be considered to cluster the result set of selected rows."@en ;
+	rdfs:domain sql:SelectStatement ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:having a rdf:Property ;
+	rdfs:label "HAVING clause"@en ;
+	rdfs:comment "The SQL clause that specifies the filtering predicates to apply on the clustered result set resulting of a GROUP BY clause."@en ;
+	rdfs:domain sql:SelectStatement ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:orderBy a rdf:Property ;
+	rdfs:label "ORDER BY clause"@en ;
+	rdfs:comment "The SQL clause that specifies how to order the result set's records according to given expressions."@en ;
+	rdfs:domain sql:SelectStatement ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:limit a rdf:Property ;
+	rdfs:label "LIMIT clause"@en ;
+	rdfs:comment "The SQL clause that limits the number of records from the result set that should be returned."@en ;
+	rdfs:domain sql:SelectStatement ;
+	rdfs:range xsd:integer ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:into a rdf:Property ;
+	rdfs:label "INTO target table clause"@en ;
+	rdfs:comment "The SQL clause that specifies into which table the following values or select statement's result set are to be inserted into."@en ;
+	rdfs:range sql:Table ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:values a rdf:Property ;
+	rdfs:label "VALUES list Clause"@en ;
+	rdfs:comment "The SQL clause that specifies a list of values or expressions evaluating to values."@en ;
+	rdfs:domain sql:InsertStatement ;
+	rdfs:range rdf:List ;
+	rdfs:subPropertyOf sql:clause ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:CatalogObject a rdfs:Class ;
+	rdfs:label "Database Catalog Object"@en ;
+	rdfs:comment "A database catalog object reference."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Schema a rdfs:Class ;
+	rdfs:label "Relational Schema"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog schema."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Table a rdfs:Class ;
+	rdfs:label "Relational Table"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog table."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Column a rdfs:Class ;
+	rdfs:label "Relational Column"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog column."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Index a rdfs:Class ;
+	rdfs:label "Relational Index"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog index."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Procedure a rdfs:Class ;
+	rdfs:label "Relational Procedure"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog procedure."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:User a rdfs:Class ;
+	rdfs:label "Relational User"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog user."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Role a rdfs:Class ;
+	rdfs:label "Relational Role"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog role."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:View a rdfs:Class ;
+	rdfs:label "Relational View"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog view."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:Sequence a rdfs:Class ;
+	rdfs:label "Relational Sequence"@en ;
+	rdfs:comment "A reference or declarative statement for a catalog sequence."@en ;
+	rdfs:subClassOf sql:CatalogObject ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ObjectIdentifier a rdfs:Class ;
+	rdfs:label "Database Catalog Object Identifier"@en ;
+	rdfs:comment "A database catalog object identifier, qualified or not."@en ;
+	rdfs:subClassOf sql:ASTNode ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:SchemaIdentifier a rdfs:Class ;
+	rdfs:label "Schema Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog schema."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:TableIdentifier a rdfs:Class ;
+	rdfs:label "Table Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog table."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ColumnIdentifier a rdfs:Class ;
+	rdfs:label "Column Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog column."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:IndexIdentifier a rdfs:Class ;
+	rdfs:label "Index Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog index."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ProcedureIdentifier a rdfs:Class ;
+	rdfs:label "Procedure Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog procedure."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:UserIdentifier a rdfs:Class ;
+	rdfs:label "User Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog user."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:RoleIdentifier a rdfs:Class ;
+	rdfs:label "Role Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog role."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:ViewIdentifier a rdfs:Class ;
+	rdfs:label "View Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog view."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .
+
+sql:SequenceIdentifier a rdfs:Class ;
+	rdfs:label "Identifier"@en ;
+	rdfs:comment "A valid identifier for a catalog sequence."@en ;
+	rdfs:subClassOf sql:ObjectIdentifier ;
+	rdfs:isDefinedBy <http://ns.inria.fr/ast/sql#> .

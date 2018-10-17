@@ -1,0 +1,100 @@
+@prefix :      <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-modelling.owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ns0:   <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix resource: <http://semanticscience.org/resource/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+:implementedIn  a   owl:ObjectProperty ;
+        rdfs:label  "implemented in" .
+
+resource:example  a  owl:AnnotationProperty .
+
+:hasAlgorithmName  a  owl:DatatypeProperty ;
+        rdfs:label  "has algorithm name" .
+
+<http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-modelling.owl>
+        a                              owl:Ontology ;
+        rdfs:isDefinedBy               <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-modelling.owl> ;
+        cc:license                     "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
+        ns0:defaultLanguage            "en" ;
+        dc:contributor                 "Contributors are those that engage in discussions during the development of this ontology (in alphabetical order):\nkarl benedict\nluis garnica\ncj grady\nbill hudspeth\ndeana pennington\nsoren scott\naimee stewart"^^xsd:string ;
+        dc:creator                     "Natalia Villanueva-Rosales"@en , "http://cybershare.utep.edu"^^xsd:anyURI , "Nicholas del Rio"@en , "ELSEWeb team"@en ;
+        dc:description                 "The ELSEWeb Modelling ontology provides simple classes for describing data models. This project provides foundational support for the ELSEWeb project(http://elseweb.cybershare.utep.edu/).\nwebsite: http://elseweb.cybershare.utep.edu/ontologies\nemail: nvillanuevarosales@utep.edu\n"@en ;
+        dc:issued                      "2014-05-01"^^xsd:date ;
+        dc:rights                      "free to use,share,modify. modify with attribution [http://creativecommons.org/licenses/by/3.0/]."^^xsd:string ;
+        dc:title                       "ELSEWeb Modelling Ontology"@en ;
+        terms:identifier               "elseweb-modelling.owl" ;
+        terms:modified                 "2015-09-24"^^xsd:date ;
+        vann:preferredNamespacePrefix  "elseweb-modelling"@en ;
+        vann:preferredNamespaceUri     "http://ontology.cybershare.utep.edu/ELSEWeb/"^^xsd:string ;
+        owl:versionIRI                 <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-modelling.owl> ;
+        owl:versionInfo                "1.2"^^xsd:string .
+
+:controlsBehaviorOf  a  owl:ObjectProperty ;
+        rdfs:label  "controls behavior of" .
+
+:behaviorControlledBy
+        a           owl:ObjectProperty ;
+        rdfs:label  "behaviour controlled by" .
+
+:SpeciesModellingParameters
+        a                    owl:Class ;
+        rdfs:comment         "A set of modelling parameter(s) required by a specific species modeling algorithm."^^xsd:string ;
+        rdfs:label           "species modelling parameters"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasParameterMember ;
+                               owl:someValuesFrom  :SpeciesModellingParameter
+                             ] .
+
+:hasParameterMember  a  owl:ObjectProperty ;
+        rdfs:label  "has parameter member" .
+
+:SpeciesModellingSoftware
+        a             owl:Class ;
+        rdfs:comment  "Following SIO's definition of software application, a species modelling software is a software that can be directly executed by some processing unit and offers species modelling services."^^xsd:string ;
+        rdfs:label    "species modelling software"^^xsd:string .
+
+:boundToValue  a    owl:DatatypeProperty ;
+        rdfs:label  "bound to value" .
+
+:hasParameterName  a  owl:DatatypeProperty ;
+        rdfs:label  "has parameter name" .
+
+:SpeciesModellingAlgorithm
+        a                    owl:Class ;
+        rdfs:comment         "Following SIO's definition of algorithm, a species modelling algorithm is an effective method expressed as a finite list of well-defined instructions for calculating a model about species."^^xsd:string ;
+        rdfs:label           "species modelling algorithm"^^xsd:string ;
+        resource:example     "Bioclim"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :behaviorControlledBy ;
+                                                       owl:someValuesFrom  :SpeciesModellingParameters
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :implementedIn ;
+                                                         owl:someValuesFrom  :SpeciesModellingSoftware
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasAlgorithmName ;
+                                                           owl:someValuesFrom  rdfs:Literal
+                                                         ] )
+                             ] .
+
+:SpeciesModellingParameter
+        a                    owl:Class ;
+        rdfs:comment         "Following SIO's definition of parameter, a species modelling parameter  is variable whose value changes the characteristics of a species model."^^xsd:string ;
+        rdfs:label           "species modelling parameter"^^xsd:string ;
+        resource:example     "Standard deviation cutoff"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :boundToValue ;
+                                                       owl:someValuesFrom  rdfs:Literal
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasParameterName ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] )
+                             ] .

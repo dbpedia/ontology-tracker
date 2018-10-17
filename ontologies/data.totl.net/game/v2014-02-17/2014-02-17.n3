@@ -1,0 +1,236 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix game: <http://data.totl.net/game/> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dcterms:title "TotL Game Ontology" ;
+	cc:attributionName "Temple ov thee Lemur Data Service" ;
+	cc:attributionURL <http://data.totl.net/> ;
+	dcterms:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+	dcterms:creator "Marvin Fenderson" ;
+	dcterms:publisher "Temple ov thee Lemur" ;
+	dcterms:description "This schema describes games with a known state, and few or no random elements." .
+
+game:Game a owl:Class ;
+	rdfs:label "Game" ;
+	rdfs:comment "A Game type, such as go or chess." .
+
+game:State a owl:Class ;
+	rdfs:label "Game State" ;
+	rdfs:comment "The state of a game." .
+
+game:Status a owl:Class ;
+	rdfs:label "Game Status" ;
+	rdfs:comment "A status of a game." .
+
+game:LocationState a owl:Class ;
+	rdfs:label "Location State" ;
+	rdfs:comment "The state of a location on a specific game state." .
+
+game:Location a owl:Class ;
+	rdfs:label "Game Location" ;
+	rdfs:comment "A location in a game, such as a square or the players hand." .
+
+game:Move a owl:Class ;
+	rdfs:label "Move" ;
+	rdfs:comment "An action which creates a new game state." .
+
+game:Player a owl:Class ;
+	rdfs:label "Player" ;
+	rdfs:comment "A player in a game. Only indicates an abstract side for the type of game, not a specific player in a single game." ;
+	rdfs:subClassOf <http://xmlns.com/foaf/0.1/Agent> .
+
+game:PieceType a owl:Class ;
+	rdfs:label "Type of Piece" ;
+	rdfs:comment "A distinct type of piece. Interchangable with any other piece of the same type." .
+
+game:PieceCount a owl:Class ;
+	rdfs:label "Pieces count" ;
+	rdfs:comment "A number of pieces of the same type. In games where money (fake or real) is used, then it should be treated as one piece per dollar (or the currency it works in). One piece per cent if subdivisions are possible." .
+
+game:Pieces a owl:Class ;
+	rdfs:label "Pieces" ;
+	rdfs:comment "Don't use piecetype and piececount interchangeably. If a location MAY contain multiple pieces of the same type, it should always use piececount." ;
+	owl:unionOf _:node18h0ei4ckx1 .
+
+_:node18h0ei4ckx1 rdf:first game:PieceType ;
+	rdf:rest _:node18h0ei4ckx2 .
+
+_:node18h0ei4ckx2 rdf:first game:PieceCount ;
+	rdf:rest _:node18h0ei4ckx3 .
+
+_:node18h0ei4ckx3 rdf:first game:Nothing .
+
+game:Nothing a owl:Class .
+
+_:node18h0ei4ckx3 rdf:rest rdf:nil .
+
+game:initialState a owl:ObjectProperty ;
+	rdfs:label "initial state" ;
+	rdfs:comment "The initial state of the game" ;
+	rdfs:domain game:Game ;
+	rdfs:range game:State .
+
+game:ofGame a owl:ObjectProperty ;
+	rdfs:label "of game" ;
+	rdfs:comment "The type of game of which this is a single state." ;
+	rdfs:domain game:State ;
+	rdfs:range game:Game .
+
+game:ofLocation a owl:ObjectProperty ;
+	rdfs:label "of location" ;
+	rdfs:comment "The location of something such as a move or a location state." ;
+	rdfs:domain game:LocationState ;
+	rdfs:range game:Location .
+
+game:legalMove a owl:ObjectProperty ;
+	rdfs:label "legal move" ;
+	rdfs:comment "A possible move given the current game state." ;
+	rdfs:domain game:State ;
+	rdfs:range game:Move .
+
+game:moveLocation a owl:ObjectProperty ;
+	rdfs:label "move location" ;
+	rdfs:comment "A location involved in the move." ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Location .
+
+game:moveStartLocation a owl:ObjectProperty ;
+	rdfs:label "move start location" ;
+	rdfs:comment "A location involved in the start of the move." ;
+	rdfs:subPropertyOf game:moveLocation ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Location .
+
+game:moveEndLocation a owl:ObjectProperty ;
+	rdfs:label "move end location" ;
+	rdfs:comment "A location involved in the end of the move." ;
+	rdfs:subPropertyOf game:moveLocation ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Location .
+
+game:capturesLocation a owl:ObjectProperty ;
+	rdfs:label "move captures location" ;
+	rdfs:comment "A location which is captured by the player making the move. For example in reversi all pieces which change to their colour." ;
+	rdfs:subPropertyOf game:moveLocation ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Location .
+
+game:removes a owl:ObjectProperty ;
+	rdfs:label "pieces removed" ;
+	rdfs:comment "The pieces removed completel from play in a move." ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Pieces .
+
+game:captures a owl:ObjectProperty ;
+	rdfs:label "pieces captured" ;
+	rdfs:comment "The pieces captured in a move." ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Pieces .
+
+game:takes a owl:ObjectProperty ;
+	rdfs:label "pieces taken" ;
+	rdfs:comment "The pieces taken in a move and removed from play." ;
+	rdfs:subPropertyOf game:captures , game:removes ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Pieces .
+
+game:converts a owl:ObjectProperty ;
+	rdfs:label "pieces converted" ;
+	rdfs:comment "The pieces converted to the players own side, in a move." ;
+	rdfs:subPropertyOf game:captures ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Pieces .
+
+game:contains a owl:ObjectProperty ;
+	rdfs:label "contains" ;
+	rdfs:comment "The piece(s) in a location of a location state, or nothing." ;
+	rdfs:domain game:LocationState ;
+	rdfs:range game:Pieces .
+
+game:newState a owl:ObjectProperty ;
+	rdfs:label "produces new state" ;
+	rdfs:comment "The new state created by a move." ;
+	rdfs:domain game:Move ;
+	rdfs:range game:State .
+
+game:madeBy a owl:ObjectProperty ;
+	rdfs:label "made by" ;
+	rdfs:comment "The player making a move." ;
+	rdfs:domain game:Move ;
+	rdfs:range game:Player .
+
+game:turn a owl:ObjectProperty ;
+	rdfs:label "player turn" ;
+	rdfs:comment "The player who's turn it is in a given state." ;
+	rdfs:domain game:State ;
+	rdfs:range game:Player .
+
+game:belongsTo a owl:ObjectProperty ;
+	rdfs:label "piece belongs to" ;
+	rdfs:comment "The player this type of piece belongs to." ;
+	rdfs:domain game:PieceType ;
+	rdfs:range game:Player .
+
+game:asciiSymbol a owl:ObjectProperty ;
+	rdfs:label "ASCII Symbol" ;
+	rdfs:comment "A symbol in ASCII to represent this type of piece." ;
+	rdfs:domain game:PieceType ;
+	rdfs:range xsd:string .
+
+game:unicodeSymbol a owl:ObjectProperty ;
+	rdfs:label "Unicode Symbol" ;
+	rdfs:comment "A symbol in Unicode to represent this type of piece." ;
+	rdfs:domain game:PieceType ;
+	rdfs:range xsd:string .
+
+game:type a owl:ObjectProperty ;
+	rdfs:label "piece type" ;
+	rdfs:comment "The type of piece in a piece count." ;
+	rdfs:domain game:PieceCount ;
+	rdfs:range game:PieceType .
+
+game:count a owl:ObjectProperty ;
+	rdfs:label "piece count" ;
+	rdfs:comment "The number of pieces, of the given type, in a piece count." ;
+	rdfs:domain game:PieceCount ;
+	rdfs:range xsd:positiveInteger .
+
+game:status a owl:ObjectProperty ;
+	rdfs:label "game status" ;
+	rdfs:comment "The status of a given game state, win, ongoing or draw. Games may introduce additional statuses." ;
+	rdfs:domain game:State ;
+	rdfs:range game:Status .
+
+game:winner a owl:ObjectProperty ;
+	rdfs:label "game won by" ;
+	rdfs:comment "The player who has won." ;
+	rdfs:domain game:State ;
+	rdfs:range game:Player .
+
+game:ongoing a game:Status ;
+	rdfs:label "Ongoing" .
+
+game:won a game:Status ;
+	rdfs:label "Won" .
+
+game:drawn a game:Status ;
+	rdfs:label "Drawn" .
+
+game:nothing a game:Nothing ;
+	rdfs:label "Nothing" ;
+	rdfs:comment "Indicates nothing is in a location." .
+
+game:Pieces owl:unionOf _:node18h0ei4ckx4 .
+
+_:node18h0ei4ckx4 rdf:first game:PieceType ;
+	rdf:rest _:node18h0ei4ckx5 .
+
+_:node18h0ei4ckx5 rdf:first game:PieceCount ;
+	rdf:rest _:node18h0ei4ckx6 .
+
+_:node18h0ei4ckx6 rdf:first game:Nothing ;
+	rdf:rest rdf:nil .

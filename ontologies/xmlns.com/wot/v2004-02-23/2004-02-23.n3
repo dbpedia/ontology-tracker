@@ -1,0 +1,157 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+
+<http://xmlns.com/wot/0.1/> a owl:Ontology ;
+	dc:date "2004-02-23" ;
+	dc:description "Web Of Trust (wot) RDF vocabulary, described using W3C RDF Schema and the Web Ontology Language." ;
+	dc:title "Web Of Trust vocabulary" ;
+	:seeAlso <http://xmlns.com/foaf/0.1/> ;
+	owl:imports <http://www.w3.org/2000/01/rdf-schema> , <http://www.w3.org/2002/07/owl> .
+
+<http://xmlns.com/wot/0.1/EncryptedDocument> a owl:Class ;
+	:comment "An encrypted document intended for a set of recipients." ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Encrypted Document" ;
+	:subClassOf <http://xmlns.com/foaf/0.1/Document> , <http://xmlns.com/wordnet/1.6/Endorsement-4> ;
+	owl:disjointWith <http://xmlns.com/wot/0.1/Endorsement> , <http://xmlns.com/wot/0.1/PubKey> , <http://xmlns.com/wot/0.1/SigEvent> , <http://xmlns.com/wot/0.1/User> ;
+	vs:term_status "unstable" .
+
+<http://xmlns.com/wot/0.1/Endorsement> a owl:Class ;
+	:comment "An endorsement resource containing a detached ascii signature." ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Endorsement" ;
+	:subClassOf <http://xmlns.com/foaf/0.1/Document> , <http://xmlns.com/wordnet/1.6/Endorsement-4> ;
+	owl:disjointWith <http://xmlns.com/wot/0.1/EncryptedDocument> , <http://xmlns.com/wot/0.1/PubKey> , <http://xmlns.com/wot/0.1/SigEvent> , <http://xmlns.com/wot/0.1/User> ;
+	vs:term_status "unstable" .
+
+<http://xmlns.com/wot/0.1/PubKey> a owl:Class ;
+	:comment "A class used to represent a PGP/GPG public key for a user (an agent, person, group or organization)." ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Public Key" ;
+	:subClassOf <http://xmlns.com/wordnet/1.6/Credential> ;
+	owl:disjointWith <http://xmlns.com/wot/0.1/EncryptedDocument> , <http://xmlns.com/wot/0.1/Endorsement> , <http://xmlns.com/wot/0.1/SigEvent> , <http://xmlns.com/wot/0.1/User> ;
+	vs:term_status "stable" .
+
+<http://xmlns.com/wot/0.1/SigEvent> a owl:Class ;
+	:comment "An event describing the action of a public key being signed by some other public key." ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Key Signing Event" ;
+	:subClassOf <http://www.w3.org/2002/12/cal/ical#Vevent> , <http://xmlns.com/wordnet/1.6/Event> ;
+	owl:disjointWith <http://xmlns.com/wot/0.1/EncryptedDocument> , <http://xmlns.com/wot/0.1/Endorsement> , <http://xmlns.com/wot/0.1/PubKey> , <http://xmlns.com/wot/0.1/User> ;
+	vs:term_status "testing" .
+
+<http://xmlns.com/wot/0.1/User> a owl:Class ;
+	:comment "A user (agent, person, group or organization) of a PGP/GPG public key." ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Key User" ;
+	:subClassOf <http://xmlns.com/foaf/0.1/Agent> ;
+	owl:disjointWith <http://xmlns.com/wot/0.1/EncryptedDocument> , <http://xmlns.com/wot/0.1/Endorsement> , <http://xmlns.com/wot/0.1/PubKey> , <http://xmlns.com/wot/0.1/SigEvent> ;
+	vs:term_status "stable" .
+
+<http://xmlns.com/wot/0.1/assurance> a owl:ObjectProperty ;
+	:comment "A property linking a document to an endorsement resource containing a detached ascii signature." ;
+	:domain <http://xmlns.com/foaf/0.1/Document> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Assurance" ;
+	:range <http://xmlns.com/wot/0.1/Endorsement> ;
+	vs:term_status "stable" .
+
+<http://xmlns.com/wot/0.1/encryptedTo> a owl:ObjectProperty ;
+	:comment "A property linking an encrypted document to a recipient." ;
+	:domain <http://xmlns.com/wot/0.1/EncryptedDocument> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Encrypted to" ;
+	:range <http://xmlns.com/wot/0.1/PubKey> ;
+	vs:term_status "unstable" .
+
+<http://xmlns.com/wot/0.1/encrypter> a owl:FunctionalProperty , owl:ObjectProperty ;
+	:comment "A property linking an encrypted document to the public key that was used to encrypt it." ;
+	:domain <http://xmlns.com/wot/0.1/EncryptedDocument> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Encrypted by" ;
+	:range <http://xmlns.com/wot/0.1/PubKey> ;
+	vs:term_status "unstable" .
+
+<http://xmlns.com/wot/0.1/fingerprint> a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+	:comment "A public key hex fingerprint string (40 digits, white space insignificant)." ;
+	:domain <http://xmlns.com/wot/0.1/PubKey> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Fingerprint" ;
+	:range <http://www.w3.org/2001/XMLSchema#string> ;
+	vs:term_status "testing" .
+
+<http://xmlns.com/wot/0.1/hasKey> a owl:ObjectProperty ;
+	:comment "A property to link a PubKey from a User" ;
+	:domain <http://xmlns.com/wot/0.1/User> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "has Key" ;
+	:range <http://xmlns.com/wot/0.1/PubKey> ;
+	vs:term_status "testing" ;
+	owl:inverseOf <http://xmlns.com/wot/0.1/identity> .
+
+<http://xmlns.com/wot/0.1/hex_id> a owl:DatatypeProperty ;
+	:comment "A public key hex identifier string (8 digits)." ;
+	:domain <http://xmlns.com/wot/0.1/PubKey> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Hex identifier" ;
+	:range <http://www.w3.org/2001/XMLSchema#string> ;
+	vs:term_status "stable" .
+
+<http://xmlns.com/wot/0.1/identity> a owl:FunctionalProperty , owl:ObjectProperty ;
+	:comment "A property linking a public key to the user of the key." ;
+	:domain <http://xmlns.com/wot/0.1/PubKey> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Identity" ;
+	:range <http://xmlns.com/wot/0.1/User> ;
+	vs:term_status "testing" .
+
+<http://xmlns.com/wot/0.1/length> a owl:DatatypeProperty ;
+	:comment "A numeric string representing the length, in bytes, of a public key." ;
+	:domain <http://xmlns.com/wot/0.1/PubKey> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Length" ;
+	:range <http://www.w3.org/2001/XMLSchema#integer> ;
+	vs:term_status "stable" .
+
+<http://xmlns.com/wot/0.1/pubkeyAddress> a owl:ObjectProperty ;
+	:comment "The location of an ascii version of a public key." ;
+	:domain <http://xmlns.com/wot/0.1/PubKey> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Address" ;
+	:range <http://xmlns.com/foaf/0.1/Document> ;
+	vs:term_status "testing" .
+
+<http://xmlns.com/wot/0.1/sigdate> a owl:DatatypeProperty ;
+	:comment "The date of a public key signature event." ;
+	:domain <http://xmlns.com/wot/0.1/SigEvent> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Signature date" ;
+	:range <http://www.w3.org/2001/XMLSchema#date> ;
+	vs:term_status "testing" .
+
+<http://xmlns.com/wot/0.1/signed> a owl:ObjectProperty ;
+	:comment "A property linking a public key to a public key signature event." ;
+	:domain <http://xmlns.com/wot/0.1/PubKey> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Signed" ;
+	:range <http://xmlns.com/wot/0.1/SigEvent> ;
+	vs:term_status "testing" .
+
+<http://xmlns.com/wot/0.1/signer> a owl:FunctionalProperty , owl:ObjectProperty ;
+	:comment "A property linking a public key signature event to the public key that was used to sign." ;
+	:domain <http://xmlns.com/wot/0.1/SigEvent> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Signer" ;
+	:range <http://xmlns.com/wot/0.1/PubKey> ;
+	vs:term_status "unstable" .
+
+<http://xmlns.com/wot/0.1/sigtime> a owl:DatatypeProperty ;
+	:comment "The time (of day) of a public key signature event." ;
+	:domain <http://xmlns.com/wot/0.1/SigEvent> ;
+	:isDefinedBy <http://xmlns.com/wot/0.1/> ;
+	:label "Signature time" ;
+	:range <http://www.w3.org/2001/XMLSchema#time> ;
+	vs:term_status "unstable" .

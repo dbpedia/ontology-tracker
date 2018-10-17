@@ -1,0 +1,648 @@
+@prefix : <http://www.monnet-project.eu/lemon#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gold: <http://purl.org/linguistics/gold#> .
+
+<http://www.monnet-project.eu/lemon> a owl:Ontology ;
+	rdfs:label "lemon"@en ;
+	rdfs:comment "Lemon: The lexicon model for ontologies is designed to allow  for descriptions of lexical information regarding ontological elements and other RDF resources. Lemon covers mapping of lexical decomposition, phrase structure, syntax,  variation, morphology, and lexicon-ontology mapping."@en .
+
+:abstractForm a owl:ObjectProperty ;
+	rdfs:comment "A representation of a lexical entry that should not be considered canonical. This is primarily from a linguistic view for non-realisable forms such as stems but may also include misspellings and other unusual forms"@en ;
+	rdfs:range :Form ;
+	rdfs:domain :LexicalEntry ;
+	rdfs:subPropertyOf :lexicalForm .
+
+:altSem a owl:ObjectProperty ;
+	rdfs:comment "The sense of a non-preferred but admissible lexicalization of a given ontology entity"@en ;
+	rdfs:range :LexicalSense ;
+	rdfs:subPropertyOf :sememe .
+
+:broader a owl:ObjectProperty ;
+	rdfs:comment "Denotes that one sense is broader than another. From a lexical point of view  this means replacing one lexical entry with another generalizes the meaning of the phrase. From an ontological point of view this property makes not strong assertions. From a mapping point of view if the broader sense applies the narrower sense must also"@en ;
+	rdfs:domain :LexicalSense ;
+	rdfs:range :LexicalSense ;
+	owl:inverseOf :narrower ;
+	rdfs:subPropertyOf :senseRelation .
+
+:canonicalForm a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "The canonical (\"dictionary\") form of the lexical entry. This can be used to indicate the \"lemma\" form of a lexical entry"@en ;
+	rdfs:range :Form ;
+	rdfs:domain :LexicalEntry ;
+	rdfs:subPropertyOf :lexicalForm .
+
+:condition a owl:ObjectProperty ;
+	rdfs:comment "Indicates an evaluable test, the is necessary for this sense to apply"@en ;
+	rdfs:domain :LexicalSense .
+
+:context a owl:ObjectProperty ;
+	rdfs:comment "Denotes the pragmatic or discursive context of a sense mapping or a constraint on the mapping by syntactic or semantic properites"@en ;
+	rdfs:domain :LexicalSense .
+
+:decomposition a owl:ObjectProperty ;
+	rdfs:comment "Denotes a component of a lexical entry"@en ;
+	rdfs:range :ComponentList ;
+	rdfs:domain :LexicalEntry .
+
+:definition a owl:ObjectProperty ;
+	rdfs:comment "Indicates a natural language definition. Note there is a pseudo-node to allow for further description of the definition (e.g., source, creation date etc.). The value property should be used to indicate the string value of the definition."@en ;
+	rdfs:domain :LexicalSense ;
+	rdfs:range :SemDefinition .
+
+:edge a owl:ObjectProperty ;
+	rdfs:comment "Denotes the relation between a node in a multi-word expression structure and an edge"@en ;
+	rdfs:range :Node ;
+	rdfs:domain :Node .
+
+:element a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "Denotes the lexical entry represented by the component"@en ;
+	rdfs:domain :Component ;
+	rdfs:range :LexicalEntry .
+
+:entry a owl:ObjectProperty ;
+	rdfs:comment "Indicates an entry in a lexicon"@en ;
+	rdfs:range :LexicalEntry ;
+	rdfs:domain :Lexicon .
+
+:equivalent a owl:ObjectProperty , owl:SymmetricProperty , owl:TransitiveProperty ;
+	rdfs:comment "Indicates that two senses are equivalent. From a lexical point of view , this indicates that the lexical entries can be substituted for each other with no change in meaning. From an ontological point of view it means that the two references are not disjoint. From a mapping point of view it means if one mapping apply the other must necessarily apply"@en ;
+	rdfs:range :LexicalSense ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :senseRelation .
+
+:example a owl:ObjectProperty ;
+	rdfs:domain :LexicalSense ;
+	rdfs:range :UsageExample .
+
+:hiddenSem a owl:ObjectProperty ;
+	rdfs:comment "The sense of a non-admissible lexicalization for a ontology entity. This is used to denote incorrect or deprecated language that may be useful for information extraction but not generation"@en ;
+	rdfs:range :LexicalSense ;
+	rdfs:subPropertyOf :sememe .
+
+:incompatible a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:comment "Says that the two senses are disjoint. From a lexical point of view, this means substituting the lexical entries must change the meaning of the phrase. From an ontological point of view, this property is implied if both references are also disjoint, but does not imply disjointness, but non-equivalence of the references. For the mapping point of view  there is not instance when both mappings are valid."@en ;
+	rdfs:domain :LexicalSense ;
+	rdfs:range :LexicalSense ;
+	rdfs:subPropertyOf :senseRelation .
+
+:isA a owl:ObjectProperty ;
+	rdfs:comment "Denotes the the single argument of a class predicate is represented in the lexicon by the given semantic argument. That is Class(?x) or ?x rdf:type Class"@en ;
+	rdfs:range :Argument ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :semArg .
+
+:leaf a owl:ObjectProperty ;
+	rdfs:comment "Denotes the component referred to by the lex (pre-terminal) of the phrase structure"@en ;
+	rdfs:domain :Node ;
+	rdfs:range :PhraseElement .
+
+:lexeme a owl:ObjectProperty ;
+	rdfs:comment "Indicate that a sense is realised by the given lexical entry"@en ;
+	rdfs:range :LexicalEntry ;
+	rdfs:domain :LexicalSense ;
+	owl:inverseOf :sense .
+
+:lexicalForm a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:comment "Denotes a written representation of a lexical entry"@en ;
+	rdfs:range :Form ;
+	rdfs:domain :LexicalEntry .
+
+:lexicalVariant a owl:ObjectProperty ;
+	rdfs:comment "Indicates a non-semantic relationship between two lexical entries. E.g., a term is derived from another term, such as \"lexical\" and \"lexicalize\""@en ;
+	rdfs:range :LexicalEntry ;
+	rdfs:domain :LexicalEntry .
+
+:marker a owl:ObjectProperty ;
+	rdfs:comment "Denotes the marker of a semantic argument. This should generally either be a semantic property i.e., case or another lexical entry e.g., a preposition or particle"@en ;
+	rdfs:domain :Argument ;
+	rdfs:range :SynRoleMarker .
+
+:narrower a owl:ObjectProperty ;
+	rdfs:comment "Denotes that one sense is broader than another. From a lexical point of view  this means replacing one lexical entry with another specializes the meaning of the phrase. From an ontological point of view this property makes not strong assertions. From a mapping point of view if the broader sense applies the narrower sense must also"@en ;
+	rdfs:range :LexicalSense ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :senseRelation .
+
+:objOfProp a owl:ObjectProperty ;
+	rdfs:comment "Indicates the semantic argument with represents the objects (ranges) of the property referred to by this sense"@en ;
+	rdfs:range :Argument ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :semArg .
+
+:otherForm a owl:ObjectProperty ;
+	rdfs:comment "A non-preferred (\"non-dictionary\") representation of a lexical entry. This should be variant that is either a morphological variant, an abbreviation, short form or acronym"@en ;
+	rdfs:range :Form ;
+	rdfs:domain :LexicalEntry ;
+	rdfs:subPropertyOf :lexicalForm .
+
+:phraseRoot a owl:ObjectProperty ;
+	rdfs:comment "Indicates the head node of a phrase structure or dependency parse graph"@en ;
+	rdfs:domain :LexicalEntry ;
+	rdfs:range :Node .
+
+:prefSem a owl:ObjectProperty ;
+	rdfs:comment "The sense of the preferred lexicalization of a given ontology entity"@en ;
+	rdfs:range :LexicalSense ;
+	rdfs:subPropertyOf :sememe .
+
+:property a owl:ObjectProperty ;
+	rdfs:comment "Denotes a lexical property of a lexical entry, form, component or MWE node. For the lexical entry this is assumed to be static properties e.g., part of speech and gender and for the others this is assumed to be specific properties e.g., case, number"@en ;
+	rdfs:domain :LemonElement ;
+	rdfs:range :PropertyValue .
+
+:propertyDomain a owl:ObjectProperty ;
+	rdfs:comment "Indicates a restrictions on the domain of the property. That is, this sense only applies if the property the sense refers to has a subject in the class referred to by this property"@en ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :condition .
+
+:propertyRange a owl:ObjectProperty ;
+	rdfs:comment "Indicates a restrictions on the range of the property. That is, this sense only applies if the property the sense refers to has a object in the class referred to by this property"@en ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :condition .
+
+:reference a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "A reference to an external resource"@en ;
+	rdfs:domain :LexicalSense .
+
+:semArg a owl:ObjectProperty ;
+	rdfs:comment "Denotes a semantic argument slot of a semantic unit"@en ;
+	rdfs:range :Argument ;
+	rdfs:domain :LexicalSense .
+
+:sememe a owl:ObjectProperty ;
+	rdfs:comment "Indicate that a reference has a given sense"@en ;
+	rdfs:range :LexicalSense ;
+	owl:inverseOf :reference .
+
+:sense a owl:ObjectProperty ;
+	rdfs:comment "Indicates the sense of a lexical entry"@en ;
+	rdfs:domain :LexicalEntry ;
+	rdfs:range :LexicalSense .
+
+:senseRelation a owl:ObjectProperty ;
+	rdfs:comment "Denotes a relationship between senses"@en ;
+	rdfs:domain :LexicalSense ;
+	rdfs:range :LexicalSense .
+
+:subjOfProp a owl:ObjectProperty ;
+	rdfs:comment "Indicates the semantic argument with represents the subjects (domain) of the property referred to by this sense"@en ;
+	rdfs:range :Argument ;
+	rdfs:domain :LexicalSense ;
+	rdfs:subPropertyOf :semArg .
+
+:subsense a owl:ObjectProperty ;
+	rdfs:comment "Indicates that the relation between a compound senses and its atomic subsenses"@en ;
+	rdfs:range :LexicalSense ;
+	rdfs:domain :LexicalSense .
+
+:synArg a owl:ObjectProperty ;
+	rdfs:comment "Indicates a slot in a syntactic frame"@en ;
+	rdfs:range :Argument ;
+	rdfs:domain :Frame .
+
+:synBehavior a owl:ObjectProperty ;
+	rdfs:comment "Indicates a syntactic behavior of a lexical entry"@en ;
+	rdfs:range :Frame ;
+	rdfs:domain :LexicalEntry .
+
+:topic a owl:ObjectProperty ;
+	rdfs:comment "Indicates the topic of the overrall lexicon, this is property is sometimes called \"subject field\". Note that in addition to the topic of a lexicon each lexical entry may belong to a given domain, this can be modelled as equal or not equal to the topic of the associated lexicon"@en ;
+	rdfs:domain _:node172fq8hi4x1 .
+
+_:node172fq8hi4x1 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x2 .
+
+_:node172fq8hi4x2 rdf:first :LexicalEntry ;
+	rdf:rest _:node172fq8hi4x3 .
+
+_:node172fq8hi4x3 rdf:first :Lexicon ;
+	rdf:rest rdf:nil .
+
+rdf:first a owl:ObjectProperty .
+
+rdf:rest a owl:ObjectProperty .
+
+:language a owl:DatatypeProperty ;
+	rdfs:comment "The language of a given lexicon. This should be some ISO-639 string"@en ;
+	rdfs:domain :Lexicon ;
+	rdfs:range xsd:string .
+
+:optional a owl:DatatypeProperty ;
+	rdfs:comment "Denotes that the syntactic argument is optional (may be omitted)"@en ;
+	rdfs:domain :Argument ;
+	rdfs:range xsd:boolean .
+
+:representation a owl:DatatypeProperty ;
+	rdfs:comment "A realisation of a given form"@en ;
+	rdfs:domain :Form ;
+	rdfs:range xsd:string .
+
+:separator a owl:DatatypeProperty ;
+	rdfs:comment "Indicates the graphical element used to seperate the subnodes of this phrase structure. It is generally recommended that you use a string value with the language tag used to indicate script, (i.e., using ISO-15924 codes, such as \"Latn\"), as orthographic features may change with script."@en ;
+	rdfs:domain :Node ;
+	rdfs:range xsd:string .
+
+:value a owl:DatatypeProperty ;
+	rdfs:comment "This indicates the value of a pseudo-data node. An example of this is definition where the value would generally be a string but it would not be possible to add further annotations, such as source or creation date."@en .
+
+:writtenRep a owl:DatatypeProperty ;
+	rdfs:comment "Gives the written representation of a given form"@en ;
+	rdfs:domain :Form ;
+	rdfs:subPropertyOf :representation ;
+	rdfs:range xsd:string .
+
+:Argument a owl:Class ;
+	rdfs:subClassOf :LemonElement , :PhraseElement ;
+	owl:disjointWith :Component , :Form , :Frame , :LexicalEntry , :LexicalSense , :Lexicon , :Node , :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "A slot representing a gap that must be filled in realising a lexical entry in a given projection"@en .
+
+:Component a owl:Class ;
+	rdfs:subClassOf :LemonElement , :PhraseElement , _:node172fq8hi4x4 .
+
+_:node172fq8hi4x4 a owl:Restriction ;
+	owl:onProperty :element ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Component owl:disjointWith :Form , :Frame , :LexicalEntry , :LexicalSense , :Lexicon , :Node , :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "A constituent element of a lexical entry. This may be a word in a multi-word lexical element or a constituent of a compound word"@en .
+
+:ComponentList a owl:Class ;
+	rdfs:subClassOf rdf:List , _:node172fq8hi4x5 .
+
+_:node172fq8hi4x5 a owl:Restriction ;
+	owl:onProperty rdf:rest ;
+	owl:allValuesFrom _:node172fq8hi4x6 .
+
+_:node172fq8hi4x6 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x7 .
+
+_:node172fq8hi4x7 rdf:first :ComponentList ;
+	rdf:rest _:node172fq8hi4x9 .
+
+_:node172fq8hi4x9 rdf:first _:node172fq8hi4x8 .
+
+_:node172fq8hi4x8 a owl:Class ;
+	owl:oneOf _:node172fq8hi4x10 .
+
+_:node172fq8hi4x10 rdf:first rdf:nil ;
+	rdf:rest rdf:nil .
+
+_:node172fq8hi4x9 rdf:rest rdf:nil .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x11 .
+
+_:node172fq8hi4x11 a owl:Restriction ;
+	owl:onProperty rdf:first ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x12 .
+
+_:node172fq8hi4x12 a owl:Restriction ;
+	owl:onProperty rdf:rest ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x13 .
+
+_:node172fq8hi4x13 a owl:Restriction ;
+	owl:onProperty rdf:first ;
+	owl:allValuesFrom :Component .
+
+:ComponentList rdfs:comment "A node within a list of components. This should generally be a blank node,see rdf:List"@en .
+
+:Form a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x14 .
+
+_:node172fq8hi4x14 a owl:Restriction ;
+	owl:onProperty :representation ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:Form owl:disjointWith :Frame , :LexicalEntry , :LexicalSense , :Lexicon , :Node , :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "A given written or spoken realisation of a lexical entry"@en .
+
+:Frame a owl:Class ;
+	rdfs:subClassOf :LemonElement ;
+	owl:disjointWith :LexicalEntry , :LexicalSense , :Lexicon , :Node , :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "A stereotypical example of the usage of a given lexical entry. The most common example of projections are subcategorization frames which describe the slots taken by the arguments of a verb."@en .
+
+:LemonElement a owl:Class .
+
+:LexicalEntry a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x15 .
+
+_:node172fq8hi4x15 a owl:Restriction ;
+	owl:onProperty :canonicalForm ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:LexicalEntry rdfs:subClassOf _:node172fq8hi4x16 .
+
+_:node172fq8hi4x16 a owl:Restriction ;
+	owl:onProperty :lexicalForm ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:LexicalEntry owl:disjointWith :LexicalSense , :Lexicon , :Node , :PropertyValue , :SemDefinition , :UsageExample ;
+	rdfs:comment "An entry in the lexicon. This may be any morpheme, word, compound, phrase or clause that is included in the lexicon"@en .
+
+:LexicalSense a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x17 .
+
+_:node172fq8hi4x17 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x19 .
+
+_:node172fq8hi4x19 rdf:first _:node172fq8hi4x18 .
+
+_:node172fq8hi4x18 a owl:Restriction ;
+	owl:onProperty :subsense ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x19 rdf:rest _:node172fq8hi4x21 .
+
+_:node172fq8hi4x21 rdf:first _:node172fq8hi4x20 .
+
+_:node172fq8hi4x20 a owl:Restriction ;
+	owl:onProperty :reference ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x21 rdf:rest rdf:nil .
+
+:LexicalSense owl:disjointWith :Lexicon , :Node , :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "Represents the intersection in meaning between the lexical entry and the ontology entity. This is used as the ontology entity and lexical entry may not be in one-to-one correspondence as such the existence of a sense between them states meerly that there are some cases when this lexical entry refer to the ontology entity and vica versa. Mapping elements can be used to further specify this relation"@en .
+
+:Lexicon a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x22 .
+
+_:node172fq8hi4x22 a owl:Restriction ;
+	owl:onProperty :language ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:Lexicon rdfs:subClassOf _:node172fq8hi4x23 .
+
+_:node172fq8hi4x23 a owl:Restriction ;
+	owl:onProperty :entry ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:Lexicon owl:disjointWith :Node , :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "The lexicon object. This object is specific to the given language and/or domain it describes"@en .
+
+:Node a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x24 .
+
+_:node172fq8hi4x24 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x26 .
+
+_:node172fq8hi4x26 rdf:first _:node172fq8hi4x25 .
+
+_:node172fq8hi4x25 a owl:Restriction ;
+	owl:onProperty :edge ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x26 rdf:rest _:node172fq8hi4x28 .
+
+_:node172fq8hi4x28 rdf:first _:node172fq8hi4x27 .
+
+_:node172fq8hi4x27 a owl:Restriction ;
+	owl:onProperty :leaf ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x28 rdf:rest rdf:nil .
+
+:Node owl:disjointWith :PropertyValue , :SemDefinition , :SynRoleMarker , :UsageExample ;
+	rdfs:comment "A node in a phrase structure or dependency parse graph"@en .
+
+:Part a owl:Class ;
+	rdfs:subClassOf :LexicalEntry ;
+	rdfs:comment "An affix is a morpheme that is attached to a word stem to form a new word.  Use this for lexical entries with only abstract forms"@en .
+
+:Phrase a owl:Class ;
+	rdfs:subClassOf :LexicalEntry , _:node172fq8hi4x29 .
+
+_:node172fq8hi4x29 a owl:Restriction ;
+	owl:onProperty :decomposition ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:Phrase rdfs:comment "A phrase in lemon is defined in the looser sense of a sequence of words, it does not have to a fully grammatical phrase"@en .
+
+:PhraseElement a owl:Class ;
+	rdfs:subClassOf :LemonElement ;
+	rdfs:comment "A terminal node in a phrase structure graph, i.e., a realisable, lexical element."@en .
+
+:PropertyValue a owl:Class ;
+	rdfs:subClassOf :LemonElement ;
+	owl:disjointWith :SemDefinition , :UsageExample ;
+	rdfs:comment "A value that can be used in the range of linguistic property"@en .
+
+:SemDefinition a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x30 .
+
+_:node172fq8hi4x30 a owl:Restriction ;
+	owl:onProperty :value ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:SemDefinition owl:disjointWith :SynRoleMarker , :UsageExample ;
+	rdfs:comment "A definition of a sememe, that is the a text describing the exact meaning of the lexical entry when its sense is the given ontology reference"@en .
+
+:SynRoleMarker a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x31 .
+
+_:node172fq8hi4x31 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x32 .
+
+_:node172fq8hi4x32 rdf:first :LexicalEntry ;
+	rdf:rest _:node172fq8hi4x33 .
+
+_:node172fq8hi4x33 rdf:first :PropertyValue ;
+	rdf:rest rdf:nil .
+
+:SynRoleMarker owl:disjointWith :UsageExample ;
+	rdfs:comment "The indicator of a given syntactic argument, normally a preposition or other particle marker or a linguistic property such as case"@en .
+
+:UsageExample a owl:Class ;
+	rdfs:subClassOf :LemonElement , _:node172fq8hi4x34 .
+
+_:node172fq8hi4x34 a owl:Restriction ;
+	owl:onProperty :value ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:UsageExample rdfs:comment "An example of the usage of a lexical entry when refering to the ontology entity given by the sememe's reference. This should in effect be an example of the form used in context. E.g., \"this is a *usage example*\""@en .
+
+_:node172fq8hi4x35 a owl:AllDisjointClasses ;
+	owl:members _:node172fq8hi4x36 .
+
+_:node172fq8hi4x36 rdf:first :UsageExample ;
+	rdf:rest rdf:nil .
+
+:Word a owl:Class ;
+	rdfs:subClassOf :LexicalEntry ;
+	rdfs:comment "A word is a single unit of writing or speech. In languages written in Latin, Cyrillic, Greek, Arabic scripts etc. these are assumed to be separated by white-space characters. For Chinese, Japanese, Korean this should correspond to some agreed segmentation scheme."@en .
+
+rdf:List a owl:Class .
+
+owl:Thing a owl:Class .
+
+rdf:nil a owl:Thing .
+
+:topic rdfs:domain _:node172fq8hi4x37 .
+
+_:node172fq8hi4x37 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x38 .
+
+_:node172fq8hi4x38 rdf:first :LexicalEntry ;
+	rdf:rest _:node172fq8hi4x39 .
+
+_:node172fq8hi4x39 rdf:first :Lexicon ;
+	rdf:rest rdf:nil .
+
+:Component rdfs:subClassOf _:node172fq8hi4x40 .
+
+_:node172fq8hi4x40 a owl:Restriction ;
+	owl:onProperty :element ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x41 .
+
+_:node172fq8hi4x41 a owl:Restriction ;
+	owl:onProperty rdf:rest ;
+	owl:allValuesFrom _:node172fq8hi4x42 .
+
+_:node172fq8hi4x42 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x43 .
+
+_:node172fq8hi4x43 rdf:first :ComponentList ;
+	rdf:rest _:node172fq8hi4x45 .
+
+_:node172fq8hi4x45 rdf:first _:node172fq8hi4x44 .
+
+_:node172fq8hi4x44 a owl:Class ;
+	owl:oneOf _:node172fq8hi4x46 .
+
+_:node172fq8hi4x46 rdf:first rdf:nil ;
+	rdf:rest rdf:nil .
+
+_:node172fq8hi4x45 rdf:rest rdf:nil .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x47 .
+
+_:node172fq8hi4x47 a owl:Restriction ;
+	owl:onProperty rdf:first ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x48 .
+
+_:node172fq8hi4x48 a owl:Restriction ;
+	owl:onProperty rdf:rest ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:ComponentList rdfs:subClassOf _:node172fq8hi4x49 .
+
+_:node172fq8hi4x49 a owl:Restriction ;
+	owl:onProperty rdf:first ;
+	owl:allValuesFrom :Component .
+
+:Form rdfs:subClassOf _:node172fq8hi4x50 .
+
+_:node172fq8hi4x50 a owl:Restriction ;
+	owl:onProperty :representation ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:LexicalEntry rdfs:subClassOf _:node172fq8hi4x51 .
+
+_:node172fq8hi4x51 a owl:Restriction ;
+	owl:onProperty :canonicalForm ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:LexicalEntry rdfs:subClassOf _:node172fq8hi4x52 .
+
+_:node172fq8hi4x52 a owl:Restriction ;
+	owl:onProperty :lexicalForm ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:LexicalSense rdfs:subClassOf _:node172fq8hi4x53 .
+
+_:node172fq8hi4x53 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x55 .
+
+_:node172fq8hi4x55 rdf:first _:node172fq8hi4x54 .
+
+_:node172fq8hi4x54 a owl:Restriction ;
+	owl:onProperty :subsense ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x55 rdf:rest _:node172fq8hi4x57 .
+
+_:node172fq8hi4x57 rdf:first _:node172fq8hi4x56 .
+
+_:node172fq8hi4x56 a owl:Restriction ;
+	owl:onProperty :reference ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x57 rdf:rest rdf:nil .
+
+:Lexicon rdfs:subClassOf _:node172fq8hi4x58 .
+
+_:node172fq8hi4x58 a owl:Restriction ;
+	owl:onProperty :language ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:Lexicon rdfs:subClassOf _:node172fq8hi4x59 .
+
+_:node172fq8hi4x59 a owl:Restriction ;
+	owl:onProperty :entry ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:Node rdfs:subClassOf _:node172fq8hi4x60 .
+
+_:node172fq8hi4x60 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x62 .
+
+_:node172fq8hi4x62 rdf:first _:node172fq8hi4x61 .
+
+_:node172fq8hi4x61 a owl:Restriction ;
+	owl:onProperty :edge ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x62 rdf:rest _:node172fq8hi4x64 .
+
+_:node172fq8hi4x64 rdf:first _:node172fq8hi4x63 .
+
+_:node172fq8hi4x63 a owl:Restriction ;
+	owl:onProperty :leaf ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x64 rdf:rest rdf:nil .
+
+:Phrase rdfs:subClassOf _:node172fq8hi4x65 .
+
+_:node172fq8hi4x65 a owl:Restriction ;
+	owl:onProperty :decomposition ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:SemDefinition rdfs:subClassOf _:node172fq8hi4x66 .
+
+_:node172fq8hi4x66 a owl:Restriction ;
+	owl:onProperty :value ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:SynRoleMarker rdfs:subClassOf _:node172fq8hi4x67 .
+
+_:node172fq8hi4x67 a owl:Class ;
+	owl:unionOf _:node172fq8hi4x68 .
+
+_:node172fq8hi4x68 rdf:first :LexicalEntry ;
+	rdf:rest _:node172fq8hi4x69 .
+
+_:node172fq8hi4x69 rdf:first :PropertyValue ;
+	rdf:rest rdf:nil .
+
+:UsageExample rdfs:subClassOf _:node172fq8hi4x70 .
+
+_:node172fq8hi4x70 a owl:Restriction ;
+	owl:onProperty :value ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node172fq8hi4x71 a owl:AllDisjointClasses ;
+	owl:members _:node172fq8hi4x72 .
+
+_:node172fq8hi4x72 rdf:first :UsageExample ;
+	rdf:rest rdf:nil .

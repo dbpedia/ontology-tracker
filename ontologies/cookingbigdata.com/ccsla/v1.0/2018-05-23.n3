@@ -1,0 +1,121 @@
+@prefix :      <http://cookingbigdata.com/linkeddata/ccsla#> .
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix schema: <http://schema.org/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gr:    <http://purl.org/goodrelations/v1#> .
+@prefix cc:    <https://creativecommons.org/ns#> .
+
+:SLA    a                 rdfs:Class , owl:Class ;
+        rdfs:comment      "SLA Main Class"@en ;
+        rdfs:isDefinedBy  :SLA ;
+        rdfs:label        "SLA Class"@en .
+
+:Term   a                 rdfs:Class , owl:Class ;
+        rdfs:comment      "Term of the SLA"@en ;
+        rdfs:isDefinedBy  :Term ;
+        rdfs:label        "Term of the agreement"@en .
+
+:includeDefs  a           rdf:Property ;
+        rdfs:comment      "Include definitions"@en ;
+        rdfs:domain       :Term ;
+        rdfs:isDefinedBy  :includeDefs ;
+        rdfs:label        "Include Defs"@en ;
+        rdfs:range        :Definition .
+
+:hasValidity  a       owl:ObjectProperty ;
+        rdfs:comment  "Validity interval of an agreement term."@en ;
+        rdfs:domain   :SLA ;
+        rdfs:label    "Validity interval"@en ;
+        rdfs:range    time:Interval .
+
+:ServiceCredit  a         rdfs:Class , owl:Class ;
+        rdfs:comment      "ServiceCredits of the agreement license considering Compensations terms"@en ;
+        rdfs:isDefinedBy  :ServiceCredit ;
+        rdfs:label        "ServiceCredits of the agreement"@en ;
+        rdfs:subClassOf   :Term .
+
+:manuelparra  a        foaf:Person ;
+        rdfs:seeAlso   <https://twitter.com/manugrapevine> ;
+        foaf:homepage  <https://twitter.com/manugrapevine> ;
+        foaf:mbox      "manuparra@gmail.com"^^xsd:string ;
+        foaf:name      "Manuel Parra-Royon"^^xsd:string .
+
+:containsTerm  a          rdf:Property ;
+        rdfs:comment      "SLA contains Terms of the agreement"@en ;
+        rdfs:domain       :SLA ;
+        rdfs:isDefinedBy  :containsTerm ;
+        rdfs:label        "SLA Contains"@en ;
+        rdfs:range        :Term .
+
+:cookingbigdata  a     foaf:Organization ;
+        rdfs:seeAlso   <http://cookingbigdata.com/about> ;
+        foaf:homepage  <http://cookingbigdata.com> ;
+        foaf:name      "CookingBigData"^^xsd:string .
+
+:       a                owl:Ontology ;
+        rdfs:label       "Service Level Agreement for Cloud Computing"@en ;
+        dc:created       "2018-03-06"^^xsd:date ;
+        dc:creator       :manuelparra ;
+        dc:description   "Service Level Agreement for Cloud Computing Services. This ontology allows to define model of SLA/SLO used in large cloud computing providers such as Amazon, Azure, etc., including terms, claims, credit, compensations, etc"@en ;
+        dc:issued        "2018-05-20"^^xsd:date ;
+        dc:modified      "2018-04-03"^^xsd:date ;
+        dc:publisher     :cookingbigdata ;
+        dc:rights        "Copyright © 2018 Manuel Parra-Royón" ;
+        dc:title         "SLA and SLO for Cloud Computing Services"@en ;
+        owl:versionInfo  1.0 ;
+        cc:licence       <https://creativecommons.org/licenses/by/3.0/> .
+
+:Limitation  a            rdfs:Class , owl:Class ;
+        rdfs:comment      "Limitations and Exclusions of the agreement license considering Compensations"@en ;
+        rdfs:isDefinedBy  :Limitation ;
+        rdfs:label        "Limitations of the agreement"@en ;
+        rdfs:subClassOf   :Term .
+
+:Definition  a            rdfs:Class , owl:Class ;
+        rdfs:comment      "Definitions of the agreement license used in terms"@en ;
+        rdfs:isDefinedBy  :Definition ;
+        rdfs:label        "Definitions of the agreement"@en .
+
+:Condition  a             rdfs:Class , owl:Class ;
+        rdfs:comment      "Conditions and levels of the agreement and compensation"@en ;
+        rdfs:isDefinedBy  :Condition ;
+        rdfs:label        "Conditions of compensation"@en .
+
+:hasDefinitionValue  a  owl:ObjectProperty ;
+        rdfs:comment  "Definition values of an agreement term."@en ;
+        rdfs:domain   :Definition ;
+        rdfs:label    "Definition values"@en ;
+        rdfs:range    schema:structuredValue .
+
+:Claim  a                 rdfs:Class , owl:Class ;
+        rdfs:comment      "Claims of the agreement license"@en ;
+        rdfs:isDefinedBy  :Claim ;
+        rdfs:label        "Claims of the agreement"@en ;
+        rdfs:subClassOf   :Term .
+
+:includeValue  a          owl:ObjectProperty ;
+        rdfs:comment      "Values of the condition"@en ;
+        rdfs:domain       :Condition ;
+        rdfs:isDefinedBy  :includeValue ;
+        rdfs:label        "With values"@en ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( gr:QuantitativeValue gr:QualitativeValue )
+                          ] .
+
+:hasTermValue  a      owl:ObjectProperty ;
+        rdfs:comment  "Definition values of an agreement term."@en ;
+        rdfs:domain   :Definition ;
+        rdfs:label    "Terms values"@en ;
+        rdfs:range    schema:structuredValue .
+
+:hasCompensation  a       rdf:Property ;
+        rdfs:comment      "Term Compensation of the agreement"@en ;
+        rdfs:domain       :Term ;
+        rdfs:isDefinedBy  :hasCompensation ;
+        rdfs:label        "Term Compensation"@en ;
+        rdfs:range        :Condition .

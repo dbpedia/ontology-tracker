@@ -1,0 +1,926 @@
+@prefix :      <http://purl.org/cwmo/#> .
+@prefix spec:  <http://xmlns.com/foaf/spec/#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix schema: <https://schema.org/> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ns:    <http://purl.org/gi2mo/ns#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:  <http://purl.org/vocab/vann> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:isFormalizing  a     owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "The decision maker define the problem that will be solved during the creative workshop."@en ;
+        rdfs:domain   :DecisionMaker ;
+        rdfs:range    :Problem .
+
+:Organization  a      owl:Class ;
+        rdfs:comment  "An organization such as a company, SME, institutions, NGO, corporation,  etc."@en ;
+        rdfs:label    "Organization"@en .
+
+:hasGenerated  a       owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain    :CreativeTeam ;
+        rdfs:range     :Idea ;
+        owl:inverseOf  :hasGroupAuthor .
+
+:Constraint  a        owl:Class ;
+        rdfs:comment  "The constraint class is the textual description of the element that limit the subject. It is related to the strategy of the company, the constraint associated with the activity domain of the organizations, …"@en ;
+        rdfs:label    "Constraint"@en .
+
+:score  a             owl:DatatypeProperty ;
+        rdfs:comment  "the idea has a score once it has been evaluated by the evaluator."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:range    xsd:float .
+
+:isSolvedDuring  a    owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A subject is solved during a creative workshop ."@en ;
+        rdfs:domain   :Subject ;
+        rdfs:range    :CreativeWorkshop .
+
+<http://schema.org/endDate>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Indicate the ending day of a creative workshop."@en ;
+        rdfs:domain   <http://schema.org/Event> ;
+        rdfs:range    xsd:dateTime .
+
+:Implementability  a  :EvaluationCriteria , owl:NamedIndividual .
+
+:ImplementAndMonitoring
+        a             :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The Implementation and monitoring class is a phase of the creative process where the readiness of the idea  is tested. Classification of the application of creative technic based on the Universal Method of Design (Martin et al., 2008)."@en ;
+        rdfs:label    "Lunch and Monitoring"@en .
+
+:ApplicationMode  a   owl:Class ;
+        rdfs:comment  "The application mode class defined the different mode of application of a creative technique"@en ;
+        rdfs:label    "Application Mode"@en .
+
+:hasStimuliType  a   owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :Stimuli ;
+        rdfs:range   :StimuliType .
+
+:CreativePhase  a     owl:Class ;
+        rdfs:comment  "The creative phase class is the decompastion of the creative process into steps/ phases which implies different nature of activities, goals and interaction."@en ;
+        rdfs:label    "Creative Phase"@en .
+
+:IndividualMode  a  :ApplicationMode , owl:NamedIndividual .
+
+:Complexity  a  :EvaluationCriteria , owl:NamedIndividual .
+
+:DesignProcess  a  :ParticipantRole , owl:NamedIndividual .
+
+dc:publisher  a  owl:AnnotationProperty .
+
+spec:firstName  a  owl:AnnotationProperty .
+
+:CreativeStrategy  a  owl:Class ;
+        rdfs:comment  "The creative strategy is a selection of creative techniques defined by the a facilitator in order to respond to the subject"@en ;
+        rdfs:label    "Creative Strategy"@en .
+
+:requireStimuliType  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :StimuliType .
+
+:MindMapping  a            :CreativeTechnique , owl:NamedIndividual ;
+        :hasCreativePhase  :Synthesis ;
+        :hasFunction       :Exploration ;
+        :hasInputType      :Attitudinal ;
+        :isProducingData   :QualitativeData ;
+        :isRelatedTo       :ConceptMapping , :BrainstormGraphicOrganizers , :Collage ;
+        :isSupportedBy     :Coggle ;
+        terms:description  "Visually organize the different elements of a complex problem in order to better understand it."@en ;
+        terms:title        "Mind Mapping"@en .
+
+:isAppliedInContext  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A creative technic is applied in certain context."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :Context .
+
+:Ideator  a               owl:Class ;
+        rdfs:comment      "Ideator is one of the role assumed by a person during the creative workshop. He is the person who solve the problem and produce ideas by applying creative techniques"@en ;
+        rdfs:label        "Ideator"@en ;
+        owl:disjointWith  [ a            owl:Class ;
+                            owl:unionOf  ( :DecisionMaker :Organizer )
+                          ] .
+
+<http://xmlns.com/foaf/0.1/#lastName>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The last name of a person."@en ;
+        rdfs:domain       <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:isDefinedBy  <http://xmlns.com/foaf/0.1/#lastName> .
+
+:EvaluationStrategy  a  owl:Class ;
+        rdfs:comment  "The evaluation strategy class gather the information concerning the evaluation technics, the criteria, and the evaluators affected to respond to the objectives of the creative workshop."@en ;
+        rdfs:label    "Evaluation Strategy"@en .
+
+:hasIdeator  a                  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment            "A creative Team is composed by several ideator"@en ;
+        rdfs:domain             :CreativeTeam ;
+        rdfs:range              :Ideator ;
+        owl:equivalentProperty  <http://xmlns.com/foaf/0.1/#member> .
+
+:hasFunction  a       owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A creative method produce different results which can be classified according to these typology: exploration, generation, and/or evaluation."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :TechniqueFunction .
+
+:Ideation  a          :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The ideation class is a phase of the creative process where ideas to respond to the problematic are generated."@en ;
+        rdfs:label    "Ideation"@en ;
+        rdfs:seeAlso  :ProblemAnalysis , :Implementation , :IdeaEvaluation .
+
+:applyEvaluationThanks
+        a              owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Evaluation technic apply evaluation criteria to do the evaluation."@en ;
+        rdfs:domain    :EvaluationTechnic ;
+        rdfs:range     :EvaluationCriteria ;
+        owl:inverseOf  :isEvaluatedDuring .
+
+:Feasibility  a          :EvaluationCriteria , owl:NamedIndividual ;
+        :isCriterizedBy  :Anon3 ;
+        :scale           5 ;
+        :weight          40 .
+
+:hasOutput  a        owl:DatatypeProperty ;
+        rdfs:domain  :CreativeTechnique .
+
+:Strategy  a    :ContextType , owl:NamedIndividual .
+
+:CreativeTeam  a      owl:Class ;
+        rdfs:comment  "The creative team class is a group of ideator who attempt to generated ideas to respond a problematic"@en ;
+        rdfs:label    "Creative Team"@en .
+
+:appliedInContextType
+        a            owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :ContextType .
+
+:CreativeWorkshop  a     owl:Class ;
+        rdfs:comment     "The CreativeWorkshop class  represent an event organized by an organizer to solve a problem formulated into a subject and provided by a decision-maker, and solved by a creative team."@en ;
+        rdfs:label       "CreativeWorkshop"@en ;
+        rdfs:subClassOf  <http://schema.org/Event> .
+
+:Unrelated  a   :StimuliType , owl:NamedIndividual .
+
+:weight  a           owl:DatatypeProperty ;
+        rdfs:domain  :EvaluationCriteria .
+
+:provideAdvice  a    owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :Expert ;
+        rdfs:range   :Advice .
+
+:Stimuli  a           owl:Class ;
+        rdfs:comment  "Stimuli is used to initiate a creative technique"@en ;
+        rdfs:label    "Stimuli"@en .
+
+:organizeResponseTo  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Creative Strategy is design to respond to a subject."@en ;
+        rdfs:domain   :CreativeStrategy ;
+        rdfs:range    :Subject .
+
+:procedure  a         owl:DatatypeProperty ;
+        rdfs:comment  "procedure details how implement the creative technic ."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    xsd:string .
+
+:hasStimuliInput  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :Stimuli .
+
+:AM     a           :ContextType , owl:NamedIndividual ;
+        rdfs:label  "Advertising/ Management"@en .
+
+:energy  a            owl:DatatypeProperty ;
+        rdfs:comment  "how much energy must be invested to complete the technic."@en ;
+        rdfs:domain   :CreativeTechnique .
+
+:InputType  a         owl:Class ;
+        rdfs:comment  "type of centent most appropriatly targeted by the method"@en ;
+        rdfs:label    "Input Type"@en .
+
+<http://schema.org/keyword>
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Keywords or tags used to describe this content. Multiple entries in a keywords list are typically delimited by commas."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:label    "keyword"@en ;
+        rdfs:range    xsd:string .
+
+:QualitativeData  a  :DataType , owl:NamedIndividual .
+
+:isFormalizedInto  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A problem is formalized into a subject in order to be adapted for a creative workshop."@en ;
+        rdfs:domain   :Problem ;
+        rdfs:range    :Subject .
+
+:Exploration  a       :TechniqueFunction , owl:NamedIndividual ;
+        rdfs:comment  "The exploration class is a creativ technic which has the porpose to explore the problem, to redefine the scope or the focus of the problem, or to collect further information"@en ;
+        rdfs:label    "Exploration"@en ;
+        rdfs:seeAlso  :Generation , :Evaluation .
+
+:isProducingData  a   owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A creative technic produce data (that leads to idea) which is qualitative, quantitative or both."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :DataType .
+
+:function  a          owl:DatatypeProperty ;
+        rdfs:comment  "creative technqiue has different function: exploration of the subject/ domain of the problem, generation of idea, and evluation of idea"@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    xsd:string .
+
+:novelty  a           owl:DatatypeProperty ;
+        rdfs:comment  "probability that ideas produced will possess statistical infrequency. Low, medium, high probability"@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    rdfs:Literal .
+
+:hasGeneralization  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain    :KnowledgeDomain ;
+        rdfs:range     :KnowledgeDomain ;
+        owl:inverseOf  :hasSpecialization .
+
+:Facilitator  a       owl:Class ;
+        rdfs:comment  "Facilitator is one of the role assumed by a person during the creative workshop. He is the person who assist the group of ideator in the application of the activities (creative technique and evaluation technique)"@en ;
+        rdfs:label    "Facilitator"@en .
+
+<http://xmlns.com/foaf/0.1/Person>
+        a                 owl:Class ;
+        rdfs:comment      "The person class represent people whatever his state"@en ;
+        rdfs:isDefinedBy  <http://xmlns.com/foaf/0.1/#term_Person> ;
+        rdfs:label        "Person"@en .
+
+:hasPlanified  a       owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Facilitator define the creative strategy"@en ;
+        rdfs:domain    :Facilitator ;
+        rdfs:range     :CreativeStrategy ;
+        owl:inverseOf  :isPlanifiedBy .
+
+:QuantitativeData  a  :DataType , owl:NamedIndividual .
+
+:criteriaIsDefinedBy  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Evaluation criteria is defined by the decision maker and/or the organizer."@en ;
+        rdfs:domain   :EvaluationCriteria ;
+        rdfs:range    [ a            owl:Class ;
+                        owl:unionOf  ( :DecisionMaker :Organizer )
+                      ] .
+
+:CollectiveMode  a  :ApplicationMode , owl:NamedIndividual .
+
+:isCoveredBy  a      owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :KnowledgeDomain ;
+        rdfs:range   [ a            owl:Class ;
+                       owl:unionOf  ( :Problem :Subject )
+                     ] .
+
+<http://schema.org/location>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "Place where the event occur."@en ;
+        rdfs:domain       <http://schema.org/Event> ;
+        rdfs:isDefinedBy  <http://schema.org/location> ;
+        rdfs:range        xsd:string .
+
+:hasGroupAuthor  a    owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Idea is generated into and by a team."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:range    :CreativeTeam .
+
+<http://xmlns.com/foaf/0.1/#member>
+        a                 owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment      "A creative Team is composed by several ideator"@en ;
+        rdfs:domain       :CreativeTeam ;
+        rdfs:isDefinedBy  "http://xmlns.com/foaf/0.1/member" ;
+        rdfs:range        :Ideator ;
+        rdfs:seeAlso      "do not confuse with https://schema.org/member whih don't have the same domain or range" .
+
+:StimuliType  a       owl:Class ;
+        rdfs:comment  "Typology of stimuli"@en ;
+        rdfs:label    "Stimuli Type"@en .
+
+:Organizer  a         owl:Class ;
+        rdfs:comment  "Organizer is one of the role assumed by a person during the creative workshop. He is the person who manage the entre workshop by providing the materials, the infrastructure and communicate with the others persons."@en ;
+        rdfs:label    "Organizer"@en .
+
+:hasCTSource  a       owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "An idea has been produced during the application of a creative technic."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:range    :CreativeTechnique .
+
+:requireEquipment  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Creative technic require some equipement to be implemented."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :Equipment .
+
+<http://www.w3.org/2004/02/skos/core#Concept>
+        a                 owl:Class ;
+        rdfs:comment      "The concept class is the generalization of specific ideas."@en ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:label        "Concept"@en ;
+        rdfs:seeAlso      :Idea .
+
+:Advice  a            owl:Class ;
+        rdfs:comment  "The advice is provided by the expert to a creative team and can concern an idea or a technique."@en ;
+        rdfs:label    "Advice"@en .
+
+:isGeneralizedBy  a    owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Properety indicating that an idea is generalized by a concept."@en ;
+        rdfs:domain    :Idea ;
+        rdfs:range     <http://www.w3.org/2004/02/skos/core#Concept> ;
+        owl:inverseOf  :isGeneralizing .
+
+dc:creator  a   owl:AnnotationProperty .
+
+spec:lastName  a  owl:AnnotationProperty .
+
+:DataType  a          owl:Class ;
+        rdfs:comment  "Data type class define the form in which that content is typically collected and communicated."@en ;
+        rdfs:label    "Data Type"@en .
+
+:innovationScope  a  owl:DatatypeProperty ;
+        rdfs:domain  :Objective .
+
+:hasRole  a          owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:range   [ a            owl:Class ;
+                       owl:unionOf  ( :DecisionMaker :Evaluator :Expert :Facilitator :Ideator :Organizer )
+                     ] .
+
+:Written  a     :ExpressionMode , owl:NamedIndividual .
+
+:ideaQuantity  a      owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "probability of a technic will result a relatively large quantity of ideas within the available time. Low, medium, high probability"@en ;
+        rdfs:domain   :CreativeTechnique .
+
+:hasHyponym  a        owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Concept whose semantic field is more specific than its hypernym"@en ;
+        rdfs:domain   <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:range    <http://www.w3.org/2004/02/skos/core#Concept> .
+
+:Workability  a  :EvaluationCriteria , owl:NamedIndividual .
+
+<http://schema.org/Event>
+        a       owl:Class .
+
+:hasParticipant  a     owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Creative workshop has participant with different role."@en ;
+        rdfs:domain    :CreativeWorkshop ;
+        rdfs:range     <http://xmlns.com/foaf/0.1/Person> ;
+        owl:inverseOf  :isParticipatingTo .
+
+:Personas  a               :CreativeTechnique , owl:NamedIndividual ;
+        :hasCreativePhase  :Ideation ;
+        :hasFunction       :Generation ;
+        :hasInputType      :Attitudinal , :Behavioral ;
+        :isProducingData   :QualitativeData ;
+        :isRelatedTo       :UserJourneyMaps , :Scenarios ;
+        terms:description  "Personas is a consolidated descriptions of typical behaviors under the format of user profil. It permits to humanize the 'client' of the solution, to try scenarios, and ease the communication of the solution."@en ;
+        terms:title        "Personas"@en .
+
+:Expert  a            owl:Class ;
+        rdfs:comment  "Expert is one of the role assumed by a person during the creative workshop. He share his knowledge about the problem or the domain to helps the ideator or the evaluation."@en ;
+        rdfs:label    "Expert"@en .
+
+:FreeReview  a                  :EvaluationTechnic , owl:NamedIndividual ;
+        :applyEvaluationThanks  :Complexity ;
+        :evalTechAppliedBy      :Anon3 .
+
+:hasExpressionMode  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :ExpressionMode .
+
+dc:modified  a  owl:AnnotationProperty .
+
+:ABTesting  a              :CreativeTechnique , owl:NamedIndividual ;
+        :hasCreativePhase  :ImplementAndMonitoring ;
+        :hasFunction       :Evaluation ;
+        :hasInputType      :Behavioral ;
+        :isProducingData   :QuantitativeData ;
+        :isRelatedTo       :Experiment , :KeyPerfIndicator , :WebAnalytics ;
+        terms:description  "Comparing two version of a same solution in order to see which one produce the statistically best results according to a defined objective."@en ;
+        terms:title        "A/B Testing"@en .
+
+:Problem  a           owl:Class ;
+        rdfs:comment  "The problem class is the description of the elements that leads the organization to initiate a creative workshop."@en ;
+        rdfs:label    "Problem"@en .
+
+:difficulty  a        owl:DatatypeProperty ;
+        rdfs:comment  "estimates how complicated is a technic to implement. Low, medium, high"@en ;
+        rdfs:domain   :CreativeTechnique .
+
+:isEvaluating  a      owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Evaluation technic evaluate idea."@en ;
+        rdfs:domain   :EvaluationTechnic ;
+        rdfs:range    :Idea .
+
+:hasEquivalent  a    owl:SymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :KnowledgeDomain ;
+        rdfs:range   :KnowledgeDomain .
+
+:organize  a          owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "An organizer organize a creative workshop. He has the responsability of this workshop."@en ;
+        rdfs:domain   :Organizer ;
+        rdfs:range    :CreativeWorkshop .
+
+:hasApplicationMode  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :ApplicationMode .
+
+:advicedBy  a          owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain    :Advice ;
+        rdfs:range     :Expert ;
+        owl:inverseOf  :provideAdvice .
+
+schema:memberOf  a        owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment      "The memberOf point an Organization to which this Person  belongs"@en ;
+        rdfs:domain       <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:isDefinedBy  "https://schema.org/memberOf"@en ;
+        rdfs:range        :Organization .
+
+:Definition  a        :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The defintion class is a phase of the creative process where project parameters are explored and defined. Classification of the application of creative technic based on the Universal Method of Design (Martin et al., 2008)."@en ;
+        rdfs:label    "planning, scoping and definition"@en .
+
+:NPD    a           :ContextType , owl:NamedIndividual ;
+        rdfs:label  "New Products/ Process/ Services"@en .
+
+:hasKnowledge  a     owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:range   :KnowledgeDomain .
+
+:BendItShapeIt  a              :CreativeTechnique , owl:NamedIndividual ;
+        rdfs:label             "Bend It, Shape It"@en ;
+        :appliedInContextType  :NPD , :PSI ;
+        :difficulty            "Low"^^rdfs:Literal ;
+        :duration              30 ;
+        :energy                "Low"^^rdfs:Literal ;
+        :funFactor             "Low"^^rdfs:Literal ;
+        :hasApplicationMode    :IndividualMode , :CollectiveMode ;
+        :ideaQuantity          "Medium"^^rdfs:Literal ;
+        :novelty               "Medium"^^rdfs:Literal ;
+        :requireStimuliType    :Related , :Unrelated ;
+        terms:title            "Bend It, Shape It"@en .
+
+:website  a          owl:DatatypeProperty ;
+        rdfs:domain  :DigitalTool ;
+        rdfs:range   rdfs:Literal .
+
+:Completeness  a  :EvaluationCriteria , owl:NamedIndividual .
+
+:progress  a         owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeWorkshop ;
+        rdfs:range   :CreativePhase .
+
+:GuidedReview  a  :EvaluationTechnic , owl:NamedIndividual .
+
+:hasEvalStrat  a       owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Evaluation technic is part of an evaluation strategy."@en ;
+        rdfs:domain    :EvaluationTechnic ;
+        rdfs:range     :EvaluationStrategy ;
+        owl:inverseOf  :hasEvalTechnic .
+
+terms:title  a        owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "Describes the title of an entity (e.g. idea title, idea contest tile, review title etc.)."@en ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( :CreativeTechnique :CreativeWorkshop :EvaluationTechnic :Idea :Subject )
+                      ] ;
+        rdfs:label    "title"@en .
+
+:Objective  a         owl:Class ;
+        rdfs:comment  "The objective is a description of the result expected by the organizations concerning the creative workshop"@en ;
+        rdfs:label    "Objective"@en .
+
+:equipe  a             owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain    :Equipment ;
+        rdfs:range     :CreativeTechnique ;
+        owl:inverseOf  :requireEquipment .
+
+:ProblemAnalysis  a   :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The problem analysis class is a phase of the creative process where the problem is formalized and the information seeked and organized."@en ;
+        rdfs:label    "Problem Analysis"@en ;
+        rdfs:seeAlso  :Implementation , :Ideation , :IdeaEvaluation .
+
+:Evaluation  a        :TechniqueFunction , owl:NamedIndividual ;
+        rdfs:comment  "The evluation class is a creative technic which has the purpose to evaluate/sort/contextualise the ideas."@en ;
+        rdfs:label    "Evaluation"@en ;
+        rdfs:seeAlso  :Generation , :Exploration .
+
+:hasCWSource  a       owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "An idea has been produced during the a creative workshop."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:range    :CreativeWorkshop .
+
+:isFormalizedFrom  a   owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "A subject is formalized from a problem."@en ;
+        rdfs:domain    :Subject ;
+        rdfs:range     :Problem ;
+        owl:inverseOf  :isFormalizedInto .
+
+:Relevance  a   :EvaluationCriteria , owl:NamedIndividual .
+
+:isSupportedBy  a      owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "A creative technic application is supported by tools."@en ;
+        rdfs:domain    :CreativeTechnique ;
+        rdfs:range     :Tool ;
+        owl:inverseOf  :support .
+
+:Expressivness  a  :EvaluationCriteria , owl:NamedIndividual .
+
+:Evaluator  a         owl:Class ;
+        rdfs:comment  "Evaluator is one of the role assumed by a person during the creative workshop. He evaluate the ideas based on the evaluation strategy according to the evaluation techniques and the criteria associated."@en ;
+        rdfs:label    "Evaluator"@en .
+
+dc:contributor  a  owl:AnnotationProperty .
+
+:Participatory  a  :ParticipantRole , owl:NamedIndividual .
+
+:Idea   a             owl:Class ;
+        rdfs:comment  "The idea class is a beginning of response to the problem. An idea can be from a Creative technic"@en ;
+        rdfs:label    "Idea"@en ;
+        rdfs:seeAlso  <http://www.w3.org/2004/02/skos/core#Concept> .
+
+:Implementation  a    :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The implementation class is a phase of the creative process where the most interesting ideas are experimented in real condition."@en ;
+        rdfs:label    "Implementation"@en ;
+        rdfs:seeAlso  :ProblemAnalysis , :Ideation , :IdeaEvaluation .
+
+:hasPrevious  a       owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "The creative technic can be preceed by another creative technic."@en ;
+        rdfs:domain   :Activity ;
+        rdfs:range    :Activity .
+
+:innovationRange  a  owl:DatatypeProperty ;
+        rdfs:domain  :Objective .
+
+:possessEquipment  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeWorkshop ;
+        rdfs:range   :Equipment .
+
+:isMaterializedBy  a   owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Property indicating that an idea as been conctreatized into some physical or visual"@en ;
+        rdfs:domain    :Idea ;
+        rdfs:range     :Artifact ;
+        owl:inverseOf  :isMaterializing .
+
+:isPlanifiedBy  a     owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "The creative strategy is defined by a facilitator"@en ;
+        rdfs:domain   :CreativeStrategy ;
+        rdfs:range    :Facilitator .
+
+:       a                              owl:Ontology ;
+        rdfs:label                     "Creative Workshop Management Ontology"^^rdfs:Literal ;
+        dc:contributor                 "Alex Gabriel"@en , "Mauricio Camargo"@en , "Davy Monticolo"@en , "Mario Bourgault"@en ;
+        dc:creator                     "Alex Gabriel"@en ;
+        dc:description                 "Creative Workshop Management Ontology (CWMO) - an ontology designed to describe the creative workshop domain, to permit reasoning on creative method and to describe resources gathered inside Creative Support System. The primary goal of the ontology is to cover all knowledge about creative workshop and creative method necessary for Creative support system. The second goal is to provide interoperability between distributed Creative Support System."@en ;
+        dc:modified                    "16/02/2017" ;
+        dc:publisher                   "Alex Gabriel"@en ;
+        dc:rights                      "This ontology is distributed under a Creative Commons Attribution License - http://creativecommons.org/licenses/by/3.0 <br/> If your reuse it for an academic purpose, please quote this article: Gabriel, A., Monticolo, D., Camargo, M., Bourgault, M., 2016. Ontology to represent the knowledge domain of a creative workshop. Presented at the The 12th International Conference on Signal Image Technology & Internet Systems, Naples, Italy."@en ;
+        dc:title                       "Creative Workshop Management Ontology (CWMO)"@en ;
+        vann:preferredNamespacePrefix  "cwmo" ;
+        vann:preferredNamespaceUri     "http://purl.org/cwmo/#" ;
+        owl:priorVersion               0.41 ;
+        owl:versionInfo                0.42 .
+
+:Originality  a            :EvaluationCriteria , owl:NamedIndividual ;
+        :scale             4 ;
+        :weight            40 ;
+        terms:description  "Originality is evaluated by considered both the interest of the idea and the novelty" .
+
+:hasSpecialization  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :KnowledgeDomain ;
+        rdfs:range   :KnowledgeDomain .
+
+:problematic  a       owl:DatatypeProperty ;
+        rdfs:comment  "the subject is summerized into an open question that pose the problem."@en ;
+        rdfs:domain   :Subject ;
+        rdfs:range    xsd:string .
+
+:ParticipantRole  a   owl:Class ;
+        rdfs:comment  "The particpant role class define the role of the person involved in a creative technique. (Martin et al., 2013). It should be distinguished from the role involved in the entire creative workshop process."@en ;
+        rdfs:label    "Participant Role"@en .
+
+dc:date  a      owl:AnnotationProperty .
+
+:hasSynonym  a        owl:IrreflexiveProperty , owl:SymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Concept that means exactly or nearly the same as another concept."@en ;
+        rdfs:domain   <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:range    <http://www.w3.org/2004/02/skos/core#Concept> .
+
+:AffinityDiagramming  a    owl:NamedIndividual , :CreativeTechnique ;
+        :hasCreativePhase  :EvalAndRafinement , :ImplementAndMonitoring , :Synthesis , :Ideation ;
+        :hasFunction       :Generation ;
+        :hasInputType      :Attitudinal , :Behavioral ;
+        :isProducingData   :QualitativeData ;
+        :isRelatedTo       :UsabilityTesting , :ContextualDesign , :KJTechnique ;
+        :requireEquipment  :PostIt ;
+        terms:title        "Diagramme d'affinités"@fr , "Affinity Diagramming"@en .
+
+:Subject  a           owl:Class ;
+        rdfs:comment  "The subject class is the description of the problerm to solve by the creative group during the creative workshop. It is a transformation/reformulation of the problem."@en ;
+        rdfs:label    "Subject"@en .
+
+:hasCreativePhase  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :CreativePhase .
+
+:Artifact  a          owl:Class ;
+        rdfs:comment  "The artefact class is a visual or physical representation of an idea."@en ;
+        rdfs:label    "Artifact"@en .
+
+dc:rights  a    owl:AnnotationProperty .
+
+:isRealisedBy  a      owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "An artefact has been realised by one or several persons. In opposite to the ideas which is from the group, the realisation is individualised."@en ;
+        rdfs:domain   :Artifact ;
+        rdfs:range    <http://xmlns.com/foaf/0.1/Person> .
+
+schema:member  a          owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment      "An organization has persons as member."@en ;
+        rdfs:domain       :Organization ;
+        rdfs:isDefinedBy  "https://schema.org/member"@en ;
+        rdfs:range        <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:seeAlso      "do not confuse with http://xmlns.com/foaf/0.1/member that don't have the same domain or range" ;
+        owl:inverseOf     schema:memberOf .
+
+:stimuli  a           owl:DatatypeProperty ;
+        rdfs:comment  "creative technique require stimuli to permit ideator apply correctly the method. This stimuli can be related or unrelated to the subject."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    xsd:string .
+
+:EvaluationCriteria  a  owl:Class ;
+        rdfs:comment  "The Evaluation criteria class is the specific aspect to obsverve on idea. It is defined according to the constraints of the subject."@en ;
+        rdfs:label    "Evaluation Criteria"@en .
+
+:isParticipatingTo  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "The person with a role is participating to the workshop"@en ;
+        rdfs:domain   <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:range    :CreativeWorkshop .
+
+:coverDomain  a        owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain    [ a            owl:Class ;
+                         owl:unionOf  ( :Problem :Subject )
+                       ] ;
+        rdfs:range     :KnowledgeDomain ;
+        owl:inverseOf  :isCoveredBy .
+
+:Synthesis  a         :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The synthesis class represent the phase of the creative process where further information a researched. Classification of the application of creative technic based on the Universal Method of Design (Martin et al., 2008)."@en , "Exploration, synthesis and design implications"@en ;
+        rdfs:seeAlso  :ImplementAndMonitoring , :EvalAndRafinement , :Definition .
+
+:support  a           owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A tool support the application of a creative technic."@en ;
+        rdfs:domain   :Tool ;
+        rdfs:range    :CreativeTechnique .
+
+:Bodystorming  a           owl:NamedIndividual , :CreativeTechnique ;
+        :hasCreativePhase  :Ideation ;
+        :hasFunction       :Generation ;
+        :hasInputType      :Behavioral ;
+        :isProducingData   :QualitativeData ;
+        :isRelatedTo       :Roleplaying , :ExperiencePrototyping , :SimulationExercise ;
+        terms:description  "This method is a mix role play, simulating exercise to inspire new idea and spontaneous prototyping based on empathy."@en ;
+        terms:title        "Bodystorming"@en .
+
+:ContextType  a       owl:Class ;
+        rdfs:comment  "The context type class gather the typology of creative workshop context"@en ;
+        rdfs:label    "Context Type"@en .
+
+:possessObjective  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A subject is described by objective."@en ;
+        rdfs:domain   :Subject ;
+        rdfs:range    :Objective .
+
+:hasAuthor  a         owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "An idea is written by an ideator."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:range    :Ideator .
+
+:usecase  a           owl:DatatypeProperty ;
+        rdfs:comment  "Usecase is used to describe the idea in context of use."@en ;
+        rdfs:domain   :Idea ;
+        rdfs:range    xsd:string .
+
+<http://xmlns.com/foaf/0.1/#firstName>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "The first name of a person."@en ;
+        rdfs:domain       <http://xmlns.com/foaf/0.1/Person> ;
+        rdfs:isDefinedBy  <http://xmlns.com/foaf/0.1/firstName> .
+
+terms:description  a      owl:DatatypeProperty ;
+        rdfs:comment      "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( :Constraint :CreativeTechnique :CreativeWorkshop :Equipment :EvaluationTechnic :Idea :Objective :Problem :Subject :Tool )
+                          ] ;
+        rdfs:isDefinedBy  terms:description ;
+        rdfs:label        "description"@en .
+
+:Tool   a             owl:Class ;
+        rdfs:comment  "The tool class is the software and interface used to ease the application of a creative technic and/or collect the data of the creative technic."@en ;
+        rdfs:label    "Tool"@en .
+
+:hasWeight  a        owl:DatatypeProperty ;
+        rdfs:domain  :EvaluationCriteria ;
+        rdfs:range   owl:real .
+
+:Context  a           owl:Class ;
+        rdfs:comment  "organizational condition in wich the problem is defined (Stratégique, Nouveau produit, processus ou service, Améliorations produit, processus ou service, publicité/marketing, Ressources humaines)"@en ;
+        rdfs:label    "Context"@en .
+
+:isMaterializing  a   owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Property indicating that an artifact represent/ symbolize an idea."@en ;
+        rdfs:domain   :Artifact ;
+        rdfs:range    :Idea .
+
+<http://schema.org/startDate>
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "Indicate the starting day of a creative workshop."@en ;
+        rdfs:domain       <http://schema.org/Event> ;
+        rdfs:isDefinedBy  <http://schema.org/startDate> ;
+        rdfs:label        "startDate"@en ;
+        rdfs:range        xsd:dateTime .
+
+schema:legalName  a  owl:DatatypeProperty ;
+        rdfs:domain  :Organization ;
+        rdfs:range   xsd:string .
+
+:DecisionMaker  a     owl:Class ;
+        rdfs:comment  "Decision Maker is one of the role assumed by a person during the creative workshop. He provides the problem to solve during the workshop and has the decision ability concerning the future of the idea generated."@en ;
+        rdfs:label    "Decision Maker"@en .
+
+:EvalAndRafinement  a  :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The evaluation and rafinement is an iterative phase of testing and feedback about a production. Classification of the application of creative technic based on the Universal Method of Design (Martin et al., 2008)."@en ;
+        rdfs:label    "Evaluation and Rafinement"@en ;
+        owl:sameAs    :Implementation , :IdeaEvaluation .
+
+:hasContext  a        owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A problem is defined according to a context."@en ;
+        rdfs:domain   :Problem ;
+        rdfs:range    :Context .
+
+:hasCreatTechnic  a   owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Creative Strategy is composed by one or several creative techniques"@en ;
+        rdfs:domain   :CreativeStrategy ;
+        rdfs:range    :CreativeTechnique .
+
+:evalStratPlannedBy  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :EvaluationStrategy ;
+        rdfs:range   [ a            owl:Class ;
+                       owl:unionOf  ( :DecisionMaker :Organizer )
+                     ] .
+
+:evalTechAppliedBy  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "restreindre la relation en fonction de la strategy: TechA evalTechappliedBy Anon for a given strategy" , "Evaluation technic is applied by evaluator."@en ;
+        rdfs:domain   :EvaluationTechnic ;
+        rdfs:range    :Evaluator .
+
+:evaluateResponseTo  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "An evaluation strategy evaluate the ideas associated to a subject. The strategy is dependant of the differnt element that define the subject (context, decision-maker, ...)"@en ;
+        rdfs:domain   :EvaluationStrategy ;
+        rdfs:range    :Subject .
+
+:Generation  a        :TechniqueFunction , owl:NamedIndividual ;
+        rdfs:comment  "The Generation class is a creative technic which has the purpose to generate ideas."@en ;
+        rdfs:label    "Generation"@en ;
+        rdfs:seeAlso  :Exploration , :Evaluation .
+
+:identifier  a       owl:DatatypeProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( :CreativeStrategy :CreativeTeam :CreativeWorkshop :EvaluationStrategy )
+                     ] .
+
+dc:title  a     owl:AnnotationProperty .
+
+:funFactor  a         owl:DatatypeProperty ;
+        rdfs:comment  "estimated likelihood that a technic will provoke mirth and humor. Low, medium, high."@en ;
+        rdfs:domain   :CreativeTechnique .
+
+:isEvaluatedDuring  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Evaluation criteria is applied during an evaluation technic."@en ;
+        rdfs:domain   :EvaluationCriteria ;
+        rdfs:range    :EvaluationTechnic .
+
+:isFollowedBy  a      owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "in theory, the creative technic can be follewed by another creative technic. it means the 2 creative technic are by default related by a temporal relation."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :CreativeTechnique .
+
+:PSI    a           :ContextType , owl:NamedIndividual ;
+        rdfs:label  "Product/ Process / Services Improvement"@en .
+
+:duration  a          owl:DatatypeProperty ;
+        rdfs:comment  "minimun amount of time required to apply a technic."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    xsd:integer .
+
+:Effectivness  a  :EvaluationCriteria , owl:NamedIndividual .
+
+:KnowledgeDomain  a   owl:Class ;
+        rdfs:comment  "The Knowledge domain class is the overall knowledge that a person posses or which is associated to an idea or a problem"@en ;
+        rdfs:label    "Knowledge Domain"@en .
+
+:scale  a             owl:DatatypeProperty ;
+        rdfs:comment  "Scale on which the evaluation criteria should be evaluated"@en ;
+        rdfs:domain   :EvaluationCriteria ;
+        rdfs:range    xsd:integer .
+
+:hasInputType  a     owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :CreativeTechnique ;
+        rdfs:range   :InputType .
+
+:isIncompatibleWith  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "All creative technic are not compatible with each other. A creative technic is not compatible with another."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :CreativeTechnique .
+
+:Activity  a          owl:Class ;
+        rdfs:comment  "The activity class gather the different activities realised during a creative workshop"@en ;
+        rdfs:label    "Activity"@en .
+
+:hasInput  a          owl:DatatypeProperty ;
+        rdfs:comment  "A creative method requires some parametrs to be applied properly. these inputs can be a problematic, aditional information, ..."@en ;
+        rdfs:domain   :CreativeTechnique .
+
+:isRelatedTo  a       owl:IrreflexiveProperty , owl:SymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "A creative method is related to another creative method according to the method principle or mechanism involved."@en ;
+        rdfs:domain   :CreativeTechnique ;
+        rdfs:range    :CreativeTechnique .
+
+:Equipment  a         owl:Class ;
+        rdfs:comment  "The material class represent the physical material/ equipment needed."@en ;
+        rdfs:label    "Equipment"@en .
+
+:CreativeTechnique  a    owl:Class ;
+        rdfs:comment     "The creativre technic class is the technic applied by the ideator to generated ideas"@en ;
+        rdfs:label       "Creative Technique"@en ;
+        rdfs:subClassOf  :Activity .
+
+:Related  a     :StimuliType , owl:NamedIndividual .
+
+:IdeaEvaluation  a    :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "The idea evaluation class is a phase of the creative process where the idea are evluated, sorted or ranked."@en ;
+        rdfs:label    "IdeaEvaluation"@en ;
+        rdfs:seeAlso  :ProblemAnalysis , :Implementation , :Ideation ;
+        owl:sameAs    :Implementation .
+
+:isGeneralizing  a    owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Property indicating that a concept generalize an idea. Althought ideas are different, several can represent the same concept."@en ;
+        rdfs:domain   <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:range    :Idea .
+
+:adviceAdressedTo  a  owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :Advice ;
+        rdfs:range   :CreativeTeam .
+
+:ExpressionMode  a  owl:Class ;
+        rdfs:label  "The expression mode class define the different mode of experssion exploited by a creative technique"@en , "Expression Mode"@en .
+
+:isConstraintedBy  a  owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Properety indicating that a problem is constrainted by constraint of different nature ( the problem itself, the domain, the context, the actor of the domain…)"@en ;
+        rdfs:domain   :Problem ;
+        rdfs:range    :Constraint .
+
+:isCriterizedBy  a    owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Evaluation criteria is defined by the decision maker and/or the organizer."@en ;
+        rdfs:domain   :EvaluationCriteria ;
+        rdfs:range    [ a            owl:Class ;
+                        owl:unionOf  ( :DecisionMaker :Organizer )
+                      ] .
+
+:hasEvalTechnic  a    owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment  "Evaluation strategy is composed by evaluation technic."@en ;
+        rdfs:domain   :EvaluationStrategy ;
+        rdfs:range    :EvaluationTechnic .
+
+:DigitalTool  a          owl:Class ;
+        rdfs:comment     "The digital tools class gather the tools available for a digital application of creative techniques"@en ;
+        rdfs:label       "Digital Tools"@en ;
+        rdfs:subClassOf  :Tool .
+
+:TechniqueFunction  a  owl:Class ;
+        rdfs:comment  "Technique Function class define the primary purpose of a creative technique."@en ;
+        rdfs:label    "Technique Function"@en .
+
+:hasContextType  a   owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:domain  :Context ;
+        rdfs:range   :ContextType .
+
+:EvaluationTechnic  a    owl:Class ;
+        rdfs:comment     "The evaluation technic class is the way the idea is evaluated. It can be qualitative (Review, sorting (top5),...) or quantitative (rating)."@en ;
+        rdfs:label       "Evaluation Technic"@en ;
+        rdfs:subClassOf  :Activity .
+
+:hasHypernym  a        owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "Concept whose semantic field is broader than that of a hyponym."@en ;
+        rdfs:domain    <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:range     <http://www.w3.org/2004/02/skos/core#Concept> ;
+        owl:inverseOf  :hasHyponym .
+
+:Verbal  a      :ExpressionMode , owl:NamedIndividual .
+
+:hasNext  a            owl:IrreflexiveProperty , owl:AsymmetricProperty , owl:ObjectProperty ;
+        rdfs:comment   "The creative technic can be follewed by another creative technic."@en ;
+        rdfs:domain    :Activity ;
+        rdfs:range     :Activity ;
+        owl:inverseOf  :hasPrevious .
+
+:ConceptGeneration  a  :CreativePhase , owl:NamedIndividual ;
+        rdfs:comment  "the phase of concept generation and eraly prototyping is an itarative phase that involves participatory and generative design activities. Classification of the application of creative technic based on the Universal Method of Design (Martin et al., 2008)."@en ;
+        rdfs:label    "Concept generation and early prototyping"@en ;
+        owl:sameAs    :Ideation .

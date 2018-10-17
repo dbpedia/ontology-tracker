@@ -1,0 +1,482 @@
+@prefix : <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix IOLite: <http://www.ontologydesignpatterns.org/ont/dul/IOLite.owl#> .
+@prefix DUL: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl> a owl:Ontology ;
+	rdfs:label "Lexical MetaModel Level 1"^^xsd:string ;
+	owl:versionInfo """1.8
+1.2 
+- contains fine-tuning of cross-context relations. Now, the formalization pathway goes from expression to meaning to reference to formal entity to formal expression.
+1.3 
+- has all elements with English labels. Moreover, I added the relatedMeaning property, which allows to query across all object properties that have a Meaning in both domain and range.
+1.4 
+- has a new relation: hasInterpretant, based on Peirce's semiotics, which is applied between any two Expression(s), where the second provides an interpretive context for the first.
+1.5 
+- fixes a bug in the domain and range of isContextOf, now both generalized to dul:Entity, and consequently, Context is equivalently defined as anything that isContextOf some dul:Entity; some comments have also been edited.
+1.6 
+- added equivalentClass axiom between lmm:Meaning and dul:SocialObject (simplifies applications).
+1.7 
+- aligned all locally defined object properties to dul:associatedWith.
+1.8
+- simplified several restrictions in the semiotic pattern core, for improving reasoning performance."""^^xsd:string ;
+	rdfs:comment """This ontology is a composition of some content design patterns for the semiotic triangle.
+Its structure is extracted from DOLCE-Ultralite (DOLCE+c.DnS), but it uses a different terminology, and explicitly defines the semiotic function: Expression is the semiotic term for dul:InformationObject, when they actually express or denote something; Meaning is the semiotic term for dul:SocialObject, when they are actually expressed by something, or are interpretation of something; Reference is the semiotic term for dul:Entity, when they are interpreted or denoted by something.
+The denotes relation is equivalent to dul:isAbout, the expresses relation is imported from DOLCE Ultralite, and the hasInterpretation relation generalizes over: dul:isClassifiedBy, dul:isCoveredBy, dul:isDescribedBy, dul:isUnifiedBy, and dul:satisfies
+
+Extensions to the triangle:
+A typical extension of the semiotic triangle concerns the participation of agents: this is introduced by using the dul:conceptualizes relation, holding between a dul:Agent and a dul:SocialObject (the Meaning). 
+An additional extension concerns semiotic context: this is provided by including four notions of 'Context': 'Paradigm' (the context of the conceptualized meaning), 'KnowledgeCollective' (the context of agents that conceptualize the paradigm), 'Cotext' (the context of expressions), and dul:Situation (the context of denoted entities).
+A final extension links semiotics to formal semantics: this is provided by reusing dul:FormalEntity, iol:isGroundingFor, iol:FormalExpression, iol:isAssignedTo, iol:FormalLanguage, etc.
+
+The complete pattern allows to declare relations between Expression(s) and their Reference(s) (denotes), between Expression(s) and their Meaning (dul:expresses), between Meaning(s) and Reference(s) (isInterpretationOf), between Reference(s) and dul:FormalEntity(ies) (iol:isGroundingFor), between dul:FormalEntity(ies) and iol:FormalExpression(s) (iol:isAssignedTo).
+
+This 'formalization pathway' moves from Expression(s) to iol:FormalExpression(s) by taking into account both Meaning(s) and Referent(s). The informal denotation of Expression(s) is moved to a formal denotation (iol:isAssignedTo) of iol:FormalExpression(s).
+For example: the Expression 'Mariachi' dul:expresses the dul:Concept (Meaning) 'MexicanStreetSinger' that isInterpretationOf the dul:Collection (Reference) 'TheStreetSingersFromMexico'. 'TheStreetSingersFromMexico' then iol:isGroundingFor e.g. the dul:Set (dul:FormalEntity) that includes all Mexican street singers, which iol:isAssignedTo e.g. the iol:FormalExpression 'owl:Class#Mariachi'.
+
+The formalization pathway enables a technique to move from/to socio-cognitive and formal semantics through denotation, in the Tarskian sense. As a matter of fact, translating directly a Meaning into a FormalEntity (or viceversa) is not always clearly implementable, while passing through an extensional grounding is easier and more accessible to intuition.
+
+Among possible uses, information extraction, ontology learning, KOS reengineering, lexical semantics, etc. For example, statistical learning of instances for a dul:Concept would be modelled as the building of a dul:Collection that isInterpretationOf the dul:Concept, but also dul:isGroundingFor a dul:Set that iol:isAssignedTo e.g. an owl:Class.
+
+An additional semiotic pattern is based on the hasInterpretant relation, which allows to link two Expression(s) (or dul:InformationRealization(s)), when the second one counts as a Meaning (or a relatedMeaning) of the first. 
+In practice, this is implemented by allowing a relation between an Expression (or its realization), and whatever Meaning (or another dul:InformationRealization). Technically speaking, the correct path would be passing through another Expression used to express a Meaning for the first one:
+
+(Exp1 hasInterpretant some (Exp2 and expresses some (Meaning and isExpressedBy some Exp1)))
+
+or even:
+
+(Exp1 hasInterpretant some (Exp2 and expresses some (Meaning and relatedMeaning some (Meaning and isExpressedBy some Exp1))))
+
+but given the expressive power of OWL, which lacks co-reference, this is the best sub-optimal solution."""@en ;
+	owl:imports <http://www.ontologydesignpatterns.org/ont/dul/IOLite.owl> .
+
+DUL:actsFor a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext .
+
+DUL:actsThrough a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf .
+
+DUL:associatedWith a owl:ObjectProperty .
+
+DUL:characterizes a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+DUL:classifies a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretationOf .
+
+DUL:concretelyExpresses a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretant .
+
+DUL:covers a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretationOf , :relatedMeaning .
+
+DUL:describes a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretationOf .
+
+DUL:expresses a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretant .
+
+DUL:hasComponent a owl:ObjectProperty .
+
+DUL:hasLocation a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext .
+
+DUL:hasMember a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf , :isInterpretationOf .
+
+DUL:hasPart a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf .
+
+DUL:hasParticipant a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf .
+
+DUL:hasSetting a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext .
+
+DUL:introduces a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf .
+
+DUL:isAbout a owl:ObjectProperty .
+
+DUL:isCharacterizedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+DUL:isClassifiedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretation .
+
+DUL:isConceptUsedIn a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext , :relatedMeaning .
+
+DUL:isConcretelyExpressedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretantFor .
+
+DUL:isCoveredBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretation , :relatedMeaning .
+
+DUL:isDescribedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretation .
+
+DUL:isExpressedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretantFor .
+
+DUL:isIntroducedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext .
+
+DUL:isLocationOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf .
+
+DUL:isMemberOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext , :hasInterpretation .
+
+DUL:isPartOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext .
+
+DUL:isParticipantIn a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasContext .
+
+DUL:isReferenceOf a owl:ObjectProperty .
+
+DUL:isRelatedToConcept a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+DUL:isRelatedToDescription a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+DUL:isSatisfiedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretationOf .
+
+DUL:isSettingFor a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf .
+
+DUL:isSpecializedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+DUL:isUnifiedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretation , :relatedMeaning .
+
+DUL:satisfies a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasInterpretation .
+
+DUL:specializes a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+DUL:unifies a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isInterpretationOf , :relatedMeaning .
+
+DUL:usesConcept a owl:ObjectProperty ;
+	rdfs:subPropertyOf :isContextOf , :relatedMeaning .
+
+IOLite:hasCulturalGrounding a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+IOLite:hasCulturalMixingWith a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+IOLite:hasGrounding a owl:ObjectProperty ;
+	rdfs:comment "A relation between a dul:Entity and a dul:FormalEntity, which can be used to give a semiotic ('natural') counterpart to a formal entity, such as a Class, a Relation, a SetBuilder, etc. See also the ontology: FormalSemantics.owl"^^xsd:string .
+
+IOLite:isCulturalGroundingFor a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+IOLite:isGroundingFor a owl:ObjectProperty ;
+	rdfs:comment "A relation between a dul:Entity and a dul:FormalEntity, which can be used to give a semiotic ('natural') counterpart to a formal entity, such as a Class, a Relation, a SetBuilder, etc. See also the ontology: FormalSemantics.owl"^^xsd:string .
+
+IOLite:metaphoricallyBlendsWith a owl:ObjectProperty ;
+	rdfs:subPropertyOf :relatedMeaning .
+
+:denotes a owl:ObjectProperty ;
+	rdfs:label "denotes"@en ;
+	rdfs:comment """A relation between expressions and any Entity (including expressions). 
+It can be used to talk about e.g. entities denoted by proper nouns: the proper noun 'Leonardo da Vinci' denotes the Person Leonardo da Vinci; as well as to talk about sets of entities that can be described by a common noun: the common noun 'person' denotes the collection of all persons in a domain of discourse."""^^xsd:string ;
+	rdfs:subPropertyOf DUL:isAbout ;
+	rdfs:domain :Expression ;
+	rdfs:range :Reference .
+
+:hasContext a owl:ObjectProperty ;
+	rdfs:comment "A catch-all property for all notions of Context considered in LMM."^^xsd:string ;
+	rdfs:domain DUL:Entity ;
+	rdfs:range DUL:Entity ;
+	rdfs:subPropertyOf DUL:associatedWith .
+
+:hasInterpretant a owl:ObjectProperty ;
+	rdfs:label "has interpretant"@en ;
+	rdfs:comment """The Peircean interpretant relation, widely adopted in semiotics: a dul:InformationObject isInterpretantFor another, e.g. fourLeggedFriendOfHumans isInterpretantFor dog. 
+Synonymy, associativity, and even topical proximity are all sources for interpretants, e.g.: domestic dog isInterpretantFor dog (synonymy); bark isInterpretantFor dog (associativity); veterinary isInterpretantFor dog (topical proximity).
+Semantic mechanisms such as metonymy depend on the interpretant relation.
+The interpretant relation is here taken as very broad, also accepting InformationRealization(s) as interpretants."""^^xsd:string ;
+	rdfs:subPropertyOf DUL:associatedWith ;
+	owl:inverseOf :isInterpretantFor ;
+	rdfs:domain _:node17168lt6lx35 .
+
+_:node17168lt6lx35 a owl:Class ;
+	owl:unionOf _:node17168lt6lx36 .
+
+_:node17168lt6lx36 rdf:first DUL:InformationRealization ;
+	rdf:rest _:node17168lt6lx37 .
+
+_:node17168lt6lx37 rdf:first :Expression ;
+	rdf:rest rdf:nil .
+
+:hasInterpretant rdfs:range _:node17168lt6lx38 .
+
+_:node17168lt6lx38 a owl:Class ;
+	owl:unionOf _:node17168lt6lx39 .
+
+_:node17168lt6lx39 rdf:first DUL:InformationRealization ;
+	rdf:rest _:node17168lt6lx40 .
+
+_:node17168lt6lx40 rdf:first :Meaning ;
+	rdf:rest rdf:nil .
+
+:hasInterpretation a owl:ObjectProperty ;
+	rdfs:label "has interpretation"@en ;
+	rdfs:comment """The relation between a Meaning and a Reference : a Meaning gives unity to a Collection of entities.
+A same Reference can be given different interpretations, for example, an old cradle can be given a unifying Meaning based on the original aesthetic design, the functionality it was built for, or a new aesthetic functionality in which it can be used as a flower pot.
+This relation allows to generalize over the following DOLCE-Ultralite relations: dul:isClassifedBy, dul:isCoveredBy, dul:isDescribedBy, dul:isUnifiedBy, and dul:satisfies"""^^xsd:string ;
+	rdfs:subPropertyOf DUL:associatedWith ;
+	rdfs:range :Meaning ;
+	rdfs:domain :Reference ;
+	owl:inverseOf :isInterpretationOf .
+
+:isContextOf a owl:ObjectProperty ;
+	rdfs:domain DUL:Entity ;
+	rdfs:range DUL:Entity ;
+	rdfs:subPropertyOf DUL:associatedWith ;
+	owl:inverseOf :hasContext .
+
+:isDenotedBy a owl:ObjectProperty ;
+	rdfs:label "is denoted by"@en ;
+	rdfs:subPropertyOf DUL:isReferenceOf ;
+	rdfs:range :Expression ;
+	rdfs:domain :Reference ;
+	owl:inverseOf :denotes .
+
+:isInterpretantFor a owl:ObjectProperty ;
+	rdfs:label "is interpretant for"@en ;
+	rdfs:comment """The Peircean interpretant relation, widely adopted in semiotics: a dul:InformationObject isInterpretantFor another, e.g. fourLeggedFriendOfHumans isInterpretantFor dog. 
+Synonymy, associativity, and even topical proximity are all sources for interpretants, e.g.: domestic dog isInterpretantFor dog (synonymy); bark isInterpretantFor dog (associativity); veterinary isInterpretantFor dog (topical proximity).
+Semantic mechanisms such as metonymy depend on the interpretant relation.
+The interpretant relation is here taken as very broad, also accepting realization of information as interpretants."""^^xsd:string ;
+	rdfs:subPropertyOf DUL:associatedWith ;
+	rdfs:range _:node17168lt6lx41 .
+
+_:node17168lt6lx41 a owl:Class ;
+	owl:unionOf _:node17168lt6lx42 .
+
+_:node17168lt6lx42 rdf:first DUL:InformationRealization ;
+	rdf:rest _:node17168lt6lx43 .
+
+_:node17168lt6lx43 rdf:first :Expression ;
+	rdf:rest rdf:nil .
+
+:isInterpretantFor rdfs:domain _:node17168lt6lx44 .
+
+_:node17168lt6lx44 a owl:Class ;
+	owl:unionOf _:node17168lt6lx45 .
+
+_:node17168lt6lx45 rdf:first DUL:InformationRealization ;
+	rdf:rest _:node17168lt6lx46 .
+
+_:node17168lt6lx46 rdf:first :Meaning ;
+	rdf:rest rdf:nil .
+
+:isInterpretationOf a owl:ObjectProperty ;
+	rdfs:label "is interpretation of"@en ;
+	rdfs:comment """The relation between a Meaning and a Reference : a Meaning gives unity to an Entity or to a Collection of entities.
+A same Reference can be given different interpretations, for example, an old cradle can be given a unifying Meaning based on the original aesthetic design, the functionality it was built for, or a new aesthetic functionality in which it can be used as a flower pot.
+This relation allows to generalize over the following DOLCE-Ultralite relations: dul:classifies, dul:covers, dul:describes, dul:unifies, and dul:isSatisfiedBy"""^^xsd:string ;
+	rdfs:subPropertyOf DUL:associatedWith ;
+	rdfs:domain :Meaning ;
+	rdfs:range :Reference .
+
+:relatedMeaning a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "related meaning"@en ;
+	rdfs:comment "A relation between any two meanings."^^xsd:string ;
+	rdfs:subPropertyOf DUL:associatedWith ;
+	rdfs:domain :Meaning ;
+	rdfs:range :Meaning ;
+	owl:inverseOf :relatedMeaning .
+
+DUL:Collection a owl:Class .
+
+DUL:Community a owl:Class ;
+	rdfs:subClassOf _:node17168lt6lx47 .
+
+_:node17168lt6lx47 a owl:Restriction ;
+	owl:onProperty DUL:actsThrough ;
+	owl:minCardinality "3"^^xsd:nonNegativeInteger .
+
+DUL:Description a owl:Class ;
+	rdfs:subClassOf :Context .
+
+DUL:Entity a owl:Class .
+
+DUL:InformationObject a owl:Class .
+
+DUL:InformationRealization a owl:Class .
+
+DUL:Place a owl:Class ;
+	rdfs:subClassOf :Context .
+
+DUL:Situation a owl:Class ;
+	rdfs:subClassOf :Context , :Reference .
+
+DUL:SocialObject a owl:Class ;
+	owl:equivalentClass :Meaning .
+
+IOLite:LinguisticObject a owl:Class .
+
+:CoText a owl:Class ;
+	rdfs:label "Cotesto {it}"^^xsd:string , "Co-text"@en ;
+	owl:equivalentClass _:node17168lt6lx48 .
+
+_:node17168lt6lx48 a owl:Class ;
+	owl:intersectionOf _:node17168lt6lx49 .
+
+_:node17168lt6lx49 rdf:first :Context ;
+	rdf:rest _:node17168lt6lx50 .
+
+_:node17168lt6lx50 rdf:first _:node17168lt6lx51 .
+
+_:node17168lt6lx51 a owl:Restriction ;
+	owl:onProperty DUL:hasMember ;
+	owl:someValuesFrom :Expression .
+
+_:node17168lt6lx50 rdf:rest _:node17168lt6lx52 .
+
+_:node17168lt6lx52 rdf:first _:node17168lt6lx53 .
+
+_:node17168lt6lx53 a owl:Restriction ;
+	owl:onProperty DUL:isUnifiedBy ;
+	owl:someValuesFrom :ConstructionRule .
+
+_:node17168lt6lx52 rdf:rest rdf:nil .
+
+:CoText rdfs:subClassOf DUL:Collection , IOLite:LinguisticObject , :Context ;
+	rdfs:comment """The context of an Expression .
+A CoText is a neighborhood of a certain chunk of text, which can be built based on a syntactic rule (all words from the sentence
+where the chunk occurs), an associative rule (all terms that are related to the chunk across the texts of a corpus, 
+given a certain statistical threshold), etc."""^^xsd:string .
+
+:ConstructionRule a owl:Class ;
+	rdfs:subClassOf DUL:Description ;
+	rdfs:comment "A description of how to build an entity. For example, a logical rule, a productive rule, a statistical algorithm, etc."^^xsd:string .
+
+:Context a owl:Class ;
+	rdfs:label "Contesto {it}"^^xsd:string , "Context"@en , "Contesto"@it ;
+	owl:equivalentClass _:node17168lt6lx54 .
+
+_:node17168lt6lx54 a owl:Restriction ;
+	owl:onProperty :isContextOf ;
+	owl:someValuesFrom DUL:Entity .
+
+:Context rdfs:subClassOf DUL:Entity ;
+	rdfs:comment """Any context, such as:
+
+- dul:Situation (the circumstantial context of denoted Entity(ies))
+- Paradigm (the cultural context of expressed Meaning(s))
+- CoText (the informational context of Expression(s))
+- dul:Description (the relational context of Concept(s))
+- KnowledgeCommunity (the social context of conceptualizing Agent(s))
+- dul:Place (the spatial context of Entity(ies))
+
+but also a dul:PhysicalPlace, a dul:Event, etc. In practice, everything that is said to be a context for something else.
+
+Notice that certain contexts can be given independently from the entities that are contextualized (e.g. the ones listed above), others need a core entity and a rule to build its neighborhood, and still others can be classified as such when a certain relation is applied to them.
+For example, a scientific theory is a dul:Description that works as a context for its dul:Concept(s), and can be given independently from the concepts, which can remain implicit to a certain extent. On the contrary, a CoText is actually a neighborhood of a certain chunk of text, which can be built based on a syntagmatic rule (all words from the sentence where the chunk occurs), an associative rule (all terms that are related to the chunk across the texts of a corpus, given a certain statistical threshold), etc.
+Contexts can also emerge based on what relations are considered \"context triggers\". For example, in this ontology very different relations: part, participation, setting, membership, acting for, localization, etc. are considered context triggers by adding owl:subPropertyOf axioms to the property: isContextOf. Since the class Context has an equivalent axiom to isContextOf someValuesFrom dul:Entity, everything has a property that is declared subPropertyOf isContextOf, will be inferred to be a Context as well."""^^xsd:string .
+
+:Expression a owl:Class ;
+	rdfs:label "Expression"^^xsd:string , "Expression"@en ;
+	owl:equivalentClass _:node17168lt6lx55 .
+
+_:node17168lt6lx55 a owl:Class ;
+	owl:unionOf _:node17168lt6lx56 .
+
+_:node17168lt6lx56 rdf:first _:node17168lt6lx57 .
+
+_:node17168lt6lx57 a owl:Restriction ;
+	owl:onProperty DUL:expresses ;
+	owl:someValuesFrom :Meaning .
+
+_:node17168lt6lx56 rdf:rest _:node17168lt6lx58 .
+
+_:node17168lt6lx58 rdf:first _:node17168lt6lx59 .
+
+_:node17168lt6lx59 a owl:Restriction ;
+	owl:onProperty :denotes ;
+	owl:someValuesFrom :Reference .
+
+_:node17168lt6lx58 rdf:rest rdf:nil .
+
+:Expression rdfs:subClassOf DUL:InformationObject ;
+	rdfs:comment "Any information that either dul:expresses a Meaning or denotes a Reference"^^xsd:string .
+
+:KnowledgeCommunity a owl:Class ;
+	rdfs:label "Comunità di conoscenza {it}"^^xsd:string , "Knowledge community"@en ;
+	rdfs:subClassOf DUL:Community , :Context ;
+	rdfs:comment "The context of agents that conceptualize a same Paradigm. This restriction cannot be represented in OWL in general, but should be encoded for specific knowledge communities by stating the specific paradigm that agents acting for it must conceptualize."^^xsd:string .
+
+:Meaning a owl:Class ;
+	rdfs:label "Meaning"^^xsd:string , "Meaning"@en ;
+	owl:equivalentClass _:node17168lt6lx60 .
+
+_:node17168lt6lx60 a owl:Restriction ;
+	owl:onProperty DUL:isExpressedBy ;
+	owl:someValuesFrom :Expression .
+
+:Meaning rdfs:subClassOf DUL:SocialObject , _:node17168lt6lx61 .
+
+_:node17168lt6lx61 a owl:Restriction ;
+	owl:onProperty DUL:isExpressedBy ;
+	owl:someValuesFrom :Expression .
+
+:Meaning rdfs:comment "Any conceptualization that dul:isExpressedBy an Expression, or isInterpretationOf a Reference"^^xsd:string .
+
+:Paradigm a owl:Class ;
+	rdfs:label "Paradigma {it}"^^xsd:string , "Paradigm"@en ;
+	rdfs:subClassOf DUL:Description , :Context , _:node17168lt6lx62 .
+
+_:node17168lt6lx62 a owl:Restriction ;
+	owl:onProperty DUL:hasComponent ;
+	owl:minCardinality "2"^^xsd:nonNegativeInteger .
+
+:Paradigm rdfs:subClassOf _:node17168lt6lx63 .
+
+_:node17168lt6lx63 a owl:Restriction ;
+	owl:onProperty DUL:hasComponent ;
+	owl:someValuesFrom :Meaning .
+
+:Paradigm rdfs:comment "The context of an expressed Meaning"^^xsd:string .
+
+:Reference a owl:Class ;
+	rdfs:label "Reference"^^xsd:string , "Reference"@en ;
+	owl:equivalentClass _:node17168lt6lx64 .
+
+_:node17168lt6lx64 a owl:Class ;
+	owl:unionOf _:node17168lt6lx65 .
+
+_:node17168lt6lx65 rdf:first _:node17168lt6lx66 .
+
+_:node17168lt6lx66 a owl:Restriction ;
+	owl:onProperty :hasInterpretation ;
+	owl:someValuesFrom :Meaning .
+
+_:node17168lt6lx65 rdf:rest _:node17168lt6lx67 .
+
+_:node17168lt6lx67 rdf:first _:node17168lt6lx68 .
+
+_:node17168lt6lx68 a owl:Restriction ;
+	owl:onProperty :isDenotedBy ;
+	owl:someValuesFrom :Expression .
+
+_:node17168lt6lx67 rdf:rest rdf:nil .
+
+:Reference rdfs:subClassOf DUL:Entity ;
+	rdfs:comment "Any Entity that isDenotedBy an Expression, or that hasInterpretation some Meaning"^^xsd:string .
+
+owl:Thing a owl:Class .

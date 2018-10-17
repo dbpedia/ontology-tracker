@@ -1,0 +1,2167 @@
+@prefix afn:   <http://jena.hpl.hp.com/ARQ/function#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dqc:   <http://semwebquality.org/ontologies/dq-constraints#> .
+@prefix sp:    <http://spinrdf.org/sp#> .
+@prefix spl:   <http://spinrdf.org/spl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix smf:   <http://topbraid.org/sparqlmotionfunctions#> .
+@prefix spin:  <http://spinrdf.org/spin#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix fn:    <http://www.w3.org/2005/xpath-functions#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+_:b0    sp:varName  "8"^^xsd:string .
+
+_:b1    sp:varName  "s"^^xsd:string .
+
+_:b2    sp:varName  "5"^^xsd:string .
+
+_:b3    sp:varName  "value"^^xsd:string .
+
+_:b4    sp:varName  "s"^^xsd:string .
+
+_:b5    sp:varName  "s"^^xsd:string .
+
+_:b6    sp:varName  "value"^^xsd:string .
+
+_:b7    sp:varName  "9"^^xsd:string .
+
+dqc:ListedLegalValueClass
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances of class ?arg1 with property ?arg2 that have values which are not contained in property ?arg4 of instances of class ?arg3. The query tolerates chaotic assignments of language tags."@en ;
+        rdfs:label          "Legal value check in class instances"@en ;
+        rdfs:subClassOf     dqc:LegalValueConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b8
+                                              ] [ sp:object     _:b9 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b8
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b8
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?s .\n    _:c0 spin:violationPath ?arg2 .}\nWHERE\n  { ?s rdf:type ?arg1 .\n    ?s ?arg2 ?value\n    OPTIONAL\n      { ?s2 rdf:type ?arg3 .\n        ?s2 ?arg4 ?value1\n        FILTER ( str(?value1) = str(?value) )\n      }\n    FILTER ( ! bound(?value1) )\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b9
+                                              ] [ sp:object     _:b10 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b9
+                                                ] [ a            sp:Optional ;
+                                                    sp:elements  ( [ sp:object     spin:_arg3 ;
+                                                                     sp:predicate  rdf:type ;
+                                                                     sp:subject    _:b11
+                                                                   ] [ sp:object     _:b12 ;
+                                                                       sp:predicate  spin:_arg4 ;
+                                                                       sp:subject    _:b11
+                                                                     ] [ a              sp:Filter ;
+                                                                         sp:expression  [ a        sp:eq ;
+                                                                                          sp:arg1  [ a        sp:str ;
+                                                                                                     sp:arg1  _:b12
+                                                                                                   ] ;
+                                                                                          sp:arg2  [ a        sp:str ;
+                                                                                                     sp:arg1  _:b10
+                                                                                                   ]
+                                                                                        ]
+                                                                       ] )
+                                                  ] [ a              sp:Filter ;
+                                                      sp:expression  [ a        sp:not ;
+                                                                       sp:arg1  [ a        sp:bound ;
+                                                                                  sp:arg1  _:b12
+                                                                                ]
+                                                                     ]
+                                                    ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances with legal values!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that holds legal values!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class with instances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:labelTemplate  "Instances of class {?arg1} can only contain the same values for property {?arg2} as property {?arg4} in instances of class {?arg3}!"^^xsd:string .
+
+_:b13   sp:varName  "value1"^^xsd:string .
+
+dqc:NumbersAll  a           spin:Template ;
+        rdfs:comment        "This query flags all instances with property ?arg1 that have characters other than numbers as literal values."@en ;
+        rdfs:label          "syntax check in all instances: only numbers allowed"@en ;
+        rdfs:subClassOf     dqc:SyntaxConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b14
+                                              ] [ sp:object     _:b15 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b14
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b14
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?s ?arg1 ?value .\n    FILTER (!regex(str(?value), \"^([0-9])*$\"^^xsd:string)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b3 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b15
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:not ;
+                                                                   sp:arg1  [ a        sp:regex ;
+                                                                              sp:arg1  [ a        sp:str ;
+                                                                                         sp:arg1  _:b3
+                                                                                       ] ;
+                                                                              sp:arg2  "^([0-9])*$"^^xsd:string
+                                                                            ]
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Syntax rule: only numbers allowed in {?arg1}!"^^xsd:string .
+
+_:b16   sp:varName  "10"^^xsd:string .
+
+_:b17   sp:varName  "value1"^^xsd:string .
+
+dqc:EAN-13Class  a          spin:Template ;
+        rdfs:comment        "This query flags wrong EAN-13 values in instances of a specified class."@en ;
+        rdfs:label          "EAN-13 Class"^^xsd:string ;
+        rdfs:subClassOf     dqc:SyntaxConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b18
+                                              ] [ sp:object     _:b19 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b18
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b18
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?instance .\n    _:c0 spin:violationPath ?arg2 .}\nWHERE\n  { ?instance rdf:type ?arg1 .\n    ?instance ?arg2 ?ean\n    LET (?1 := afn:substr(str(?ean), 0, 1))\n    LET (?2 := afn:substr(str(?ean), 1, 2))\n    LET (?3 := afn:substr(str(?ean), 2, 3))\n    LET (?4 := afn:substr(str(?ean), 3, 4))\n    LET (?5 := afn:substr(str(?ean), 4, 5))\n    LET (?6 := afn:substr(str(?ean), 5, 6))\n    LET (?7 := afn:substr(str(?ean), 6, 7))\n    LET (?8 := afn:substr(str(?ean), 7, 8))\n    LET (?9 := afn:substr(str(?ean), 8, 9))\n    LET (?10 := afn:substr(str(?ean), 9, 10))\n    LET (?11 := afn:substr(str(?ean), 10, 11))\n    LET (?12 := afn:substr(str(?ean), 11, 12))\n    LET (?13 := afn:substr(str(?ean), 12, 13))\n    LET (?value := ( ( ( ( ( ( ( xsd:int(?2) + xsd:int(?4) ) + xsd:int(?6) ) + xsd:int(?8) ) + xsd:int(?10) ) + xsd:int(?12) ) * 3 ) + ( ( ( ( ( xsd:int(?1) + xsd:int(?3) ) + xsd:int(?5) ) + xsd:int(?7) ) + xsd:int(?9) ) + xsd:int(?11) ) ))\n    LET (?check := afn:substr(str(?value), ( fn:string-length(str(?value)) - 1 ), fn:string-length(str(?value))))\n    FILTER ( ( ( ( xsd:int(?check) + xsd:int(?13) ) != 0 ) && ( ( xsd:int(?check) + xsd:int(?13) ) != 10 ) ) || ( ! regex(str(?ean), \"^[0-9]{13}$\") ) )\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b19
+                                              ] [ sp:object     _:b20 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b19
+                                                ] [ a              sp:Let ;
+                                                    sp:expression  [ a        afn:substr ;
+                                                                     sp:arg1  [ a        sp:str ;
+                                                                                sp:arg1  _:b20
+                                                                              ] ;
+                                                                     sp:arg2  0 ;
+                                                                     sp:arg3  1
+                                                                   ] ;
+                                                    sp:variable    _:b21
+                                                  ] [ a              sp:Let ;
+                                                      sp:expression  [ a        afn:substr ;
+                                                                       sp:arg1  [ a        sp:str ;
+                                                                                  sp:arg1  _:b20
+                                                                                ] ;
+                                                                       sp:arg2  1 ;
+                                                                       sp:arg3  2
+                                                                     ] ;
+                                                      sp:variable    _:b22
+                                                    ] [ a              sp:Let ;
+                                                        sp:expression  [ a        afn:substr ;
+                                                                         sp:arg1  [ a        sp:str ;
+                                                                                    sp:arg1  _:b20
+                                                                                  ] ;
+                                                                         sp:arg2  2 ;
+                                                                         sp:arg3  3
+                                                                       ] ;
+                                                        sp:variable    _:b23
+                                                      ] [ a              sp:Let ;
+                                                          sp:expression  [ a        afn:substr ;
+                                                                           sp:arg1  [ a        sp:str ;
+                                                                                      sp:arg1  _:b20
+                                                                                    ] ;
+                                                                           sp:arg2  3 ;
+                                                                           sp:arg3  4
+                                                                         ] ;
+                                                          sp:variable    _:b24
+                                                        ] [ a              sp:Let ;
+                                                            sp:expression  [ a        afn:substr ;
+                                                                             sp:arg1  [ a        sp:str ;
+                                                                                        sp:arg1  _:b20
+                                                                                      ] ;
+                                                                             sp:arg2  4 ;
+                                                                             sp:arg3  5
+                                                                           ] ;
+                                                            sp:variable    _:b2
+                                                          ] [ a              sp:Let ;
+                                                              sp:expression  [ a        afn:substr ;
+                                                                               sp:arg1  [ a        sp:str ;
+                                                                                          sp:arg1  _:b20
+                                                                                        ] ;
+                                                                               sp:arg2  5 ;
+                                                                               sp:arg3  6
+                                                                             ] ;
+                                                              sp:variable    _:b25
+                                                            ] [ a              sp:Let ;
+                                                                sp:expression  [ a        afn:substr ;
+                                                                                 sp:arg1  [ a        sp:str ;
+                                                                                            sp:arg1  _:b20
+                                                                                          ] ;
+                                                                                 sp:arg2  6 ;
+                                                                                 sp:arg3  7
+                                                                               ] ;
+                                                                sp:variable    _:b26
+                                                              ] [ a              sp:Let ;
+                                                                  sp:expression  [ a        afn:substr ;
+                                                                                   sp:arg1  [ a        sp:str ;
+                                                                                              sp:arg1  _:b20
+                                                                                            ] ;
+                                                                                   sp:arg2  7 ;
+                                                                                   sp:arg3  8
+                                                                                 ] ;
+                                                                  sp:variable    _:b27
+                                                                ] [ a              sp:Let ;
+                                                                    sp:expression  [ a        afn:substr ;
+                                                                                     sp:arg1  [ a        sp:str ;
+                                                                                                sp:arg1  _:b20
+                                                                                              ] ;
+                                                                                     sp:arg2  8 ;
+                                                                                     sp:arg3  9
+                                                                                   ] ;
+                                                                    sp:variable    _:b28
+                                                                  ] [ a              sp:Let ;
+                                                                      sp:expression  [ a        afn:substr ;
+                                                                                       sp:arg1  [ a        sp:str ;
+                                                                                                  sp:arg1  _:b20
+                                                                                                ] ;
+                                                                                       sp:arg2  9 ;
+                                                                                       sp:arg3  10
+                                                                                     ] ;
+                                                                      sp:variable    _:b29
+                                                                    ] [ a              sp:Let ;
+                                                                        sp:expression  [ a        afn:substr ;
+                                                                                         sp:arg1  [ a        sp:str ;
+                                                                                                    sp:arg1  _:b20
+                                                                                                  ] ;
+                                                                                         sp:arg2  10 ;
+                                                                                         sp:arg3  11
+                                                                                       ] ;
+                                                                        sp:variable    _:b30
+                                                                      ] [ a              sp:Let ;
+                                                                          sp:expression  [ a        afn:substr ;
+                                                                                           sp:arg1  [ a        sp:str ;
+                                                                                                      sp:arg1  _:b20
+                                                                                                    ] ;
+                                                                                           sp:arg2  11 ;
+                                                                                           sp:arg3  12
+                                                                                         ] ;
+                                                                          sp:variable    _:b31
+                                                                        ] [ a              sp:Let ;
+                                                                            sp:expression  [ a        afn:substr ;
+                                                                                             sp:arg1  [ a        sp:str ;
+                                                                                                        sp:arg1  _:b20
+                                                                                                      ] ;
+                                                                                             sp:arg2  12 ;
+                                                                                             sp:arg3  13
+                                                                                           ] ;
+                                                                            sp:variable    _:b32
+                                                                          ] [ a              sp:Let ;
+                                                                              sp:expression  [ a        sp:add ;
+                                                                                               sp:arg1  [ a        sp:mul ;
+                                                                                                          sp:arg1  [ a        sp:add ;
+                                                                                                                     sp:arg1  [ a        sp:add ;
+                                                                                                                                sp:arg1  [ a        sp:add ;
+                                                                                                                                           sp:arg1  [ a        sp:add ;
+                                                                                                                                                      sp:arg1  [ a        sp:add ;
+                                                                                                                                                                 sp:arg1  [ a        xsd:int ;
+                                                                                                                                                                            sp:arg1  _:b22
+                                                                                                                                                                          ] ;
+                                                                                                                                                                 sp:arg2  [ a        xsd:int ;
+                                                                                                                                                                            sp:arg1  _:b24
+                                                                                                                                                                          ]
+                                                                                                                                                               ] ;
+                                                                                                                                                      sp:arg2  [ a        xsd:int ;
+                                                                                                                                                                 sp:arg1  _:b25
+                                                                                                                                                               ]
+                                                                                                                                                    ] ;
+                                                                                                                                           sp:arg2  [ a        xsd:int ;
+                                                                                                                                                      sp:arg1  _:b27
+                                                                                                                                                    ]
+                                                                                                                                         ] ;
+                                                                                                                                sp:arg2  [ a        xsd:int ;
+                                                                                                                                           sp:arg1  _:b29
+                                                                                                                                         ]
+                                                                                                                              ] ;
+                                                                                                                     sp:arg2  [ a        xsd:int ;
+                                                                                                                                sp:arg1  _:b31
+                                                                                                                              ]
+                                                                                                                   ] ;
+                                                                                                          sp:arg2  3
+                                                                                                        ] ;
+                                                                                               sp:arg2  [ a        sp:add ;
+                                                                                                          sp:arg1  [ a        sp:add ;
+                                                                                                                     sp:arg1  [ a        sp:add ;
+                                                                                                                                sp:arg1  [ a        sp:add ;
+                                                                                                                                           sp:arg1  [ a        sp:add ;
+                                                                                                                                                      sp:arg1  [ a        xsd:int ;
+                                                                                                                                                                 sp:arg1  _:b21
+                                                                                                                                                               ] ;
+                                                                                                                                                      sp:arg2  [ a        xsd:int ;
+                                                                                                                                                                 sp:arg1  _:b23
+                                                                                                                                                               ]
+                                                                                                                                                    ] ;
+                                                                                                                                           sp:arg2  [ a        xsd:int ;
+                                                                                                                                                      sp:arg1  _:b2
+                                                                                                                                                    ]
+                                                                                                                                         ] ;
+                                                                                                                                sp:arg2  [ a        xsd:int ;
+                                                                                                                                           sp:arg1  _:b26
+                                                                                                                                         ]
+                                                                                                                              ] ;
+                                                                                                                     sp:arg2  [ a        xsd:int ;
+                                                                                                                                sp:arg1  _:b28
+                                                                                                                              ]
+                                                                                                                   ] ;
+                                                                                                          sp:arg2  [ a        xsd:int ;
+                                                                                                                     sp:arg1  _:b30
+                                                                                                                   ]
+                                                                                                        ]
+                                                                                             ] ;
+                                                                              sp:variable    _:b33
+                                                                            ] [ a              sp:Let ;
+                                                                                sp:expression  [ a        afn:substr ;
+                                                                                                 sp:arg1  [ a        sp:str ;
+                                                                                                            sp:arg1  _:b33
+                                                                                                          ] ;
+                                                                                                 sp:arg2  [ a        sp:sub ;
+                                                                                                            sp:arg1  [ a        fn:string-length ;
+                                                                                                                       sp:arg1  [ a        sp:str ;
+                                                                                                                                  sp:arg1  _:b33
+                                                                                                                                ]
+                                                                                                                     ] ;
+                                                                                                            sp:arg2  1
+                                                                                                          ] ;
+                                                                                                 sp:arg3  [ a        fn:string-length ;
+                                                                                                            sp:arg1  [ a        sp:str ;
+                                                                                                                       sp:arg1  _:b33
+                                                                                                                     ]
+                                                                                                          ]
+                                                                                               ] ;
+                                                                                sp:variable    _:b34
+                                                                              ] [ a              sp:Filter ;
+                                                                                  sp:expression  [ a        sp:or ;
+                                                                                                   sp:arg1  [ a        sp:and ;
+                                                                                                              sp:arg1  [ a        sp:ne ;
+                                                                                                                         sp:arg1  [ a        sp:add ;
+                                                                                                                                    sp:arg1  [ a        xsd:int ;
+                                                                                                                                               sp:arg1  _:b34
+                                                                                                                                             ] ;
+                                                                                                                                    sp:arg2  [ a        xsd:int ;
+                                                                                                                                               sp:arg1  _:b32
+                                                                                                                                             ]
+                                                                                                                                  ] ;
+                                                                                                                         sp:arg2  0
+                                                                                                                       ] ;
+                                                                                                              sp:arg2  [ a        sp:ne ;
+                                                                                                                         sp:arg1  [ a        sp:add ;
+                                                                                                                                    sp:arg1  [ a        xsd:int ;
+                                                                                                                                               sp:arg1  _:b34
+                                                                                                                                             ] ;
+                                                                                                                                    sp:arg2  [ a        xsd:int ;
+                                                                                                                                               sp:arg1  _:b32
+                                                                                                                                             ]
+                                                                                                                                  ] ;
+                                                                                                                         sp:arg2  10
+                                                                                                                       ]
+                                                                                                            ] ;
+                                                                                                   sp:arg2  [ a        sp:not ;
+                                                                                                              sp:arg1  [ a        sp:regex ;
+                                                                                                                         sp:arg1  [ a        sp:str ;
+                                                                                                                                    sp:arg1  _:b20
+                                                                                                                                  ] ;
+                                                                                                                         sp:arg2  "^[0-9]{13}$"
+                                                                                                                       ]
+                                                                                                            ]
+                                                                                                 ]
+                                                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Please enter the class holding the instances that shall be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Please enter the property holding the EAN-13!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Incorrect EAN-13 in {?arg2} of {?arg1} class instances!"^^xsd:string .
+
+_:b35   sp:varName  "b"^^xsd:string .
+
+_:b36   sp:varName  "1"^^xsd:string .
+
+_:b37   sp:varName  "value2"^^xsd:string .
+
+_:b19   sp:varName  "instance"^^xsd:string .
+
+_:b38   sp:varName  "value1"^^xsd:string .
+
+dqc:ListedLegalValueAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances with property ?arg1 that have values which are not contained in  property ?arg3 of instances of class ?arg2. The query tolerates chaotic assignments of language tags."@en ;
+        rdfs:label          "Legal value check in all instances"@en ;
+        rdfs:subClassOf     dqc:LegalValueConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b39
+                                              ] [ sp:object     _:b40 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b39
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b39
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?s .\n    _:c0 spin:violationPath ?arg1 .}\nWHERE\n  { ?s ?arg1 ?value\n    OPTIONAL\n      { ?s2 rdf:type ?arg2 .\n        ?s2 ?arg3 ?value1\n        FILTER ( str(?value1) = str(?value) )\n      }\n    FILTER ( ! bound(?value1) )\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b41 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b40
+                                              ] [ a            sp:Optional ;
+                                                  sp:elements  ( [ sp:object     spin:_arg2 ;
+                                                                   sp:predicate  rdf:type ;
+                                                                   sp:subject    _:b42
+                                                                 ] [ sp:object     _:b43 ;
+                                                                     sp:predicate  spin:_arg3 ;
+                                                                     sp:subject    _:b42
+                                                                   ] [ a              sp:Filter ;
+                                                                       sp:expression  [ a        sp:eq ;
+                                                                                        sp:arg1  [ a        sp:str ;
+                                                                                                   sp:arg1  _:b43
+                                                                                                 ] ;
+                                                                                        sp:arg2  [ a        sp:str ;
+                                                                                                   sp:arg1  _:b41
+                                                                                                 ]
+                                                                                      ]
+                                                                     ] )
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:not ;
+                                                                     sp:arg1  [ a        sp:bound ;
+                                                                                sp:arg1  _:b43
+                                                                              ]
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances with legal values!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that holds legal values!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Property {?arg1} can only contain the same values as property {?arg3} in instances of class {?arg2}!"^^xsd:string .
+
+_:b25   sp:varName  "6"^^xsd:string .
+
+_:b44   sp:varName  "value1"^^xsd:string .
+
+dqc:UpperLimitAll  a        spin:Template ;
+        rdfs:comment        "This query returns all instances that have a value for property ?arg1 above the user defined limit ?arg2. The query tolerates chaotic datatype assignments."@en ;
+        rdfs:label          "Upper limit check in all instances"@en ;
+        rdfs:subClassOf     dqc:ValueRangeConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b45
+                                              ] [ sp:object     _:b46 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b45
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b45
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?s ?arg1 ?value .\n    FILTER (smf:cast(?value, xsd:decimal) > ?arg2) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b47 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b46
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:gt ;
+                                                                   sp:arg1  [ a        smf:cast ;
+                                                                              sp:arg1  _:b47 ;
+                                                                              sp:arg2  xsd:decimal
+                                                                            ] ;
+                                                                   sp:arg2  spin:_arg2
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter upper limit!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  xsd:decimal
+                            ] ;
+        spin:labelTemplate  "Values in {?arg1} must be lower than {?arg2}!"^^xsd:string .
+
+dc:subject  a       owl:AnnotationProperty ;
+        rdfs:label  "Subject"@en .
+
+_:b48   sp:varName  "value2"^^xsd:string .
+
+_:b49   sp:varName  "s2"^^xsd:string .
+
+dqc:LegalValueConstraints
+        a                spin:Template ;
+        rdfs:comment     "Legal value constraints identify values that are either not explicitly allowed or explicitly illegal."@en ;
+        rdfs:label       "legal value constraints"@en ;
+        rdfs:subClassOf  dqc:ConstraintTemplates ;
+        spin:abstract    true .
+
+_:b50   sp:varName  "value2"^^xsd:string .
+
+dc:creator  a       owl:AnnotationProperty ;
+        rdfs:label  "Creator"@en .
+
+_:b26   sp:varName  "7"^^xsd:string .
+
+_:b51   sp:varName  "s2"^^xsd:string .
+
+_:b52   sp:varName  "11"^^xsd:string .
+
+_:b27   sp:varName  "8"^^xsd:string .
+
+_:b53   sp:varName  "2"^^xsd:string .
+
+dqc:ListedIllegalValueAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances with property ?arg1 that have values which are contained in property ?arg3 of instances of class ?arg2. The query tolerates chaotic assignments of language tags."@en ;
+        rdfs:label          "Illegal value check in all instances"@en ;
+        rdfs:subClassOf     dqc:LegalValueConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b54
+                                              ] [ sp:object     _:b55 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b54
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b54
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?s .\n    _:c0 spin:violationPath ?arg1 .}\nWHERE\n  { ?s ?arg1 ?value\n    OPTIONAL\n      { ?s2 rdf:type ?arg2 .\n        ?s2 ?arg3 ?value1\n        FILTER ( str(?value1) = str(?value) )\n      }\n    FILTER bound(?value1)\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b56 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b55
+                                              ] [ a            sp:Optional ;
+                                                  sp:elements  ( [ sp:object     spin:_arg2 ;
+                                                                   sp:predicate  rdf:type ;
+                                                                   sp:subject    _:b57
+                                                                 ] [ sp:object     _:b13 ;
+                                                                     sp:predicate  spin:_arg3 ;
+                                                                     sp:subject    _:b57
+                                                                   ] [ a              sp:Filter ;
+                                                                       sp:expression  [ a        sp:eq ;
+                                                                                        sp:arg1  [ a        sp:str ;
+                                                                                                   sp:arg1  _:b13
+                                                                                                 ] ;
+                                                                                        sp:arg2  [ a        sp:str ;
+                                                                                                   sp:arg1  _:b56
+                                                                                                 ]
+                                                                                      ]
+                                                                     ] )
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:bound ;
+                                                                     sp:arg1  _:b13
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property holding the illegal values!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class with instances holding the illegal values!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Property {?arg1} cannot have the same values as property {?arg3} in class {?arg2}!"^^xsd:string .
+
+_:b58   sp:varName  "12"^^xsd:string .
+
+_:b10   sp:varName  "value"^^xsd:string .
+
+dqc:LettersAll  a           spin:Template ;
+        rdfs:comment        "This query flags all instances with property ?arg1 that do not have letters as literal values. The query tolerates language tags."@en ;
+        rdfs:label          "syntax check in all instances: only letters allowed"@en ;
+        rdfs:subClassOf     dqc:SyntaxConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b59
+                                              ] [ sp:object     _:b60 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b59
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b59
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?s ?arg1 ?value .\n    FILTER (!regex(str(?value), \"^([A-Za-z])*$\"^^xsd:string)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b61 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b60
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:not ;
+                                                                   sp:arg1  [ a        sp:regex ;
+                                                                              sp:arg1  [ a        sp:str ;
+                                                                                         sp:arg1  _:b61
+                                                                                       ] ;
+                                                                              sp:arg2  "^([A-Za-z])*$"^^xsd:string
+                                                                            ]
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Syntax rule: only letters allowed in {?arg1}!"^^xsd:string .
+
+_:b62   sp:varName  "s2"^^xsd:string .
+
+dqc:SyntaxConstraints
+        a                spin:Template ;
+        rdfs:comment     "Syntax constraints identify values that do not adhere to syntactical rules. {@en} "^^xsd:string ;
+        rdfs:label       "syntax constraints"@en ;
+        rdfs:subClassOf  dqc:ConstraintTemplates ;
+        spin:abstract    true .
+
+_:b63   sp:varName  "from"^^xsd:string .
+
+_:b64   sp:varName  "a"^^xsd:string .
+
+_:b55   sp:varName  "s"^^xsd:string .
+
+_:b20   sp:varName  "ean"^^xsd:string .
+
+dqc:ListedLegalValueClassOverBlankNode
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances of property-and-node element ?arg2 (rdf:parseType=\"Resource\") with property ?arg3 in class ?arg1 that have values which are not contained in property ?arg5 of instances of class ?arg3. The query tolerates chaotic assignments of language tags."@en ;
+        rdfs:label          "Legal value check in blank node instances of a class"@en ;
+        rdfs:subClassOf     dqc:LegalValueConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b65
+                                              ] [ sp:object     _:b4 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b65
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b65
+                                                  ] [ sp:object     spin:_arg3 ;
+                                                      sp:predicate  spin:violationPath ;
+                                                      sp:subject    _:b65
+                                                    ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?s .\n    _:c0 spin:violationPath ?arg2 .\n    _:c0 spin:violationPath ?arg3 .}\nWHERE\n  { ?s rdf:type ?arg1 .\n    ?s ?arg2 ?node .\n    ?node ?arg3 ?value\n    OPTIONAL\n      { ?s2 rdf:type ?arg4 .\n        ?s2 ?arg5 ?value1\n        FILTER ( str(?value) = str(?value1) )\n      }\n    FILTER ( ! bound(?value1) )\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b4
+                                              ] [ sp:object     _:b66 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b4
+                                                ] [ sp:object     _:b67 ;
+                                                    sp:predicate  spin:_arg3 ;
+                                                    sp:subject    _:b66
+                                                  ] [ a            sp:Optional ;
+                                                      sp:elements  ( [ sp:object     spin:_arg4 ;
+                                                                       sp:predicate  rdf:type ;
+                                                                       sp:subject    _:b68
+                                                                     ] [ sp:object     _:b69 ;
+                                                                         sp:predicate  spin:_arg5 ;
+                                                                         sp:subject    _:b68
+                                                                       ] [ a              sp:Filter ;
+                                                                           sp:expression  [ a        sp:eq ;
+                                                                                            sp:arg1  [ a        sp:str ;
+                                                                                                       sp:arg1  _:b67
+                                                                                                     ] ;
+                                                                                            sp:arg2  [ a        sp:str ;
+                                                                                                       sp:arg1  _:b69
+                                                                                                     ]
+                                                                                          ]
+                                                                         ] )
+                                                    ] [ a              sp:Filter ;
+                                                        sp:expression  [ a        sp:not ;
+                                                                         sp:arg1  [ a        sp:bound ;
+                                                                                    sp:arg1  _:b69
+                                                                                  ]
+                                                                       ]
+                                                      ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that holds blank nodes!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances with legal values!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class with instances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that holds legal values!"^^xsd:string ;
+                              spl:predicate  sp:arg5 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Instances of property-and-node element {?arg2} in class {?arg1} can only contain the same values for property {?arg3} as property {?arg5} in instances of class {?arg4}!"^^xsd:string .
+
+_:b70   sp:varName  "s"^^xsd:string .
+
+_:b71   sp:varName  "uniqueValue1"^^xsd:string .
+
+_:b11   sp:varName  "s2"^^xsd:string .
+
+_:b72   sp:varName  "3"^^xsd:string .
+
+_:b73   sp:varName  "a"^^xsd:string .
+
+_:b74   sp:varName  "13"^^xsd:string .
+
+sp:arg7  a                  rdf:Property ;
+        rdfs:comment        "The seventh argument of a function call."^^xsd:string ;
+        rdfs:label          "arg7"^^xsd:string ;
+        rdfs:subPropertyOf  sp:arg .
+
+dqc:ConstraintTemplates
+        a                spin:Template ;
+        rdfs:comment     "Constraint templates are generalized SPARQL query templates based on the SPARQL Inferencing Framework (SPIN). The query templates represent generic data quality rules that may be used to identify data quality problems, i.e. violations of previously defined constraints."@en ;
+        rdfs:label       "data quality constraint templates"^^xsd:string ;
+        rdfs:subClassOf  spin:Templates ;
+        spin:abstract    true .
+
+_:b75   sp:varName  "s"^^xsd:string .
+
+_:b76   sp:varName  "s"^^xsd:string .
+
+_:b77   sp:varName  "s2"^^xsd:string .
+
+dqc:ValueRangeConstraints
+        a                spin:Template ;
+        rdfs:comment     "Value range constraints allow the identification of values that do not obey a certain upper and/or lower limit."@en ;
+        rdfs:label       "value range constraints"@en ;
+        rdfs:subClassOf  dqc:ConstraintTemplates ;
+        spin:abstract    true .
+
+_:b41   sp:varName  "value"^^xsd:string .
+
+_:b78   sp:varName  "4"^^xsd:string .
+
+_:b79   sp:varName  "uniqueValue1"^^xsd:string .
+
+dqc:UniquenessConstraints
+        a                spin:Template ;
+        rdfs:comment     "Uniqueness constraints identify values that shall be unique, but are redundant within a certain data set."@en ;
+        rdfs:label       "uniqueness constraints"@en ;
+        rdfs:subClassOf  dqc:ConstraintTemplates ;
+        spin:abstract    true .
+
+_:b80   sp:varName  "value"^^xsd:string .
+
+dqc:InconsistentValueRangeAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances with inconsistant value ranges. Among others it is suitable for value ranges with datatypes xsd:integer, xsd:int, xsd:float, xsd:date, and xsd:dateTime. The literals must be typed."@en ;
+        rdfs:label          "Inconsistent value range all"^^xsd:string ;
+        rdfs:subClassOf     dqc:ValueRangeConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b81
+                                              ] [ sp:object     _:b82 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b81
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b81
+                                                  ] [ sp:object     spin:_arg2 ;
+                                                      sp:predicate  spin:violationPath ;
+                                                      sp:subject    _:b81
+                                                    ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?instance .\n    _:c0 spin:violationPath ?arg1 .\n    _:c0 spin:violationPath ?arg2 .}\nWHERE\n  { ?instance ?arg1 ?from .\n    ?instance ?arg2 ?through\n    FILTER ( ?from >= ?through )\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b63 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b82
+                                              ] [ sp:object     _:b83 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b82
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:ge ;
+                                                                     sp:arg1  _:b63 ;
+                                                                     sp:arg2  _:b83
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Please enter the datatype property that shall hold the lower value!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Please enter the datatype property that shall hold the greater value!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Value in {?arg1} cannot be greater than value of {?arg2}!"^^xsd:string .
+
+_:b67   sp:varName  "value"^^xsd:string .
+
+_:b84   sp:varName  "value1"^^xsd:string .
+
+dqc:LettersAndDotsAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances with property ?arg1 that have characters other than letters or dots in literal values. The query tolerates language tags."@en ;
+        rdfs:label          "syntax check in all instances: only letters and dots allowed"@en ;
+        rdfs:subClassOf     dqc:SyntaxConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b85
+                                              ] [ sp:object     _:b76 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b85
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b85
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?s ?arg1 ?value .\n    FILTER (!regex(str(?value), \"^([A-Za-z\\\\. ])*$\"^^xsd:string)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b86 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b76
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:not ;
+                                                                   sp:arg1  [ a        sp:regex ;
+                                                                              sp:arg1  [ a        sp:str ;
+                                                                                         sp:arg1  _:b86
+                                                                                       ] ;
+                                                                              sp:arg2  "^([A-Za-z\\. ])*$"^^xsd:string
+                                                                            ]
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Syntax rule: only letters and dots allowed in {?arg1}!"^^xsd:string .
+
+dqc:MissingProperties
+        a                   spin:Template ;
+        rdfs:comment        "This query returns all instances of class ?arg1 where property ?arg2 is missing. It explicitly tolerates empty literal values in property ?arg2."@en ;
+        rdfs:label          "Mandatory property check in instances of a class"@en ;
+        rdfs:subClassOf     dqc:MissingElementConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b87
+                                              ] [ sp:object     _:b1 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b87
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b87
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    ?s a ?arg1 .\n    NOT EXISTS {\n        ?s ?arg2 ?value .\n    } \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b1
+                                              ] [ a            sp:NotExists ;
+                                                  sp:elements  ( [ sp:object     [ sp:varName  "value"^^xsd:string ] ;
+                                                                   sp:predicate  spin:_arg2 ;
+                                                                   sp:subject    _:b1
+                                                                 ] )
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"@en ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that contains instances to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:labelTemplate  "Property {?arg2} is mandatory but may contain empty literals for instances of class {?arg1}!"^^xsd:string .
+
+dc:title  a         owl:AnnotationProperty ;
+        rdfs:label  "Title"@en .
+
+dqc:MissingLiterals  a      spin:Template ;
+        rdfs:comment        "This query returns all instances of class ?arg1 where the literal for ?arg2 is empty. It does not return instances where the whole property ?arg2 is missing."@en ;
+        rdfs:label          "mandatory literal value check in instances of a class"@en ;
+        rdfs:subClassOf     dqc:MissingElementConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b88
+                                              ] [ sp:object     _:b89 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b88
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b88
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    ?s a ?arg1 .\n    ?s ?arg2 \"\"^^xsd:string .\n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b89
+                                              ] [ sp:object     ""^^xsd:string ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b89
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:labelTemplate  "Mandatory literals in {?arg2} of class {?arg1}!"^^xsd:string .
+
+dqc:FunctionalDependencyTrustedReference_ClassOverBlankNode
+        a                   spin:Template ;
+        rdfs:comment        "This query is designed to test (blank node) instances of the property-and-node element (rdf:parseType=\"Resource\") ?arg2 that are part of the instances of class ?arg 1. The query flags instances of property ?arg2 with properties ?arg3 and ?arg4 that do not have the exact value combination in instances of the trusted reference in class ?arg5. The semantics of property ?arg3 should be equal with property ?arg6, and the semantics of property ?arg4 should be equal with ?arg7. The query tolerates homonymous values, i.e. the same value may be assigned to different dependent values. Value combinations that cannot be found in the trusted reference will also be flagged. The query will also test the existence of a single value in the trusted reference when one property of the tested data is missing."@en ;
+        rdfs:label          "Functional dependency check in blank node instances of a class with trusted reference"@en ;
+        rdfs:subClassOf     dqc:FunctionalDependencyConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b90
+                                              ] [ sp:object     _:b75 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b90
+                                                ] [ sp:object     spin:_arg3 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b90
+                                                  ] [ sp:object     spin:_arg4 ;
+                                                      sp:predicate  spin:violationPath ;
+                                                      sp:subject    _:b90
+                                                    ] ) ;
+                              sp:text       "CONSTRUCT { \n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg3 .\n    _:b0 spin:violationPath ?arg4 .\n}\nWHERE {\n    ?s a ?arg1 .\n    OPTIONAL {\n        ?s ?arg2 ?node .\n        OPTIONAL {\n            ?node ?arg3 ?value1 .\n        } \n        OPTIONAL {\n            ?s ?arg4 ?value2 .\n        } \n    } \n    NOT EXISTS {\n        ?s2 a ?arg5 .\n        ?s2 ?arg6 ?value1 .\n        ?s2 ?arg7 ?value2 .\n    } \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b75
+                                              ] [ a            sp:Optional ;
+                                                  sp:elements  ( [ sp:object     _:b91 ;
+                                                                   sp:predicate  spin:_arg2 ;
+                                                                   sp:subject    _:b75
+                                                                 ] [ a            sp:Optional ;
+                                                                     sp:elements  ( [ sp:object     _:b38 ;
+                                                                                      sp:predicate  spin:_arg3 ;
+                                                                                      sp:subject    _:b91
+                                                                                    ] )
+                                                                   ] [ a            sp:Optional ;
+                                                                       sp:elements  ( [ sp:object     _:b48 ;
+                                                                                        sp:predicate  spin:_arg4 ;
+                                                                                        sp:subject    _:b75
+                                                                                      ] )
+                                                                     ] )
+                                                ] [ a            sp:NotExists ;
+                                                    sp:elements  ( [ sp:object     spin:_arg5 ;
+                                                                     sp:predicate  rdf:type ;
+                                                                     sp:subject    _:b51
+                                                                   ] [ sp:object     _:b38 ;
+                                                                       sp:predicate  [ sp:varName  "arg6"^^xsd:string ] ;
+                                                                       sp:subject    _:b51
+                                                                     ] [ sp:object     _:b48 ;
+                                                                         sp:predicate  [ sp:varName  "arg7"^^xsd:string ] ;
+                                                                         sp:subject    _:b51
+                                                                       ] )
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that holds blank nodes!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select first property of trusted reference that holds legal values for property 1!"^^xsd:string ;
+                              spl:predicate  sp:arg6 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 1 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select second property of trusted reference that holds legal values for property 2!"^^xsd:string ;
+                              spl:predicate  sp:arg7 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class of trusted reference that holds instances with legal value combinations!"^^xsd:string ;
+                              spl:predicate  sp:arg5 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 2 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Value combinations of properties {?arg3} and {?arg4} must always be identical with value combinations of properties {?arg6} and {?arg7} of class {?arg5}  for all instances of class {?arg1}!"^^xsd:string .
+
+_:b92   sp:varName  "instance"^^xsd:string .
+
+_:b42   sp:varName  "s2"^^xsd:string .
+
+_:b46   sp:varName  "s"^^xsd:string .
+
+_:b86   sp:varName  "value"^^xsd:string .
+
+_:b28   sp:varName  "9"^^xsd:string .
+
+_:b93   sp:varName  "s"^^xsd:string .
+
+_:b68   sp:varName  "s2"^^xsd:string .
+
+dqc:UpperLimitClass  a      spin:Template ;
+        rdfs:comment        "This query returns all instances of class ?arg1 that have a value for property ?arg2 above the user defined limit ?arg3. The query tolerates chaotic datatype assignments."@en ;
+        rdfs:label          "Upper limit check in all instances of a class"@en ;
+        rdfs:subClassOf     dqc:ValueRangeConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b94
+                                              ] [ sp:object     _:b95 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b94
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b94
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    ?s a ?arg1 .\n    ?s ?arg2 ?value .\n    FILTER (smf:cast(?value, xsd:decimal) > ?arg3) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b95
+                                              ] [ sp:object     _:b96 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b95
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:gt ;
+                                                                     sp:arg1  [ a        smf:cast ;
+                                                                                sp:arg1  _:b96 ;
+                                                                                sp:arg2  xsd:decimal
+                                                                              ] ;
+                                                                     sp:arg2  spin:_arg3
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that contains instances to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"@en ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter upper limit!"@en ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  xsd:decimal
+                            ] ;
+        spin:labelTemplate  "Values in {?arg2} for instances of class {?arg1} must be lower than {?arg3}!"^^xsd:string .
+
+dqc:EAN-13All  a            spin:Template ;
+        rdfs:comment        "This query flags wrong EAN-13 values."@en ;
+        rdfs:label          "EAN-13 All"^^xsd:string ;
+        rdfs:subClassOf     dqc:SyntaxConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b97
+                                              ] [ sp:object     _:b92 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b97
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b97
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT \n  { _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?instance .\n    _:c0 spin:violationPath ?arg1 .}\nWHERE\n  { ?instance ?arg1 ?ean\n    LET (?1 := afn:substr(str(?ean), 0, 1))\n    LET (?2 := afn:substr(str(?ean), 1, 2))\n    LET (?3 := afn:substr(str(?ean), 2, 3))\n    LET (?4 := afn:substr(str(?ean), 3, 4))\n    LET (?5 := afn:substr(str(?ean), 4, 5))\n    LET (?6 := afn:substr(str(?ean), 5, 6))\n    LET (?7 := afn:substr(str(?ean), 6, 7))\n    LET (?8 := afn:substr(str(?ean), 7, 8))\n    LET (?9 := afn:substr(str(?ean), 8, 9))\n    LET (?10 := afn:substr(str(?ean), 9, 10))\n    LET (?11 := afn:substr(str(?ean), 10, 11))\n    LET (?12 := afn:substr(str(?ean), 11, 12))\n    LET (?13 := afn:substr(str(?ean), 12, 13))\n    LET (?value := ( ( ( ( ( ( ( xsd:int(?2) + xsd:int(?4) ) + xsd:int(?6) ) + xsd:int(?8) ) + xsd:int(?10) ) + xsd:int(?12) ) * 3 ) + ( ( ( ( ( xsd:int(?1) + xsd:int(?3) ) + xsd:int(?5) ) + xsd:int(?7) ) + xsd:int(?9) ) + xsd:int(?11) ) ))\n    LET (?check := afn:substr(str(?value), ( fn:string-length(str(?value)) - 1 ), fn:string-length(str(?value))))\n    FILTER ( ( ( ( xsd:int(?check) + xsd:int(?13) ) != 0 ) && ( ( xsd:int(?check) + xsd:int(?13) ) != 10 ) ) || ( ! regex(str(?ean), \"^[0-9]{13}$\") ) )\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b98 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b92
+                                              ] [ a              sp:Let ;
+                                                  sp:expression  [ a        afn:substr ;
+                                                                   sp:arg1  [ a        sp:str ;
+                                                                              sp:arg1  _:b98
+                                                                            ] ;
+                                                                   sp:arg2  0 ;
+                                                                   sp:arg3  1
+                                                                 ] ;
+                                                  sp:variable    _:b36
+                                                ] [ a              sp:Let ;
+                                                    sp:expression  [ a        afn:substr ;
+                                                                     sp:arg1  [ a        sp:str ;
+                                                                                sp:arg1  _:b98
+                                                                              ] ;
+                                                                     sp:arg2  1 ;
+                                                                     sp:arg3  2
+                                                                   ] ;
+                                                    sp:variable    _:b53
+                                                  ] [ a              sp:Let ;
+                                                      sp:expression  [ a        afn:substr ;
+                                                                       sp:arg1  [ a        sp:str ;
+                                                                                  sp:arg1  _:b98
+                                                                                ] ;
+                                                                       sp:arg2  2 ;
+                                                                       sp:arg3  3
+                                                                     ] ;
+                                                      sp:variable    _:b72
+                                                    ] [ a              sp:Let ;
+                                                        sp:expression  [ a        afn:substr ;
+                                                                         sp:arg1  [ a        sp:str ;
+                                                                                    sp:arg1  _:b98
+                                                                                  ] ;
+                                                                         sp:arg2  3 ;
+                                                                         sp:arg3  4
+                                                                       ] ;
+                                                        sp:variable    _:b78
+                                                      ] [ a              sp:Let ;
+                                                          sp:expression  [ a        afn:substr ;
+                                                                           sp:arg1  [ a        sp:str ;
+                                                                                      sp:arg1  _:b98
+                                                                                    ] ;
+                                                                           sp:arg2  4 ;
+                                                                           sp:arg3  5
+                                                                         ] ;
+                                                          sp:variable    _:b99
+                                                        ] [ a              sp:Let ;
+                                                            sp:expression  [ a        afn:substr ;
+                                                                             sp:arg1  [ a        sp:str ;
+                                                                                        sp:arg1  _:b98
+                                                                                      ] ;
+                                                                             sp:arg2  5 ;
+                                                                             sp:arg3  6
+                                                                           ] ;
+                                                            sp:variable    _:b100
+                                                          ] [ a              sp:Let ;
+                                                              sp:expression  [ a        afn:substr ;
+                                                                               sp:arg1  [ a        sp:str ;
+                                                                                          sp:arg1  _:b98
+                                                                                        ] ;
+                                                                               sp:arg2  6 ;
+                                                                               sp:arg3  7
+                                                                             ] ;
+                                                              sp:variable    _:b101
+                                                            ] [ a              sp:Let ;
+                                                                sp:expression  [ a        afn:substr ;
+                                                                                 sp:arg1  [ a        sp:str ;
+                                                                                            sp:arg1  _:b98
+                                                                                          ] ;
+                                                                                 sp:arg2  7 ;
+                                                                                 sp:arg3  8
+                                                                               ] ;
+                                                                sp:variable    _:b0
+                                                              ] [ a              sp:Let ;
+                                                                  sp:expression  [ a        afn:substr ;
+                                                                                   sp:arg1  [ a        sp:str ;
+                                                                                              sp:arg1  _:b98
+                                                                                            ] ;
+                                                                                   sp:arg2  8 ;
+                                                                                   sp:arg3  9
+                                                                                 ] ;
+                                                                  sp:variable    _:b7
+                                                                ] [ a              sp:Let ;
+                                                                    sp:expression  [ a        afn:substr ;
+                                                                                     sp:arg1  [ a        sp:str ;
+                                                                                                sp:arg1  _:b98
+                                                                                              ] ;
+                                                                                     sp:arg2  9 ;
+                                                                                     sp:arg3  10
+                                                                                   ] ;
+                                                                    sp:variable    _:b16
+                                                                  ] [ a              sp:Let ;
+                                                                      sp:expression  [ a        afn:substr ;
+                                                                                       sp:arg1  [ a        sp:str ;
+                                                                                                  sp:arg1  _:b98
+                                                                                                ] ;
+                                                                                       sp:arg2  10 ;
+                                                                                       sp:arg3  11
+                                                                                     ] ;
+                                                                      sp:variable    _:b52
+                                                                    ] [ a              sp:Let ;
+                                                                        sp:expression  [ a        afn:substr ;
+                                                                                         sp:arg1  [ a        sp:str ;
+                                                                                                    sp:arg1  _:b98
+                                                                                                  ] ;
+                                                                                         sp:arg2  11 ;
+                                                                                         sp:arg3  12
+                                                                                       ] ;
+                                                                        sp:variable    _:b58
+                                                                      ] [ a              sp:Let ;
+                                                                          sp:expression  [ a        afn:substr ;
+                                                                                           sp:arg1  [ a        sp:str ;
+                                                                                                      sp:arg1  _:b98
+                                                                                                    ] ;
+                                                                                           sp:arg2  12 ;
+                                                                                           sp:arg3  13
+                                                                                         ] ;
+                                                                          sp:variable    _:b74
+                                                                        ] [ a              sp:Let ;
+                                                                            sp:expression  [ a        sp:add ;
+                                                                                             sp:arg1  [ a        sp:mul ;
+                                                                                                        sp:arg1  [ a        sp:add ;
+                                                                                                                   sp:arg1  [ a        sp:add ;
+                                                                                                                              sp:arg1  [ a        sp:add ;
+                                                                                                                                         sp:arg1  [ a        sp:add ;
+                                                                                                                                                    sp:arg1  [ a        sp:add ;
+                                                                                                                                                               sp:arg1  [ a        xsd:int ;
+                                                                                                                                                                          sp:arg1  _:b53
+                                                                                                                                                                        ] ;
+                                                                                                                                                               sp:arg2  [ a        xsd:int ;
+                                                                                                                                                                          sp:arg1  _:b78
+                                                                                                                                                                        ]
+                                                                                                                                                             ] ;
+                                                                                                                                                    sp:arg2  [ a        xsd:int ;
+                                                                                                                                                               sp:arg1  _:b100
+                                                                                                                                                             ]
+                                                                                                                                                  ] ;
+                                                                                                                                         sp:arg2  [ a        xsd:int ;
+                                                                                                                                                    sp:arg1  _:b0
+                                                                                                                                                  ]
+                                                                                                                                       ] ;
+                                                                                                                              sp:arg2  [ a        xsd:int ;
+                                                                                                                                         sp:arg1  _:b16
+                                                                                                                                       ]
+                                                                                                                            ] ;
+                                                                                                                   sp:arg2  [ a        xsd:int ;
+                                                                                                                              sp:arg1  _:b58
+                                                                                                                            ]
+                                                                                                                 ] ;
+                                                                                                        sp:arg2  3
+                                                                                                      ] ;
+                                                                                             sp:arg2  [ a        sp:add ;
+                                                                                                        sp:arg1  [ a        sp:add ;
+                                                                                                                   sp:arg1  [ a        sp:add ;
+                                                                                                                              sp:arg1  [ a        sp:add ;
+                                                                                                                                         sp:arg1  [ a        sp:add ;
+                                                                                                                                                    sp:arg1  [ a        xsd:int ;
+                                                                                                                                                               sp:arg1  _:b36
+                                                                                                                                                             ] ;
+                                                                                                                                                    sp:arg2  [ a        xsd:int ;
+                                                                                                                                                               sp:arg1  _:b72
+                                                                                                                                                             ]
+                                                                                                                                                  ] ;
+                                                                                                                                         sp:arg2  [ a        xsd:int ;
+                                                                                                                                                    sp:arg1  _:b99
+                                                                                                                                                  ]
+                                                                                                                                       ] ;
+                                                                                                                              sp:arg2  [ a        xsd:int ;
+                                                                                                                                         sp:arg1  _:b101
+                                                                                                                                       ]
+                                                                                                                            ] ;
+                                                                                                                   sp:arg2  [ a        xsd:int ;
+                                                                                                                              sp:arg1  _:b7
+                                                                                                                            ]
+                                                                                                                 ] ;
+                                                                                                        sp:arg2  [ a        xsd:int ;
+                                                                                                                   sp:arg1  _:b52
+                                                                                                                 ]
+                                                                                                      ]
+                                                                                           ] ;
+                                                                            sp:variable    _:b80
+                                                                          ] [ a              sp:Let ;
+                                                                              sp:expression  [ a        afn:substr ;
+                                                                                               sp:arg1  [ a        sp:str ;
+                                                                                                          sp:arg1  _:b80
+                                                                                                        ] ;
+                                                                                               sp:arg2  [ a        sp:sub ;
+                                                                                                          sp:arg1  [ a        fn:string-length ;
+                                                                                                                     sp:arg1  [ a        sp:str ;
+                                                                                                                                sp:arg1  _:b80
+                                                                                                                              ]
+                                                                                                                   ] ;
+                                                                                                          sp:arg2  1
+                                                                                                        ] ;
+                                                                                               sp:arg3  [ a        fn:string-length ;
+                                                                                                          sp:arg1  [ a        sp:str ;
+                                                                                                                     sp:arg1  _:b80
+                                                                                                                   ]
+                                                                                                        ]
+                                                                                             ] ;
+                                                                              sp:variable    _:b102
+                                                                            ] [ a              sp:Filter ;
+                                                                                sp:expression  [ a        sp:or ;
+                                                                                                 sp:arg1  [ a        sp:and ;
+                                                                                                            sp:arg1  [ a        sp:ne ;
+                                                                                                                       sp:arg1  [ a        sp:add ;
+                                                                                                                                  sp:arg1  [ a        xsd:int ;
+                                                                                                                                             sp:arg1  _:b102
+                                                                                                                                           ] ;
+                                                                                                                                  sp:arg2  [ a        xsd:int ;
+                                                                                                                                             sp:arg1  _:b74
+                                                                                                                                           ]
+                                                                                                                                ] ;
+                                                                                                                       sp:arg2  0
+                                                                                                                     ] ;
+                                                                                                            sp:arg2  [ a        sp:ne ;
+                                                                                                                       sp:arg1  [ a        sp:add ;
+                                                                                                                                  sp:arg1  [ a        xsd:int ;
+                                                                                                                                             sp:arg1  _:b102
+                                                                                                                                           ] ;
+                                                                                                                                  sp:arg2  [ a        xsd:int ;
+                                                                                                                                             sp:arg1  _:b74
+                                                                                                                                           ]
+                                                                                                                                ] ;
+                                                                                                                       sp:arg2  10
+                                                                                                                     ]
+                                                                                                          ] ;
+                                                                                                 sp:arg2  [ a        sp:not ;
+                                                                                                            sp:arg1  [ a        sp:regex ;
+                                                                                                                       sp:arg1  [ a        sp:str ;
+                                                                                                                                  sp:arg1  _:b98
+                                                                                                                                ] ;
+                                                                                                                       sp:arg2  "^[0-9]{13}$"
+                                                                                                                     ]
+                                                                                                          ]
+                                                                                               ]
+                                                                              ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Please enter the property holding the EAN-13!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Incorrect EAN-13 in {?arg1}!"^^xsd:string .
+
+dqc:FunctionalDependencyTrustedReferenceAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags instances with properties ?arg1 and ?arg2 that do not have a corresponding value combination in instances of the trusted reference in class ?arg3. The semantics of property ?arg1 should be equal with property ?arg4, and the semantics of property ?arg2 should be equal with ?arg5. The query tolerates homonymous values, i.e. the same value may be assigned to different dependent values by using different instances in the trusted reference. Value combinations that cannot be found in the trusted reference will also be flagged as incorrect. The query will also test the existence of a single value in the trusted reference when one property of the tested data is missing."@en ;
+        rdfs:label          "Functional dependency check in all instances with trusted reference"@en ;
+        rdfs:subClassOf     dqc:FunctionalDependencyConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b103
+                                              ] [ sp:object     _:b70 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b103
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b103
+                                                  ] [ sp:object     spin:_arg2 ;
+                                                      sp:predicate  spin:violationPath ;
+                                                      sp:subject    _:b103
+                                                    ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    OPTIONAL {\n        ?s ?arg1 ?value1 .\n        OPTIONAL {\n            ?s ?arg2 ?value2 .\n        } \n    } \n    NOT EXISTS {\n        ?s2 a ?arg3 .\n        ?s2 ?arg4 ?value1 .\n        ?s2 ?arg5 ?value2 .\n    } \n}"^^xsd:string ;
+                              sp:where      ( [ a            sp:Optional ;
+                                                sp:elements  ( [ sp:object     _:b17 ;
+                                                                 sp:predicate  spin:_arg1 ;
+                                                                 sp:subject    _:b70
+                                                               ] [ a            sp:Optional ;
+                                                                   sp:elements  ( [ sp:object     _:b37 ;
+                                                                                    sp:predicate  spin:_arg2 ;
+                                                                                    sp:subject    _:b70
+                                                                                  ] )
+                                                                 ] )
+                                              ] [ a            sp:NotExists ;
+                                                  sp:elements  ( [ sp:object     spin:_arg3 ;
+                                                                   sp:predicate  rdf:type ;
+                                                                   sp:subject    _:b62
+                                                                 ] [ sp:object     _:b17 ;
+                                                                     sp:predicate  spin:_arg4 ;
+                                                                     sp:subject    _:b62
+                                                                   ] [ sp:object     _:b37 ;
+                                                                       sp:predicate  spin:_arg5 ;
+                                                                       sp:subject    _:b62
+                                                                     ] )
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select first property of trusted reference that holds legal values for property 1!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select second property of trusted reference that holds legal values for property 2!"^^xsd:string ;
+                              spl:predicate  sp:arg5 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 2 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 1 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class of trusted reference that holds instances with legal value combinations!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:labelTemplate  "Value combinations of properties {?arg1} and {?arg2} must always be identical with value combinations of properties {?arg4} and {?arg5} in class {?arg3} for all instances!"^^xsd:string .
+
+_:b89   sp:varName  "s"^^xsd:string .
+
+_:b29   sp:varName  "10"^^xsd:string .
+
+_:b47   sp:varName  "value"^^xsd:string .
+
+dqc:LowerLimitAll  a        spin:Template ;
+        rdfs:comment        "This query returns all instances that have a value for property ?arg1 below the user defined limit ?arg2. The query tolerates chaotic datatype assignments."@en ;
+        rdfs:label          "Lower limit check in all instances"@en ;
+        rdfs:subClassOf     dqc:ValueRangeConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b104
+                                              ] [ sp:object     _:b105 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b104
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b104
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?s ?arg1 ?value .\n    FILTER (smf:cast(?value, xsd:decimal) < ?arg2) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b106 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b105
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:lt ;
+                                                                   sp:arg1  [ a        smf:cast ;
+                                                                              sp:arg1  _:b106 ;
+                                                                              sp:arg2  xsd:decimal
+                                                                            ] ;
+                                                                   sp:arg2  spin:_arg2
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter lower limit!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  xsd:decimal
+                            ] ;
+        spin:labelTemplate  "Values in {?arg1} must be greater than {?arg2}!"^^xsd:string .
+
+dqc:ExclusiveFunctionalDependencyAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags instances with property ?arg1 and value ?arg2 that do not have value ?arg4 with property ?arg3. It is only suitable for value dependencies with one to one cardinality. The query does not tolerate homonyms and is not restricted to a specific class."@en ;
+        rdfs:label          "exclusive functional dependency check in all instances"@en ;
+        rdfs:subClassOf     dqc:FunctionalDependencyConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b107
+                                              ] [ sp:object     _:b5 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b107
+                                                ] [ sp:object     spin:_arg3 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b107
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg3 .\n}\nWHERE {\n    ?s ?arg1 ?arg2 .\n    FILTER (!spl:hasValue(?s, ?arg3, ?arg4)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg2 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b5
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:not ;
+                                                                   sp:arg1  [ a        spl:hasValue ;
+                                                                              sp:arg1  _:b5 ;
+                                                                              sp:arg2  spin:_arg3 ;
+                                                                              sp:arg3  spin:_arg4
+                                                                            ]
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 1 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 2 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter functionally dependent value 1 of property 1!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  xsd:string
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter functionally dependent value 2 of property 2!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  xsd:string
+                            ] ;
+        spin:labelTemplate  "Value \"{?arg2}\" of {?arg1} must only have value \"{?arg4}\" in {?arg3} in all instances!"^^xsd:string .
+
+dqc:ListedIllegalValueClass
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances of class ?arg1 with property ?arg2 that have values which are contained in property ?arg4 of instances of class ?arg3. The query tolerates chaotic assignments of language tags."@en ;
+        rdfs:label          "Illegal value check in class instances"@en ;
+        rdfs:subClassOf     dqc:LegalValueConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b108
+                                              ] [ sp:object     _:b109 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b108
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b108
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT\r\n{   _:c0 rdf:type spin:ConstraintViolation .\n    _:c0 spin:violationRoot ?s .\n    _:c0 spin:violationPath ?arg2 .\r\n}\nWHERE\n  { ?s rdf:type ?arg1 .\n    ?s ?arg2 ?value\n    OPTIONAL\n      { ?s2 rdf:type ?arg3 .\n        ?s2 ?arg4 ?value1\n        FILTER ( str(?value1) = str(?value) )\n      }\n    FILTER bound(?value1)\n  }"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b109
+                                              ] [ sp:object     _:b6 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b109
+                                                ] [ a            sp:Optional ;
+                                                    sp:elements  ( [ sp:object     spin:_arg3 ;
+                                                                     sp:predicate  rdf:type ;
+                                                                     sp:subject    _:b49
+                                                                   ] [ sp:object     _:b84 ;
+                                                                       sp:predicate  spin:_arg4 ;
+                                                                       sp:subject    _:b49
+                                                                     ] [ a              sp:Filter ;
+                                                                         sp:expression  [ a        sp:eq ;
+                                                                                          sp:arg1  [ a        sp:str ;
+                                                                                                     sp:arg1  _:b84
+                                                                                                   ] ;
+                                                                                          sp:arg2  [ a        sp:str ;
+                                                                                                     sp:arg1  _:b6
+                                                                                                   ]
+                                                                                        ]
+                                                                       ] )
+                                                  ] [ a              sp:Filter ;
+                                                      sp:expression  [ a        sp:bound ;
+                                                                       sp:arg1  _:b84
+                                                                     ]
+                                                    ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances with illegal values!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that holds illegal values!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class with instances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:labelTemplate  "Instances of class {?arg1} cannot have the same values for property {?arg2} as property {?arg4} in class {?arg3}!"^^xsd:string .
+
+_:b110  sp:varName  "b"^^xsd:string .
+
+dqc:FunctionalDependentEmptyValueAll
+        a                   spin:Template ;
+        rdfs:comment        "This query returns all instances with value ?arg2 for property ?arg1 that do not have an empty literal string for property ?arg3."@en ;
+        rdfs:subClassOf     dqc:FunctionalDependencyConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b111
+                                              ] [ sp:object     _:b112 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b111
+                                                ] [ sp:object     spin:_arg3 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b111
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg3 .\n}\nWHERE {\n    ?s ?arg1 ?arg2 .\n    FILTER (!spl:hasValue(?s, ?arg3, \"\"^^xsd:string)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg2 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b112
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:not ;
+                                                                   sp:arg1  [ a        spl:hasValue ;
+                                                                              sp:arg1  _:b112 ;
+                                                                              sp:arg2  spin:_arg3 ;
+                                                                              sp:arg3  ""^^xsd:string
+                                                                            ]
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property that must contain empty literal!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter functionally dependent value 1 of property 1!"@en ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  xsd:string
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 1 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "When {?arg1} has value {?arg2}, then {?arg3} has to be empty!"^^xsd:string .
+
+_:b21   sp:varName  "1"^^xsd:string .
+
+_:b30   sp:varName  "11"^^xsd:string .
+
+_:b12   sp:varName  "value1"^^xsd:string .
+
+_:b112  sp:varName  "s"^^xsd:string .
+
+dqc:LowerLimitClass  a      spin:Template ;
+        rdfs:comment        "This query returns all instances of class ?arg1 that have a value for property ?arg2 below the user defined limit ?arg3. The query tolerates chaotic datatype assignments."@en ;
+        rdfs:label          "Lower limit check in all instances of a class"@en ;
+        rdfs:subClassOf     dqc:ValueRangeConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b113
+                                              ] [ sp:object     _:b114 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b113
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b113
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    ?s a ?arg1 .\n    ?s ?arg2 ?value .\n    FILTER (smf:cast(?value, xsd:decimal) < ?arg3) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b114
+                                              ] [ sp:object     _:b115 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b114
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:lt ;
+                                                                     sp:arg1  [ a        smf:cast ;
+                                                                                sp:arg1  _:b115 ;
+                                                                                sp:arg2  xsd:decimal
+                                                                              ] ;
+                                                                     sp:arg2  spin:_arg3
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that contains instances to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter lower limit! {@en}"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  xsd:decimal
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"@en ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Values in {?arg2} for instances of class {?arg1} must be greater than {?arg3}!"^^xsd:string .
+
+_:b99   sp:varName  "5"^^xsd:string .
+
+_:b116  sp:varName  "s"^^xsd:string .
+
+dqc:FunctionalDependencyConstraints
+        a                spin:Template ;
+        rdfs:comment     "Functional dependencies are dependencies between the values of two or more different properties. Functional dependency constraints check the abidance of functional dependencies."@en ;
+        rdfs:label       "functional dependency constraints"@en ;
+        rdfs:subClassOf  dqc:ConstraintTemplates ;
+        spin:abstract    true .
+
+_:b22   sp:varName  "2"^^xsd:string .
+
+_:b31   sp:varName  "12"^^xsd:string .
+
+_:b105  sp:varName  "s"^^xsd:string .
+
+_:b96   sp:varName  "value"^^xsd:string .
+
+_:b117  sp:varName  "uniqueValue2"^^xsd:string .
+
+_:b66   sp:varName  "node"^^xsd:string .
+
+_:b115  sp:varName  "value"^^xsd:string .
+
+_:b100  sp:varName  "6"^^xsd:string .
+
+_:b34   sp:varName  "check"^^xsd:string .
+
+_:b83   sp:varName  "through"^^xsd:string .
+
+_:b60   sp:varName  "s"^^xsd:string .
+
+_:b43   sp:varName  "value1"^^xsd:string .
+
+_:b106  sp:varName  "value"^^xsd:string .
+
+_:b69   sp:varName  "value1"^^xsd:string .
+
+_:b56   sp:varName  "value"^^xsd:string .
+
+<http://semwebquality.org/ontologies/dq-constraints>
+        a                owl:Ontology ;
+        rdfs:comment     "This RDF document contains a library of data quality constraints represented as SPARQL query templates based on the SPARQL Inferencing Framework (SPIN). The data quality constraint templates are especially useful for the identification of data quality problems during data entry and for periodic quality checks during data usage."@en ;
+        rdfs:label       "The Data Quality Constraints Library"@en ;
+        dc:creator       "Christian Fuerber, Martin Hepp, and Markus Wischnewski"@en ;
+        dc:date          "2011-03-28"^^xsd:string ;
+        dc:subject       "Semantic Data Quality Management"@en ;
+        dc:title         "The Data Quality Constraints Library"@en ;
+        dcterms:license  <http://www.gnu.org/licenses/lgpl.html> ;
+        owl:imports      <http://spinrdf.org/spin> ;
+        owl:versionInfo  "V 1.1 Release 2011-03-28"^^xsd:string .
+
+_:b101  sp:varName  "7"^^xsd:string .
+
+dqc:UniqueValueAll  a       spin:Template ;
+        rdfs:comment        "This query returns all instances where the value for property ?arg1 is not unique in the tested data set. The query tolerates chaotic language tag assignments."@en ;
+        rdfs:label          "Uniqueness check for all values in a property"@en ;
+        rdfs:subClassOf     dqc:UniquenessConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b118
+                                              ] [ sp:object     _:b73 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b118
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b118
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?a .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?a ?arg1 ?uniqueValue1 .\n    ?b ?arg1 ?uniqueValue2 .\n    FILTER ((str(?uniqueValue1) = str(?uniqueValue2)) && (?a != ?b)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b79 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b73
+                                              ] [ sp:object     _:b117 ;
+                                                  sp:predicate  spin:_arg1 ;
+                                                  sp:subject    _:b35
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:and ;
+                                                                     sp:arg1  [ a        sp:eq ;
+                                                                                sp:arg1  [ a        sp:str ;
+                                                                                           sp:arg1  _:b79
+                                                                                         ] ;
+                                                                                sp:arg2  [ a        sp:str ;
+                                                                                           sp:arg1  _:b117
+                                                                                         ]
+                                                                              ] ;
+                                                                     sp:arg2  [ a        sp:ne ;
+                                                                                sp:arg1  _:b73 ;
+                                                                                sp:arg2  _:b35
+                                                                              ]
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Values in {?arg1} must be unique!"^^xsd:string .
+
+dqc:MissingElementConstraints
+        a                spin:Template ;
+        rdfs:comment     "Missing element constraints identify elements in the data set that are missing but required."@en ;
+        rdfs:label       "missing element constraints"@en ;
+        rdfs:subClassOf  dqc:ConstraintTemplates ;
+        spin:abstract    true .
+
+_:b61   sp:varName  "value"^^xsd:string .
+
+dc:date  a          owl:AnnotationProperty ;
+        rdfs:label  "Date"@en .
+
+_:b109  sp:varName  "s"^^xsd:string .
+
+_:b15   sp:varName  "s"^^xsd:string .
+
+_:b95   sp:varName  "s"^^xsd:string .
+
+sp:arg6  a                  rdf:Property ;
+        rdfs:comment        "The sixth argument of a function call."^^xsd:string ;
+        rdfs:label          "arg6"^^xsd:string ;
+        rdfs:subPropertyOf  sp:arg .
+
+_:b57   sp:varName  "s2"^^xsd:string .
+
+_:b114  sp:varName  "s"^^xsd:string .
+
+_:b119  sp:varName  "uniqueValue2"^^xsd:string .
+
+_:b102  sp:varName  "check"^^xsd:string .
+
+_:b120  sp:varName  "value"^^xsd:string .
+
+dqc:FunctionalDependencyTrustedReferenceClass
+        a                   spin:Template ;
+        rdfs:comment        "This query flags instances of class ?arg 1 with properties ?arg2 and ?arg3 that do not have the exact value combination in instances of the trusted reference in class ?arg4. The semantics of property ?arg2 should be equal with property ?arg5, and the semantics of property ?arg3 should be equal with ?arg6. The query tolerates homonymous values, i.e. the same value may be assigned to different dependent values. Value combinations that cannot be found in the trusted reference will also be flagged. The query will also test the existence of a single value in the trusted reference when one property of the tested data is missing."@en ;
+        rdfs:label          "Functional dependency check in class instances with trusted reference"@en ;
+        rdfs:subClassOf     dqc:FunctionalDependencyConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b121
+                                              ] [ sp:object     _:b93 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b121
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b121
+                                                  ] [ sp:object     spin:_arg3 ;
+                                                      sp:predicate  spin:violationPath ;
+                                                      sp:subject    _:b121
+                                                    ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg2 .\n    _:b0 spin:violationPath ?arg3 .\n}\nWHERE {\n    ?s a ?arg1 .\n    OPTIONAL {\n        ?s ?arg2 ?value1 .\n        OPTIONAL {\n            ?s ?arg3 ?value2 .\n        } \n    } \n    NOT EXISTS {\n        ?s2 a ?arg4 .\n        ?s2 ?arg5 ?value1 .\n        ?s2 ?arg6 ?value2 .\n    } \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b93
+                                              ] [ a            sp:Optional ;
+                                                  sp:elements  ( [ sp:object     _:b44 ;
+                                                                   sp:predicate  spin:_arg2 ;
+                                                                   sp:subject    _:b93
+                                                                 ] [ a            sp:Optional ;
+                                                                     sp:elements  ( [ sp:object     _:b50 ;
+                                                                                      sp:predicate  spin:_arg3 ;
+                                                                                      sp:subject    _:b93
+                                                                                    ] )
+                                                                   ] )
+                                                ] [ a            sp:NotExists ;
+                                                    sp:elements  ( [ sp:object     spin:_arg4 ;
+                                                                     sp:predicate  rdf:type ;
+                                                                     sp:subject    _:b77
+                                                                   ] [ sp:object     _:b44 ;
+                                                                       sp:predicate  spin:_arg5 ;
+                                                                       sp:subject    _:b77
+                                                                     ] [ sp:object     _:b50 ;
+                                                                         sp:predicate  [ sp:varName  "arg6"^^xsd:string ] ;
+                                                                         sp:subject    _:b77
+                                                                       ] )
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 2 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 1 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select second property of trusted reference that holds legal values for property 2!"^^xsd:string ;
+                              spl:predicate  sp:arg6 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class of trusted reference that holds instances with legal value combinations!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select first property of trusted reference that holds legal values for property 1!"^^xsd:string ;
+                              spl:predicate  sp:arg5 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Value combinations of properties {?arg2} and {?arg3} must always be identical with value combinations of properties {?arg5} and {?arg6} of class {?arg4}  for all instances of class {?arg1}!"^^xsd:string .
+
+dcterms:license  a    owl:AnnotationProperty ;
+        rdfs:comment  "A legal document giving official permission to do something with the resource."@en ;
+        rdfs:label    "License"@en .
+
+dqc:MissingLiteralsAndProperties
+        a                   spin:Template ;
+        rdfs:comment        "This query returns all instances of class ?arg1 where the literal for ?arg2 is empty or the whole property ?arg2 is missing."@en ;
+        rdfs:label          "Mandatory literal value and property check in instances of a class"@en ;
+        rdfs:subClassOf     dqc:MissingElementConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b122
+                                              ] [ sp:object     spin:_this ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b122
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b122
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?this .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    {\n        ?this a ?arg1 .\n        ?this ?arg2 \"\" .\n    }\n    UNION\n    {\n        ?this a ?arg1 .\n        NOT EXISTS {\n            ?this ?arg2 ?value .\n        } \n    } \n}"^^xsd:string ;
+                              sp:where      ( [ a            sp:Union ;
+                                                sp:elements  ( ( [ sp:object     spin:_arg1 ;
+                                                                   sp:predicate  rdf:type ;
+                                                                   sp:subject    spin:_this
+                                                                 ] [ sp:object     "" ;
+                                                                     sp:predicate  spin:_arg2 ;
+                                                                     sp:subject    spin:_this
+                                                                   ] ) ( [ sp:object     spin:_arg1 ;
+                                                                           sp:predicate  rdf:type ;
+                                                                           sp:subject    spin:_this
+                                                                         ] [ a            sp:NotExists ;
+                                                                             sp:elements  ( [ sp:object     [ sp:varName  "value"^^xsd:string ] ;
+                                                                                              sp:predicate  spin:_arg2 ;
+                                                                                              sp:subject    spin:_this
+                                                                                            ] )
+                                                                           ] ) )
+                                              ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that contains intances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Property {?arg2} is mandatory and must not contain empty literals for instances of class {?arg1}!"^^xsd:string .
+
+dqc:FiveDigitNumericAll
+        a                   spin:Template ;
+        rdfs:comment        "This query flags all instances that do not have a five digit numeric value for property ?arg1."@en ;
+        rdfs:label          "syntax check in all instances:  5 digit numeric values"@en ;
+        rdfs:subClassOf     dqc:SyntaxConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b123
+                                              ] [ sp:object     _:b116 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b123
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b123
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?s .\n    _:b0 spin:violationPath ?arg1 .\n}\nWHERE {\n    ?s ?arg1 ?value .\n    FILTER (!regex(str(?value), \"^[0-9]{5}$\"^^xsd:string)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     _:b120 ;
+                                                sp:predicate  spin:_arg1 ;
+                                                sp:subject    _:b116
+                                              ] [ a              sp:Filter ;
+                                                  sp:expression  [ a        sp:not ;
+                                                                   sp:arg1  [ a        sp:regex ;
+                                                                              sp:arg1  [ a        sp:str ;
+                                                                                         sp:arg1  _:b120
+                                                                                       ] ;
+                                                                              sp:arg2  "^[0-9]{5}$"^^xsd:string
+                                                                            ]
+                                                                 ]
+                                                ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select the property that contains the US zip codes!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "Syntax rule: {?arg1} must contain 5-digit numeric value in all instances!"^^xsd:string .
+
+_:b23   sp:varName  "3"^^xsd:string .
+
+_:b32   sp:varName  "13"^^xsd:string .
+
+_:b40   sp:varName  "s"^^xsd:string .
+
+_:b98   sp:varName  "ean"^^xsd:string .
+
+dqc:UniqueValueClass  a     spin:Template ;
+        rdfs:comment        "This query returns all instances of class ?arg1 where the value for property ?arg2 is not unique in the tested data set. The query tolerates chaotic language tag assignments."@en ;
+        rdfs:label          "Uniqueness check for all values in instances of a class"@en ;
+        rdfs:subClassOf     dqc:UniquenessConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b124
+                                              ] [ sp:object     _:b64 ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b124
+                                                ] [ sp:object     spin:_arg2 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b124
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?a .\n    _:b0 spin:violationPath ?arg2 .\n}\nWHERE {\n    ?a a ?arg1 .\n    ?a ?arg2 ?uniqueValue1 .\n    ?b a ?arg1 .\n    ?b ?arg2 ?uniqueValue2 .\n    FILTER ((str(?uniqueValue1) = str(?uniqueValue2)) && (?a != ?b)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b64
+                                              ] [ sp:object     _:b71 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    _:b64
+                                                ] [ sp:object     spin:_arg1 ;
+                                                    sp:predicate  rdf:type ;
+                                                    sp:subject    _:b110
+                                                  ] [ sp:object     _:b119 ;
+                                                      sp:predicate  spin:_arg2 ;
+                                                      sp:subject    _:b110
+                                                    ] [ a              sp:Filter ;
+                                                        sp:expression  [ a        sp:and ;
+                                                                         sp:arg1  [ a        sp:eq ;
+                                                                                    sp:arg1  [ a        sp:str ;
+                                                                                               sp:arg1  _:b71
+                                                                                             ] ;
+                                                                                    sp:arg2  [ a        sp:str ;
+                                                                                               sp:arg1  _:b119
+                                                                                             ]
+                                                                                  ] ;
+                                                                         sp:arg2  [ a        sp:ne ;
+                                                                                    sp:arg1  _:b64 ;
+                                                                                    sp:arg2  _:b110
+                                                                                  ]
+                                                                       ]
+                                                      ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that contains instances to be tested!"@en ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property to be tested! {@en}"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:labelTemplate  "{?arg2} in {?arg1} must be unique!"^^xsd:string .
+
+_:b82   sp:varName  "instance"^^xsd:string .
+
+dqc:ExclusiveFunctionalDependencyClass
+        a                   spin:Template ;
+        rdfs:comment        "This query flags instances of class ?arg1 with property ?arg2 and value ?arg3 that do not have value ?arg5 with property ?arg4. It is only suitable for value dependencies with one to one cardinality. The query does not tolerate homonyms. Not defined dependencies will not be flagged."@en ;
+        rdfs:label          "exclusive functional dependency check in class instances"@en ;
+        rdfs:subClassOf     dqc:FunctionalDependencyConstraints ;
+        spin:body           [ a             sp:Construct ;
+                              sp:templates  ( [ sp:object     spin:ConstraintViolation ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    _:b125
+                                              ] [ sp:object     spin:_this ;
+                                                  sp:predicate  spin:violationRoot ;
+                                                  sp:subject    _:b125
+                                                ] [ sp:object     spin:_arg4 ;
+                                                    sp:predicate  spin:violationPath ;
+                                                    sp:subject    _:b125
+                                                  ] ) ;
+                              sp:text       "CONSTRUCT {\n    _:b0 a spin:ConstraintViolation .\n    _:b0 spin:violationRoot ?this .\n    _:b0 spin:violationPath ?arg4 .\n}\nWHERE {\n    ?this a ?arg1 .\n    ?this ?arg2 ?arg3 .\n    FILTER (!spl:hasValue(?this, ?arg4, ?arg5)) \n}"^^xsd:string ;
+                              sp:where      ( [ sp:object     spin:_arg1 ;
+                                                sp:predicate  rdf:type ;
+                                                sp:subject    spin:_this
+                                              ] [ sp:object     spin:_arg3 ;
+                                                  sp:predicate  spin:_arg2 ;
+                                                  sp:subject    spin:_this
+                                                ] [ a              sp:Filter ;
+                                                    sp:expression  [ a        sp:not ;
+                                                                     sp:arg1  [ a        spl:hasValue ;
+                                                                                sp:arg1  spin:_this ;
+                                                                                sp:arg2  spin:_arg4 ;
+                                                                                sp:arg3  spin:_arg5
+                                                                              ]
+                                                                   ]
+                                                  ] )
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter functionally dependent value 2 of property 2!"^^xsd:string ;
+                              spl:predicate  sp:arg5 ;
+                              spl:valueType  xsd:string
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 2 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg4 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select property 1 of functional dependency!"^^xsd:string ;
+                              spl:predicate  sp:arg2 ;
+                              spl:valueType  rdf:Property
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Select class that holds instances to be tested!"^^xsd:string ;
+                              spl:predicate  sp:arg1 ;
+                              spl:valueType  rdfs:Class
+                            ] ;
+        spin:constraint     [ a              spl:Argument ;
+                              rdfs:comment   "Enter functionally dependent value 1 of property 1!"^^xsd:string ;
+                              spl:predicate  sp:arg3 ;
+                              spl:valueType  xsd:string
+                            ] ;
+        spin:labelTemplate  "Value \"{?arg3}\" of {?arg2} must only have value \"{?arg5}\" in {?arg4} in instances of class {?arg1}!"^^xsd:string .
+
+_:b24   sp:varName  "4"^^xsd:string .
+
+_:b33   sp:varName  "value"^^xsd:string .
+
+_:b91   sp:varName  "node"^^xsd:string .
+
+_:b9    sp:varName  "s"^^xsd:string .

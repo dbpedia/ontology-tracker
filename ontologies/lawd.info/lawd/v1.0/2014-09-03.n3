@@ -1,0 +1,271 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://lawd.info/ontology/> .
+@prefix voaf: <http://purl.org/vocommons/voaf#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix geo: <http://geovocab.org/spatial#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix cidoc-crm: <http://erlangen-crm.org/current/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+
+<http://lawd.info/ontology/> a owl:Ontology , voaf:Vocabulary ;
+	dc:title "Linking Ancient World Data Ontology" ;
+	dc:issued "2013-03-28" ;
+	dc:rights "Copyright © 2013 Hugh A. Cayless" ;
+	vann:preferredNamespacePrefix "lawd" ;
+	dc:modified "2014-09-03" ;
+	dc:description "The goal of LAWD is to fill in the cracks between the data used and published by projects with a focus on the ancient world and the standard Linked Data vocablary schemes, like Dublin Core, the Open Annotation Collaboration, and CIDOC-CRM." ;
+	vann:preferredNamespaceUri "http://lawd.info/ontology/" ;
+	cc:license <http://creativecommons.org/license/by/3.0/> ;
+	owl:imports <http://erlangen-crm.org/current/> ;
+	owl:versionIRI <http://lawd.info/ontology/1.0/> ;
+	owl:imports <http://purl.org/ontology/olo/core#> , <http://www.w3.org/2004/02/skos/core> , <http://www.w3.org/ns/oa#> .
+
+:conjunctOf a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:comment "Indicates that a piece of evidence (any subclass of lawd:EvidentiaryItem) is joined to another—for example because they co-occur."@en ;
+	rdfs:range :EvidentiaryItem ;
+	rdfs:domain :EvidentiaryItem .
+
+:embodies a owl:ObjectProperty ;
+	rdfs:comment "The relationship between a Written Work and the abstract Conceptual Work it embodies. For example, the OCT text of Homer's Iliad's relationship to the idea of Homer's Iliad."@en ;
+	rdfs:range :ConceptualWork ;
+	rdfs:domain :WrittenWork .
+
+:foundAt a owl:ObjectProperty ;
+	rdfs:comment "The place where an artifact was discovered."@en ;
+	rdfs:range :Place ;
+	rdfs:subPropertyOf :where .
+
+:hasAttestation a owl:ObjectProperty ;
+	rdfs:comment "Indicates a lawd:Attestation providing evidence for a name, etc."@en ;
+	rdfs:range :Attestation .
+
+:hasCitation a owl:ObjectProperty ;
+	rdfs:comment "Indicates a Citation that contains the source for a lawd:Attestation"@en ;
+	rdfs:domain :Attestation ;
+	rdfs:range :Citation .
+
+:hasName a owl:ObjectProperty ;
+	rdfs:comment "Indicates that (e.g.) a Person or Place has a lawd:Name that is the range of the property."@en ;
+	rdfs:range :Name .
+
+:origin a owl:ObjectProperty ;
+	rdfs:comment "The place where an artifact originated."@en ;
+	rdfs:range :Place ;
+	rdfs:subPropertyOf :where .
+
+:readingType a owl:ObjectProperty ;
+	rdfs:range :Reading .
+
+:representedBy a owl:ObjectProperty ;
+	rdfs:range :Citation ;
+	rdfs:domain :WrittenWork .
+
+:represents a owl:ObjectProperty ;
+	rdfs:comment """Describes the relationship between a Citation or Siglum and the
+      Written Work it indicates."""@en ;
+	rdfs:domain :Citation ;
+	rdfs:range :WrittenWork ;
+	owl:inverseOf :representedBy .
+
+:responsibleAgent a owl:ObjectProperty ;
+	rdfs:comment """Connects a work of any type to the person, group, or insitution
+      responsible for the creation of the work."""@en ;
+	owl:inverseOf :responsibleFor ;
+	rdfs:range _:node190u6lm7vx1 .
+
+_:node190u6lm7vx1 a owl:Restriction ;
+	owl:onProperty :responsibleAgent ;
+	owl:someValuesFrom :Agent .
+
+:responsibleFor a owl:ObjectProperty ;
+	rdfs:comment """Connects any kind of author or creator to the work he/she/it is
+      responsible for creating. The author may be anonymous or fictional."""@en ;
+	rdfs:domain _:node190u6lm7vx2 .
+
+_:node190u6lm7vx2 a owl:Restriction ;
+	owl:onProperty :responsibleFor ;
+	owl:someValuesFrom :Agent .
+
+:where a owl:ObjectProperty ;
+	rdfs:comment "Generic location relation."@en ;
+	rdfs:range :Place .
+
+:witness a owl:ObjectProperty ;
+	rdfs:comment "(Experimental) Connects an item in a collation to the witness it derives from."@en ;
+	rdfs:domain :CollationItem ;
+	rdfs:range :Siglum .
+
+:abbreviation a owl:DatatypeProperty ;
+	rdfs:comment """A label representing an abbreviated form of a name or title, e.g. of
+      an author or work. E.g. Homer -> Hom.; Odyssey -> Od.;"""@en .
+
+:primaryForm a owl:DatatypeProperty ;
+	rdfs:comment "Indicates the primary form of a lawd:Name"@en ;
+	rdfs:domain :Name .
+
+:variantForm a owl:DatatypeProperty ;
+	rdfs:comment "Indicates a variant form of a lawd:Name"@en ;
+	rdfs:domain :Name ;
+	rdfs:subPropertyOf owl:topDataProperty .
+
+cidoc-crm:E21_Person owl:equivalentClass :Person .
+
+cidoc-crm:E27_Site owl:equivalentClass :Place .
+
+cidoc-crm:E33_Linguistic_Object owl:equivalentClass :WrittenWork .
+
+geo:Feature a owl:Class ;
+	owl:equivalentClass :Place .
+
+:Agent a owl:Class ;
+	rdfs:comment "An Agent is an abstract entity which has agency or is considered capable of acting in some way. Current subclasses include Deities and Persons."@en .
+
+:AssembledWork a owl:Class ;
+	rdfs:subClassOf :WrittenWork ;
+	rdfs:comment """A Written Work that collects together more than one Written Work.
+      Manuscripts are often AssembledWorks."""@en .
+
+:Attestation a owl:Class ;
+	rdfs:subClassOf :EvidentiaryItem ;
+	rdfs:comment "An Attestation models a piece of evidence for something in a text (e.g. the mention of a person in a document). Typically it is the conjunction of a Citation and an entity like a name or person."@en .
+
+:Citation a owl:Class ;
+	rdfs:comment "A Citation models a bibliographic reference as a resource."@en .
+
+:CollationItem a owl:Class ;
+	rdfs:comment "(Experimental) Part of a collation of witnesses to a text." .
+
+:ConceptualWork a owl:Class ;
+	rdfs:comment """A Conceptual Work groups together one or more Written Works which
+      have the same intellectual source. E.g. The Iliad, as opposed to a particular manuscript witness or edition of the Iliad."""@en .
+
+:Deity a owl:Class ;
+	rdfs:subClassOf :Agent ;
+	rdfs:comment "Any divine Agent." .
+
+:Edition a owl:Class ;
+	rdfs:subClassOf :WrittenWork ;
+	rdfs:comment """A published (whether officially or not) Written Work that relies on
+      one or more Written Works as sources"""@en .
+
+:EditorialComment a owl:Class ;
+	rdfs:subClassOf :CollationItem .
+
+:EvidentiaryItem a owl:Class ;
+	rdfs:comment "Superclass for types of evidence that support assertions."@en .
+
+:Hand a owl:Class ;
+	rdfs:subClassOf :WrittenWork ;
+	rdfs:comment """A portion of a Written Work in a distinct hand. Written Works may
+      consist of one or more hands."""@en .
+
+:MythologicalCreature a owl:Class ;
+	rdfs:subClassOf :Agent ;
+	rdfs:comment "Class for non-human, non-divine Agents, e.g. Polyphemus or Medusa." .
+
+:Name a owl:Class ;
+	rdfs:comment "A name is a resource providing a name for some thing. It may be specialized with subclasses like PersonalName or PlaceName"@en .
+
+:Person a owl:Class ;
+	rdfs:subClassOf :Agent ;
+	rdfs:comment "Any person, whether historical, mythological, or fictional" .
+
+:PersonalName a owl:Class ;
+	rdfs:subClassOf :Name ;
+	rdfs:comment "A name belonging to a lawd:Person"@en .
+
+:Place a owl:Class ;
+	rdfs:comment "Any conceivable place, such as a town, a mountain, or the site of a building."@en .
+
+:PlaceName a owl:Class ;
+	rdfs:subClassOf :Name ;
+	rdfs:comment "The name of a lawd:Place"@en .
+
+:Reading a owl:Class ;
+	rdfs:subClassOf skos:Concept ;
+	rdfs:comment "(Experimental) The superclass for members of the readingScheme concept scheme. A Reading is a word, phrase, or larger chunk of text from a witness (or any observation of variance concerning the text, such as an omission or interpolation)."@en .
+
+:Reference a owl:Class ;
+	rdfs:subClassOf :CollationItem .
+
+:Sigla a owl:Class ;
+	rdfs:subClassOf <http://purl.org/ontology/olo/core#OrderedList> ;
+	rdfs:comment """An ordered collection that maps Written Works used as sources for an
+      Edition to symbols used to represent them in the context of that Edition."""@en .
+
+:Siglum a owl:Class ;
+	rdfs:subClassOf :Citation ;
+	rdfs:comment """A Siglum represents a witness (a Written Work of some kind) and
+      associates it with a symbol used to represent that work in the context of an
+      Edition."""@en .
+
+:Translation a owl:Class ;
+	rdfs:subClassOf :WrittenWork ;
+	rdfs:comment "A Written Work that translates one or more other Written Works that embody the same Conceptual Work."@en .
+
+:WrittenWork a owl:Class ;
+	rdfs:comment "A written work, whether extant or not. May be considered to embody a Conceptual Work."@en .
+
+:addition a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme ;
+	skos:broader :variant .
+
+:agreement a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme .
+
+:collation a owl:NamedIndividual , <http://www.w3.org/ns/oa#Motivation> ;
+	rdfs:comment """a Motivation that represents the addition of a critical apparatus
+      comment upon a text"""@en ;
+	skos:broader <http://www.w3.org/ns/oa#commenting> .
+
+:conjecture a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme .
+
+:correction a owl:NamedIndividual , :Reading ;
+	skos:broader :intervention ;
+	skos:inScheme :readingScheme .
+
+:deletion a owl:NamedIndividual , :Reading ;
+	skos:broader :intervention ;
+	skos:inScheme :readingScheme .
+
+:interpolation a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme ;
+	skos:broader :variant .
+
+:intervention a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme ;
+	skos:broader :variant .
+
+:omission a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme ;
+	skos:broader :variant .
+
+:readingScheme a owl:NamedIndividual ;
+	rdfs:comment "(Experimental) The SKOS scheme for classifying types of lawd:Reading."@en .
+
+:transposition a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme ;
+	skos:broader :variant .
+
+:uncertainReading a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme .
+
+:variant a owl:NamedIndividual , :Reading ;
+	skos:inScheme :readingScheme .
+
+:responsibleAgent rdfs:range _:node190u6lm7vx3 .
+
+_:node190u6lm7vx3 a owl:Restriction ;
+	owl:onProperty :responsibleAgent ;
+	owl:someValuesFrom :Agent .
+
+:responsibleFor rdfs:domain _:node190u6lm7vx4 .
+
+_:node190u6lm7vx4 a owl:Restriction ;
+	owl:onProperty :responsibleFor ;
+	owl:someValuesFrom :Agent .

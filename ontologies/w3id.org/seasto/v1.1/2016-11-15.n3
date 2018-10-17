@@ -1,0 +1,348 @@
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix pep:   <https://w3id.org/pep/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix seas:  <https://w3id.org/seas/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs:    <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix qudt:  <http://data.qudt.org/qudt/owl/1.0.0/qudt.owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+seas:Balancing  a         owl:Class ;
+        rdfs:comment      "Balancing refers to the procedure in which a Balance responsible party acts to ensure that demand is equal to supply after markets have closed, in and near real time (source: Entso-e)."@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Balancing"@en ;
+        rdfs:subClassOf   pep:Procedure ;
+        vs:term_status    "testing" .
+
+seas:isTradedBy  a        owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a commodity to the one and only player that trades it."@en ;
+        rdfs:domain       seas:Commodity ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "is traded by"@en ;
+        rdfs:range        seas:Player ;
+        owl:inverseOf     seas:trades ;
+        vs:term_status    "testing" .
+
+seas:owns  a              owl:InverseFunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a player to a system it owns."@en ;
+        rdfs:domain       seas:Player ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "owns"@en ;
+        rdfs:range        seas:System ;
+        owl:inverseOf     seas:isOwnedBy ;
+        vs:term_status    "testing" .
+
+seas:Service  a           owl:Class ;
+        rdfs:comment      "In economics, a service is an economic activity where an immaterial exchange of value occurs. When a service such as labor is performed the buyer does not take exclusive ownership of that which is purchased, unless agreed upon by buyer and seller. The benefits of such a service, if priced, are held to be self-evident in the buyer's willingness to pay for it (source: Wikipedia).\r\n    "@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Service"@en ;
+        rdfs:subClassOf   seas:Commodity ;
+        owl:disjointWith  seas:Good ;
+        vs:term_status    "testing" .
+
+seas:trades  a            owl:InverseFunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a player to a commodity it trades."@en ;
+        rdfs:domain       seas:Player ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "trades"@en ;
+        rdfs:range        seas:Commodity ;
+        owl:inverseOf     seas:isTradedBy ;
+        vs:term_status    "testing" .
+
+dcterms:license  a  owl:AnnotationProperty .
+
+seas:tax  a                 owl:ObjectProperty ;
+        rdfs:comment        "Tax for the commodity, quantified as a percentage of something.\r\n\r\nFunctional sub properties of `seas:tax` must precise what that _something_ is."@en ;
+        rdfs:domain         seas:Commodity ;
+        rdfs:isDefinedBy    seas:TradingOntology ;
+        rdfs:label          "tax"@en ;
+        rdfs:subPropertyOf  seas:hasProperty ;
+        vs:term_status      "testing" .
+
+vann:preferredNamespaceUri
+        a       owl:AnnotationProperty .
+
+seas:hasTradedVolumeContext
+        a                   owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "Links an evaluation to its traded volume validity context.\r\n\r\n  for instance .\r\n\r\n```\r\n<myConnectionPoint> seas:outgoingElectricEnergy <whatIGive> .\r\n\r\n<whatIGive> seas:price <priceOfWhatIGive> .\r\n\r\n<priceOfWhatIGive> seas:evaluation <evaluationOfThePriceOfWhatIGive> .\r\n\r\n<evaluationOfThePriceOfWhatIGive> a seas:Evaluation ;\r\n  seas:evaluatedValue \"200 €\"^^cdt:ucum ;\r\n  seas:hasTradedVolumeContext \"12 €/MWh\"^^cdt:ucum .\r\n```\r\n\r\nThis concept needs polishing ... please ping me if necessary."@en ;
+        rdfs:domain         seas:Evaluation ;
+        rdfs:isDefinedBy    seas:TradingOntology ;
+        rdfs:label          "has traded volume context"@en ;
+        rdfs:range          seas:ElectricEnergyProperty ;
+        rdfs:subPropertyOf  seas:hasValidityContext ;
+        vs:term_status      "testing" .
+
+seas:BalancingExecution
+        a                    owl:Class ;
+        rdfs:comment         "The execution of some balancing procedure on a market."@en ;
+        rdfs:isDefinedBy     seas:TradingOntology ;
+        rdfs:label           "Balancing Execution"@en ;
+        rdfs:subClassOf      pep:ProcedureExecution ;
+        rdfs:subClassOf      [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:Balancing
+                             ] ;
+        rdfs:subClassOf      [ owl:onProperty      pep:madeBy ;
+                               owl:someValuesFrom  seas:TransmissionSystemOperator
+                             ] ;
+        owl:equivalentClass  [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:Balancing
+                             ] ;
+        vs:term_status       "testing" .
+
+seas:Commodity  a         owl:Class ;
+        rdfs:comment      "In economics, a commodity is a marketable item produced to satisfy wants or needs. Often the item is fungible. Economic commodities comprise goods and services (source: Wikipedia).\r\n\r\nFor instance, the electric energy outgoing of a certain connection point can be a commodity, and have a price:\r\n\r\n```\r\n[] seas:outgoingElectricEnergy  [\r\n  a seas:ElectricEnergyProperty ;\r\n  seas:price [ \r\n    a seas:Price ;\r\n    seas:evaluation [ \r\n      a seas:Evaluation ;\r\n      seas:evaluatedValue \"200 €\"^^xsd:ucum ;\r\n      seas:hasTradedVolumeContext \"12 €/MWh\"^^xsd:ucum\r\n    ]\r\n  ]\r\n]\r\n``` \r\n\r\n"@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Commodity"@en ;
+        rdfs:subClassOf   seas:Property ;
+        rdfs:subClassOf   [ owl:onProperty      seas:price ;
+                            owl:someValuesFrom  seas:PriceProperty
+                          ] ;
+        rdfs:subClassOf   [ owl:onProperty      seas:isPropertyOf ;
+                            owl:someValuesFrom  seas:ConnectionPoint
+                          ] ;
+        vs:term_status    "testing" .
+
+dcterms:creator  a  owl:AnnotationProperty .
+
+voaf:Vocabulary  a  owl:Class .
+
+dcterms:title  a  owl:AnnotationProperty .
+
+seas:tradesElectricityWith
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "An Electricity Player can trade electricity directly with another electricity player, through an electricity bilateral contract. They then exchange some of the commodities they trade.\r\n\r\nThese connections are qualified with class `seas:ElectricityBilateralContract`."@en ;
+        rdfs:domain         seas:ElectricityTrader ;
+        rdfs:isDefinedBy    seas:TradingOntology ;
+        rdfs:label          "trades electricity with"@en ;
+        rdfs:range          seas:ElectricityTrader ;
+        rdfs:subPropertyOf  seas:connectedTo ;
+        vs:term_status      "testing" .
+
+seas:AncillaryService
+        a                 owl:Class ;
+        rdfs:comment      "Ancillary services are the specialty services and functions provided by the electric grid that facilitate and support the continuous flow of electricity so that supply will continually meet demand (source: Wikipedia).\r\n\r\n    These include black start capability (the ability to restart a grid following a blackout); frequency response (to maintain system frequency with automatic and very fast responses); fast reserve (which can provide additional energy when needed); the provision of reactive power and various other services. (source: Entso-e)"@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Ancillary Service"@en ;
+        rdfs:subClassOf   seas:Service ;
+        vs:term_status    "testing" .
+
+dcterms:contributor  a  owl:AnnotationProperty .
+
+seas:TradingOntology  a                voaf:Vocabulary , owl:Ontology ;
+        dcterms:contributor            <http://www.vtt.fi/JarmoKalaoja> ;
+        dcterms:contributor            [ a          foaf:Person ;
+                                         foaf:name  "Gabriel Santos"
+                                       ] ;
+        dcterms:contributor            [ a          foaf:Person ;
+                                         foaf:name  "Antoine Zimmermann"
+                                       ] ;
+        dcterms:contributor            [ a          foaf:Person ;
+                                         foaf:name  "Erkki Siira"
+                                       ] ;
+        dcterms:creator                <http://www.maxime-lefrancois.info/me#> ;
+        dcterms:description            "The Seas Trading Ontology defines concepts and relations to describe ownership, trading, bilateral contracts and market licenses:\r\n\r\n- players own systems and trade commodities, which have a price;\r\n- bilateral electricity contracts are connections between electricity traders at which they exchange\r\nelectricity;\r\n- electricity markets are connections between electricity traders at which they exchange electricity,\r\nusing a market license;\r\n- electricity markets can be cleared, and balanced;\r\n- evaluations can have a traded volume validity context\r\n\r\n  "@en ;
+        dcterms:issued                 "2016-11-15"^^xsd:date ;
+        dcterms:license                <https://www.apache.org/licenses/LICENSE-2.0> ;
+        dcterms:modified               "2016-11-15"^^xsd:date ;
+        dcterms:title                  "The SEAS Trading ontology"@en ;
+        vann:preferredNamespacePrefix  "seas" ;
+        vann:preferredNamespaceUri     seas: ;
+        owl:imports                    seas:PlayerOntology , pep: , seas:ElectricPowerSystemOntology , seas:OfferingOntology ;
+        owl:priorVersion               seas:TradingOntology-1.0 ;
+        owl:versionIRI                 seas:TradingOntology-1.1 ;
+        owl:versionInfo                "v1.1" .
+
+seas:valueAddedTax  a       owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment        "A value-added tax (VAT), known in some countries as a goods and services tax (GST), is a type of general consumption tax that is collected incrementally, based on the value added, at each stage of production and is usually implemented as a destination-based tax, where the tax rate is based on the location of the customer (source: Wikipedia).\r\n\r\n      The value added tax is quantified as a percentage of the nett price."@en ;
+        rdfs:domain         seas:Commodity ;
+        rdfs:isDefinedBy    seas:TradingOntology ;
+        rdfs:label          "value added tax"@en ;
+        rdfs:subPropertyOf  seas:hasProperty , seas:tax ;
+        vs:term_status      "testing" .
+
+seas:NegativeLoadShifting
+        a                 owl:Class ;
+        rdfs:comment      "Negative Load Shifting is a Load Shifting which occurs when the load is less than the initial request."@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Negative Load Shifting"@en ;
+        rdfs:subClassOf   seas:LoadShifting ;
+        vs:term_status    "testing" .
+
+seas:operatedBy  a        owl:ObjectProperty ;
+        rdfs:comment      "Links some connection to a player that regulates what's happening through that connection."@en ;
+        rdfs:domain       seas:Connection ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "operated by"@en ;
+        rdfs:range        seas:Player ;
+        vs:term_status    "testing" .
+
+seas:ClearingExecution
+        a                    owl:Class ;
+        rdfs:comment         "A procedure executed by some player. The execution of some clearing procedure on an electricity market."@en ;
+        rdfs:isDefinedBy     seas:TradingOntology ;
+        rdfs:label           "Clearing Execution"@en ;
+        rdfs:subClassOf      pep:ProcedureExecution ;
+        rdfs:subClassOf      [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:Clearing
+                             ] ;
+        rdfs:subClassOf      [ owl:onProperty      pep:madeBy ;
+                               owl:someValuesFrom  seas:Player
+                             ] ;
+        owl:equivalentClass  [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:Clearing
+                             ] ;
+        vs:term_status       "testing" .
+
+seas:Good  a              owl:Class ;
+        rdfs:comment      "In economics, a good is a material that satisfies human wants and provides utility, for example, to a consumer making a purchase while getting an enough-satisfying product. A common distinction is made between 'goods' that are tangible property, and services, which are non-physical (source: Wikipedia)."@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Good"@en ;
+        rdfs:subClassOf   seas:Commodity ;
+        owl:disjointWith  seas:Service ;
+        vs:term_status    "testing" .
+
+vs:term_status  a  owl:AnnotationProperty .
+
+foaf:name  a    owl:DatatypeProperty .
+
+seas:ElectricityBilateralContract
+        a                 owl:Class ;
+        rdfs:comment      "An electricity bilateral contract is both a connection between electricity players, and a contract. It only connects electricity traders.\r\n\r\nIt is linked to some player that validates each trade."@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Electricity Bilateral Contract"@en ;
+        rdfs:subClassOf   seas:Contract , seas:Connection ;
+        rdfs:subClassOf   [ owl:onProperty      seas:operatedBy ;
+                            owl:someValuesFrom  seas:Player
+                          ] ;
+        rdfs:subClassOf   [ owl:allValuesFrom  seas:ElectricityTrader ;
+                            owl:onProperty     seas:connectsSystem
+                          ] ;
+        vs:term_status    "testing" .
+
+dcterms:modified  a  owl:AnnotationProperty .
+
+seas:LoadShiftingExecution
+        a                    owl:Class ;
+        rdfs:comment         "The execution of some Load Shifting procedure on a market."@en ;
+        rdfs:isDefinedBy     seas:TradingOntology ;
+        rdfs:label           "Load Shifting Execution"@en ;
+        rdfs:subClassOf      seas:BalancingExecution ;
+        rdfs:subClassOf      [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:LoadShifting
+                             ] ;
+        rdfs:subClassOf      [ owl:onProperty      pep:madeBy ;
+                               owl:someValuesFrom  seas:TransmissionSystemOperator
+                             ] ;
+        owl:equivalentClass  [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:LoadShifting
+                             ] ;
+        vs:term_status       "testing" .
+
+vann:preferredNamespacePrefix
+        a       owl:AnnotationProperty .
+
+seas:PositiveLoadShiftingExecution
+        a                    owl:Class ;
+        rdfs:comment         "The execution of some Positive Load Shifting procedure on a market."@en ;
+        rdfs:isDefinedBy     seas:TradingOntology ;
+        rdfs:label           "Positive Load Shifting Execution"@en ;
+        rdfs:subClassOf      seas:LoadShiftingExecution ;
+        rdfs:subClassOf      [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:PositiveLoadShifting
+                             ] ;
+        owl:equivalentClass  [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:PositiveLoadShifting
+                             ] ;
+        vs:term_status       "testing" .
+
+dcterms:issued  a  owl:AnnotationProperty .
+
+seas:tradesElectricityOn
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "An Electricity Player can trade electricity on an Electricity Market.\r\n\r\nFor example,\r\n\r\n```\r\n<http://market.com/> a seas:ElectricityMarket .\r\n\r\n<http://agregator.com> a seas:ElectricityTrader ;\r\n  seas:tradesElectricityOn <http://market.com/> .\r\n\r\n<http://otheragregator.com> a seas:ElectricityTrader ;\r\n  seas:tradesElectricityOn <http://market.com/> .\r\n```\r\n\r\nThese connections are qualified with class `seas:ElectricityMarketLicense`.\r\n\r\n\r\nFor example,\r\n\r\n```\r\n<http://agregator.com> seas:hasElectricityMarketLicense <http://market.com/license12> .\r\n<http://otheragregator.com> seas:hasElectricityMarketLicense <http://market.com/license32> .\r\n\r\n<http://market.com/> seas:connectsSystem <http://agregator.com> , <http://otheragregator.com> .\r\n<http://market.com/> seas:connectsSystemAt <http://market.com/license12> , <http://market.com/license32> .\r\n```\r\n\r\n"@en ;
+        rdfs:domain         seas:ElectricityTrader ;
+        rdfs:isDefinedBy    seas:TradingOntology ;
+        rdfs:label          "trades electricity on"@en ;
+        rdfs:range          seas:ElectricityMarket ;
+        rdfs:subPropertyOf  seas:connectedThrough ;
+        vs:term_status      "testing" .
+
+foaf:Person  a  owl:Class .
+
+seas:hasElectricityMarketLicense
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "Links an electricity player to its electricity market license."@en ;
+        rdfs:domain         seas:ElectricityTrader ;
+        rdfs:isDefinedBy    seas:TradingOntology ;
+        rdfs:label          "has electricity market license"@en ;
+        rdfs:range          seas:ElectricityMarketLicense ;
+        rdfs:subPropertyOf  seas:connectsAt ;
+        vs:term_status      "testing" .
+
+dcterms:description  a  owl:AnnotationProperty .
+
+seas:PositiveLoadShifting
+        a                 owl:Class ;
+        rdfs:comment      "Positive Load Shifting is a Load Shifting which occurs when the load is greater than the initial request. "@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Positive Load Shifting"@en ;
+        rdfs:subClassOf   seas:LoadShifting ;
+        vs:term_status    "testing" .
+
+seas:LoadShifting  a      owl:Class ;
+        rdfs:comment      "Load Shifting is the procedure of balancing the supply of electricity on the network with the electrical load by adjusting or \r\n                controlling the load rather than the power station output. (source:Wikipedia) ."@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Load Shifting"@en ;
+        rdfs:subClassOf   seas:Balancing ;
+        vs:term_status    "testing" .
+
+seas:ElectricityMarket
+        rdfs:subClassOf  seas:Connection ;
+        rdfs:subClassOf  [ owl:allValuesFrom  seas:ElectricityMarketLicense ;
+                           owl:onProperty     seas:connectsSystemAt
+                         ] ;
+        rdfs:subClassOf  [ owl:allValuesFrom  seas:ElectricityTrader ;
+                           owl:onProperty     seas:connectsSystem
+                         ] .
+
+seas:isOwnedBy  a         owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Links a system to the one and only player that owns it."@en ;
+        rdfs:domain       seas:System ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "is owned by"@en ;
+        rdfs:range        seas:Player ;
+        owl:inverseOf     seas:owns ;
+        vs:term_status    "testing" .
+
+seas:NegativeLoadShiftingExecution
+        a                    owl:Class ;
+        rdfs:comment         "The execution of some Negative Load Shifting procedure on a market."@en ;
+        rdfs:isDefinedBy     seas:TradingOntology ;
+        rdfs:label           "Negative Load Shifting Execution"@en ;
+        rdfs:subClassOf      seas:LoadShiftingExecution ;
+        rdfs:subClassOf      [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:NegativeLoadShifting
+                             ] ;
+        owl:equivalentClass  [ owl:onProperty      pep:usedProcedure ;
+                               owl:someValuesFrom  seas:NegativeLoadShifting
+                             ] ;
+        vs:term_status       "testing" .
+
+seas:Clearing  a          owl:Class ;
+        rdfs:comment      "In economics, market clearing is the procedure by which, in an economic market, the supply of whatever is traded is equated to the demand, so that there is no leftover supply or demand (source: Wikipedia).\r\n  "@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Clearing"@en ;
+        rdfs:subClassOf   pep:Procedure ;
+        vs:term_status    "testing" .
+
+seas:ElectricityMarketLicense
+        a                 owl:Class ;
+        rdfs:comment      "An Electricity Market License is a connection point between a player and a market."@en ;
+        rdfs:isDefinedBy  seas:TradingOntology ;
+        rdfs:label        "Electricity Market License"@en ;
+        rdfs:subClassOf   seas:ConnectionPoint ;
+        vs:term_status    "testing" .

@@ -1,0 +1,143 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix food: <http://data.lirmm.fr/ontologies/food#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://data.lirmm.fr/ontologies/food> a owl:Ontology , adms:SemanticAsset ;
+	dcterms:title "Food Ontology" ;
+	dcterms:description "This ontology models the Food domain. It allows to describe ingredients and food products." ;
+	dc:license "http://creativecommons.org/licenses/by/3.0/" ;
+	dcterms:modified "2012-11-22"^^xsd:date ;
+	vann:preferredNamespaceUri "http://data.lirmm.fr/ontologies/food#" ;
+	vann:preferredNamespacePrefix "food" ;
+	foaf:homepage <http://data.lirmm.fr/ontologies/food.html> ;
+	dcterms:created "2012-10-17"^^xsd:date ;
+	dcterms:publisher "http://data.lirmm.fr/ontologies/food#LIRMM" ;
+	dcterms:partOf <http://data.lirmm.fr/ontologies> ;
+	dcterms:type <http://purl.org/adms/assettype/Ontology> ;
+	dcterms:status <http://purl.org/adms/status/UnderDevelopment> ;
+	dc:creator <http://data.lirmm.fr/ontologies/food#fran%C3%A7ois> , <http://data.lirmm.fr/ontologies/food#St%C3%A9phaneGigandet> , food:EmmanuelNauer .
+
+food:ttl a adms:SemanticDistribution ;
+	dcterms:FileFormat <http://www.w3.org/1999/02/22-rdf-syntax-ns> ;
+	adms:accessURL "http://data.lirmm.fr/ontologies/food.ttl" ;
+	adms:status <http://purl.org/adms/status/Completed> ;
+	dcterms:license <http://creativecommons.org/licenses/by/3.0/> .
+
+food:rdf a adms:SemanticDistribution ;
+	dcterms:FileFormat <http://www.w3.org/1999/02/22-rdf-syntax-ns> ;
+	adms:accessURL "http://data.lirmm.fr/ontologies/food.rdf" ;
+	adms:status <http://purl.org/adms/status/Completed> ;
+	dcterms:license <http://creativecommons.org/licenses/by/3.0/> .
+
+<http://data.lirmm.fr/ontologies/food#fran%C3%A7ois> a foaf:Person ;
+	foaf:name "François Scharffe" ;
+	foaf:homepage <http://www.scharffe.fr> .
+
+food:LIRMM a dcterms:Agent ;
+	foaf:member <http://data.lirmm.fr/ontologies/food#fran%C3%A7ois> ;
+	foaf:name "LIRMM" ;
+	foaf:homepage <http://www.lirmm.fr> .
+
+<http://data.lirmm.fr/ontologies/food#St%C3%A9phaneGigandet> a foaf:Person ;
+	foaf:name "Stéphane Gigandet" ;
+	foaf:homepage <http://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+food:EmmanuelNauer a foaf:Person ;
+	foaf:name "Emmanuel Nauer" ;
+	foaf:homepage <http://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+food:Food a rdfs:Class , owl:Class ;
+	rdfs:label "Anything that can be eaten: a basic Food item (e.g. salt), a Dish made with a recipe, a manufactured Food Product" ;
+	rdfs:subClassOf owl:Thing .
+
+food:FoodProduct a rdfs:Class , owl:Class ;
+	rdfs:label "A manufactured food product" ;
+	rdfs:subClassOf food:Food .
+
+food:Ingredient a rdfs:Class , owl:Class ;
+	rdfs:label "An ingredient : a certain quantity of food that is part of another food" ;
+	rdfs:comment """Represents an ingredient line in a recipe (for a Dish) or an ingredient listed in the ingredient list (for a Product).
+We need to specify a quantity and unit, so the relation is not binary. So the value for the containsIngredient property of a Food object is an object of the IngredientAmount class (instead of a Food object or string directly). See http://www.w3.org/TR/swbp-n-aryRelations/ for details.""" .
+
+food:NutritionData a rdfs:Class , owl:Class ;
+	rdfs:label "Nutrition data for a food item (recipe, product or ingredient)" .
+
+food:Dish a rdfs:Class , owl:Class ;
+	rdfs:label "A dish is a food item with a recipe" ;
+	rdfs:subClassOf food:Food .
+
+food:Recipe a rdfs:Class , owl:Class ;
+	rdfs:label "Recipe" ;
+	rdfs:comment "A recipe as a set of ingredients together with the protocol to prepare the resulting food" ;
+	rdfs:subClassOf owl:Thing .
+
+food:percent a rdf:Property ;
+	rdfs:label "Quantity of ingredient in percentage % of the total amount of ingredients in a Food" ;
+	rdfs:comment "Useful in particular for food products" ;
+	rdfs:domain food:Ingredient .
+
+food:food a rdf:Property ;
+	rdfs:label "Food that is an ingredient of another food" ;
+	rdfs:comment "String or Food object" ;
+	rdfs:domain food:Ingredient ;
+	rdfs:range food:Food .
+
+food:code a rdf:Property ;
+	rdfs:label "Identifier: usually a barcode such as EAN-13 (European Article Numbering) or UPC-A (Universal Product Code)" ;
+	rdfs:domain food:FoodProduct .
+
+food:containsIngredient a rdf:Property ;
+	rdfs:label "Specifies an ingredient contained in the Food object" ;
+	rdfs:comment """Value is an object of the class Ingredient so that we can specify the quantity, the unit, and the nature of the ingredient (string or other Food object)
+e.g. 1 clove of garlic -> quantity = 1, unit = clove, ingredient = garlic (or Food object for garlic)""" ;
+	rdfs:domain food:Food ;
+	rdfs:range food:Ingredient .
+
+food:quantity a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "quantity of ingredient in any unit (unit specified in unit)" ;
+	rdfs:comment "e.g. 1 clove of garlic -> quantity = 1, unit = clove, ingredient = garlic (or Food object for garlic)" ;
+	rdfs:domain food:Ingredient ;
+	rdfs:range rdfs:Literal .
+
+food:unit a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "Unit for the specified quantity" ;
+	rdfs:comment "e.g. 1 clove of garlic -> quantity = 1, unit = clove, ingredient = garlic (or Food object for garlic)" ;
+	rdfs:domain food:Ingredient ;
+	rdfs:range xsd:string .
+
+food:rank a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "Rank of an ingredient in an ingredient list ordered by quantity (e.g. food products)" ;
+	rdfs:domain food:Ingredient ;
+	rdfs:range xsd:integer .
+
+food:ingredientListAsText a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "Text of the list of ingredients" ;
+	rdfs:comment "Full text of the list of ingredients of a Food item (Product or Dish). May contain more details than what can be listed in the containsIngredient properties." ;
+	rdfs:domain food:Food ;
+	rdfs:range xsd:string .
+
+food:energyPer100g a rdf:Property ;
+	rdfs:label "Nutrition data: energy (in kJ) per 100g (or 100ml for liquids)" ;
+	rdfs:domain food:Food .
+
+food:carbohydratesPer100g a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "Nutrition data: carbohydrates (in g) per 100g (or 100ml for liquids) " ;
+	rdfs:domain food:Food ;
+	rdfs:range xsd:decimal .
+
+food:fatPer100g a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "Nutrition data: fat (in g) per 100g (or 100ml for liquids)" ;
+	rdfs:domain food:Food ;
+	rdfs:range xsd:decimal .
+
+food:proteinsPer100g a rdf:Property , owl:DatatypeProperty ;
+	rdfs:label "Nutrition data: proteins (in g) per 100g (or 100ml for liquids)" ;
+	rdfs:domain food:Food ;
+	rdfs:range xsd:decimal .

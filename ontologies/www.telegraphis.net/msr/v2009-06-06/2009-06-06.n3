@@ -1,0 +1,117 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix scv: <http://purl.org/NET/scovo#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix measurement: <http://www.telegraphis.net/ontology/measurement/measurement#> .
+
+<http://www.telegraphis.net/ontology/measurement/measurement#> a owl:Ontology ;
+	dc:creator <http://www.pipian.com/people/pipian/card#me> ;
+	dc:description "The Measurement Ontology is an ontology in which measurements may be rendered."@en ;
+	dc:title "Measurement Ontology" .
+
+dc:description a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+measurement:Measurement a owl:Class ;
+	rdfs:description "A measurement is a statistic that measures a quantity that may or may not have units."@en ;
+	rdfs:label "Measurement"@en ;
+	rdfs:subClassOf scv:Item , _:node17168ltkax6 .
+
+_:node17168ltkax6 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty measurement:quantityMeasured .
+
+measurement:Quantity a owl:Class ;
+	rdfs:description "A quantity is a quantifiable quality of an object."@en ;
+	rdfs:label "Quantity"@en ;
+	rdfs:subClassOf scv:Dimension ;
+	owl:disjointWith measurement:Unit , measurement:UnitClass .
+
+measurement:Unit a owl:Class ;
+	rdfs:description "A unit is a particular quantity against which another quantity may be compared.  Hence, a unit is dimensionful and provides a ratio by which a quantity may be measured."@en ;
+	rdfs:label "Unit"@en ;
+	rdfs:subClassOf scv:Dimension ;
+	owl:disjointWith measurement:Quantity , measurement:UnitClass .
+
+measurement:UnitClass a owl:Restriction , owl:Class ;
+	rdfs:description "A unit class is a subset of units, with no particular restriction on its contents (i.e. it may be a set of units measuring orthogonal quantities, making a UnitSystem, or a set of units measuring the same quantity)."@en ;
+	rdfs:label "Unit Class"@en ;
+	rdfs:subClassOf owl:Class ;
+	owl:disjointWith measurement:Quantity , measurement:Unit ;
+	owl:hasValue measurement:Unit ;
+	owl:onProperty rdfs:subClassOf .
+
+measurement:UnitSystem a owl:Class ;
+	rdfs:description "A unit system is a class of units for which no two elements in the class measure the same dimension (i.e. all dimensions are orthogonal to each other, or measure dimensions derived from a set of orthogonal dimensions with units derived from the units that measure those orthogonal dimensions specified in the system."@en ;
+	rdfs:label "Unit System"@en ;
+	rdfs:subClassOf measurement:UnitClass .
+
+measurement:equivalentUnitClass a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:description "An equivalent unit class of a quantity is the unit class corresponding to units that measure the quantity."@en ;
+	rdfs:domain measurement:Quantity ;
+	rdfs:label "equivalent unit class"@en ;
+	rdfs:range measurement:UnitClass ;
+	owl:inverseOf measurement:quantityMeasured .
+
+measurement:equivalentQuantity a owl:InverseFunctionalProperty , owl:ObjectProperty ;
+	rdfs:description "An equivalent quantity of a unit class is the quantity measured by all units in the unit class."@en ;
+	rdfs:domain measurement:UnitClass ;
+	rdfs:label "equivalent quantity"@en ;
+	rdfs:range measurement:Quantity ;
+	owl:inverseOf measurement:unitClass .
+
+measurement:quantityMeasured a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:description "The quantity measured for a measurement."@en ;
+	rdfs:domain measurement:Measurement ;
+	rdfs:label "measured quantity"@en ;
+	rdfs:range measurement:Quantity ;
+	rdfs:subPropertyOf scv:dimension .
+
+measurement:unit a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:description "The unit a measurement is made in."@en ;
+	rdfs:domain measurement:Measurement ;
+	rdfs:label "unit"@en ;
+	rdfs:range measurement:Unit ;
+	rdfs:subPropertyOf scv:dimension .
+
+measurement:Area a measurement:Quantity ;
+	measurement:equivalentUnitClass measurement:AreaUnit ;
+	rdfs:label "Area"@en .
+
+measurement:AreaUnit a measurement:UnitClass ;
+	measurement:equivalentQuantity measurement:Area ;
+	rdfs:label "Area Unit"@en ;
+	rdfs:subClassOf measurement:Unit .
+
+measurement:Km2 a measurement:AreaUnit ;
+	rdfs:label "square kilometers"@en .
+
+measurement:AreaMeasurement a owl:Class ;
+	rdfs:label "Area Measurement"@en ;
+	rdfs:subClassOf measurement:Measurement , _:node17168ltkax7 .
+
+_:node17168ltkax7 a owl:Restriction ;
+	owl:hasValue measurement:Area ;
+	owl:onProperty measurement:measuredQuantity .
+
+measurement:AreaMeasurement rdfs:subClassOf _:node17168ltkax8 .
+
+_:node17168ltkax8 a owl:Restriction ;
+	owl:hasValue _:node17168ltkax9 .
+
+_:node17168ltkax9 a measurement:AreaUnit .
+
+_:node17168ltkax8 owl:onProperty measurement:unit .
+
+measurement:area a owl:ObjectProperty ;
+	rdfs:label "area"@en ;
+	rdfs:range measurement:AreaMeasurement .
+
+_:node17168ltkax10 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty measurement:units .

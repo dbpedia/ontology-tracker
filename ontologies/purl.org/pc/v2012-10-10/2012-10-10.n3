@@ -1,0 +1,482 @@
+@prefix criteria: <http://purl.org/procurement/public-contracts-criteria#> .
+@prefix authkinds: <http://purl.org/procurement/public-contracts-authority-kinds#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix payment: <http://reference.data.gov.uk/def/payment#> .
+@prefix kinds: <http://purl.org/procurement/public-contracts-kinds#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix loted: <http://www.loted.eu/ontology#> .
+@prefix s: <http://schema.org/> .
+@prefix pc: <http://purl.org/procurement/public-contracts#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix c4n: <http://vocab.deri.ie/c4n#> .
+@prefix pcdt: <http://purl.org/procurement/public-contracts-datatypes#> .
+@prefix proctypes: <http://purl.org/procurement/public-contracts-procedure-types#> .
+@prefix activities: <http://purl.org/procurement/public-contracts-activities#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://purl.org/procurement/public-contracts> a owl:Ontology ;
+	dcterms:title "Public Contracts Ontology"@en , "Ontologie pro veřejné zakázky"@cs ;
+	dcterms:description "Ontologie pro veřejné zakázky poskytuje vyjadřovací prostředky pro popis zakázek zadávaných institucemi veřejné správy."@cs , "Public Contracts Ontology offers a means of expression for describing public contracts in the public sector."@en ;
+	dcterms:modified "2012-10-10"^^xsd:date ;
+	vann:preferredNamespaceUri "http://purl.org/procurement/public-contracts#" ;
+	vann:preferredNamespacePrefix "pc" ;
+	dcterms:creator <http://purl.org/klimek#me> , <http://purl.org/knap#me> , <http://keg.vse.cz/resource/person/jindrich-mynarz> , <http://www.ksi.mff.cuni.cz/~necasky> , <http://www.facebook.com/nohis> , <http://keg.vse.cz/resource/person/josef-petrak> , <http://keg.vse.cz/resource/person/vojtech-svatek> ;
+	rdfs:seeAlso <http://code.google.com/p/public-contracts-ontology/> , <http://prefix.cc/pc> ;
+	dcterms:rights <http://creativecommons.org/licenses/by/3.0/cz/> .
+
+<http://purl.org/klimek#me> a foaf:Person ;
+	foaf:name "Jakub Klímek" ;
+	foaf:mbox <mailto:klimek.mff@gmail.com> .
+
+<http://purl.org/knap#me> a foaf:Person ;
+	foaf:name "Tomáš Knap" ;
+	foaf:mbox <mailto:toknap@gmail.com> .
+
+<http://keg.vse.cz/resource/person/jindrich-mynarz> a foaf:Person ;
+	foaf:name "Jindřich Mynarz" ;
+	foaf:mbox <mailto:mynarzjindrich@gmail.com> .
+
+<http://www.ksi.mff.cuni.cz/~necasky> a foaf:Person ;
+	foaf:name "Martin Nečaský" ;
+	foaf:mbox <mailto:martinnec@gmail.com> .
+
+<http://www.facebook.com/nohis> a foaf:Person ;
+	foaf:name "Pavel Nohejl" ;
+	foaf:mbox <mailto:nohejl.pavel@gmail.com> .
+
+<http://keg.vse.cz/resource/person/josef-petrak> a foaf:Person ;
+	foaf:name "Josef Petrák" ;
+	foaf:mbox <mailto:me@jspetrak.name> .
+
+<http://keg.vse.cz/resource/person/vojtech-svatek> a foaf:Person ;
+	foaf:name "Vojtěch Svátek" ;
+	foaf:mbox <mailto:svatek@vse.cz> .
+
+pc:Contract a owl:Class ;
+	rdfs:label "Veřejná zakázka"@cs , "Public contract"@en ;
+	rdfs:comment "Instance této třídy je abstraktní informační entitou o veřejné zakázce. Obsahuje všechny aktuálně známé informace o zakázce, tj. např. o zadavateli veřejné zakázky, službách či dodávkách, které ve veřejné zakázce nakupuje, a o podmínkách nákupu (termíny, očekávané ceny, atd.). Dále obsahuje informace o nabídkách od zájemců o zakázku a o vybrané nabídce. Pokud již byla zakázka realizována, obsahuje i informace o skutečné ceně za realizaci apod."@cs , "An instance of this class is an abstract information entity about a public contract. It consists of all currently known information about a contract, e.g., a contracting authority, services or supplies which shall be purchased, and contract conditions (e.g., important dates, expected price, etc.). It also informs about tenders received from particular bidders and about an accepted tender. If the contract has already been realized it also informs about an actual price of realization, etc."@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> ;
+	owl:equivalentClass loted:Tender .
+
+pc:FrameworkAgreement a owl:Class ;
+	rdfs:label "Rámcová smlouva"@cs , "Framework agreement"@en ;
+	rdfs:comment "Třída pro popis rámcové smlouvy"@cs , "Class for decribing a framework agreement"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:Tender a owl:Class ;
+	rdfs:subClassOf gr:Offering ;
+	rdfs:label "Nabídka"@cs , "Tender"@en ;
+	rdfs:comment "Základní třída pro popis nabídky zájemce o zakázku"@cs , "Basic class for decribing a tender submitted by a bidder"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:AwardCriteriaCombination a owl:Class ;
+	owl:equivalentClass loted:AwardCriteria ;
+	rdfs:label "Kombinace kritérií pro hodnocení dodaných nabídek"@cs , "Combination of contract award criteria"@en ;
+	rdfs:comment "Třída pro popis kombinace kritérií pro posuzování nabídek zájemců o zakázku"@cs , "Class for description of criteria combination used for tender evaluation"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:CriterionWeighting a owl:Class ;
+	rdfs:subClassOf c4n:Condition ;
+	rdfs:label "Vážené kritérium pro udělení zakázky"@cs , "Contract award weighted criterion"@en ;
+	rdfs:comment "Třída pro popis jednoho kritéria a jeho váhy."@cs , "Class for description of one criterion and its weight"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:TendersOpening a owl:Class ;
+	rdfs:subClassOf s:Event ;
+	rdfs:label "Tenders' opening"@en , "Otevírání nabídek"@cs ;
+	rdfs:comment "Opening of tenders submitted for a public contract"@en , "Otevírání nabídek zaslaných pro veřejnou zakázku"@cs ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+adms:identifier vann:usageNote "Use for attaching identifiers (instances of adms:Identifier) to contracting authorities and bidders (instances of gr:BusinessEntity). The property should be used for official numbers assigned to public contracts in national public procurement systems, reference numbers of public contracts assigned by their contracting authorities, notice number in EU TED, etc. The domain is a union of gr:BusinessEntity and pc:Contract."@en .
+
+pc:awardDate a owl:FunctionalProperty ;
+	rdfs:label "Datum přidělení zakázky"@cs , "Date of contract award"@en ;
+	rdfs:comment "Vlastnost pro datum přidělení zakázky dodavateli. Kardinalita 0..1"@cs , "Property for date of contract award to a bidder. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:date ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+dcterms:title vann:usageNote "Use for labelling states of public contracts (instances of pc:Contract). The domain is pc:Contract."@en .
+
+dcterms:description vann:usageNote "Use for attaching plain text description of public contracts (instances of pc:Contract). The domain is pc:Contract."@en .
+
+pc:contact a rdf:Property ;
+	rdfs:label "Kontaktní osoba"@cs , "Contact person"@en ;
+	rdfs:comment "Vlastnost pro kontaktní údaje na místo nebo osobu určenou pro komunikaci s veřejností a zájemci o zakázku. Pokud je kontaktních míst či osob více (např. pro vyzvednutí dokumentace k veřejné zakázce), je pro každou uveden samostatný kontakt. Kardinalita 0..*"@cs , "Property for contact information for a person or place responsible for a communication with the public and bidders. If there are more contact places or persons (e.g., for collecting documentation to the public contract), there is a separate contact for each person. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range vcard:VCard ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:kind a owl:FunctionalProperty , qb:CodedProperty ;
+	rdfs:subPropertyOf dcterms:type ;
+	rdfs:label "Kategorie zakázky"@cs , "Contract kind"@en ;
+	rdfs:comment "Kategorie veřejné zakázky specifikuje základní zaměření veřejné zakázky na stavební práce, dodávku zboží nebo služby. Lze použít pouze jeden z předdefinovaných SKOS konceptů. Kardinalita 0..1"@cs , "Kind of a public contract specifies a basic focus of the contract on works, supplies or services. Only a predefined SKOS concept can be used. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range skos:Concept .
+
+_:node17r1lpir0x1 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-kinds#> .
+
+pc:kind rdfs:range _:node17r1lpir0x1 ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:procedureType a owl:FunctionalProperty , qb:CodedProperty ;
+	rdfs:label "Druh řízení"@cs , "Procedure type"@en ;
+	rdfs:comment "Druh řízení veřejné zakázky specifikuje proceduru, podle které je zakázka uveřejňována a podle které je vybírán dodavatel. Lze použít pouze jednu z předdefinovaných hodnot. Kardinalita 0..1"@cs , "Type of procedure of a public contract specifies a procedure which is applied to publish information about the contract and choose a supplier. Only a predefined value can be used. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range skos:Concept .
+
+_:node17r1lpir0x2 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-procedure-types#> .
+
+pc:procedureType rdfs:range _:node17r1lpir0x2 ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:contractingAuthority a owl:FunctionalProperty ;
+	rdfs:label "Zadavatel"@cs , "Contracting authority"@en ;
+	rdfs:comment "Instituce, která vypisuje veřejnou zakázku, přijímá nabídky a vybírá vhodného dodavatele na základě pravidel stanovených zakázkou. Kardinalita 0..1"@cs , "Institution which issues a public contract, receives tenders to the contract and chooses a suitable supplier on the base of the conditions given by the contract. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range gr:BusinessEntity ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:item a rdf:Property ;
+	rdfs:subPropertyOf dcterms:hasPart .
+
+_:node17r1lpir0x3 a owl:Class .
+
+_:node17r1lpir0x4 rdf:first pc:Contract ;
+	rdf:rest _:node17r1lpir0x5 .
+
+_:node17r1lpir0x5 rdf:first pc:Tender ;
+	rdf:rest rdf:nil .
+
+_:node17r1lpir0x3 owl:unionOf _:node17r1lpir0x4 .
+
+pc:item rdfs:domain _:node17r1lpir0x3 ;
+	rdfs:range gr:Offering ;
+	rdfs:comment "Položka poptávaná v rámci veřejné zakázky. Může být kombinací několika produktů či služeb, což lze vyjádřit pomocí vlastností gr:Offering. Kardinalita 0..*"@cs , "An item inquired by a public contract. It can be a combination of several products or services which can be expressed using properties of gr:Offering. Cardinality 0..*"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:mainObject a owl:FunctionalProperty ;
+	rdfs:subPropertyOf dcterms:subject ;
+	rdfs:label "Hlavní předmět zakázky"@cs , "Main object of contract"@en ;
+	rdfs:comment "CPV (Common Procurement Vocabulary) kód popisující hlavní předmět veřejné zakázky. Kardinalita 0..1"@cs , "CPV (Common Procurement Vocabulary) code describing the main object of a public contract. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range skos:Concept ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:additionalObject a rdf:Property ;
+	rdfs:subPropertyOf dcterms:subject ;
+	rdfs:label "Další předmět zakázky"@cs , "Additional object of contract"@en ;
+	rdfs:comment "CPV (Common Procurement Vocabulary) kód popisující doplňující předmět veřejné zakázky. Kardinalita 0..*"@cs , "CPV (Common Procurement Vocabulary) code describing an additional object of a public contract. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range skos:Concept ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:location a rdf:Property ;
+	rdfs:subPropertyOf s:location ;
+	rdfs:label "Místo uskutečnění zakázky"@cs , "Place of contract's realization"@en ;
+	rdfs:comment "Místo, kde dojde k dodání produktu nebo plnění služby nasmlouvané ve veřejné zakázce. Kardinalita 0..*"@cs , "Place of delivery of contracted product or performance of contracted service. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range s:Place ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:onBehalfOf a rdf:Property ;
+	rdfs:label "Jménem"@cs , "On behalf of"@en ;
+	rdfs:comment "Zadání zakázky jménem jiných zadavatelů. Kardinalita 0..*"@cs , "Contract award on behalf of other contracting authorities. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range gr:BusinessEntity ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:contractPrice a rdf:Property ;
+	rdfs:label "Cena"@cs , "Price"@en ;
+	rdfs:comment "Abstraktní vlastnost pro cenu přiřazené k veřejné zakázce"@cs , "Abstract property for price of public contract"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range gr:PriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:documentationPrice a owl:FunctionalProperty ;
+	rdfs:label "Cena zadávací dokumentace k zakázce"@cs , "Price of documentation for public contract"@en ;
+	rdfs:comment "Vlastnost pro cenu zadávací dokumentace k zakázce. Kardinalita 0..1"@cs , "Property for price of documentation for public contract. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range gr:PriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:estimatedPrice a owl:FunctionalProperty ;
+	rdfs:subPropertyOf pc:contractPrice ;
+	rdfs:label "Odhadovaná cena zakázky"@cs , "Exact estimated price"@en ;
+	rdfs:comment "Vlastnost pro odhadovanou cenu veřejné zakázky. Může jít o přesně odhadovanou částku nebo interval. Kardinalita 0..1"@cs , "Property for estimated price of public contract. It can be an exact estimation or an interval. Cardinality 0..1"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:tenderDeadline a owl:FunctionalProperty ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:label "Lhůta pro doručení nabídek nebo přijetí žádostí o účast"@cs , "Time-limit for receipt of tenders or requests to participate"@en ;
+	rdfs:comment "Vlastnost pro lhůtu pro doručení nabídek nebo přijetí žádostí o účast. Kardinalita 0..1"@cs , "Property for time limit for receipt of tenders or requests to participate. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:dateTime ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> ;
+	owl:equivalentProperty loted:DT .
+
+pc:documentationRequestDeadline a owl:FunctionalProperty ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:label "Lhůta pro vyžádání dokumentace k veřejné zakázce"@cs , "Time-limit for receipt of requests for documentation"@en ;
+	rdfs:comment "Vlastnost pro lhůtu pro vyžádání dokumentace k veřejné zakázce. Kardinalita 0..1"@cs , "Property for time limit for receipt of requests for documentation. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:dateTime ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:duration a owl:FunctionalProperty ;
+	rdfs:label "Doba trvání zakázky"@cs , "Duration of contract"@en ;
+	rdfs:comment "Vlastnost pro dobu trvání zakázky. Doba trvání může být uvedena ve dnech, měsících, letech apod. Kardinalita 0..1"@cs , "Property for duration of contract. The duration may be described in days, months, years, etc. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:duration ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:tenderMaintenanceDuration a owl:FunctionalProperty ;
+	rdfs:label "Doba trvání nabídky"@cs , "Duration of tender validity"@en ;
+	rdfs:comment "Vlastnost pro vyjádření minimální doby, po kterou je uchazeč svou nabídkou vázán. Doba trvání může být uvedena ve dnech, měsících, letech apod. Kardinalita 0..1"@cs , "Property for expressing minimum time frame during which the tenderer must maintain the tender. The duration may be described in days, months, years, etc. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:duration ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:startDate a owl:FunctionalProperty ;
+	rdfs:label "Datum začátku realizace zakázky"@cs , "Start date of contract"@en ;
+	rdfs:comment "Vlastnost pro datum začátku realizace zakázky, které je uvedené ve smlouvě. Kardinalita 0..1"@cs , "Property for start date of public contract realization coming from the contract's text. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:date ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:estimatedEndDate a owl:FunctionalProperty ;
+	rdfs:label "Očekávané datum konce realizace zakázky"@cs , "Estimated end date of contract"@en ;
+	rdfs:comment "Vlastnost pro očekávané datum konce realizace zakázky. Kardinalita 0..1"@cs , "Property for estimated end date of public contract realization. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:date ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:actualEndDate a owl:FunctionalProperty ;
+	rdfs:label "Skutečné datum konce realizace zakázky"@cs , "Actual end date of contract realization"@en ;
+	rdfs:comment "Vlastnost pro skutečné datum konce realizace zakázky. Kardinalita 0..1"@cs , "Property for actual end date of public contract's realization. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:date ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:awardCriteriaCombination a owl:FunctionalProperty ;
+	rdfs:label "Kombinace kritérií pro hodnocení nabídek zájemců o zakázku."@cs , "Criteria combination for tender evaluation."@en ;
+	rdfs:comment "Vlastnost pro nastavení kombinace kritérií pro hodnocení nabídek zájemců o zakázku. Kardinalita 0..1"@cs , "Property for criteria combination for tender evaluation. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range pc:AwardCriteriaCombination ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:lot a rdf:Property ;
+	rdfs:domain pc:Contract ;
+	rdfs:range pc:Contract ;
+	rdfs:label "Část zakázky"@cs , "Contract lot"@en ;
+	rdfs:comment "Vlastnost pro specifikaci části zakázky. Zakázku rozděluje na části zadavatel, pokud je zakázka přiliš velká. Zájemci o zakázku podávají nabídky na každou část odděleně a pro každou část zakázky je vybrán samostatný dodavatel. Pro samotnou zakázku nabídky nejsou podávány. Kardinalita 0..*"@cs , "Property for specifying contract lot. When contract is too big, it is split to lots by contracting authority. Bidders then tender each lot separately. For each lot the authority awards a separate tender. The contract itself has no tenders. Cardinality 0..*"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:frameworkAgreement a rdf:Property ;
+	rdfs:domain pc:Contract ;
+	rdfs:range pc:FrameworkAgreement ;
+	rdfs:label "Na základě rámcové smlouvy"@cs , "On the base of a framework agreement"@en ;
+	rdfs:comment "Vlastnost pro rámcovou smlouvu, na jejímž základě byla veřejná zakázka zadána. Kardinalita 0..1"@cs , "Property for a framework agreement on which base a public contract was issued. Cardinality 0..1"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:numberOfTenders a owl:FunctionalProperty ;
+	rdfs:label "Počet obdržených nabídek"@cs , "Number of tenders received"@en ;
+	rdfs:comment "Vlastnost pro počet obdržených nabídek. Kardinalita 0..1"@cs , "Property for number of tenders received. Cardinality 0..1"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:tender a rdf:Property ;
+	rdfs:label "Nabídka"@cs , "Tender"@en ;
+	rdfs:comment "Vlastnost pro nabídku zájemce o zakázku. Kardinalita 0..*"@cs , "Property for a tender submitted by a bidder. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range pc:Tender ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:awardedTender a owl:FunctionalProperty ;
+	rdfs:subPropertyOf pc:tender ;
+	rdfs:label "Vybraná nabídka"@cs , "Awarded tender"@en ;
+	rdfs:comment "Vlastnost pro vítěznou nabídku zájemce o zakázku. Kardinalita 0..1"@cs , "Property for awarded tender submitted by a bidder. Cardinality 0..1"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:subsidy a rdf:Property ;
+	rdfs:label "Dotace použitá pro zakázku"@cs , "Subsidy supplemented for contract"@en ;
+	rdfs:comment "Vlastnost pro dotaci použitou pro zakázku. Kardinalita 0..*"@cs , "Property for used tender subsidy. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range payment:Payment ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:agreedPrice a owl:FunctionalProperty ;
+	rdfs:subPropertyOf pc:contractPrice ;
+	rdfs:label "Smluvní cena"@cs , "Agreed price"@en ;
+	rdfs:comment "Vlastnost pro cenu napsanou na smlouvě s dodavatelem. Kardinalita 0..1"@cs , "Property for a price stated on the contract with the supplier. Cardinality 0..1"@en ;
+	rdfs:range gr:PriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:actualPrice a owl:FunctionalProperty ;
+	rdfs:subPropertyOf pc:contractPrice ;
+	rdfs:label "Skutečná cena po realizaci zakázky"@cs , "Actual price after contract realization"@en ;
+	rdfs:comment "Vlastnost pro skutečnou cenu zaplacenou za zakázku. Kardinalita 0..1"@cs , "Property for actual price of the public contract. Cardinality 0..1"@en ;
+	rdfs:range gr:PriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:attachment a rdf:Property ;
+	rdfs:label "Příloha k zakázce"@cs , "Contract attachment"@en ;
+	rdfs:comment "Vlastnost pro připojení ostatních příloh. Zadávací dokumentaci připojte pomocí pc:specification, smlouvu pomocí pc:agreement. Kardinalita 0..*"@cs , "Property for attachment of other documents. For attachment of contract specification use pc:specification. For attachment of contract agreement use pc:agreement. Cardinality 0..*"@en ;
+	rdfs:domain pc:Contract ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:specification a rdf:Property ;
+	rdfs:subPropertyOf pc:attachment ;
+	rdfs:label "Zadávací dokumentace zakázky"@cs , "Contract specification"@en ;
+	rdfs:comment "Vlastnost pro připojení dokumentů obsahujících zadávací dokumentaci veřejné zakázky. Kardinalita 0..*"@cs , "Property for attachment of documents containing the contract specification. Cardinality 0..*"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:agreement a rdf:Property ;
+	rdfs:subPropertyOf pc:attachment ;
+	rdfs:label "Smlouva na veřejnou zakázku"@cs , "Contract agreement"@en ;
+	rdfs:comment "Vlastnost pro připojení dokumentů obsahujících smlouvy na veřejnou zakázku uzavřené mezi zadavatelem a dodavatelem. Kardinalita 0..*"@cs , "Property for attachment of documents containing the agreement between supplier and contractor. Cardinality 0..*"@en ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:awardCriterion a rdf:Property ;
+	rdfs:label "Kritérium pro zadání zakázky."@cs , "Criterion for contract award."@en , "Critères d'attribution"@fr , "Vergabekriterien"@de ;
+	rdfs:comment "Vlastnost pro nastavení jednoho kritéria pro hodnocení nabídek zájemců o zakázku. Kardinalita 0..*"@cs , "Property for setting a criterion for tender evaluation. Cardinality 0..*"@en ;
+	rdfs:domain pc:AwardCriteriaCombination ;
+	rdfs:range pc:CriterionWeighting ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> ;
+	owl:equivalentProperty loted:AC .
+
+pc:expectedNumberOfOperators a owl:FunctionalProperty ;
+	rdfs:label "Očekávaný počet účastníků rámcové smlouvy"@cs , "Expected number of operators of framework agreement"@en ;
+	rdfs:comment "Očekávaný počet účastníků rámcové smlouvy. Kardinalita 0..1"@cs , "Expected number of operators of framework agreement. Cardinality 0..1"@en ;
+	rdfs:domain pc:FrameworkAgreement ;
+	rdfs:range gr:QuantitativeValueInteger ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:profile a owl:InverseFunctionalProperty ;
+	rdfs:subPropertyOf foaf:homepage ;
+	rdfs:label "Profilová stránka zadavatele"@cs , "Profile web site of contracting authority"@en ;
+	rdfs:comment "Vlastnost pro internetovou adresu profilové stránky zadavatele veřejných zakázek (URL). Kardinalita 0..1"@cs , "Property for the internet address of the profile of contracting authority (URL). Cardinality 0..1"@en ;
+	rdfs:domain gr:BusinessEntity ;
+	rdfs:range rdf:Resource ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:authorityKind a owl:FunctionalProperty , qb:CodedProperty ;
+	rdfs:label "Druh zadavatele"@cs , "Kind of contracting authority"@en ;
+	rdfs:comment "Vlastnost pro druh zadavatele. Lze použít pouze jeden z předdefinovaných SKOS konceptů. Kardinalita 0..1"@cs , "Property for a kind of a contracting authority. Only a predefined SKOS concept can be used. Cardinality 0..1"@en ;
+	rdfs:domain gr:BusinessEntity ;
+	rdfs:range skos:Concept .
+
+_:node17r1lpir0x6 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-authority-kinds#> .
+
+pc:authorityKind rdfs:range _:node17r1lpir0x6 ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:mainActivity a owl:FunctionalProperty , qb:CodedProperty ;
+	rdfs:label "Hlavní aktivita"@cs , "Hlavní aktivita"@en ;
+	rdfs:comment "Vlastnost pro hlavní aktivitu zadavatele. Lze použít pouze jeden z předdefinovaných SKOS konceptů. Kardinalita 0..1"@cs , "Property for main activity of contracting authority. Only a predefined SKOS concept can be used. Cardinality 0..1"@en ;
+	rdfs:domain gr:BusinessEntity ;
+	rdfs:range skos:Concept .
+
+_:node17r1lpir0x7 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-activities#> .
+
+pc:mainActivity rdfs:range _:node17r1lpir0x7 ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:offeredPrice a owl:FunctionalProperty ;
+	rdfs:subPropertyOf gr:hasPriceSpecification ;
+	rdfs:label "Nabídnutá cena v nabídce"@cs , "Offered price in tender"@en ;
+	rdfs:comment "Vlastnost pro cenu nabídnutou zájemcem o zakázku. Kardinalita 0..1"@cs , "Property for price offered by supplier. Cardinality 0..1"@en ;
+	rdfs:domain pc:Tender ;
+	rdfs:range gr:PriceSpecification ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:bidder a rdf:Property ;
+	rdfs:label "Zájemce o zakázku"@cs , "Tender bidder"@en ;
+	rdfs:comment "Vlastnost pro zájemce o zakázku podávajícího nabídku. Kardinalita 0..1"@cs , "Property for bidder submitting the tender. Cardinality 0..1"@en ;
+	rdfs:domain pc:Tender ;
+	rdfs:range gr:BusinessEntity ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:contract a rdf:Property ;
+	rdfs:label "Public contract"@en , "Veřejná zakázka"@cs ;
+	rdfs:comment "Public contract, for which tenders are opened"@en , "Veřejná zakázka, pro níž jsou otevírány nabídky"@cs ;
+	rdfs:domain pc:TendersOpening ;
+	rdfs:range pc:Contract ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+dcterms:date vann:usageNote "Use for date and time, when tenders are opened. The domain is pc:TendersOpening. Cardinality 0..1"@en , "Používejte pro datum a čas otevření nabídek. Definičním oborem je pc:TendersOpening. Kardinalita 0..1"@cs .
+
+s:location vann:usageNote "Use for location, where tenders are opened. The domain is pc:TendersOpening. Cardinality 0..1"@en , "Místo, kde dojde k otevření obálek s nabídkami pro veřejnou zakázku. Definičním oborem je pc:TendersOpening. Kardinalita 0..1"@cs .
+
+pc:weightedCriterion a owl:FunctionalProperty ;
+	rdfs:subPropertyOf dcterms:subject ;
+	rdfs:label "Vážené kritérium"@cs , "Weighted criterion"@en ;
+	rdfs:comment "Vlastnost pro připojení kritéria, které je váženo. Kardinalita 0..1"@cs , "Property for attaching criterion that is weighted. Cardinality 0..1"@en ;
+	rdfs:domain pc:CriterionWeighting ;
+	rdfs:range skos:Concept ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+pc:criterionWeight a owl:FunctionalProperty ;
+	rdfs:label "Váha kritéria pro výběr dodavatele zakázky"@cs , "Contract award criterion weight"@en ;
+	rdfs:comment "Vlastnost pro specifikaci váhy kritéria pro hodnocení nabídky. Kardinalita 0..1"@cs , "Property for criterion weight for tender evaluation. Cardinality 0..1"@en ;
+	rdfs:domain pc:CriterionWeighting ;
+	rdfs:range pcdt:percentage ;
+	rdfs:isDefinedBy <http://purl.org/procurement/public-contracts> .
+
+_:node17r1lpir0x8 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-kinds#> .
+
+pc:kind rdfs:range _:node17r1lpir0x8 .
+
+_:node17r1lpir0x9 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-procedure-types#> .
+
+pc:procedureType rdfs:range _:node17r1lpir0x9 .
+
+_:node17r1lpir0x10 a owl:Class .
+
+_:node17r1lpir0x11 rdf:first pc:Contract ;
+	rdf:rest _:node17r1lpir0x12 .
+
+_:node17r1lpir0x12 rdf:first pc:Tender ;
+	rdf:rest rdf:nil .
+
+_:node17r1lpir0x10 owl:unionOf _:node17r1lpir0x11 .
+
+pc:item rdfs:domain _:node17r1lpir0x10 .
+
+_:node17r1lpir0x13 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-authority-kinds#> .
+
+pc:authorityKind rdfs:range _:node17r1lpir0x13 .
+
+_:node17r1lpir0x14 a owl:Restriction ;
+	owl:onProperty skos:inScheme ;
+	owl:hasValue <http://purl.org/procurement/public-contracts-activities#> .
+
+pc:mainActivity rdfs:range _:node17r1lpir0x14 .

@@ -1,0 +1,123 @@
+@prefix :      <http://www.w3.org/2002/07/owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfg-1: <http://www.w3.org/2004/03/trix/rdfg-1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ro:    <http://purl.org/wf4ever/ro#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ao:    <http://purl.org/ao/> .
+@prefix terms: <http://www.openarchives.org/ore/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix terms2: <http://purl.org/dc/terms/> .
+
+ro:Manifest  a               owl:Class ;
+        rdfs:comment         "The ro:Manifest is used to describe an ro:ResearchObject. This identifies the resource for the manifest which lists all the aggregations of the research object, typically called \".ro/manifest.rdf\" relative to the research object this manifest ore:describes."@en ;
+        rdfs:subClassOf      terms:ResourceMap ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      terms:describes ;
+                               owl:someValuesFrom  ro:ResearchObject
+                             ] .
+
+ro:SemanticAnnotation
+        a                owl:Class ;
+        rdfs:comment     "An ro:SemanticAnnotation is a specialisation of ao:Annotation which requires that ao:body points to an RDF Graph.\n\nThis might be a Named Graph or a resource which can be resolved separately from the URI given by ao:body.\n\nThis graph SHOULD mention the resources identified by ao:annotatesResource from this annotation, preferably by using their URIs as subject or object of statements.\n\nNote that this use of ao:body is distinct from ao:hasTopic, which also allows the association of a an RDF Graph with an ao:Annotation, but which also implies that this graph is the \"topic\" (subproperty of bookmark:hasTopic) of the annotated resource. This class does not require this interpretation, it is merely enough that the annotation body mentions the annotated resource, for instance to give it a dc:title or to relate two annotated resources.  Also note that the next version of the AO ontology (v2) might change this definition of ao:hasTopic, removing the need for this class."@en ;
+        rdfs:seeAlso     <http://www.w3.org/2002/01/bookmark#hasTopic> , <http://www.w3.org/2001/Annotea/User/BookmarkSchema> , ao:hasTopic , ao:body , <http://code.google.com/p/annotation-ontology/wiki/GraphsAnnotations> ;
+        rdfs:subClassOf  ao:Annotation ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  rdfg-1:Graph ;
+                           owl:onProperty     ao:body
+                         ] .
+
+ro:ResearchObject  a         owl:Class ;
+        rdfs:comment         "A research object aggregates a number of resources. A resource can be a workflow, web service, document, data item, data set, workflow run, software or a research object."@en ;
+        rdfs:subClassOf      terms:Aggregation ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:onProperty      terms2:created ;
+                               owl:someValuesFrom  xsd:dateTime
+                             ] ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:onProperty      terms2:creator ;
+                               owl:someValuesFrom  foaf:Agent
+                             ] ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      terms:isDescribedBy ;
+                               owl:someValuesFrom  ro:Manifest
+                             ] .
+
+ro:annotatesAggregatedResource
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "ro:annotatesAggregatedResource specifies that an ao:Annotation annotates an aggregated ro:Resource. \n                               \nWhen used on an ro:AggregatedAnnotation, both the domain and range of this property must ore:isAggregatedBy the same ro:ResearchObject.  \n\nTODO: Should also ro:ResearchObject and ore:Proxy be in the range of this property, or is this subproperty even needed?\n"@en ;
+        rdfs:domain         ao:Annotation ;
+        rdfs:range          ro:Resource ;
+        rdfs:subPropertyOf  ao:annotatesResource .
+
+ro:entryName  a       owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment  "This functional property specifies the name of a ro:FolderEntry within an ro:Folder. \n\nThis name must be case-sensitively unique within the ro:Folder, similar to a filename in a directory.\n\nTODO: Need a functional property to specify the top level folder structure of an {{ro:ResearchObject}}?\n"@en ;
+        rdfs:domain   ro:FolderEntry ;
+        rdfs:range    xsd:string .
+
+<http://purl.org/wf4ever/ro>
+        a                owl:Ontology ;
+        rdfs:comment     "This ontology shows how AO and ORE ontologies can be used together to define a ResearchObject. This ontology is further customized by the wf4ever ontology."@en ;
+        rdfs:seeAlso     <http://www.wf4ever-project.org/wiki/display/docs/Research+Object+Vocabulary+Specification> ;
+        dc:description   "This ontology shows how AO and ORE ontologies can be used together to define a ResearchObject. This ontology is further customized by the wf4ever ontology."@en ;
+        dc:title         "The Research Object Ontology"@en ;
+        owl:imports      <http://purl.org/NET/dc_owl2dl/terms_od> , <http://purl.org/wf4ever/ore-owl> , foaf: , <http://purl.org/ao/core/> ;
+        owl:versionIRI   <https://raw.github.com/wf4ever/ro/0.1.1/ro.owl> ;
+        owl:versionInfo  "0.1.1"^^xsd:string .
+
+ro:FolderEntry  a            owl:Class ;
+        rdfs:comment         "An ro:FolderEntry is any ore:Proxy instance that associates a resources aggregated within an ro:Folder with a ro:entryName. This name is (case-sensitive) unique within a given folder."@en ;
+        rdfs:subClassOf      terms:Proxy ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      terms:proxyIn ;
+                               owl:someValuesFrom  ro:Folder
+                             ] ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      ro:entryName ;
+                               owl:someValuesFrom  xsd:string
+                             ] ;
+        owl:hasKey           ( terms:proxyIn ro:entryName ) .
+
+ro:AggregatedAnnotation
+        a                owl:Class ;
+        rdfs:comment     "An annotation aggregated within an ro:ResearchObject.  \n\nInstances of this class are used to annotated resources aggregated within the aggregating research object, proxies of these resources, or the research object itself. In other words, if :ro is the ro:ResearchObject this annotation has been ore:isAggregatedBy, then the annotation should have at least one ao:annotatesResource which is an ore:AggregatedResource which is ore:isAggregatedBy :ro, or the annotated resource is an ore:Proxy which ore:proxyIn :ro, or the annotated resource is :ro.\n\nIt is possible for the annotation to also annotate non-aggregated resources, but as above, at least one of them needs to be part of the RO or the RO itself.\n\nAs a subclass of ro:SemanticAnnotation the ao:body must point to an rdfg:Graph which contains the actual annotation. "@en ;
+        rdfs:subClassOf  terms:AggregatedResource , ro:SemanticAnnotation ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      terms:isAggregatedBy ;
+                           owl:someValuesFrom  ro:ResearchObject
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      terms2:creator ;
+                           owl:someValuesFrom  foaf:Agent
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      terms2:created ;
+                           owl:someValuesFrom  xsd:dateTime
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      ao:annotatesResource ;
+                           owl:someValuesFrom  [ a            owl:Class ;
+                                                 owl:unionOf  ( ro:ResearchObject terms:AggregatedResource terms:Proxy )
+                                               ]
+                         ] .
+
+ro:Folder  a             owl:Class ;
+        rdfs:comment     "An ro:Folder is a special kind of ore:Aggregation where every ro:AggregatedResource must have a ro:FolderEntry proxy with a unique ro:entryName within that folder.\n\nNote that all resources which are aggregated within an (potentially nested) ro:Folder SHOULD also be aggregated by the same ro:ResearchObject this ro:Folder is aggregated within.\n\nSuch folders can be nested and (optionally) used to organize the resources of the research object into a file-like structure. All such resources should also be aggregated by the ro:ResearchObject\n          "@en ;
+        rdfs:subClassOf  terms:Aggregation , ro:Resource .
+
+ro:Resource  a           owl:Class ;
+        rdfs:comment     "An ro:Resource is an ore:AggregatedResource which ore:isAggregatedBy an ro:ResearchObject. \n\nThis specialisation requires that there exists an ore:Proxy which is ore:proxyFor this resource, and which is ore:proxyIn the same ro:ResearchObject the resource ore:isAggregatedBy. Any annotations on such a proxy will descrive the ro:Resource within that particular ro:ResearchObject, in particular dct:creator and dct:created on the proxy will specify who added the resource to the aggregation at what time.\n\nNote that annotations (ro:AggregatedAnnotation) can be added to both the ro:Resource and the ore:Proxy - depending on if the annotation is seen to be globally true (such as the provenance of how the resource was created) or locally true within the Research Object (such as the the resource playing the role of a wf4ever:Dataset).\n\nNot all resources aggregated by an ro:ResearchObject are ro:Resource instances, in particular ro:AggregatedAnnotations will also be aggregated, but will not be \"true\" RO resources (and thus don't need their own ore:Proxy).  \n\nAggregated resources MAY also be organised in (potentially nested) ro:Folders to reflect a file-system like structure. Note that any such resources SHOULD also be aggregated in the \"mother\" ro:ResearchObject.\n"@en ;
+        rdfs:subClassOf  terms:AggregatedResource ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      terms:isAggregatedBy ;
+                           owl:someValuesFrom  ro:ResearchObject
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      [ owl:inverseOf  terms:proxyFor ] ;
+                           owl:someValuesFrom  [ a                   owl:Restriction ;
+                                                 owl:onProperty      terms:proxyIn ;
+                                                 owl:someValuesFrom  ro:ResearchObject
+                                               ]
+                         ] .

@@ -1,0 +1,1241 @@
+@prefix : <http://ontology.it/itsmo/v1#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix xsp: <http://www.owl-ontologies.com/2005/08/07/xsp.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://ontology.it/itsmo/v1> a owl:Ontology ;
+	rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide#Overview> ;
+	dc:title "A dictionary for some IT service management subjects."@en ;
+	dc:rights """IT Service Management Ontology is available under the Creative Commons 
+    Attribution 3.0 Unported license; see 
+    http://creativecommons.org/licenses/by/3.0/. In a nutshell, you are free 
+    to copy, distribute and transmit the work; to remix/adapt the work (e.g. 
+    to import the ontology and create specializations of its elements), as 
+    long as you attribute the work in the manner specified by the author or 
+    licensor (but not in any way that suggests that they endorse you or your 
+    use of the work). You may not use this work for commercial purposes 
+    without written permission of the author. Proper Attribution: Simply 
+    include the statement \"This work is based on the IT Service Management 
+    Ontology, developed by Enrico Fagnoni\" and link back to 
+    http://ontology.it/itsmo/."""@en ;
+	dc:contributor "ITSMO Ontology is a project sponsored by E-Artspace Labs (http://www.e-artspace.com)"^^xsd:string ;
+	owl:versionInfo "$Id: itsmo.owl 199 2012-06-01 13:25:58Z e-artspace $"^^xsd:string ;
+	rdfs:comment """IT Service Management Ontology (ITSMO) provides the vocabulary for 
+    annotating  resources related to IT Service Management. ITSMO try to be 
+    consistent with 2011 ITIL glossary. ITIL&#174; is a Registered Trade Mark, and 
+    a Registered Community Trade Mark of the Office of Government Commerce, 
+    and is Registered in the U.S. Patent and Trademark Office. Please make 
+    sure you are only using element identifiers in this namespace, 
+    e.g.http://ontology.it/itsmo/v1#ITService. There may be copies of the 
+    ontology file on the Web which can be retrieved from other locations, BUT 
+    THOSE LOCATIONS MUST NOT BE USED AS REFERENCES."""@en ;
+	rdfs:label "IT Service Management Ontology"^^xsd:string ;
+	dc:creator "Enrico Fagnoni"^^xsd:string ;
+	dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
+	dc:subject "ITSM, ITIL, IT Service Management"@en .
+
+:SoftwarePackage a owl:Class ;
+	owl:disjointWith :Document .
+
+:Document a owl:Class .
+
+:SoftwarePackage owl:disjointWith :Hardware .
+
+:Hardware a owl:Class .
+
+:SoftwarePackage owl:disjointWith :Identity .
+
+:Identity a owl:Class .
+
+:SoftwarePackage owl:disjointWith :Building .
+
+:Building a owl:Class .
+
+:SoftwarePackage owl:disjointWith :RunnableResource .
+
+:RunnableResource a owl:Class .
+
+:SoftwarePackage rdfs:comment """A logical entity that identify a software release or a software feature set.
+For example: \"VirtueMart 1.1.x\", \"Linux LTS 10.04\" , \"Windows 7 service pack 2\", \"Apache 2\" . Sometime referenced only with \"software\"."""@en ;
+	rdfs:label "SoftwarePackage"^^xsd:string ;
+	rdfs:subClassOf :ConfigurationItem .
+
+:ConfigurationItem a owl:Class .
+
+:DataCenter a owl:Class ;
+	rdfs:subClassOf :Building ;
+	rdfs:label "DataCenter"^^xsd:string ;
+	rdfs:comment "is a facility used to house computer systems and associated components>"@en .
+
+:Plan a owl:Class ;
+	owl:disjointWith :Template .
+
+:Template a owl:Class .
+
+:Plan rdfs:subClassOf :Document ;
+	owl:disjointWith :ServiceOption .
+
+:ServiceOption a owl:Class .
+
+:Plan dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	owl:disjointWith :Utility .
+
+:Utility a owl:Class .
+
+:Plan owl:disjointWith :Policy .
+
+:Policy a owl:Class .
+
+:Plan rdfs:comment """A detailed proposal that describes the activities and resources needed to achieve
+an objective – for example, a plan to implement a new IT service or process.
+ISO/IEC 20000 requires a plan for the management of each IT service management
+process."""^^xsd:string ;
+	rdfs:label "Plan"^^xsd:string ;
+	owl:disjointWith :Warranty .
+
+:Warranty a owl:Class .
+
+:RunTimeDependency a owl:Class ;
+	owl:disjointWith :StructuralDependency .
+
+:StructuralDependency a owl:Class .
+
+:RunTimeDependency rdfs:comment """A time dependent dinamic dependency. 
+For example there is a runtime dependency betwen proces A and ITservice B when A calls a REST service exposed by B."""@en ;
+	rdfs:subClassOf :Dependency .
+
+:Dependency a owl:Class .
+
+:RunTimeDependency rdfs:label "RunTimeDependency"^^xsd:string .
+
+:Application a owl:Class ;
+	rdfs:label "Application"^^xsd:string ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:subClassOf :SoftwarePackage ;
+	rdfs:comment """Software that provides functions which are required by an IT service. Each application
+may be part of more than one IT service. An application runs on one or more servers or
+clients."""@en , "Application should be executable and installable Software Package. For example a library is not an application but it is a Software Package. [Not ITIL definition]"@en .
+
+:Utility owl:disjointWith :Warranty ;
+	rdfs:label "Utility"^^xsd:string ;
+	owl:disjointWith :Template , :Policy ;
+	rdfs:subClassOf :Document ;
+	rdfs:comment "The functionality offered by a product or service to meet a particular need. Utility can be summarized as ‘what the service does’, and can be used to determine whether a service is able to meet its required outcomes, or is ‘fit for purpose’. The business value of an IT service is created by the combination of utility and warranty."@en ;
+	owl:disjointWith :Plan ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	owl:disjointWith :ServiceOption .
+
+:ControlledConfiguration a owl:Class ;
+	owl:disjointWith :QualitativeValue .
+
+:QualitativeValue a owl:Class .
+
+:ControlledConfiguration owl:disjointWith :Dependency ;
+	rdfs:subClassOf :Configuration .
+
+:Configuration a owl:Class .
+
+:ControlledConfiguration rdfs:comment """A  term used to describe configuration  subjected to change management and stored in a configuration management database (CMDB).
+If you use a Version Control System as CMDB, this is could be the  the name of a source tree. If you use a plain filesystem as CMDB, this is the pathname of a directory that contains a file structure. Could be thinked as a \"versioned directory\". This term  is similar to ITILs: \"configuration record\"."""@en ;
+	owl:disjointWith :LifeCycleStage .
+
+:LifeCycleStage a owl:Class .
+
+:ControlledConfiguration rdfs:subClassOf _:node18q8aepebx1 .
+
+_:node18q8aepebx1 a owl:Restriction ;
+	owl:onProperty :hasCMDB .
+
+:hasCMDB a owl:ObjectProperty .
+
+_:node18q8aepebx1 owl:cardinality "1"^^xsd:int .
+
+:ControlledConfiguration rdfs:label "ControlledConfiguration"^^xsd:string ;
+	owl:disjointWith :ConfigurationItem , :Snapshot .
+
+:Snapshot a owl:Class .
+
+:DependencyStrength a owl:Class ;
+	owl:disjointWith :Criticality .
+
+:Criticality a owl:Class .
+
+:DependencyStrength owl:disjointWith :Priority .
+
+:Priority a owl:Class .
+
+:DependencyStrength rdfs:comment "A Strength level for a dependency"@en ;
+	rdfs:subClassOf :QualitativeValue ;
+	rdfs:label "Dependency Strength"^^xsd:string .
+
+:ConfigurationItem owl:disjointWith :QualitativeValue , :LifeCycleStage , :Configuration ;
+	rdfs:subClassOf _:node18q8aepebx2 .
+
+_:node18q8aepebx2 a owl:Restriction ;
+	owl:onProperty :hasStatus .
+
+:hasStatus a owl:ObjectProperty .
+
+_:node18q8aepebx2 owl:maxCardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf owl:Thing ;
+	rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide/#CI> ;
+	rdfs:subClassOf _:node18q8aepebx3 .
+
+_:node18q8aepebx3 a owl:Restriction ;
+	owl:onProperty :hasReferenceBaseline .
+
+:hasReferenceBaseline a owl:ObjectProperty .
+
+_:node18q8aepebx3 owl:maxCardinality "1"^^xsd:int .
+
+:ConfigurationItem owl:disjointWith :Snapshot , :Dependency ;
+	rdfs:label "Configuration Item"^^xsd:string ;
+	rdfs:comment """any component or other service asset  that needs to be managed in order to deliver an IT service. Information about each configuration item is recorded [at least] in a configuration record within the configuration management system and is maintained throughout its lifecycle by service asset and configuration management.
+Configuration items are under the control of change management. They  typically include IT services, hardware, software, buildings, people and  formal documentation such as process documentation and service level  agreements.
+Note that tis definition is a  bit extensive than ITIL one, because it allow a CI to be described in more than one configuration records.This make this definition compatible with semantic web architecture that allow metadata do be defined everywhere in the web. See ITSMO user manual for more info about this class."""@en ;
+	owl:disjointWith :ControlledConfiguration ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> .
+
+:Document owl:disjointWith :Building , :RunnableResource ;
+	rdfs:label "Document"^^xsd:string ;
+	owl:disjointWith :Identity ;
+	rdfs:comment """Information in readable form. A document may be paper or electronic – for example, a policy statement, service level agreement, incident record or diagram of a computer room layout.
+
+Dublin Core vocabulary appy to objetc of thes class."""@en ;
+	owl:disjointWith :Hardware , :SoftwarePackage ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:subClassOf :ConfigurationItem .
+
+:Template rdfs:subClassOf :Document ;
+	rdfs:comment "A skeleton document or a document to be  used as reference for editin another document."@en ;
+	rdfs:label "Template"^^xsd:string ;
+	owl:disjointWith :ServiceOption , :Policy , :Warranty , :Utility , :Plan .
+
+:Warranty dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:comment "Assurance that a product or service will meet agreed requirements. This may be a formal agreement such as a service level agreement or contract, or it may be a marketing message or brand image. Warranty refers to the ability of a service to be available when needed, to provide the required capacity, and to provide the required reliability in terms of continuity and security. Warranty can be summarized as ‘how the service is delivered’, and can be used to determine whether a service is ‘fit for use’. The business value of an IT service is created by the combination of utility and warranty."@en ;
+	owl:disjointWith :Policy , :Template , :Plan , :ServiceOption ;
+	rdfs:label "Warranty"^^xsd:string ;
+	rdfs:subClassOf :Document ;
+	owl:disjointWith :Utility .
+
+:Snapshot rdfs:label "Snapshot"^^xsd:string ;
+	owl:disjointWith :Configuration , :LifeCycleStage , :QualitativeValue , :Dependency , :ConfigurationItem , :ControlledConfiguration ;
+	rdfs:comment "A shapshot at a defined  time frame for a configuration Item. Use dcterms:created to annotate the date of the snapshot."@en .
+
+:ManagementProcess a owl:Class ;
+	rdfs:label "ManagementProcess"^^xsd:string ;
+	rdfs:comment """Is a process of planning and controlling one or more of activities. Here 
+    are some examples:
+
+    <ul>
+      <li>
+        <b>Configuration Management</b>: the process responsible for ensuring 
+        that the assets required to deliver services are properly controlled, 
+        and that accurate and reliable information about those assets is 
+        available when and where it is needed. This information includes 
+        details of how the assets have been configured and the relationships 
+        betweens [ITIL glossary].
+      </li>
+      <li>
+        <b>Project Management</b>: the discipline of planning, organizing, 
+        securing, and managing resources to achieve specific goals. A project 
+        is a temporary endeavor with a defined beginning and end (usually 
+        time-constrained, and often constrained by funding or deliverables), 
+        undertaken to meet unique goals and objectives, typically to bring 
+        about beneficial change or added value[Wikipedia].
+      </li>
+      <li>
+        Change Management: the process responsible for controlling the 
+        lifecycle of all changes, enabling beneficial changes to be made with 
+        minimum disruption to IT services.[ITIL glossary]
+      </li>
+    </ul>
+    <p>"""@en ;
+	rdfs:subClassOf :Process .
+
+:Process a owl:Class .
+
+:Priority rdfs:comment "A process priority"@en ;
+	rdfs:label "Process Priority"^^xsd:string ;
+	rdfs:subClassOf :QualitativeValue ;
+	owl:disjointWith :Criticality , :DependencyStrength .
+
+:Hardware owl:disjointWith :SoftwarePackage , :Document , :Identity , :Building , :RunnableResource ;
+	rdfs:label "Hardware"^^xsd:string ;
+	rdfs:subClassOf :ConfigurationItem ;
+	rdfs:comment "the physical part of a computer"@en .
+
+:Configuration owl:disjointWith :LifeCycleStage , :Snapshot , :QualitativeValue , :Dependency , :ConfigurationItem ;
+	rdfs:label "Configuration"^^xsd:string ;
+	rdfs:comment "A term that indicate a set of related phisical object with their metadata that are considered as a whole."@en .
+
+:Identity owl:disjointWith :Document ;
+	rdfs:label "Identity"^^xsd:string ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	owl:disjointWith :SoftwarePackage , :Building , :RunnableResource ;
+	rdfs:subClassOf :ConfigurationItem ;
+	owl:disjointWith :Hardware ;
+	rdfs:comment "A unique name that is used to identify a user, person or role. The identity is used to grant rights to that user, person or role. Example identities might be the username SmithJ or the role ‘change manager’."@en .
+
+:Policy owl:disjointWith :Utility ;
+	rdfs:label "Policy"^^xsd:string ;
+	rdfs:subClassOf :Document ;
+	owl:disjointWith :ServiceOption , :Warranty , :Template , :Plan ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:comment "Formally documented management expectations and intentions. Policies are used to direct decisions, and to ensure consistent and appropriate development and implementation of processes, standards, roles, activities, IT infrastructure etc."@en .
+
+:Process dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:subClassOf :RunnableResource , _:node18q8aepebx4 .
+
+_:node18q8aepebx4 a owl:Restriction ;
+	owl:onProperty :hasAccountable .
+
+:hasAccountable a owl:ObjectProperty .
+
+_:node18q8aepebx4 owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Process rdfs:comment """A structured set of activities designed to accomplish a specific objective. 
+A process takes one or more defined inputs and turns them into defined outputs. It may include any of the roles, responsibilities, tools and management controls required to reliably deliver the outputs. A process may define policies, standards, guidelines, activities and work instructions if they are needed."""@en ;
+	rdfs:label "Process"^^xsd:string ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> .
+
+:Baseline a owl:Class ;
+	rdfs:label "Baseline"^^xsd:string ;
+	rdfs:subClassOf :Snapshot ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:comment "A configuration baseline is a snapshot that is used as a reference point."@en ;
+	rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide/#CI> .
+
+:Building rdfs:comment "Any human-made structure used or intended for supporting or sheltering any use or continuous occupancy"@en ;
+	owl:disjointWith :SoftwarePackage , :Document , :Hardware , :Identity , :RunnableResource ;
+	rdfs:label "Building"^^xsd:string ;
+	rdfs:subClassOf :ConfigurationItem .
+
+:OLA a owl:Class ;
+	rdfs:subClassOf :Agreement .
+
+:Agreement a owl:Class .
+
+:OLA rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:label "Operational Level Agreement"^^xsd:string ;
+	rdfs:comment """An Agreement between an IT Service Provider and another part of the same Organisation. An OLA supports the IT Service Provider's delivery of IT Services to Customers. The OLA defines the goods or Services to be provided and the responsibilities of both parties. For example there could be an OLA between the IT Service Provider and a procurement department to obtain hardware in agreed times, between the Service Desk and a Support Group to provide Incident Resolution in agreed times.
+See Service Level Agreement."""@en ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	owl:disjointWith :SLA .
+
+:SLA a owl:Class .
+
+:Agreement dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:comment """A document that describes a formal understanding between two or more parties.
+An agreement is not legally binding, unless it forms part of a contract."""@en ;
+	rdfs:label "Agreement"@en ;
+	rdfs:subClassOf :Warranty .
+
+:System a owl:Class ;
+	rdfs:label "System"^^xsd:string ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:subClassOf :RunnableResource ;
+	rdfs:comment "A number of related things that work together to achieve an overall Objective. For example:computer System including hardware, software and Applications, a management System, including multiple Processes that are planned and managed together. For example a Quality Management System, a Database Management System or Operating System that includes many software modules that are designed to perform a set of related Functions."@en .
+
+:Dependency rdfs:comment """The direct or indirect reliance of one Configuraiton Item on another.
+ [ Note that the ITIL 2011 restrict the domain of this terms to Processes or activity, this definition is more general ]. This is a superclass for all types of dependency relastionship for a CI."""@en ;
+	rdfs:subClassOf _:node18q8aepebx5 .
+
+_:node18q8aepebx5 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :hasDependentObject .
+
+:hasDependentObject a owl:ObjectProperty .
+
+:Dependency rdfs:label "Dependency"^^xsd:string ;
+	owl:disjointWith :ConfigurationItem ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:subClassOf owl:Thing ;
+	owl:disjointWith :Snapshot ;
+	rdfs:subClassOf _:node18q8aepebx6 .
+
+_:node18q8aepebx6 a owl:Restriction ;
+	owl:onProperty :hasDependencyStrength .
+
+:hasDependencyStrength a owl:ObjectProperty .
+
+_:node18q8aepebx6 owl:maxCardinality "1"^^xsd:int .
+
+:Dependency owl:disjointWith :Configuration , :ControlledConfiguration , :QualitativeValue , :LifeCycleStage ;
+	rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide#dependency_relations> ;
+	rdfs:subClassOf _:node18q8aepebx7 .
+
+_:node18q8aepebx7 a owl:Restriction ;
+	owl:onProperty :hasDependencyDistance .
+
+:hasDependencyDistance a owl:DatatypeProperty .
+
+_:node18q8aepebx7 owl:maxCardinality "1"^^xsd:int .
+
+:ITService a owl:Class ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:comment """A service is a means of delivering value to customers by facilitating 
+      outcomes customers want to achieve without the ownership of specific 
+      costs and risks. An IT is a service provided by an IT service provider. 
+      An IT service is made up of a combination of information technology, 
+      people and processes. A customer-facing IT service directly supports the 
+      business processes of one or more customers and its service level 
+      targets should be defined in a service level agreement. Other IT 
+      services, called supporting services, are not directly used by the 
+      business but are required by the service provider to deliver 
+      customer-facing services."""@en ;
+	rdfs:label "IT Service"^^xsd:string ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:subClassOf :RunnableResource , _:node18q8aepebx8 .
+
+_:node18q8aepebx8 a owl:Restriction ;
+	owl:onProperty :hasProvider .
+
+:hasProvider a owl:ObjectProperty .
+
+_:node18q8aepebx8 owl:maxCardinality "1"^^xsd:int .
+
+:LifeCycleStage dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	owl:disjointWith :ControlledConfiguration , :ConfigurationItem ;
+	rdfs:comment """A stage in the life of a configuration item. The lifecycle defines the 
+    categories for status and the status transitions that are permitted. For 
+    example:
+
+    <ul>
+      <li>
+        The lifecycle of an application includes requirements, design, build, 
+        deploy, operate, optimize.
+      </li>
+      <li>
+        The expanded incident lifecycle includes detection, diagnosis, repair, 
+        recovery and restoration
+      </li>
+      <li>
+        The lifecycle of a server may include: ordered, received, in test, 
+        live, disposed etc
+      </li>
+    </ul>"""@en ;
+	owl:disjointWith :Configuration , :Snapshot ;
+	rdfs:label "LifeCycleStage"^^xsd:string ;
+	owl:disjointWith :QualitativeValue , :Dependency .
+
+:ServiceOption owl:disjointWith :Template ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	owl:disjointWith :Utility ;
+	rdfs:comment "A choice of utility and warranty offered to customers by a core service or service package."@en ;
+	owl:disjointWith :Plan , :Policy , :Warranty ;
+	rdfs:label "ServiceOption"^^xsd:string ;
+	rdfs:subClassOf :Document .
+
+:Project a owl:Class ;
+	rdfs:comment """A temporary organization, with people and other assets, that is required to achieve an
+objective or other outcome. Each project has a lifecycle that typically includes initiation,
+planning, execution, and closure. Projects are usually managed using a formal
+methodology such as PRojects IN Controlled Environments (PRINCE2) or the Project
+Management Body of Knowledge (PMBOK)."""@en ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:label "Project"^^xsd:string ;
+	rdfs:subClassOf :RunnableResource , _:node18q8aepebx9 .
+
+_:node18q8aepebx9 a owl:Restriction ;
+	owl:onProperty :hasProjectOwner .
+
+:hasProjectOwner a owl:ObjectProperty .
+
+_:node18q8aepebx9 owl:minCardinality "1"^^xsd:int .
+
+:LifeCycle a owl:Class ;
+	rdfs:comment "A set of related LifeCycleStage. Could be implementetd with a state machine."@en ;
+	rdfs:label "Life cycle"@en .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx10 .
+
+_:node18q8aepebx10 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasOperationProcess .
+
+:hasOperationProcess a owl:ObjectProperty .
+
+:RunnableResource owl:disjointWith :Identity ;
+	rdfs:subClassOf _:node18q8aepebx11 .
+
+_:node18q8aepebx11 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasPriority .
+
+:hasPriority a owl:ObjectProperty .
+
+:RunnableResource rdfs:subClassOf :ConfigurationItem ;
+	owl:disjointWith :Document , :SoftwarePackage , :Hardware , :Building ;
+	rdfs:subClassOf _:node18q8aepebx12 .
+
+_:node18q8aepebx12 a owl:Restriction ;
+	owl:onProperty :hasCriticality .
+
+:hasCriticality a owl:ObjectProperty .
+
+_:node18q8aepebx12 owl:maxCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:label "RunnableResource"^^xsd:string ;
+	rdfs:subClassOf _:node18q8aepebx13 .
+
+_:node18q8aepebx13 a owl:Restriction ;
+	owl:onProperty :hasDesignProcess .
+
+:hasDesignProcess a owl:ObjectProperty .
+
+_:node18q8aepebx13 owl:maxCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:comment "Configuration items that require an execution environment to go live."@en .
+
+:SLA dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:subClassOf :Agreement ;
+	rdfs:comment """An Agreement between an IT Service Provider and a Customer. The SLA describes the IT Service, documents Service Level Targets, and specifies the responsibilities of the IT Service Provider and the Customer. A single SLA may cover multiple IT Services or multiple Customers.
+See Operational Level Agreement."""@en ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	owl:disjointWith :OLA ;
+	rdfs:label "Service Level Agreement"^^xsd:string .
+
+:StructuralDependency rdfs:label "StructuralDependency"^^xsd:string ;
+	rdfs:comment """describes a  part/whole relationship between components.
+A strucural dependency is an included file, a paragrapg in a text, a  library used by applcation an application etc. etc."""@en ;
+	owl:disjointWith :RunTimeDependency ;
+	rdfs:subClassOf :Dependency .
+
+:QualitativeValue rdfs:comment """This property share the same definition of  gr:QualitativeValue.
+ A qualitative value is a predefined value for a service characteristic. 
+	
+Examples: The Service is critical.
+	
+Note: Value sets are supported by creating subclasses of this class. Ordinal relations between values (gr:greater, gr:lesser, ...) can be provided directly by GoodRelations after subclassing itsmo:QualitativeValue to gr:QualitativeValue"""@en ;
+	rdfs:label "QualitativeValue"^^xsd:string ;
+	owl:disjointWith :Configuration , :LifeCycleStage , :Snapshot , :Dependency , :ConfigurationItem , :ControlledConfiguration .
+
+:Criticality owl:disjointWith :DependencyStrength , :Priority ;
+	rdfs:comment "A process Critcality"@en ;
+	rdfs:label "criticality"^^xsd:string ;
+	rdfs:subClassOf :QualitativeValue .
+
+:uses a owl:ObjectProperty ;
+	rdfs:subPropertyOf :qualitativeServiceProperty .
+
+:qualitativeServiceProperty a owl:ObjectProperty .
+
+:uses rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide#dependency_relations> ;
+	rdfs:domain :ConfigurationItem ;
+	rdfs:comment """This object property is a shortcut for the original itsmo:hasDirectDependency property for the common case of  having a runtime  (itsmo:runtimeDependency) dependency with strong strength (itsmo:strongDependency) with another resource (totally or partially).
+Note that this property is NOT transitive because states a DIRECT dependency."""@en ;
+	rdfs:range :ConfigurationItem ;
+	rdfs:label "uses"^^xsd:string .
+
+:hasAgreement a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:comment "An contract or an agriment related to a service (Service level agreed, ola or other)"@en ;
+	rdfs:label "hasAgreement"^^xsd:string ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain :ITService ;
+	rdfs:range :Agreement .
+
+:hasDependencyStrength rdfs:label "hasDependencyStrength"^^xsd:string ;
+	rdfs:domain :Dependency ;
+	rdfs:range :DependencyStrength ;
+	rdfs:comment "The level of dependency. There are two level of predefined value: itsmo:strongDependancy and  itsmo:weakDependancy. Other value can be defined."@en .
+
+:hasManagementProcess a owl:ObjectProperty ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain :ConfigurationItem ;
+	rdfs:comment "the referernced resource is a process for managing the described project rference"@en ;
+	rdfs:range :ManagementProcess ;
+	rdfs:label "hasManagementProcess"^^xsd:string .
+
+:hasCustomer a owl:ObjectProperty ;
+	rdfs:range :Identity ;
+	rdfs:label "hasCustomer"^^xsd:string ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:domain :ITService ;
+	rdfs:comment "States the service Customer"@en .
+
+:hasTemplate a owl:ObjectProperty ;
+	rdfs:comment "states a document that contains a skeleton or that can be used as reference for editing."@en ;
+	rdfs:domain :Document ;
+	rdfs:range :Template ;
+	rdfs:label "hasTemplate"^^xsd:string .
+
+:hasServiceOption a owl:ObjectProperty ;
+	rdfs:label "hasSLAPackage"^^xsd:string ;
+	rdfs:comment """The reference resouce (or litteral) is a choice of utility and warranty offered to
+customers by a core service or service package."""@en ;
+	rdfs:domain :ITService ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:range :ServiceOption .
+
+:hasSystemOwner a owl:ObjectProperty ;
+	rdfs:label "hasSystemAdministrator"^^xsd:string ;
+	rdfs:comment "the referenced resource is the owner of the  the system"@en ;
+	rdfs:domain :System .
+
+:hasPublishingProcess a owl:ObjectProperty ;
+	rdfs:domain :Document ;
+	rdfs:label "hasPublishingProcess"^^xsd:string ;
+	rdfs:comment "the referenced resource is a Process for publishing the described resource."@en ;
+	rdfs:range :Process .
+
+:hasParty a owl:ObjectProperty ;
+	rdfs:domain :Agreement ;
+	rdfs:label "hasParty"^^xsd:string ;
+	rdfs:comment "One of the parties of an agreement"@en .
+
+:hasDependentObject rdfs:label "hasDependentObject"^^xsd:string ;
+	rdfs:comment "The subject of the statement depends fro, the referenced resource."@en ;
+	rdfs:domain :Dependency .
+
+:hasAccountable rdfs:label "hasAccountable"^^xsd:string ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:comment "The one ultimately accountable for the correct and thorough completion of the process, and the one to whom Responsible is accountable. In other words, an Accountable must sign off (Approve) on work that Responsible provides. There must be only one Accountable specified for each process."@en ;
+	rdfs:domain :Process .
+
+:links a owl:ObjectProperty ;
+	rdfs:subPropertyOf :uses ;
+	rdfs:label "links"^^xsd:string ;
+	rdfs:comment """This object property is a shortcut for the original itsmo:hasDirectDependency property for the common case of  having a runtime  (itsmo:runtimeDependency) dependency with weak strength (itsmo:strongDependency) with another resource (totally or partially).
+Note that this property is NOT transitive because states a DIRECT dependency.
+It is an uses properties but with a weak dependency strenght becouse the link can be broken without risk of destruction for describing resource."""@en .
+
+:qualitativeServiceProperty rdfs:label "quantitativeServiceProperty"^^xsd:string ;
+	rdfs:comment "This class is  a container to collect all property that are safely sub-classable to gr:quantitativeProductOrServiceProperties."@en .
+
+:hasCriticality rdfs:comment "Relative criticality"@en ;
+	rdfs:label "hasCriticality"@en ;
+	rdfs:range :Criticality ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain :RunnableResource .
+
+:hasProvider rdfs:comment "States The Service Provider that provides IT Services to Internal Customers or External Customers."^^xsd:string ;
+	rdfs:label "hasProvider"@it ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:domain :ITService ;
+	rdfs:subPropertyOf :qualitativeServiceProperty .
+
+:hasPriority rdfs:domain :RunnableResource ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:range :Priority ;
+	rdfs:label "hasPriority"^^xsd:string ;
+	rdfs:comment "Relative priority"@en .
+
+:hasOperationProcess rdfs:label "hasOperationProcess"^^xsd:string ;
+	rdfs:comment "States Day-to-day management  proces of an IT service, system or other runnable item."@en ;
+	rdfs:domain :RunnableResource ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:range :Process ;
+	rdfs:subPropertyOf :qualitativeServiceProperty .
+
+:hasEditingProcess a owl:ObjectProperty ;
+	rdfs:comment "hasEditingProcess"@en ;
+	rdfs:domain :Document ;
+	rdfs:label "the referenced resource is process for edititing described resource."^^xsd:string ;
+	rdfs:range :Process .
+
+:hasReferenceBaseline rdfs:subPropertyOf :hasBaseline .
+
+:hasBaseline a owl:ObjectProperty .
+
+:hasReferenceBaseline rdfs:label "hasReferenceBaseline"^^xsd:string ;
+	rdfs:comment "the referenced resource is a baseline that officially represent  the annotated Configuration Item. If not present you can assume the the actual configuration."@en .
+
+:requires a owl:ObjectProperty ;
+	rdfs:comment """A related resource that is directly totally or partially  included either physically or logically in the described resource. This property implies dcterms:hasPart
+This object property is a shortcut for the original itsmo:hasDirectDependency property for the common case of having a static structural (itsmo:structuralDependency) dependency with strong strength (itsmo:strongDependency).
+Note that this property is NOT transitive becouse it states a DIRECT dependency.
+See  http://ontology.it/itsmo/v1/itsmo.html#dependency_relations for more info.
+N.B. The study of part-whole relations is a large field in its own right - \"mereology\" and \"mereotopology\" and has been the topic of many papers.
+Note that this property is quite different form gr:includes one (that has a more restricted domains). gr:includes could be thinked as a subclass of itsmo:includes"""@en ;
+	rdfs:range :ConfigurationItem ;
+	rdfs:label "requires"^^xsd:string ;
+	rdfs:domain :ConfigurationItem ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide#dependency_relations> .
+
+:hasConsole a owl:ObjectProperty ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:label "hasConsole"^^xsd:string ;
+	rdfs:domain :ITService ;
+	rdfs:range :ITService ;
+	rdfs:comment "The referenced service is an administrative console forr the annotate service"@en .
+
+:hasInformed a owl:ObjectProperty ;
+	rdfs:label "hasInformed"^^xsd:string ;
+	rdfs:comment "Those who are kept up-to-date on progress, often only on completion of the task or deliverable; and with whom there is just one-way communication. [source Wikypedia Raci matrix]"@en ;
+	rdfs:domain :Process ;
+	rdfs:range :Identity .
+
+:hasProjectOwner rdfs:range :Identity ;
+	rdfs:domain :Project ;
+	rdfs:comment "the reference resource is who owns the described respurce."@en ;
+	rdfs:label "hasProjectOwner"^^xsd:string .
+
+:hasDesignProcess rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain :RunnableResource ;
+	dcterms:conformsTo <http://www.itil-officialsite.com/InternationalActivities/ITILGlossaries_2.aspx#English_2011_Glossary> ;
+	rdfs:label "hasDesign"^^xsd:string ;
+	rdfs:comment "States process that identifies requirements and then defines a solution that is able to meet these requirements."@en ;
+	rdfs:range :Process .
+
+:hasConsulted a owl:ObjectProperty ;
+	rdfs:comment "Those whose opinions are sought, typically subject matter experts; and with whom there is two-way communication. [ source wikypedia RACI matrix]"@en ;
+	rdfs:domain :Process ;
+	rdfs:label "hasConsulted"^^xsd:string ;
+	rdfs:range :Identity .
+
+:hasDependency a owl:ObjectProperty ;
+	rdfs:seeAlso <http://ontology.it/itsmo/v1/userguide#dependency_relations> ;
+	rdfs:label "hasDependency"^^xsd:string ;
+	rdfs:range :Dependency ;
+	rdfs:comment """This states that the subject resource depends (directly or indirectly) from referenced resource.
+This could be thinked as  a pseudo transitive property. 
+If  hasDependency(A,B) and BhasDependency(B,C) then
+hasDepency(A,C).
+
+Note that this is not a standard OWL reasoning."""@en .
+
+:hasUtility a owl:ObjectProperty ;
+	rdfs:range :Utility ;
+	rdfs:comment "The referenced resource is an utility for the annotated service or service option."@en ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain _:node18q8aepebx14 .
+
+_:node18q8aepebx14 a owl:Class ;
+	owl:unionOf _:node18q8aepebx15 .
+
+_:node18q8aepebx15 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx16 .
+
+_:node18q8aepebx16 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasUtility rdfs:label "hasUtility"^^xsd:string .
+
+:hasWarranty a owl:ObjectProperty ;
+	rdfs:label "hasWarranty"^^xsd:string ;
+	rdfs:range :Warranty ;
+	rdfs:comment "The referenced resource is a Warranty for the annotated service or Service Option."@en ;
+	rdfs:domain _:node18q8aepebx17 .
+
+_:node18q8aepebx17 a owl:Class ;
+	owl:unionOf _:node18q8aepebx18 .
+
+_:node18q8aepebx18 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx19 .
+
+_:node18q8aepebx19 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasWarranty rdfs:subPropertyOf :qualitativeServiceProperty .
+
+:hasCMDB rdfs:domain :ControlledConfiguration ;
+	rdfs:range _:node18q8aepebx20 .
+
+_:node18q8aepebx20 a owl:Class ;
+	owl:unionOf _:node18q8aepebx21 .
+
+_:node18q8aepebx21 rdf:first :ITService ;
+	rdf:rest _:node18q8aepebx22 .
+
+_:node18q8aepebx22 rdf:first :System ;
+	rdf:rest rdf:nil .
+
+:hasCMDB rdfs:comment """the related resource is a means  to store configuration  throughout their lifecycle for described resource. The configuration management
+system  maintains one or more configuration management databases, and each database stores attributes of configuration items, and
+relationships with other configuration items."""@en ;
+	rdfs:label "hasCMDB"^^xsd:string .
+
+:hasDeliverable a owl:ObjectProperty ;
+	rdfs:range :ConfigurationItem ;
+	rdfs:comment "the reference resource is a planned output for the described resource"@en ;
+	rdfs:label "hasDeliverable"^^xsd:string ;
+	rdfs:domain :Project .
+
+:hasConfiguration a owl:ObjectProperty ;
+	rdfs:range :Configuration ;
+	rdfs:comment """A resource in from which the described resource is derived.
+General practice suggests to use a Version Control System to manage configuration  ad  versioned directory. This practice minimize the need of baseline and helps to maintain a coherent history of Configuration Items Changes.
+ITIL impose using just one Controlled Configuration record per Configuration Item."""@en ;
+	rdfs:label "hasConfiguration"^^xsd:string ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain :ConfigurationItem .
+
+:hasBaseline rdfs:label "hasBaseline"^^xsd:string ;
+	rdfs:comment "A reference to  a  baseline  of a configuration."@en ;
+	rdfs:range :Baseline ;
+	rdfs:subPropertyOf :hasSnapshot .
+
+:hasSnapshot a owl:ObjectProperty ;
+	rdfs:domain :ConfigurationItem ;
+	rdfs:comment "The reference resource is a snapshot of a configuration item."@en ;
+	rdfs:label "hasSnapshot"^^xsd:string ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:range :Snapshot .
+
+:hasDesignDocument a owl:ObjectProperty ;
+	rdfs:comment "the reference resource  is a  resource defining some  aspects of an IT Service and  its Requirements through each stage of its Lifecycle."@en ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:domain :RunnableResource ;
+	rdfs:label "hasServiceDesignPackage"^^xsd:string .
+
+:hasResponsible a owl:ObjectProperty ;
+	rdfs:range :Identity ;
+	rdfs:label "hasResponsible"@en ;
+	rdfs:comment "Those who do the work to achieve a Process. There is typically one role with a participation type of Responsible, although others can be delegated to assist in the work required."@en ;
+	rdfs:isDefinedBy <http://ontology.it/itsmo/v1> ;
+	rdfs:domain :Process .
+
+:hasManagementPlan a owl:ObjectProperty ;
+	rdfs:domain :ManagementProcess ;
+	rdfs:subPropertyOf :qualitativeServiceProperty ;
+	rdfs:label "hasManagementPlan"^^xsd:string ;
+	rdfs:range :Plan ;
+	rdfs:comment "the reference resource is a plan document for the described resource."@en .
+
+:directReportOf a owl:ObjectProperty ;
+	rdfs:domain :Identity ;
+	rdfs:label "directReportOf"^^xsd:string ;
+	rdfs:comment "The referenced resource  is the head of  the described resource. This is a shortcut for describing a strong structural dependency between two identities."@en ;
+	rdfs:range :Identity .
+
+:hasStatus rdfs:range :LifeCycleStage ;
+	rdfs:comment "the referenced resource is a stage in the life cycle of the described resource."@en ;
+	rdfs:label "hasStatus"^^xsd:string ;
+	rdfs:subPropertyOf :qualitativeServiceProperty .
+
+:agreementValidFrom a owl:DatatypeProperty ;
+	rdfs:comment "This property specifies the beginning of the validity of an agreement."@en ;
+	rdfs:label "agreementValidFrom"^^xsd:string ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain :Agreement .
+
+:hasConfigurationDump a owl:DatatypeProperty ;
+	rdfs:comment "identifies a dump of a configuration. This cold be an URI of a controlled configuration revision. an archive file  or just a string that allow you how to identify such dump."@en ;
+	rdfs:domain :Snapshot ;
+	rdfs:label "hasConfigurationDump"^^xsd:string .
+
+:hasLinkedDataDump a owl:DatatypeProperty ;
+	rdfs:domain :Snapshot ;
+	rdfs:label "hasLinkedDataDump"^^xsd:string ;
+	rdfs:comment """states a set of metadata snapshot. This sholud be a string expressed in a formal RDF language like XML/RF or turtle.
+It is used to take a snapshot of the properties of a C.I. when it has mulltiple or uncontrolled configuration or any other sparse metadata definition.
+Think  it  as the output of a SPARQL DESCRIBE query to an end-point that contains  metadata for configuration Item.."""@en ;
+	rdfs:range xsd:string .
+
+:agreementValidThrough a owl:DatatypeProperty ;
+	rdfs:range xsd:dateTime ;
+	rdfs:label "agreementValidThrough"@en ;
+	rdfs:domain :Agreement ;
+	rdfs:comment "This property specifies the end of the validity of an agreement."@en .
+
+:datatypeDependencyProperty a owl:DatatypeProperty .
+
+:datatypeServiceProperty a owl:DatatypeProperty ;
+	rdfs:label "datatypeServiceProperty"^^xsd:string ;
+	rdfs:comment "This property is the super property for all pure datatype properties that can be used to describe a gr:ProductOrService."@en .
+
+:hasDependencyDistance rdfs:subPropertyOf :datatypeDependencyProperty ;
+	rdfs:label "hasDependencyDistance"^^xsd:string ;
+	rdfs:range xsd:positiveInteger ;
+	rdfs:comment """States the distance of an indirect dependency. If this property does not exist the distance is unknown. The value means the number of dependency hops from the direct dependency source reference.
+A value of 1 means a direct dependancy.
+ This should be a positive integer."""@en ;
+	rdfs:domain :Dependency .
+
+dcterms:license a owl:AnnotationProperty .
+
+:lowPriority a :Priority ;
+	rdfs:label "low priority"^^xsd:string ;
+	rdfs:comment "a low priority"@en .
+
+:lowCritical a :Criticality ;
+	rdfs:comment "a low criticality value"@en ;
+	rdfs:label "low critical"^^xsd:string .
+
+dc:title a owl:AnnotationProperty .
+
+:highCritical a :Criticality ;
+	rdfs:label "high critical"^^xsd:string ;
+	rdfs:comment "an high criticality value"@en .
+
+dc:rights a owl:AnnotationProperty .
+
+:weakDependency a :DependencyStrength ;
+	rdfs:label "weak Dependency"^^xsd:string ;
+	rdfs:comment "If the resource is missing can degrade process performances or functions but the dependent process still exists."@en .
+
+:strongDependency a :DependencyStrength ;
+	rdfs:comment "The resource is mandatory for  the process execution."@en ;
+	rdfs:label "strong dependency"^^xsd:string .
+
+:mediumPriority a :Priority ;
+	rdfs:label "mediumPriority"^^xsd:string ;
+	rdfs:comment "a mediumPriority"@en .
+
+dcterms:conformsTo a owl:AnnotationProperty .
+
+dc:subject a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+:mediumCritical a :Criticality ;
+	rdfs:comment "a medium criticality value"@en ;
+	rdfs:label "medium critical"^^xsd:string .
+
+dc:contributor a owl:AnnotationProperty .
+
+:Retire a :LifeCycleStage ;
+	rdfs:label "Retire"^^xsd:string ;
+	rdfs:comment "Permanent removal of a configuration item, from the live environment. Being retired is a stage in the lifecycle of many configuration items."@en .
+
+:highPriority a :Priority ;
+	rdfs:comment "an high priority"@en ;
+	rdfs:label "high priority"^^xsd:string .
+
+:ControlledConfiguration rdfs:subClassOf _:node18q8aepebx23 .
+
+_:node18q8aepebx23 a owl:Restriction ;
+	owl:onProperty :hasCMDB ;
+	owl:cardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf _:node18q8aepebx24 .
+
+_:node18q8aepebx24 a owl:Restriction ;
+	owl:onProperty :hasStatus ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf _:node18q8aepebx25 .
+
+_:node18q8aepebx25 a owl:Restriction ;
+	owl:onProperty :hasReferenceBaseline ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Process rdfs:subClassOf _:node18q8aepebx26 .
+
+_:node18q8aepebx26 a owl:Restriction ;
+	owl:onProperty :hasAccountable ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx27 .
+
+_:node18q8aepebx27 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :hasDependentObject .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx28 .
+
+_:node18q8aepebx28 a owl:Restriction ;
+	owl:onProperty :hasDependencyStrength ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx29 .
+
+_:node18q8aepebx29 a owl:Restriction ;
+	owl:onProperty :hasDependencyDistance ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:ITService rdfs:subClassOf _:node18q8aepebx30 .
+
+_:node18q8aepebx30 a owl:Restriction ;
+	owl:onProperty :hasProvider ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Project rdfs:subClassOf _:node18q8aepebx31 .
+
+_:node18q8aepebx31 a owl:Restriction ;
+	owl:onProperty :hasProjectOwner ;
+	owl:minCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx32 .
+
+_:node18q8aepebx32 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasOperationProcess .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx33 .
+
+_:node18q8aepebx33 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasPriority .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx34 .
+
+_:node18q8aepebx34 a owl:Restriction ;
+	owl:onProperty :hasCriticality ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx35 .
+
+_:node18q8aepebx35 a owl:Restriction ;
+	owl:onProperty :hasDesignProcess ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:hasUtility rdfs:domain _:node18q8aepebx36 .
+
+_:node18q8aepebx36 a owl:Class ;
+	owl:unionOf _:node18q8aepebx37 .
+
+_:node18q8aepebx37 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx38 .
+
+_:node18q8aepebx38 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasWarranty rdfs:domain _:node18q8aepebx39 .
+
+_:node18q8aepebx39 a owl:Class ;
+	owl:unionOf _:node18q8aepebx40 .
+
+_:node18q8aepebx40 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx41 .
+
+_:node18q8aepebx41 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasCMDB rdfs:range _:node18q8aepebx42 .
+
+_:node18q8aepebx42 a owl:Class ;
+	owl:unionOf _:node18q8aepebx43 .
+
+_:node18q8aepebx43 rdf:first :ITService ;
+	rdf:rest _:node18q8aepebx44 .
+
+_:node18q8aepebx44 rdf:first :System ;
+	rdf:rest rdf:nil .
+
+:ControlledConfiguration rdfs:subClassOf _:node18q8aepebx45 .
+
+_:node18q8aepebx45 a owl:Restriction ;
+	owl:onProperty :hasCMDB ;
+	owl:cardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf _:node18q8aepebx46 .
+
+_:node18q8aepebx46 a owl:Restriction ;
+	owl:onProperty :hasStatus ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf _:node18q8aepebx47 .
+
+_:node18q8aepebx47 a owl:Restriction ;
+	owl:onProperty :hasReferenceBaseline ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Process rdfs:subClassOf _:node18q8aepebx48 .
+
+_:node18q8aepebx48 a owl:Restriction ;
+	owl:onProperty :hasAccountable ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx49 .
+
+_:node18q8aepebx49 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :hasDependentObject .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx50 .
+
+_:node18q8aepebx50 a owl:Restriction ;
+	owl:onProperty :hasDependencyStrength ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx51 .
+
+_:node18q8aepebx51 a owl:Restriction ;
+	owl:onProperty :hasDependencyDistance ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:ITService rdfs:subClassOf _:node18q8aepebx52 .
+
+_:node18q8aepebx52 a owl:Restriction ;
+	owl:onProperty :hasProvider ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Project rdfs:subClassOf _:node18q8aepebx53 .
+
+_:node18q8aepebx53 a owl:Restriction ;
+	owl:onProperty :hasProjectOwner ;
+	owl:minCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx54 .
+
+_:node18q8aepebx54 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasOperationProcess .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx55 .
+
+_:node18q8aepebx55 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasPriority .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx56 .
+
+_:node18q8aepebx56 a owl:Restriction ;
+	owl:onProperty :hasCriticality ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx57 .
+
+_:node18q8aepebx57 a owl:Restriction ;
+	owl:onProperty :hasDesignProcess ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:hasUtility rdfs:domain _:node18q8aepebx58 .
+
+_:node18q8aepebx58 a owl:Class ;
+	owl:unionOf _:node18q8aepebx59 .
+
+_:node18q8aepebx59 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx60 .
+
+_:node18q8aepebx60 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasWarranty rdfs:domain _:node18q8aepebx61 .
+
+_:node18q8aepebx61 a owl:Class ;
+	owl:unionOf _:node18q8aepebx62 .
+
+_:node18q8aepebx62 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx63 .
+
+_:node18q8aepebx63 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasCMDB rdfs:range _:node18q8aepebx64 .
+
+_:node18q8aepebx64 a owl:Class ;
+	owl:unionOf _:node18q8aepebx65 .
+
+_:node18q8aepebx65 rdf:first :ITService ;
+	rdf:rest _:node18q8aepebx66 .
+
+_:node18q8aepebx66 rdf:first :System ;
+	rdf:rest rdf:nil .
+
+:ControlledConfiguration rdfs:subClassOf _:node18q8aepebx67 .
+
+_:node18q8aepebx67 a owl:Restriction ;
+	owl:onProperty :hasCMDB ;
+	owl:cardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf _:node18q8aepebx68 .
+
+_:node18q8aepebx68 a owl:Restriction ;
+	owl:onProperty :hasStatus ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:ConfigurationItem rdfs:subClassOf _:node18q8aepebx69 .
+
+_:node18q8aepebx69 a owl:Restriction ;
+	owl:onProperty :hasReferenceBaseline ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Process rdfs:subClassOf _:node18q8aepebx70 .
+
+_:node18q8aepebx70 a owl:Restriction ;
+	owl:onProperty :hasAccountable ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx71 .
+
+_:node18q8aepebx71 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :hasDependentObject .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx72 .
+
+_:node18q8aepebx72 a owl:Restriction ;
+	owl:onProperty :hasDependencyStrength ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Dependency rdfs:subClassOf _:node18q8aepebx73 .
+
+_:node18q8aepebx73 a owl:Restriction ;
+	owl:onProperty :hasDependencyDistance ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:ITService rdfs:subClassOf _:node18q8aepebx74 .
+
+_:node18q8aepebx74 a owl:Restriction ;
+	owl:onProperty :hasProvider ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Project rdfs:subClassOf _:node18q8aepebx75 .
+
+_:node18q8aepebx75 a owl:Restriction ;
+	owl:onProperty :hasProjectOwner ;
+	owl:minCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx76 .
+
+_:node18q8aepebx76 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasOperationProcess .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx77 .
+
+_:node18q8aepebx77 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :hasPriority .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx78 .
+
+_:node18q8aepebx78 a owl:Restriction ;
+	owl:onProperty :hasCriticality ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:RunnableResource rdfs:subClassOf _:node18q8aepebx79 .
+
+_:node18q8aepebx79 a owl:Restriction ;
+	owl:onProperty :hasDesignProcess ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:hasUtility rdfs:domain _:node18q8aepebx80 .
+
+_:node18q8aepebx80 a owl:Class ;
+	owl:unionOf _:node18q8aepebx81 .
+
+_:node18q8aepebx81 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx82 .
+
+_:node18q8aepebx82 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasWarranty rdfs:domain _:node18q8aepebx83 .
+
+_:node18q8aepebx83 a owl:Class ;
+	owl:unionOf _:node18q8aepebx84 .
+
+_:node18q8aepebx84 rdf:first :ServiceOption ;
+	rdf:rest _:node18q8aepebx85 .
+
+_:node18q8aepebx85 rdf:first :ITService ;
+	rdf:rest rdf:nil .
+
+:hasCMDB rdfs:range _:node18q8aepebx86 .
+
+_:node18q8aepebx86 a owl:Class ;
+	owl:unionOf _:node18q8aepebx87 .
+
+_:node18q8aepebx87 rdf:first :ITService ;
+	rdf:rest _:node18q8aepebx88 .
+
+_:node18q8aepebx88 rdf:first :System ;
+	rdf:rest rdf:nil .

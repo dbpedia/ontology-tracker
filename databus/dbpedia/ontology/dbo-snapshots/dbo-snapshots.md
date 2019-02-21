@@ -1,0 +1,1 @@
+# DBpedia Ontology Snapshot

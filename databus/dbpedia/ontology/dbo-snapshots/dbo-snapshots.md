@@ -1,5 +1,5 @@
 # DBpedia Ontology Snapshot
-Hourly DBpedia Ontology snapshots from http://mappings.dbpedia.org/server/ontology/dbpedia.owl (only if changes are detected)
+(offline, work in progress) Hourly DBpedia Ontology snapshots from http://mappings.dbpedia.org/server/ontology/dbpedia.owl (only if changes are detected)
 
 ## Description
 The DBpedia Ontology and Mappings can be edited in the mappings wiki.

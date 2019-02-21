@@ -1,0 +1,661 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://purl.org/co/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix error: <http://www.essepuntato.it/2009/10/error/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/co> a owl:Ontology ;
+	owl:versionInfo "2.0"^^xsd:string ;
+	dc:date "March 19, 2012"^^xsd:string ;
+	dc:contributor "Marco Ocana"^^xsd:string , "Paolo Ciccarese"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:format "application/rdf+xml"^^xsd:string ;
+	dc:language "en" ;
+	dc:title """The Collections Ontology
+(CO)"""@en ;
+	dc:creator <http://www.paolociccarese.info> ;
+	owl:imports <http://www.essepuntato.it/2009/10/error> .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:publisher a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+dc:language a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:format a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+:element a owl:ObjectProperty ;
+	rdfs:label "has element"@en ;
+	rdfs:comment "The link to the members of a collection"@en ;
+	rdfs:domain :Collection ;
+	owl:propertyChainAxiom _:node182kgl007x105 .
+
+_:node182kgl007x105 rdf:first :item ;
+	rdf:rest _:node182kgl007x106 .
+
+_:node182kgl007x106 rdf:first :itemContent ;
+	rdf:rest rdf:nil .
+
+:elementOf a owl:ObjectProperty ;
+	rdfs:label "is element of"@en ;
+	rdfs:comment "The link to a collection in which the object is member."@en ;
+	owl:inverseOf :element .
+
+:firstItem a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has first item"@en ;
+	rdfs:comment "The link to the first item of the list."@en ;
+	rdfs:domain :List ;
+	rdfs:subPropertyOf :item ;
+	rdfs:range _:node182kgl007x107 .
+
+_:node182kgl007x107 a owl:Class ;
+	owl:intersectionOf _:node182kgl007x108 .
+
+_:node182kgl007x108 rdf:first :ListItem ;
+	rdf:rest _:node182kgl007x109 .
+
+_:node182kgl007x109 rdf:first _:node182kgl007x110 .
+
+_:node182kgl007x110 a owl:Restriction ;
+	owl:onProperty :previousItem ;
+	owl:cardinality "0"^^xsd:nonNegativeInteger .
+
+_:node182kgl007x109 rdf:rest _:node182kgl007x111 .
+
+_:node182kgl007x111 rdf:first _:node182kgl007x112 .
+
+_:node182kgl007x112 a owl:Restriction ;
+	owl:onProperty :index ;
+	owl:hasValue "1"^^xsd:positiveInteger .
+
+_:node182kgl007x111 rdf:rest rdf:nil .
+
+:firstItemOf a owl:ObjectProperty ;
+	rdfs:label "is first item of"@en ;
+	rdfs:comment "The link to a list in which the item is first item."@en ;
+	owl:inverseOf :firstItem ;
+	rdfs:subPropertyOf :itemOf .
+
+:followedBy a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "is followed by"@en ;
+	dc:description "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the item I[i] is followed by I[i+1], ... , I[n-1] and I[n]."@en ;
+	rdfs:comment "The link to the following item in a list."@en ;
+	rdfs:domain :ListItem ;
+	rdfs:range :ListItem .
+
+:item a owl:ObjectProperty ;
+	rdfs:label "has item"@en ;
+	rdfs:comment "The link to every item of the bag"@en ;
+	rdfs:domain :Bag ;
+	rdfs:range :Item ;
+	owl:propertyChainAxiom _:node182kgl007x113 .
+
+_:node182kgl007x113 rdf:first :item ;
+	rdf:rest _:node182kgl007x114 .
+
+_:node182kgl007x114 rdf:first :nextItem ;
+	rdf:rest rdf:nil .
+
+:itemContent a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has item content"@en ;
+	rdfs:comment "The link to the actual resource to which the item refers."@en ;
+	rdfs:domain :Item ;
+	rdfs:range _:node182kgl007x115 .
+
+_:node182kgl007x115 a owl:Class ;
+	owl:complementOf :Item .
+
+:itemContentOf a owl:ObjectProperty ;
+	rdfs:label "is item content of"@en ;
+	rdfs:comment "The link to the item that refers to the resource."@en ;
+	owl:inverseOf :itemContent .
+
+:itemOf a owl:ObjectProperty ;
+	rdfs:label "is item of"@en ;
+	rdfs:comment "The link to a bag in which the item is member."@en ;
+	owl:inverseOf :item .
+
+:lastItem a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has last item"@en ;
+	rdfs:comment "The link to the last item of the list."@en ;
+	rdfs:domain :List ;
+	rdfs:subPropertyOf :item ;
+	rdfs:range _:node182kgl007x116 .
+
+_:node182kgl007x116 a owl:Class ;
+	owl:intersectionOf _:node182kgl007x117 .
+
+_:node182kgl007x117 rdf:first :ListItem ;
+	rdf:rest _:node182kgl007x118 .
+
+_:node182kgl007x118 rdf:first _:node182kgl007x119 .
+
+_:node182kgl007x119 a owl:Restriction ;
+	owl:onProperty :nextItem ;
+	owl:cardinality "0"^^xsd:nonNegativeInteger .
+
+_:node182kgl007x118 rdf:rest rdf:nil .
+
+:lastItemOf a owl:ObjectProperty ;
+	rdfs:label "is last item of"@en ;
+	rdfs:comment "The link to a list in which the item is last item."@en ;
+	rdfs:subPropertyOf :itemOf ;
+	owl:inverseOf :lastItem .
+
+:nextItem a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has next item"@en ;
+	dc:description "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the next item of I[i] is I[i+1]."@en ;
+	rdfs:comment "The link to the next item in a list."@en ;
+	rdfs:subPropertyOf :followedBy .
+
+:precededBy a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:label "is preceded by"@en ;
+	dc:description "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the item I[i] is preceded by I[i-1], ... , I[2] and I[1]."@en ;
+	rdfs:comment "The link to the preceding item in a list."@en ;
+	owl:inverseOf :followedBy .
+
+:previousItem a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has previous item"@en ;
+	dc:description "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the previous item of I[i] is I[i-1]."@en ;
+	rdfs:comment "The link to the previous item in a list."@en ;
+	owl:inverseOf :nextItem ;
+	rdfs:subPropertyOf :precededBy .
+
+error:hasError a owl:DatatypeProperty .
+
+:index a owl:DatatypeProperty ;
+	rdfs:label "has index"@en ;
+	rdfs:comment "A number identifying the position, starting from 1, of a particular list item within a list."@en ;
+	rdfs:domain :ListItem ;
+	rdfs:range xsd:positiveInteger .
+
+:size a owl:DatatypeProperty ;
+	rdfs:label "has size"@en ;
+	dc:description """CO defines the size of a collection as the sum of the number of times entities that are part of the collection appear in it. This means that co:size considers how much each entity is involved by a particular collection, i.e.:
+- the size of the set {a, b, c} is three
+- the size of the bag [a, a, b, b, b, c] is five
+- the size of the list (a, b, c, b, a, b, c, c) is seven"""@en ;
+	rdfs:comment "The number of item belonging to a collection."@en ;
+	rdfs:domain :Collection ;
+	rdfs:range xsd:nonNegativeInteger .
+
+:Bag a owl:Class ;
+	rdfs:label "bag"@en ;
+	rdfs:subClassOf :Collection ;
+	owl:disjointWith :Set ;
+	rdfs:comment "Collection that can have a number of copies of each object"@en .
+
+:Collection a owl:Class ;
+	rdfs:label "collection"@en ;
+	rdfs:subClassOf owl:Thing , _:node182kgl007x120 .
+
+_:node182kgl007x120 a owl:Restriction ;
+	owl:onProperty :element ;
+	owl:allValuesFrom owl:Thing .
+
+:Collection rdfs:subClassOf _:node182kgl007x121 .
+
+_:node182kgl007x121 a owl:Restriction ;
+	owl:onProperty :size ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:Collection owl:disjointWith :Item ;
+	rdfs:comment "A group of objects that can be considered as a whole."@en .
+
+:Item a owl:Class ;
+	rdfs:label "item"@en ;
+	rdfs:subClassOf owl:Thing , _:node182kgl007x122 .
+
+_:node182kgl007x122 a owl:Restriction ;
+	owl:onProperty _:node182kgl007x123 .
+
+_:node182kgl007x123 owl:inverseOf :item .
+
+_:node182kgl007x122 owl:someValuesFrom :Bag .
+
+:Item rdfs:comment "Element belonging to a bag"@en .
+
+:List a owl:Class ;
+	rdfs:label "list"@en ;
+	rdfs:subClassOf _:node182kgl007x124 .
+
+_:node182kgl007x124 a owl:Restriction ;
+	owl:onProperty :lastItem ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:List rdfs:subClassOf _:node182kgl007x125 .
+
+_:node182kgl007x125 a owl:Restriction ;
+	owl:onProperty :firstItem ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:List rdfs:subClassOf _:node182kgl007x126 .
+
+_:node182kgl007x126 a owl:Class ;
+	owl:intersectionOf _:node182kgl007x127 .
+
+_:node182kgl007x127 rdf:first :Bag ;
+	rdf:rest _:node182kgl007x128 .
+
+_:node182kgl007x128 rdf:first _:node182kgl007x129 .
+
+_:node182kgl007x129 a owl:Restriction ;
+	owl:onProperty :item ;
+	owl:allValuesFrom :ListItem .
+
+_:node182kgl007x128 rdf:rest rdf:nil .
+
+:List rdfs:comment "An ordered array of items, that can be present in multiple copies"@en .
+
+:ListItem a owl:Class ;
+	rdfs:label "list item"@en ;
+	rdfs:subClassOf :Item , _:node182kgl007x130 .
+
+_:node182kgl007x130 a owl:Restriction ;
+	owl:onProperty :index ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+:ListItem rdfs:comment "element belonging to a list"@en .
+
+:Set a owl:Class ;
+	rdfs:label "set"@en ;
+	rdfs:subClassOf :Collection ;
+	rdfs:comment "A collection that cannot contain duplicate elements."@en .
+
+owl:Thing a owl:Class .
+
+_:node182kgl007x131 a owl:Class ;
+	rdfs:subClassOf _:node182kgl007x132 .
+
+_:node182kgl007x132 a owl:Class ;
+	owl:intersectionOf _:node182kgl007x133 .
+
+_:node182kgl007x133 rdf:first :List ;
+	rdf:rest _:node182kgl007x134 .
+
+_:node182kgl007x134 rdf:first _:node182kgl007x135 .
+
+_:node182kgl007x135 a owl:Restriction ;
+	owl:onProperty :firstItem ;
+	owl:someValuesFrom :Item .
+
+_:node182kgl007x134 rdf:rest _:node182kgl007x136 .
+
+_:node182kgl007x136 rdf:first _:node182kgl007x137 .
+
+_:node182kgl007x137 a owl:Restriction ;
+	owl:onProperty :lastItem ;
+	owl:someValuesFrom :Item .
+
+_:node182kgl007x136 rdf:rest rdf:nil .
+
+_:node182kgl007x131 owl:intersectionOf _:node182kgl007x138 .
+
+_:node182kgl007x138 rdf:first :List ;
+	rdf:rest _:node182kgl007x139 .
+
+_:node182kgl007x139 rdf:first _:node182kgl007x140 .
+
+_:node182kgl007x140 a owl:Restriction ;
+	owl:onProperty :item ;
+	owl:someValuesFrom :ListItem .
+
+_:node182kgl007x139 rdf:rest rdf:nil .
+
+<urn:swrl#li1> a swrl:Variable .
+
+<urn:swrl#l> a swrl:Variable .
+
+<urn:swrl#li2> a swrl:Variable .
+
+<urn:swrl#r1> a swrl:Variable .
+
+<urn:swrl#r2> a swrl:Variable .
+
+<urn:swrl#current> a swrl:Variable .
+
+<urn:swrl#next> a swrl:Variable .
+
+<urn:swrl#r> a swrl:Variable .
+
+<urn:swrl#nextR> a swrl:Variable .
+
+<urn:swrl#i> a swrl:Variable .
+
+<urn:swrl#value> a swrl:Variable .
+
+<urn:swrl#x> a swrl:Variable .
+
+<urn:swrl#list> a swrl:Variable .
+
+<urn:swrl#last> a swrl:Variable .
+
+<urn:swrl#li> a swrl:Variable .
+
+_:node182kgl007x141 a swrl:Imp ;
+	swrl:body _:node182kgl007x142 .
+
+_:node182kgl007x142 a swrl:AtomList ;
+	rdf:first _:node182kgl007x143 .
+
+_:node182kgl007x143 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :itemOf ;
+	swrl:argument2 <urn:swrl#l> ;
+	swrl:argument1 <urn:swrl#li1> .
+
+_:node182kgl007x142 rdf:rest _:node182kgl007x144 .
+
+_:node182kgl007x144 a swrl:AtomList ;
+	rdf:first _:node182kgl007x145 .
+
+_:node182kgl007x145 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :itemOf ;
+	swrl:argument2 <urn:swrl#l> ;
+	swrl:argument1 <urn:swrl#li2> .
+
+_:node182kgl007x144 rdf:rest _:node182kgl007x146 .
+
+_:node182kgl007x146 a swrl:AtomList ;
+	rdf:rest _:node182kgl007x147 .
+
+_:node182kgl007x147 a swrl:AtomList ;
+	rdf:rest _:node182kgl007x148 .
+
+_:node182kgl007x148 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x149 .
+
+_:node182kgl007x149 a swrl:BuiltinAtom ;
+	swrl:builtin swrlb:add ;
+	swrl:arguments _:node182kgl007x150 .
+
+_:node182kgl007x150 a rdf:List ;
+	rdf:first <urn:swrl#r2> ;
+	rdf:rest _:node182kgl007x151 .
+
+_:node182kgl007x151 a rdf:List ;
+	rdf:first <urn:swrl#r1> ;
+	rdf:rest _:node182kgl007x152 .
+
+_:node182kgl007x152 a rdf:List ;
+	rdf:first "1"^^xsd:integer ;
+	rdf:rest rdf:nil .
+
+_:node182kgl007x147 rdf:first _:node182kgl007x153 .
+
+_:node182kgl007x153 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#li2> ;
+	swrl:argument2 <urn:swrl#r2> .
+
+_:node182kgl007x146 rdf:first _:node182kgl007x154 .
+
+_:node182kgl007x154 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#li1> ;
+	swrl:argument2 <urn:swrl#r1> .
+
+_:node182kgl007x141 swrl:head _:node182kgl007x155 .
+
+_:node182kgl007x155 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x156 .
+
+_:node182kgl007x156 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :nextItem ;
+	swrl:argument1 <urn:swrl#li1> ;
+	swrl:argument2 <urn:swrl#li2> .
+
+_:node182kgl007x157 a swrl:Imp ;
+	swrl:body _:node182kgl007x158 .
+
+_:node182kgl007x158 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x159 .
+
+_:node182kgl007x159 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :precededBy ;
+	swrl:argument1 <urn:swrl#x> ;
+	swrl:argument2 <urn:swrl#x> .
+
+_:node182kgl007x157 swrl:head _:node182kgl007x160 .
+
+_:node182kgl007x160 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x161 .
+
+_:node182kgl007x161 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "A list item cannot be preceded by itself" ;
+	swrl:propertyPredicate error:hasError ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node182kgl007x162 a swrl:Imp ;
+	swrl:body _:node182kgl007x163 .
+
+_:node182kgl007x163 a swrl:AtomList ;
+	rdf:rest _:node182kgl007x164 .
+
+_:node182kgl007x164 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x165 .
+
+_:node182kgl007x165 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :size ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#value> .
+
+_:node182kgl007x163 rdf:first _:node182kgl007x166 .
+
+_:node182kgl007x166 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :lastItem ;
+	swrl:argument2 <urn:swrl#i> ;
+	swrl:argument1 <urn:swrl#l> .
+
+_:node182kgl007x162 swrl:head _:node182kgl007x167 .
+
+_:node182kgl007x167 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x168 .
+
+_:node182kgl007x168 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#i> ;
+	swrl:argument2 <urn:swrl#value> .
+
+_:node182kgl007x169 a swrl:Imp ;
+	swrl:head _:node182kgl007x170 .
+
+_:node182kgl007x170 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x171 .
+
+_:node182kgl007x171 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :lastItem ;
+	swrl:argument2 <urn:swrl#i> ;
+	swrl:argument1 <urn:swrl#l> .
+
+_:node182kgl007x169 swrl:body _:node182kgl007x172 .
+
+_:node182kgl007x172 a swrl:AtomList ;
+	rdf:first _:node182kgl007x173 .
+
+_:node182kgl007x173 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :itemOf ;
+	swrl:argument1 <urn:swrl#i> ;
+	swrl:argument2 <urn:swrl#l> .
+
+_:node182kgl007x172 rdf:rest _:node182kgl007x174 .
+
+_:node182kgl007x174 a swrl:AtomList ;
+	rdf:rest _:node182kgl007x175 .
+
+_:node182kgl007x175 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x176 .
+
+_:node182kgl007x176 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :size ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#value> .
+
+_:node182kgl007x174 rdf:first _:node182kgl007x177 .
+
+_:node182kgl007x177 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#i> ;
+	swrl:argument2 <urn:swrl#value> .
+
+_:node182kgl007x178 a swrl:Imp ;
+	swrl:head _:node182kgl007x179 .
+
+_:node182kgl007x179 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x180 .
+
+_:node182kgl007x180 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "A list item cannot be followed by itself" ;
+	swrl:propertyPredicate error:hasError ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node182kgl007x178 swrl:body _:node182kgl007x181 .
+
+_:node182kgl007x181 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x182 .
+
+_:node182kgl007x182 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :followedBy ;
+	swrl:argument1 <urn:swrl#x> ;
+	swrl:argument2 <urn:swrl#x> .
+
+_:node182kgl007x183 a swrl:Imp ;
+	swrl:head _:node182kgl007x184 .
+
+_:node182kgl007x184 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x185 .
+
+_:node182kgl007x185 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :size ;
+	swrl:argument1 <urn:swrl#list> ;
+	swrl:argument2 <urn:swrl#r> .
+
+_:node182kgl007x183 swrl:body _:node182kgl007x186 .
+
+_:node182kgl007x186 a swrl:AtomList ;
+	rdf:first _:node182kgl007x187 .
+
+_:node182kgl007x187 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :lastItem ;
+	swrl:argument2 <urn:swrl#last> ;
+	swrl:argument1 <urn:swrl#list> .
+
+_:node182kgl007x186 rdf:rest _:node182kgl007x188 .
+
+_:node182kgl007x188 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x189 .
+
+_:node182kgl007x189 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#last> ;
+	swrl:argument2 <urn:swrl#r> .
+
+_:node182kgl007x190 a swrl:Imp ;
+	swrl:body _:node182kgl007x191 .
+
+_:node182kgl007x191 a swrl:AtomList ;
+	rdf:rest _:node182kgl007x192 .
+
+_:node182kgl007x192 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x193 .
+
+_:node182kgl007x193 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "1" ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#li> .
+
+_:node182kgl007x191 rdf:first _:node182kgl007x194 .
+
+_:node182kgl007x194 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :itemOf ;
+	swrl:argument2 <urn:swrl#l> ;
+	swrl:argument1 <urn:swrl#li> .
+
+_:node182kgl007x190 swrl:head _:node182kgl007x195 .
+
+_:node182kgl007x195 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x196 .
+
+_:node182kgl007x196 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :firstItem ;
+	swrl:argument1 <urn:swrl#l> ;
+	swrl:argument2 <urn:swrl#li> .
+
+_:node182kgl007x197 a swrl:Imp ;
+	swrl:head _:node182kgl007x198 .
+
+_:node182kgl007x198 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x199 .
+
+_:node182kgl007x199 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#next> ;
+	swrl:argument2 <urn:swrl#nextR> .
+
+_:node182kgl007x197 swrl:body _:node182kgl007x200 .
+
+_:node182kgl007x200 a swrl:AtomList ;
+	rdf:first _:node182kgl007x201 .
+
+_:node182kgl007x201 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :nextItem ;
+	swrl:argument1 <urn:swrl#current> ;
+	swrl:argument2 <urn:swrl#next> .
+
+_:node182kgl007x200 rdf:rest _:node182kgl007x202 .
+
+_:node182kgl007x202 a swrl:AtomList ;
+	rdf:rest _:node182kgl007x203 .
+
+_:node182kgl007x203 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node182kgl007x204 .
+
+_:node182kgl007x204 a swrl:BuiltinAtom ;
+	swrl:builtin swrlb:add ;
+	swrl:arguments _:node182kgl007x205 .
+
+_:node182kgl007x205 a rdf:List ;
+	rdf:first <urn:swrl#nextR> ;
+	rdf:rest _:node182kgl007x206 .
+
+_:node182kgl007x206 a rdf:List ;
+	rdf:first <urn:swrl#r> ;
+	rdf:rest _:node182kgl007x207 .
+
+_:node182kgl007x207 a rdf:List ;
+	rdf:first "1"^^xsd:integer ;
+	rdf:rest rdf:nil .
+
+_:node182kgl007x202 rdf:first _:node182kgl007x208 .
+
+_:node182kgl007x208 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :index ;
+	swrl:argument1 <urn:swrl#current> ;
+	swrl:argument2 <urn:swrl#r> .

@@ -1,0 +1,350 @@
+﻿@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc11: <http://purl.org/dc/elements/1.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix ns0: <http://purl.org/vocab/vann/> .
+
+<http://purl.org/net/step>
+  a owl:Ontology ;
+  rdfs:label "Semantic Trajectory Episodes"@en ;
+  owl:versionInfo 1.0 ;
+  dc11:creator """Hervé Martin
+https://www.researchgate.net/profile/Herve_Martin"""^^xsd:string, """Tales P. Nogueira
+https://www.researchgate.net/profile/Tales_Nogueira"""^^xsd:string ;
+  rdfs:comment """Please cite the following paper if you use or refer to this ontology: 
+
+T. P. Nogueira and H. Martin, "Querying Semantic Trajectory Episodes" in 4th ACM SIGSPATIAL International Workshop on Mobile Geographic Information Systems (MobiGIS'15), 2015."""^^xsd:string ;
+  dc:title "Semantic Trajectory Episodes"^^xsd:string ;
+  dc11:issued "2015-11-03" ;
+  dc11:description "A lightweight ontology for representing semantic trajectories and contextual elements in terms of features of interests and episodes."@en ;
+  ns0:preferredNamespacePrefix "step" .
+
+dc11:description a owl:AnnotationProperty .
+dc11:issued a owl:AnnotationProperty .
+ns0:preferredNamespacePrefix a owl:AnnotationProperty .
+owl:versionInfo a owl:AnnotationProperty .
+<http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> a owl:AnnotationProperty .
+<http://www.opengis.net/ont/sf#WktLiteral>
+  a rdfs:Datatype ;
+  rdfs:isDefinedBy "http://www.opengis.net/ont/sf#WktLiteral" .
+
+xsd:anySimpleType
+  a rdfs:Datatype ;
+  rdfs:isDefinedBy "http://www.w3.org/2001/XMLSchema#anySimpleType" .
+
+xsd:dateTime
+  a rdfs:Datatype ;
+  rdfs:isDefinedBy "http://www.w3.org/2001/XMLSchema#dateTime" .
+
+<http://purl.org/net/step#atTime>
+  a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:label "atTime"@en ;
+  rdfs:comment "Links the Fix or KeyPoint to a time instant."@en ;
+  rdfs:range <http://www.w3.org/2006/time#Instant> ;
+  rdfs:domain [
+    a owl:Restriction ;
+    owl:onProperty <http://purl.org/net/step#atTime> ;
+    owl:allValuesFrom [
+      a owl:Class ;
+      owl:unionOf (
+       <http://purl.org/net/step#Fix>
+       <http://purl.org/net/step#KeyPoint>
+     )
+    ]
+  ] .
+
+<http://purl.org/net/step#hasEndingPoint>
+  a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:label "hasEndingPoint"@en ;
+  rdfs:comment "Links a Spatiotemporal extent to a KeyPoint that defines when and where the episode finishes."@en ;
+  rdfs:range <http://purl.org/net/step#KeyPoint> ;
+  rdfs:domain <http://purl.org/net/step#SpatiotemporalExtent> .
+
+<http://purl.org/net/step#hasEpisode>
+  a owl:ObjectProperty ;
+  rdfs:label "hasEpisode"@en ;
+  rdfs:comment "Links a Feature of Interest to its corresponding Episodes."@en ;
+  rdfs:range <http://purl.org/net/step#Episode> ;
+  rdfs:domain <http://purl.org/net/step#FeatureOfInterest> .
+
+<http://purl.org/net/step#hasExtent>
+  a owl:ObjectProperty ;
+  rdfs:label "hasExtent"@en ;
+  rdfs:comment "Links an episode to an extent."@en ;
+  rdfs:domain <http://purl.org/net/step#Episode> ;
+  rdfs:range <http://purl.org/net/step#Extent> .
+
+<http://purl.org/net/step#hasFeature>
+  a owl:ObjectProperty ;
+  rdfs:label "hasFeature"@en ;
+  rdfs:comment "Links a Trajectory or Contextual Element to a Feature of Interest."@en ;
+  rdfs:range <http://purl.org/net/step#FeatureOfInterest> ;
+  rdfs:domain [
+    a owl:Restriction ;
+    owl:onProperty <http://purl.org/net/step#hasFeature> ;
+    owl:allValuesFrom [
+      a owl:Class ;
+      owl:unionOf (
+       <http://purl.org/net/step#ContextualElement>
+       <http://purl.org/net/step#Trajectory>
+     )
+    ]
+  ] .
+
+<http://purl.org/net/step#hasFix>
+  a owl:ObjectProperty ;
+  rdfs:label "hasFix"@en ;
+  rdfs:comment "Links each Fix to its Raw Trajectory."@en ;
+  rdfs:range <http://purl.org/net/step#Fix> ;
+  rdfs:domain <http://purl.org/net/step#RawTrajectory> .
+
+<http://purl.org/net/step#hasLocation>
+  a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:label "hasLocation"@en ;
+  rdfs:comment "Links a Fix or a KeyPoint to a location."@en ;
+  rdfs:range <http://www.opengis.net/ont/sf#Point> ;
+  rdfs:domain [
+    a owl:Restriction ;
+    owl:onProperty <http://purl.org/net/step#hasLocation> ;
+    owl:allValuesFrom [
+      a owl:Class ;
+      owl:unionOf (
+       <http://purl.org/net/step#Fix>
+       <http://purl.org/net/step#KeyPoint>
+     )
+    ]
+  ] .
+
+<http://purl.org/net/step#hasPoint>
+  a owl:ObjectProperty ;
+  rdfs:label "hasPoint"@en ;
+  rdfs:comment "Links any point of the trajectory to a spatiotemporal extent."@en ;
+  rdfs:range <http://purl.org/net/step#KeyPoint> ;
+  rdfs:domain <http://purl.org/net/step#SpatiotemporalExtent> .
+
+<http://purl.org/net/step#hasRawTrajectory>
+  a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:label "hasRawTrajectory"@en ;
+  rdfs:comment "Links a trajectory to its own raw representation."@en ;
+  rdfs:range <http://purl.org/net/step#RawTrajectory> ;
+  rdfs:domain <http://purl.org/net/step#Trajectory> .
+
+<http://purl.org/net/step#hasSemanticDescription>
+  a owl:ObjectProperty ;
+  rdfs:label "hasSemanticDescription"@en ;
+  rdfs:comment "Links an episode to a description."@en ;
+  rdfs:domain <http://purl.org/net/step#Episode> ;
+  rdfs:range <http://purl.org/net/step#SemanticDescription> .
+
+<http://purl.org/net/step#hasStartingPoint>
+  a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:label "hasStartingPoint"@en ;
+  rdfs:comment "Links a Spatiotemporal extent to a KeyPoint that defines when and where the episode starts."@en ;
+  rdfs:range <http://purl.org/net/step#KeyPoint> ;
+  rdfs:domain <http://purl.org/net/step#SpatiotemporalExtent> .
+
+<http://purl.org/net/step#hasTrajectory>
+  a owl:ObjectProperty, owl:InverseFunctionalProperty ;
+  rdfs:label "hasTrajectory"@en ;
+  rdfs:comment "Links an Agent to a Trajectory."@en ;
+  rdfs:domain <http://purl.org/net/step#Agent> ;
+  rdfs:range <http://purl.org/net/step#Trajectory> .
+
+<http://purl.org/net/step#hasUnit>
+  a owl:ObjectProperty, owl:FunctionalProperty ;
+  rdfs:label "hasUnit"@en ;
+  rdfs:comment "Links an Unit to a Quantitative Description."@en ;
+  rdfs:range <http://purl.oclc.org/NET/ssnx/qu/qu#Unit> ;
+  rdfs:domain <http://purl.org/net/step#QuantitativeValue> .
+
+<http://purl.org/net/step#relatesTo>
+  a owl:ObjectProperty ;
+  rdfs:label "relatesTo"@en ;
+  rdfs:comment "Links an Episode to a ContextualElement."@en ;
+  rdfs:range <http://purl.org/net/step#ContextualElement> ;
+  rdfs:domain <http://purl.org/net/step#Episode> .
+
+<http://purl.org/net/step#hasValue>
+  a owl:DatatypeProperty ;
+  rdfs:label "hasValue" ;
+  rdfs:comment "Links the value to a QuantitativeValue of an Episode."@en ;
+  rdfs:domain <http://purl.org/net/step#QuantitativeValue> ;
+  rdfs:range xsd:anySimpleType .
+
+<http://www.opengis.net/ont/geosparql#asWKT>
+  a owl:DatatypeProperty ;
+  rdfs:label "asWKT" ;
+  rdfs:comment "The WKT serialization of a geometry."@en ;
+  rdfs:isDefinedBy "http://www.opengis.net/ont/geosparql#asWKT" ;
+  rdfs:seeAlso "http://www.opengis.net/ont/geosparql#asWKT" ;
+  rdfs:domain <http://www.opengis.net/ont/sf#Geometry> ;
+  rdfs:range <http://www.opengis.net/ont/sf#WktLiteral> .
+
+<http://www.w3.org/2006/time#inXSDDateTime>
+  a owl:DatatypeProperty ;
+  rdfs:comment "See hhttp://www.w3.org/TR/owl-time/"@en ;
+  rdfs:isDefinedBy "http://www.w3.org/2006/time#inXSDDateTime" ;
+  rdfs:seeAlso "http://www.w3.org/2006/time#inXSDDateTime"@en ;
+  rdfs:range xsd:dateTime ;
+  rdfs:domain <http://www.w3.org/2006/time#Instant> .
+
+<http://purl.oclc.org/NET/ssnx/qu/qu#Unit>
+  a owl:Class ;
+  rdfs:label "Unit"@en ;
+  rdfs:comment "A Unit is an abstract classifier that represents the [VIM] concept of \"measurement unit\" that is defined as \"real scalar quantity, defined and adopted by convention, with which any other quantity of the same kind can be compared to express the ratio of the two quantities as a number.\""@en ;
+  rdfs:isDefinedBy "http://purl.oclc.org/NET/ssnx/qu/qu#Unit"@en .
+
+<http://purl.org/net/step#Agent>
+  a owl:Class ;
+  rdfs:label "Agent"@en ;
+  rdfs:comment "The agent is the moving object. It can be a person, an animal, a car, etc."@en .
+
+<http://purl.org/net/step#ContextualElement>
+  a owl:Class ;
+  rdfs:label "Contextual Element"@en ;
+  rdfs:comment "The contextual element can be anything related to the trajectory. It can be another agent, another trajectory, a geographic feature, etc."@en .
+
+<http://purl.org/net/step#Episode>
+  a owl:Class ;
+  rdfs:label "Episode"@en ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty <http://purl.org/net/step#hasSemanticDescription> ;
+    owl:onClass <http://purl.org/net/step#SemanticDescription> ;
+    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+  ] ;
+  rdfs:comment "The episode is the smallest semantic unity for discretizing some aspect of a Feature of Interest."@en .
+
+<http://purl.org/net/step#Extent>
+  a owl:Class ;
+  rdfs:label "Extent"@en ;
+  rdfs:comment "Extent is a superclass for all kinds of extents an Episode may have."@en .
+
+<http://purl.org/net/step#FeatureOfInterest>
+  a owl:Class ;
+  rdfs:label "Feature of Interest"@en ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty <http://purl.org/net/step#hasEpisode> ;
+    owl:onClass <http://purl.org/net/step#Episode> ;
+    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+  ] ;
+  rdfs:comment "The aspect of the trajectory or context that is being described. Example: speed, direction, etc."@en .
+
+<http://purl.org/net/step#Fix>
+  a owl:Class ;
+  rdfs:label "Fix"@en ;
+  rdfs:comment "A Fix is a spatial timestamped point."@en .
+
+<http://purl.org/net/step#KeyPoint>
+  a owl:Class ;
+  rdfs:label "Key Point"@en ;
+  rdfs:comment "Key Points delimits the extent of SpatiotemporalExtents and can also be used to represent important points of a trajectory."@en .
+
+<http://purl.org/net/step#QualitativeDescription>
+  a owl:Class ;
+  rdfs:label "Qualitative Description"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#SemanticDescription> ;
+  rdfs:comment "A Qualitative Description is used in situations when the Episode cannot be described by numeric values. This is also a point of extension of the ontology as other ontologies can be plugged here for extending it. For instance, one can define values such as \"slow\", \"medium\", or \"fast\" for speed episodes."@en .
+
+<http://purl.org/net/step#QuantitativeValue>
+  a owl:Class ;
+  rdfs:label "Quantitative Value"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#SemanticDescription> ;
+  rdfs:comment "The value associated to the Episode. For instance, integer, decimal values. It is also associated with an Unit."@en .
+
+<http://purl.org/net/step#RawTrajectory>
+  a owl:Class ;
+  rdfs:label "Raw Trajectory"@en ;
+  rdfs:comment "Represent the raw data from trajectories. As there's no official support for ensuring sequential ordering of tuples, we advise putting sequential numbers into the URLs of fixes to be able to retrieve the spatial footprint of the trajectory. Another solution is querying using an ORDER BY statement that sorts by the time:Interval of each Fix that composes the RawTrajectory."@en .
+
+<http://purl.org/net/step#SemanticDescription>
+  a owl:Class ;
+  rdfs:label "Semantic Description"@en ;
+  rdfs:comment "Each episode may have one or many semantic descriptions, which can be of two types: Qualitative or Quantitative."@en .
+
+<http://purl.org/net/step#SpatialExtent>
+  a owl:Class ;
+  rdfs:label "Spatial Extent"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#Extent> ;
+  rdfs:comment "An extent determined only by spatial concepts (points, lines, polygons, etc). The usage of OGC Simple Features is a suggestion and can be exchanged by other ontologies."@en .
+
+<http://purl.org/net/step#SpatiotemporalExtent>
+  a owl:Class ;
+  rdfs:label "Spatiotemporal Extent"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#Extent> ;
+  rdfs:comment "Spatiotemporal extents are delimited by KeyPoints and the properties hasStartingPoint and hasEndingPoint. Event-like episodes may be delimited by the property hasPoint."@en .
+
+<http://purl.org/net/step#TemporalExtent>
+  a owl:Class ;
+  rdfs:label "Temporal Extent"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#Extent> ;
+  rdfs:comment "An extent determined only by temporal concepts (interval, instant, etc). The usage of OWL Time is a suggestion and can be exchanged by other ontologies."@en .
+
+<http://purl.org/net/step#Trajectory>
+  a owl:Class ;
+  rdfs:label "Trajectory"@en ;
+  rdfs:comment "The agent's trajectory."@en .
+
+<http://www.opengis.net/ont/sf#Geometry>
+  a owl:Class ;
+  rdfs:label "Geometry"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#SpatialExtent> ;
+  rdfs:comment "Geometry is the root class of the hierarchy. The instantiable subclasses of Geometry are restricted to 0, 1 and 2-dimensional geometric objects that exist in 2, 3 or 4-dimensional coordinate space (R2, R3 or R4). Geometry values in R2 have points with coordinate values for x and y. Geometry values in R3 have points with coordinate values for x, y and z or for x, y and m. Geometry values in R4 have points with coordinate values for x, y, z and m. The interpretation of the coordinates is subject to the coordinate reference systems associated to the point. All coordinates within a geometry object should be in the same coordinate reference systems. Each coordinate shall be unambiguously associated to a coordinate reference system either directly or through its containing geometry. The z coordinate of a point is typically, but not necessarily, represents altitude or elevation. The m coordinate represents a measurement. All Geometry classes described in this specification are defined so that instances of Geometry are topologically closed, i.e. all represented geometries include their boundary as point sets. This does not affect their representation, and open version of the same classes may be used in other circumstances, such as topological representations."@en ;
+  rdfs:isDefinedBy "http://www.opengis.net/ont/sf#Geometry" .
+
+<http://www.opengis.net/ont/sf#Point>
+  a owl:Class ;
+  rdfs:label "Point"@en ;
+  rdfs:subClassOf <http://www.opengis.net/ont/sf#Geometry> ;
+  rdfs:comment "A Point is a 0-dimensional geometric object and represents a single location in coordinate space. A Point has an x-coordinate value, a y-coordinate value. If called for by the associated Spatial Reference System, it may also have coordinate values for z and m. The boundary of a Point is the empty set."@en ;
+  rdfs:isDefinedBy "http://www.opengis.net/ont/sf#Point"@en .
+
+<http://www.w3.org/2006/time#Instant>
+  a owl:Class ;
+  rdfs:label "Instant"@en ;
+  rdfs:subClassOf <http://www.w3.org/2006/time#TemporalEntity> ;
+  rdfs:isDefinedBy "http://www.w3.org/2006/time#Instant" ;
+  rdfs:comment "See http://www.w3.org/TR/owl-time/"@en .
+
+<http://www.w3.org/2006/time#TemporalEntity>
+  a owl:Class ;
+  rdfs:label "Temporal Entity"@en ;
+  rdfs:subClassOf <http://purl.org/net/step#TemporalExtent> ;
+  rdfs:isDefinedBy "http://www.w3.org/2006/time#TemporalEntity" ;
+  rdfs:comment "See http://www.w3.org/TR/owl-time/"@en .
+
+[]
+  a owl:AllDisjointClasses ;
+  owl:members (
+   <http://purl.org/net/step#Agent>
+   <http://purl.org/net/step#ContextualElement>
+   <http://purl.org/net/step#Episode>
+   <http://purl.org/net/step#Extent>
+   <http://purl.org/net/step#FeatureOfInterest>
+   <http://purl.org/net/step#Fix>
+   <http://purl.org/net/step#KeyPoint>
+   <http://purl.org/net/step#RawTrajectory>
+   <http://purl.org/net/step#SemanticDescription>
+   <http://purl.org/net/step#Trajectory>
+ ) .
+
+[]
+  a owl:AllDisjointProperties ;
+  owl:members (
+   <http://purl.org/net/step#atTime>
+   <http://purl.org/net/step#hasEndingPoint>
+   <http://purl.org/net/step#hasEpisode>
+   <http://purl.org/net/step#hasExtent>
+   <http://purl.org/net/step#hasFeature>
+   <http://purl.org/net/step#hasFix>
+   <http://purl.org/net/step#hasLocation>
+   <http://purl.org/net/step#hasPoint>
+   <http://purl.org/net/step#hasRawTrajectory>
+   <http://purl.org/net/step#hasSemanticDescription>
+   <http://purl.org/net/step#hasStartingPoint>
+   <http://purl.org/net/step#hasTrajectory>
+   <http://purl.org/net/step#hasUnit>
+   <http://purl.org/net/step#relatesTo>
+ ) .

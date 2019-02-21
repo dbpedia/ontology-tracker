@@ -1,0 +1,2641 @@
+@prefix : <http://rhizomik.net/ontologies/copyrightonto.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://rhizomik.net/ontologies/copyrightonto.owl> a owl:Ontology ;
+	dct:date "2013-09-02"^^xsd:date ;
+	dct:description "Copyright Ontology, http://rhizomik.net/ontologies/copyrightonto"@en ;
+	rdfs:label "CopyrightOntology"@en ;
+	vann:preferredNamespacePrefix "co" ;
+	dct:license <http://creativecommons.org/licenses/by/3.0/> ;
+	dct:creator <http://rhizomik.net/~roberto> ;
+	owl:imports <http://schema.rdfs.org/all> .
+
+:BroadcastingRight a owl:Class ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:label "Broadcasting Right"@en ;
+	rdfs:subClassOf :CommunicationRight .
+
+:CommunicationRight a owl:Class .
+
+<http://schema.org/CreativeWork> a owl:Class ;
+	owl:disjointWith :Copyright .
+
+:Copyright a owl:Class .
+
+<http://schema.org/CreativeWork> owl:disjointWith :CommunicationMedium .
+
+:CommunicationMedium a owl:Class .
+
+<http://schema.org/CreativeWork> owl:disjointWith :Aim .
+
+:Aim a owl:Class .
+
+:Rent a owl:Class ;
+	rdfs:subClassOf _:node184868itpx1 .
+
+_:node184868itpx1 a owl:Restriction ;
+	owl:onProperty :condition .
+
+:condition a owl:ObjectProperty .
+
+_:node184868itpx1 owl:someValuesFrom :EconomicTransfer .
+
+:EconomicTransfer a owl:Class .
+
+:Rent rdfs:subClassOf :RentalRight .
+
+:RentalRight a owl:Class .
+
+:Rent rdfs:label "Rent"@en ;
+	rdfs:subClassOf :Distribute .
+
+:Distribute a owl:Class .
+
+:Rent rdfs:comment "Distribute  temporarily with a significant economic value exchange. There is a duration and some economic transfer condition."@en ;
+	rdfs:subClassOf _:node184868itpx2 .
+
+_:node184868itpx2 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:duration a owl:ObjectProperty .
+
+:Rent rdfs:subClassOf :Ambient .
+
+:Ambient a owl:Class .
+
+:Manifest a owl:Class ;
+	rdfs:subClassOf _:node184868itpx3 .
+
+_:node184868itpx3 a owl:Restriction ;
+	owl:onProperty :result .
+
+:result a owl:ObjectProperty .
+
+_:node184868itpx3 owl:allValuesFrom :Manifestation .
+
+:Manifestation a owl:Class .
+
+:Manifest rdfs:subClassOf _:node184868itpx4 .
+
+_:node184868itpx4 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :pointInTime .
+
+:pointInTime a owl:DatatypeProperty .
+
+:Manifest rdfs:subClassOf :Spatial .
+
+:Spatial a owl:Class .
+
+:Manifest rdfs:subClassOf _:node184868itpx5 .
+
+_:node184868itpx5 a owl:Restriction ;
+	owl:onProperty :agent .
+
+:agent a owl:ObjectProperty .
+
+_:node184868itpx5 owl:allValuesFrom :LegalPerson .
+
+:LegalPerson a owl:Class .
+
+:Manifest rdfs:subClassOf _:node184868itpx6 .
+
+_:node184868itpx6 a owl:Restriction ;
+	owl:onProperty :theme .
+
+:theme a owl:ObjectProperty .
+
+_:node184868itpx6 owl:cardinality "1"^^xsd:int .
+
+:Manifest rdfs:subClassOf _:node184868itpx7 .
+
+_:node184868itpx7 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :location .
+
+:location a owl:ObjectProperty .
+
+:Manifest rdfs:subClassOf :Temporal .
+
+:Temporal a owl:Class .
+
+:Manifest rdfs:subClassOf _:node184868itpx8 .
+
+_:node184868itpx8 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:Work a owl:Class .
+
+:Manifest rdfs:comment """If this action brings into existence the first manifestation of a work, the manifest event implies that the creator becomes the holder of all the copyright rights on the creation. All this is modelled by the Manifest-Rule. In order to check that this is the first manifestation of the work, the rule tests if there is not a statement asserting that there is a manifestation of the work yet.
+RULE:
+(∀v:Manifest)
+((∃mr:MoralRights)(∃er:EconomicRights)
+((∀p:Person)(∀m':Manifestation)(∀w:Work)(∀m:Manifestation)(∀t:Time)
+(¬isManifestationOf(m',w)∧agent(v,p)∧theme(v,w)∧result(v,m)∧
+pointInTime(v,t)∧location(v,l)
+→
+agent(mr,p)∧agent(er,p)∧essence(mr,w)∧essence(er,m)∧
+start(mr,t)∧start(er,t)∧location(mr,l)∧location(er,l)∧isManifestationOf(m,w)))"""@en ;
+	rdfs:subClassOf _:node184868itpx9 .
+
+_:node184868itpx9 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:Manifest rdfs:label "Manifest"@en ;
+	rdfs:comment """One or more authors generate a manifestation from a work at a given place (at least the country for copyright jurisdiction) and time (from legal point of view).
+In the case of employed authors and works made for hire, the employer, and not the employee, is legally considered the author of the work and  becomes the rights holder.
+Multiple creators are also allowed in order to cope with works realised in collaboration."""@en ;
+	rdfs:subClassOf :Action .
+
+:Action a owl:Class .
+
+:Manifest rdfs:subClassOf _:node184868itpx10 .
+
+_:node184868itpx10 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:PublicPlace a owl:Class ;
+	rdfs:label "Public Place"@en ;
+	owl:disjointWith :CommunicationMedium , <http://schema.org/CreativeWork> , :LegalPerson ;
+	rdfs:subClassOf <http://schema.org/Place> ;
+	rdfs:comment "A place that is public."@en ;
+	owl:disjointWith :Aim , <http://schema.org/Action> .
+
+<http://schema.org/Action> a owl:Class .
+
+:PublicPlace owl:disjointWith :Copyright .
+
+:CreationObject a owl:Class ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subClassOf <http://schema.org/CreativeWork> .
+
+:Agree a owl:Class ;
+	rdfs:subClassOf :Ambient ;
+	rdfs:comment "An event in which a written or unwritten accord is made between two or more parties."^^xsd:string ;
+	rdfs:label "Agreement"^^xsd:string .
+
+:DistributionContract a owl:Class ;
+	rdfs:label "DistributionContract"^^xsd:string ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subClassOf :IPRAgreement .
+
+:IPRAgreement a owl:Class .
+
+:Tune a owl:Class ;
+	rdfs:subClassOf _:node184868itpx11 .
+
+_:node184868itpx11 a owl:Restriction ;
+	owl:onProperty :start .
+
+:start a owl:ObjectProperty .
+
+_:node184868itpx11 owl:maxCardinality "1"^^xsd:int .
+
+:Tune rdfs:subClassOf :Transfer .
+
+:Transfer a owl:Class .
+
+:Tune rdfs:subClassOf _:node184868itpx12 .
+
+_:node184868itpx12 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx13 .
+
+_:node184868itpx13 a owl:Restriction ;
+	owl:onProperty :medium .
+
+:medium a owl:ObjectProperty .
+
+_:node184868itpx13 owl:maxCardinality "1"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx14 .
+
+_:node184868itpx14 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:allValuesFrom :BroadcastMedium .
+
+:BroadcastMedium a owl:Class .
+
+:Tune rdfs:subClassOf _:node184868itpx15 .
+
+_:node184868itpx15 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :BroadcastedCommunication .
+
+:BroadcastedCommunication a owl:Class .
+
+:Tune rdfs:subClassOf :Ambient , _:node184868itpx16 .
+
+_:node184868itpx16 a owl:Restriction ;
+	owl:onProperty :manner .
+
+:manner a owl:ObjectProperty .
+
+_:node184868itpx16 owl:minCardinality "0"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx17 .
+
+_:node184868itpx17 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:Tune rdfs:label "Tune"@en ;
+	rdfs:comment "This is the action that consumes the communication of a Broadcast. Consequently, it is a non-interactive action from the point of view of the consumer. The user just tunes the medium where the content is broadcasted from an appropriate location."@en ;
+	rdfs:subClassOf :Use .
+
+:Use a owl:Class .
+
+:WithdrawalRight a owl:Class ;
+	rdfs:comment "The right to withdraw the work."@en ;
+	rdfs:subClassOf :MoralRights .
+
+:MoralRights a owl:Class .
+
+:WithdrawalRight rdfs:label "Withdrawal Right"@en .
+
+:IPRAgreement rdfs:subClassOf :Agree ;
+	rdfs:label "IPRAgreement"^^xsd:string ;
+	rdfs:comment "A situation in which an ipr is transferred by an agreement."^^xsd:string .
+
+:CommunicationMedium rdfs:comment "The medium used for a Communicate."@en ;
+	rdfs:label "Communication Medium"@en ;
+	owl:disjointWith :Aim .
+
+:Transfer rdfs:subClassOf <http://schema.org/Action> .
+
+:LiveCommunicate a owl:Class ;
+	rdfs:label "Live Communicate"@en ;
+	rdfs:subClassOf _:node184868itpx18 .
+
+_:node184868itpx18 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Performance .
+
+:Performance a owl:Class .
+
+:LiveCommunicate rdfs:subClassOf :Communicate .
+
+:Communicate a owl:Class .
+
+:LiveCommunicate owl:disjointWith :RecordingCommunicate .
+
+:RecordingCommunicate a owl:Class .
+
+:LiveCommunicate rdfs:comment "A Communicate of a Performance."@en .
+
+:Adapt a owl:Class ;
+	rdfs:label "Adapt"@en ;
+	rdfs:comment "To Adapt is generally understood as the modification of a Work from one type of Work to another, for example adapting a novel so as to make a motion picture, or the modification of a Work so as to make it suitable for different conditions of exploitation, for example adapting an instructional textbook originally prepared for higher education into an instructional textbook intended for students at a lower level."@en ;
+	rdfs:subClassOf :AdaptationRight .
+
+:AdaptationRight a owl:Class .
+
+:Adapt rdfs:subClassOf :Derive .
+
+:Derive a owl:Class .
+
+:Access a owl:Class ;
+	rdfs:subClassOf _:node184868itpx19 .
+
+_:node184868itpx19 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :InteractiveCommunication .
+
+:InteractiveCommunication a owl:Class .
+
+:Access rdfs:subClassOf _:node184868itpx20 .
+
+_:node184868itpx20 a owl:Restriction ;
+	owl:minCardinality "0"^^xsd:int ;
+	owl:onProperty :manner .
+
+:Access rdfs:subClassOf :Ambient , _:node184868itpx21 .
+
+_:node184868itpx21 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Access rdfs:subClassOf _:node184868itpx22 .
+
+_:node184868itpx22 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :start .
+
+:Access rdfs:subClassOf _:node184868itpx23 .
+
+_:node184868itpx23 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :medium .
+
+:Access rdfs:comment "This is the action that consumes the communication of a MakeAvailable, i.e. an InteractiveCommunication. Consequently, it is an interactive action from the point of view of the consumer, who is able to determine the time line of the content. Usually, the content is consumed from its beginning and from the time point when the content is accessed. Moreover, the user is usually free to pause, resume, forward and rewind the content. However, all these issues are specific to the technological means used to make the content available, e.g. internet video on-demand streamers. It is important to note that this same features can be enjoyed with non-interactive communications but a recording system at the consumers place is then required."@en ;
+	rdfs:label "Access"@en ;
+	rdfs:subClassOf :Transfer , _:node184868itpx24 .
+
+_:node184868itpx24 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:Access rdfs:subClassOf :Use , _:node184868itpx25 .
+
+_:node184868itpx25 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:allValuesFrom :InteractiveMedium .
+
+:InteractiveMedium a owl:Class .
+
+:Translate a owl:Class ;
+	rdfs:subClassOf :TranslationRight .
+
+:TranslationRight a owl:Class .
+
+:Translate rdfs:subClassOf :Derive ;
+	rdfs:comment "To express a work in a language other than that of the original version. Therefore, it is possible to just chain the language characteristic from the original Work to the new one."@en ;
+	rdfs:label "Translate"@en .
+
+:Communication a owl:Class ;
+	rdfs:label "Communication"@en ;
+	rdfs:comment """The transmission of a work among places at a given time. It is a process performed when the public is not present at the place and or time where the Communication originates. It includes broadcasts, i.e. one to many, but also communications from a place and at a time individually chosen.
+Examples: a radio broadcast of a sound recording of The Magic Flute or an Internet streaming of the film Les Misérables."""@en ;
+	rdfs:subClassOf :CreationProcess .
+
+:CreationProcess a owl:Class .
+
+:InteractiveCommunication rdfs:subClassOf :Communication ;
+	rdfs:label "Interactive Communication"@en .
+
+:RentalRight rdfs:label "Rental Right"@en ;
+	rdfs:subClassOf :DistributionRight .
+
+:DistributionRight a owl:Class .
+
+:RentalRight rdfs:comment ""^^xsd:string .
+
+:Withdraw a owl:Class ;
+	rdfs:subClassOf :WithdrawalRight , :Action .
+
+:BroadcastedCommunication rdfs:subClassOf :Communication ;
+	rdfs:label "Broadcasted Communication"@en .
+
+:RelatedRights a owl:Class ;
+	rdfs:comment "There are the rights of other persons also involved in the exploitation of works. Performers, producers and broadcasters make a significant contribution in order to make works reach end-users. Their contribution is also protected by some rights related to copyright, the Related Rights or Neighbouring Rights."@en ;
+	rdfs:subClassOf :Copyright ;
+	rdfs:label "Related Rights"@en .
+
+:CounterOffer a owl:Class ;
+	rdfs:label "CounterOffer"^^xsd:string ;
+	rdfs:subClassOf :Ambient ;
+	rdfs:comment ""^^xsd:string .
+
+:ImportationRight a owl:Class ;
+	rdfs:subClassOf :DistributionRight , _:node184868itpx26 .
+
+_:node184868itpx26 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :origin .
+
+:origin a owl:ObjectProperty .
+
+:ImportationRight rdfs:comment "Some copyright laws include a right to control importation of copies as a means of preventing erosion of the principle of territoriality of copyright."@en ;
+	rdfs:label "Importation Right"@en .
+
+:CreationConcept a owl:Class ;
+	rdfs:comment "Something that cannot exist at a paticular place and time without some physical encoding or embodiment. Also known as Mental Concept."@en ;
+	rdfs:label "Abstract"@en ;
+	rdfs:subClassOf <http://schema.org/CreativeWork> .
+
+:Improvise a owl:Class ;
+	rdfs:subClassOf _:node184868itpx27 .
+
+_:node184868itpx27 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:Improvise rdfs:label "Improvise"@en ;
+	rdfs:subClassOf _:node184868itpx28 .
+
+_:node184868itpx28 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :pointInTime .
+
+:Improvise rdfs:subClassOf _:node184868itpx29 .
+
+_:node184868itpx29 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minCardinality "1"^^xsd:int .
+
+:Improvise rdfs:subClassOf _:node184868itpx30 .
+
+_:node184868itpx30 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :Performance .
+
+:Improvise rdfs:comment "This action directly generates a performance from a work, without a previous manifestation."@en ;
+	rdfs:subClassOf _:node184868itpx31 .
+
+_:node184868itpx31 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Improvise rdfs:subClassOf :Spatial , _:node184868itpx32 .
+
+_:node184868itpx32 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:Improvise rdfs:subClassOf _:node184868itpx33 .
+
+_:node184868itpx33 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Improvise rdfs:subClassOf :Action , :Temporal , _:node184868itpx34 .
+
+_:node184868itpx34 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :location .
+
+:Copyright rdfs:subClassOf :Temporal , :Action , owl:Thing ;
+	rdfs:label "Copyright"^^xsd:string ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subClassOf :Spatial ;
+	owl:disjointWith :Aim , :CommunicationMedium .
+
+:Communicate rdfs:subClassOf _:node184868itpx35 .
+
+_:node184868itpx35 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:cardinality "1"^^xsd:int .
+
+:Communicate rdfs:subClassOf _:node184868itpx36 .
+
+_:node184868itpx36 a owl:Restriction ;
+	owl:onProperty :recipient .
+
+:recipient a owl:ObjectProperty .
+
+_:node184868itpx36 owl:allValuesFrom :LegalPerson .
+
+:Communicate rdfs:subClassOf _:node184868itpx37 .
+
+_:node184868itpx37 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Communicate rdfs:subClassOf _:node184868itpx38 .
+
+_:node184868itpx38 a owl:Restriction ;
+	owl:allValuesFrom :RecordingOrPerformance .
+
+:RecordingOrPerformance a owl:Class .
+
+_:node184868itpx38 owl:onProperty :theme .
+
+:Communicate rdfs:label "Communicate"@en ;
+	rdfs:subClassOf _:node184868itpx39 .
+
+_:node184868itpx39 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Communicate rdfs:subClassOf _:node184868itpx40 .
+
+_:node184868itpx40 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:allValuesFrom :CommunicationMedium .
+
+:Communicate rdfs:subClassOf :Transfer , _:node184868itpx41 .
+
+_:node184868itpx41 a owl:Restriction ;
+	owl:onProperty :origin ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Communicate rdfs:comment "This verb includes any communication to the public of the originals or copies of works, including wire or wireless means and \"the making available to the public of works in a way that the members of the public may access the work from a place and at a time individually chosen by them\". The quoted expression covers, in particular, on-demand interactive communication through the Internet. On the contrary to Perform, this action just covers all communication to the public not present at the place where the communication originates."@en ;
+	rdfs:subClassOf :CommunicationRight , _:node184868itpx42 .
+
+_:node184868itpx42 a owl:Restriction ;
+	owl:allValuesFrom :Communication ;
+	owl:onProperty :result .
+
+:AdaptationRight rdfs:subClassOf :TransformationRight .
+
+:TransformationRight a owl:Class .
+
+:AdaptationRight rdfs:comment ""^^xsd:string ;
+	rdfs:label "Adaptation Right"@en .
+
+:Improvisation a owl:Class ;
+	rdfs:comment """The expression in time of a work, which has not been previously materialised in a manifestation, before and audience. Performers or technical methods might be involved in the process. 
+Examples: to play some improvised music in a concert."""^^xsd:string ;
+	rdfs:label "Improvisation"@en ;
+	rdfs:subClassOf :CreationProcess .
+
+:EducationRight a owl:Class ;
+	rdfs:subClassOf :UsersRights .
+
+:UsersRights a owl:Class .
+
+:EducationRight rdfs:label "Education Right"@en ;
+	rdfs:comment "To illustrate for teaching and research, uses for reproduction and communication to the public in educational institutions, libraries and archives."@en .
+
+:Derive rdfs:subClassOf _:node184868itpx43 .
+
+_:node184868itpx43 a owl:Restriction ;
+	owl:onProperty :aim .
+
+:aim a owl:ObjectProperty .
+
+_:node184868itpx43 owl:cardinality "1"^^xsd:int .
+
+:Derive rdfs:subClassOf _:node184868itpx44 .
+
+_:node184868itpx44 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Derive rdfs:subClassOf _:node184868itpx45 .
+
+_:node184868itpx45 a owl:Restriction ;
+	owl:allValuesFrom :Work ;
+	owl:onProperty :aim .
+
+:Derive rdfs:subClassOf _:node184868itpx46 .
+
+_:node184868itpx46 a owl:Restriction ;
+	owl:allValuesFrom :Manifestation ;
+	owl:onProperty :result .
+
+:Derive rdfs:comment """This correspond to the act changing a work protected by copyright in order to generate a new work. The resulting derivations are themselves works protected by copyright. Derive is thus also a rights generation action, i.e. it causes new rights to arise as a new Work and its first Manifestation are generated as results of the Derive action. 
+The action is required to produce also the first Manifestation of the Work in order to have legal implications. If there is not a Manifestation, the derivation takes part just in the field of ideas, which are not regulated by copyright."""@en ;
+	rdfs:subClassOf _:node184868itpx47 .
+
+_:node184868itpx47 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:Derive rdfs:subClassOf :TransformationRight , _:node184868itpx48 .
+
+_:node184868itpx48 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:cardinality "1"^^xsd:int .
+
+:Derive rdfs:label "Derive"@en ;
+	rdfs:comment """RULE:
+(∀v:Derive)
+((∃mr:MoralRights)(∃er:EconomicRights)
+((∀p:Person)(∀w:Work)(∀w':Work)(∀m:Manifestation)(∀t:Time)
+(w≠w')∧agent(v,p)∧theme(v,w)∧result(v,m)∧aim(v,w')∧pointInTime(v,t)∧location(v,l)
+→
+agent(mr,p)∧agent(er,p)∧essence(mr,w')∧essence(er,m)∧start(mr,t)∧start(er,t)∧
+location(mr,l)∧location(er,l)∧isManifestationOf(m,w')∧isDerivationOf(w',w)))"""^^xsd:string ;
+	rdfs:subClassOf :Ambient .
+
+:TemporaryReproductionRight a owl:Class ;
+	rdfs:comment "To produce ephemeral reproductions required in order to facilitate some technological processes geared towards work usage, e.g. internet caches."@en ;
+	rdfs:label "Temporary Reproduction Right"@en ;
+	rdfs:subClassOf :UsersRights .
+
+:Manifestation rdfs:comment """The materialisation of a Work in a concrete medium, i.e. a tangible or digital object. 
+International identification schemes for manifestations: ISBN (International Standard Book Number) for books or ISMN (International Standard Music Number) for printed music.
+Examples: the printed scores of The Magic Flute or the editions of Les Misérables."""@en ;
+	rdfs:subClassOf :CreationObject ;
+	rdfs:label "Manifestation"@en .
+
+:PublicPerformanceRight a owl:Class ;
+	rdfs:comment "It regulates Performances of works when they are made in public, i.e. before an audience."@en ;
+	rdfs:label "Public Performance Right"@en ;
+	rdfs:subClassOf :EconomicRights .
+
+:EconomicRights a owl:Class .
+
+:Temporal rdfs:subClassOf <http://schema.org/Action> .
+
+:UsersRights rdfs:comment "End-users have some special permissions that grant them the possibility to perform some actions otherwise forbidden by copyright, although this does not mean that the user must pay a compensation if they are exercises, e.g. levies on digital recording equipment and media. These exceptions to copyright should be considered as end-user privileges and not rights. However, some of them are referred to as rights, e.g. the right to quote. Moreover, they are modelled as rights in this conceptualisation in order to build a more homogeneous model."@en ;
+	rdfs:label "Users Rights"@en ;
+	rdfs:subClassOf :Copyright .
+
+:Action rdfs:subClassOf <http://schema.org/Action> .
+
+:Performance rdfs:subClassOf :CreationProcess ;
+	rdfs:comment """The expression in time of a manifestation of a work before and audience. Performers or technical methods might be involved in the process.  
+Examples: the scenic play of The Magic Flute opera or a screen play of any of Les Misérables films."""@en ;
+	rdfs:label "Performance"@en .
+
+:Aim rdfs:subClassOf owl:Thing ;
+	rdfs:label "Aim"@en ;
+	rdfs:comment "The motivation of an action."@en .
+
+:Instance a owl:Class ;
+	rdfs:subClassOf :CreationObject ;
+	rdfs:comment """A copy of a creation object produced for commersialisation, a product.
+International identification schemes for manifestations: EAN13 (European Article Number) or UPC (Universal Product Code).
+Examples: a CD of The Magic Flute or a DVD of Les Misérables."""@en ;
+	rdfs:label "Instance"@en .
+
+:SoundRecordingRight a owl:Class ;
+	rdfs:subClassOf :FixationRight .
+
+:FixationRight a owl:Class .
+
+:SoundRecordingRight rdfs:subClassOf _:node184868itpx49 .
+
+_:node184868itpx49 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :SoundRecording .
+
+:SoundRecording a owl:Class .
+
+:SoundRecordingRight rdfs:label "Sound Recording Right"@en .
+
+:Process a owl:Class ;
+	rdfs:label "Process"@en ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subClassOf <http://schema.org/Action> .
+
+:TranslationRight rdfs:label "Translation Right"@en ;
+	rdfs:subClassOf :TransformationRight ;
+	rdfs:comment ""^^xsd:string .
+
+:InteractiveMedium rdfs:label "Interactive Medium"@en ;
+	rdfs:subClassOf :CommunicationMedium .
+
+:LegalPerson owl:disjointWith :Copyright , :CommunicationMedium , :Aim , :PublicPlace ;
+	rdfs:label "Legal Person"@en ;
+	owl:disjointWith <http://schema.org/CreativeWork> , <http://schema.org/Action> ;
+	rdfs:subClassOf <http://schema.org/Thing> .
+
+<http://schema.org/Thing> rdfs:subClassOf owl:Thing .
+
+:Lend a owl:Class ;
+	rdfs:comment "Distribute  temporarily without a significant economic value exchange. There is a duration but there is not an economic transfer condition."@en ;
+	rdfs:subClassOf _:node184868itpx50 .
+
+_:node184868itpx50 a owl:Restriction ;
+	owl:onProperty :condition ;
+	owl:allValuesFrom _:node184868itpx51 .
+
+_:node184868itpx51 a owl:Class ;
+	owl:complementOf :EconomicTransfer .
+
+:Lend rdfs:subClassOf :Distribute , _:node184868itpx52 .
+
+_:node184868itpx52 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:Lend rdfs:label "Lend"@en .
+
+<http://schema.org/Action> owl:disjointWith <http://schema.org/CreativeWork> , :CommunicationMedium , :Aim .
+
+:FixationRight rdfs:comment "It regulates the materialisation of a Performance into an object that constitutes a Fixation. Common fixations are motion pictures and sound recordings, which are governed by the corresponding Sound Recording Right and Motion Picture Right."@en ;
+	rdfs:label "Fixation Right"@en ;
+	rdfs:subClassOf :EconomicRights , _:node184868itpx53 .
+
+_:node184868itpx53 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Performance .
+
+:Cite a owl:Class ;
+	rdfs:subClassOf :Action , :QuotationRight .
+
+:QuotationRight a owl:Class .
+
+:OfficialActRight a owl:Class ;
+	rdfs:subClassOf :UsersRights ;
+	rdfs:label "Official Act Right"@en ;
+	rdfs:comment "To use for certain administrative, judicial or security proceedings and religious or official ceremonies."@en .
+
+:BroadcastMedium rdfs:subClassOf :CommunicationMedium ;
+	rdfs:label "Broadcast Medium"@en .
+
+:EconomicTransfer rdfs:label "Economic Transfer"@en ;
+	rdfs:subClassOf _:node184868itpx54 .
+
+_:node184868itpx54 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx55 .
+
+_:node184868itpx55 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :recipient .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx56 .
+
+_:node184868itpx56 a owl:Restriction ;
+	owl:onProperty :aim ;
+	owl:someValuesFrom :VerbOrAim .
+
+:VerbOrAim a owl:Class .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx57 .
+
+_:node184868itpx57 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:allValuesFrom :LegalPerson .
+
+:EconomicTransfer rdfs:comment "A Transfer of some economic value in exchange of something, the aim."@en ;
+	rdfs:subClassOf :Ambient , :Transfer , _:node184868itpx58 .
+
+_:node184868itpx58 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx59 .
+
+_:node184868itpx59 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:Recording a owl:Class ;
+	rdfs:label "Recording"@en ;
+	rdfs:comment """The materialisation of a performance in a tangible of digital object.
+International identification schemes for manifestations: ISRC (International Standard Recording Code) for audio and video recordings or ISAN (International Standard Audiovisual Number) for audiovisual works.
+Examples: a sound recording of The Magic Flute opera or any motion picture of Les Misérables."""@en ;
+	rdfs:subClassOf :CreationObject .
+
+:TransformationRight rdfs:comment "It regulates actions that generate new works from previously existing ones. The results of this kind of actions are considered new works, and not mere reproductions, because they contribute something new, i.e. they are original as detailed in the Originality section. This right is concretised into the Adaptation Right and the Translation Right. The former creates a new work of a different type than the original one, e.g. a film from a novel. The latter generates a work of the same type but in a different language."@en ;
+	rdfs:label "Transformation Right"@en ;
+	rdfs:subClassOf :EconomicRights , _:node184868itpx60 .
+
+_:node184868itpx60 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:MakeAvailable a owl:Class ;
+	rdfs:subClassOf :MakingAvailableRight .
+
+:MakingAvailableRight a owl:Class .
+
+:MakeAvailable rdfs:subClassOf _:node184868itpx61 .
+
+_:node184868itpx61 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :InteractiveCommunication .
+
+:MakeAvailable owl:disjointWith :Broadcast .
+
+:Broadcast a owl:Class .
+
+:MakeAvailable rdfs:subClassOf _:node184868itpx62 .
+
+_:node184868itpx62 a owl:Restriction ;
+	owl:allValuesFrom :InteractiveMedium ;
+	owl:onProperty :medium .
+
+:MakeAvailable rdfs:label "Make Available"@en ;
+	rdfs:comment """Traditionally communication actions related to the communication right were quite passive from the point of view of the communication consumer. The communicator decided when a concrete work was broadcasted and the consumers had just to the option to get or not access to the communication medium in order to consume the content. Consumers did not have any alternative to time-shift content consumption without the intervention of recording mediums.
+However, communication mediums that allow user interaction have appeared, among which the Internet is the more important one nowadays. The consequence is a particular kind of communication where members of the public access works from a place and at a time individually chosen by them. This kind of communication is called to MakeAvailable in the copyright context."""@en ;
+	rdfs:subClassOf :Communicate .
+
+:VerbOrAim owl:unionOf _:node184868itpx63 .
+
+_:node184868itpx63 rdf:first <http://schema.org/Action> ;
+	rdf:rest _:node184868itpx64 .
+
+_:node184868itpx64 rdf:first :Aim ;
+	rdf:rest rdf:nil .
+
+:SoundRecording rdfs:subClassOf :Recording ;
+	rdfs:label "Sound Recording"@en .
+
+:CreationProcess rdfs:comment "A creation that happens and has temporal parts or stages."^^xsd:string ;
+	rdfs:subClassOf <http://schema.org/CreativeWork> .
+
+:ProducersRights a owl:Class ;
+	rdfs:label "Producers Rights"@en ;
+	rdfs:comment "Producers have exclusive Reproduction Right over their fixations and exclusive Distribution Right over the resulting copies. As before, these rights will be in addition to the rights of copyright owners."@en ;
+	rdfs:subClassOf :RelatedRights .
+
+:QuotationRight rdfs:subClassOf :UsersRights ;
+	rdfs:comment "The making of quotations from a protected work, provided that the source is mentioned and that the extent of the quotation is compatible with fair practice."@en ;
+	rdfs:label "Quotation Right"@en .
+
+:Attend a owl:Class ;
+	rdfs:comment "This is the action corresponding to the consumption of a Perform in a PublicPlace. The theme is a Performance which result from a Perform that is held in the same PublicPlace. Therefore, there is a time sharing between the Attend and the corresponding Perform."@en ;
+	rdfs:subClassOf :Use , _:node184868itpx65 .
+
+_:node184868itpx65 a owl:Restriction ;
+	owl:allValuesFrom :Performance ;
+	owl:onProperty :theme .
+
+:Attend rdfs:subClassOf _:node184868itpx66 .
+
+_:node184868itpx66 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Attend rdfs:label "Attend"@en .
+
+:Broadcast rdfs:subClassOf _:node184868itpx67 .
+
+_:node184868itpx67 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :BroadcastedCommunication .
+
+:Broadcast owl:disjointWith :MakeAvailable ;
+	rdfs:label "Broadcast"@en ;
+	rdfs:subClassOf _:node184868itpx68 .
+
+_:node184868itpx68 a owl:Restriction ;
+	owl:allValuesFrom :BroadcastMedium ;
+	owl:onProperty :medium .
+
+:Broadcast rdfs:subClassOf :BroadcastingRight , :Communicate ;
+	rdfs:comment "When a work is broadcasted, it is made available to a collective through a communication medium. There are two kinds of broadcasting depending on the communication medium. In the first one the medium is the air. A wireless signal is emitted into the air, which can be received by any person, within range of the signal, who possesses the equipment (radio or television receiver) necessary to convert the signal into sounds or sounds and images. In the second one the medium is a cable. A signal is diffused and only persons who possess the required equipment linked to the cables used to diffuse the signal can receive it."@en .
+
+:ReproductionRight a owl:Class ;
+	rdfs:comment "It regulates actions that produce replicas of a given object, i.e. Instances. Examples of reproduction are the mass production of CD copies from an audio recording master, to scan a book in order to produce a digitalisation of it or to download a digital file into the local hard disk."@en ;
+	rdfs:label "Reproduction Right"@en ;
+	rdfs:subClassOf :EconomicRights , _:node184868itpx69 .
+
+_:node184868itpx69 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :CreationObject .
+
+:ParodyRight a owl:Class ;
+	rdfs:subClassOf :UsersRights ;
+	rdfs:comment "To use for parody and caricature."@en ;
+	rdfs:label "Parody Right"@en .
+
+:IntegrityRight a owl:Class ;
+	rdfs:comment "The right to object to any distortion, mutilation or other modification of, or other derogatory action in relation to, the work which would be prejudicial to the author's honour or reputation."@en ;
+	rdfs:label "Integrity Right"@en ;
+	rdfs:subClassOf :MoralRights .
+
+:DisclosureRight a owl:Class ;
+	rdfs:comment "The right to disclose the work."@en ;
+	rdfs:label "Dissemination Right"@en ;
+	rdfs:subClassOf :MoralRights .
+
+:Spatial rdfs:subClassOf <http://schema.org/Action> .
+
+:Give a owl:Class ;
+	rdfs:subClassOf :Distribute , _:node184868itpx70 .
+
+_:node184868itpx70 a owl:Restriction ;
+	owl:allValuesFrom _:node184868itpx71 .
+
+_:node184868itpx71 a owl:Class ;
+	owl:complementOf :EconomicTransfer .
+
+_:node184868itpx70 owl:onProperty :condition .
+
+:Give rdfs:subClassOf _:node184868itpx72 .
+
+_:node184868itpx72 a owl:Restriction ;
+	owl:onProperty :duration ;
+	owl:cardinality "0"^^xsd:int .
+
+:Give rdfs:comment "The ownership of the corresponding physical support is transferred permanently, there is not a duration. Moreover, there is not an economic transfer condition as the ownership is transferred without any economic counterpart."@en ;
+	rdfs:label "Give"@en .
+
+:CommunicationRight rdfs:subClassOf :EconomicRights ;
+	rdfs:label "Communication Right"@en ;
+	rdfs:comment "It regulates the realisation of Communications of works, including wire or wireless means and those realised from a place and at a time individually selected. This right is concretised into Broadcasting Right, when the communication is massive, and Make Available Right, when the communication is individually chosen."@en ;
+	rdfs:subClassOf _:node184868itpx73 .
+
+_:node184868itpx73 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :RecordingOrPerformance .
+
+:RecordingOrPerformance owl:unionOf _:node184868itpx74 .
+
+_:node184868itpx74 rdf:first :Recording ;
+	rdf:rest _:node184868itpx75 .
+
+_:node184868itpx75 rdf:first :Performance ;
+	rdf:rest rdf:nil .
+
+:RecordingOrPerformance rdfs:subClassOf <http://schema.org/CreativeWork> .
+
+:Distribute rdfs:subClassOf :Transfer ;
+	rdfs:label "Distribute"@en ;
+	rdfs:subClassOf _:node184868itpx76 .
+
+_:node184868itpx76 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:allValuesFrom :LegalPerson .
+
+:Distribute rdfs:subClassOf _:node184868itpx77 .
+
+_:node184868itpx77 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Instance .
+
+:Distribute rdfs:subClassOf _:node184868itpx78 .
+
+_:node184868itpx78 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Distribute rdfs:subClassOf :DistributionRight , _:node184868itpx79 .
+
+_:node184868itpx79 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:minCardinality "1"^^xsd:int .
+
+:Distribute rdfs:comment "Once Instances of a Work have been produced, they are distributed to the public. Therefore, there is a recipient of the Instance. If the Distribute does not imply a permanent transfer of ownership on the Instance, i.e. on the material support but not on the underlying Work, there is also a duration case role. This is concretised in the Distribute specialisations."@en .
+
+<http://schema.org/Person> a owl:Class ;
+	rdfs:label "Person"@en ;
+	rdfs:subClassOf :LegalPerson .
+
+:AttributionRight a owl:Class ;
+	rdfs:comment "The right to claim authorship of the work."@en ;
+	rdfs:subClassOf :MoralRights ;
+	rdfs:label "Attribution Right"@en .
+
+:MoralRights rdfs:subClassOf _:node184868itpx80 .
+
+_:node184868itpx80 a owl:Restriction ;
+	owl:allValuesFrom :Work ;
+	owl:onProperty :theme .
+
+:MoralRights rdfs:subClassOf _:node184868itpx81 .
+
+_:node184868itpx81 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :pointInTime .
+
+:MoralRights rdfs:label "Moral Rights"@en ;
+	rdfs:subClassOf _:node184868itpx82 .
+
+_:node184868itpx82 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:MoralRights rdfs:subClassOf _:node184868itpx83 .
+
+_:node184868itpx83 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:cardinality "1"^^xsd:int .
+
+:MoralRights rdfs:subClassOf _:node184868itpx84 .
+
+_:node184868itpx84 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:MoralRights rdfs:subClassOf :Copyright ;
+	rdfs:comment "Moral rights are always held by the creator and cannot be commercially exploited. They are not present in all legal systems. However, WIPO treaties are promoting some of them in order to improve worldwide copyright law harmonisation."@en ;
+	rdfs:subClassOf _:node184868itpx85 .
+
+_:node184868itpx85 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minCardinality "1"^^xsd:int .
+
+:Ambient rdfs:subClassOf <http://schema.org/Action> .
+
+:Work rdfs:comment """The socially shared concept that captures the characteristics that allow the identification of the original creation among all its manifestations.
+International identification schemes for works: ISTC (International Standard Text Code) for textual works, ISSN (International Standard Serial Number) for serial publications or ISWC (International Standard Musical Work Code) for musical and literary works.
+Examples: Mozart's The Magic Flute or Victor Hugo's Les Misérables."""@en ;
+	rdfs:subClassOf :CreationConcept ;
+	rdfs:label "Work"@en .
+
+<http://schema.org/Organization> a owl:Class ;
+	rdfs:label "Organization"@en ;
+	rdfs:subClassOf :LegalPerson ;
+	owl:disjointWith <http://schema.org/Person> .
+
+:RecordedCommunication a owl:Class ;
+	rdfs:subClassOf _:node184868itpx86 .
+
+_:node184868itpx86 a owl:Restriction ;
+	owl:allValuesFrom :Recording ;
+	owl:onProperty :isCommunicationOf .
+
+:isCommunicationOf a owl:FunctionalProperty .
+
+:RecordedCommunication owl:disjointWith :LiveCommunication .
+
+:LiveCommunication a owl:Class .
+
+:RecordedCommunication rdfs:label "Recorded Communication"@en ;
+	rdfs:subClassOf :Communication .
+
+:ManifestationOrRecording a owl:Class ;
+	owl:unionOf _:node184868itpx87 .
+
+_:node184868itpx87 rdf:first :Manifestation ;
+	rdf:rest _:node184868itpx88 .
+
+_:node184868itpx88 rdf:first :Recording ;
+	rdf:rest rdf:nil .
+
+:ManifestationOrRecording rdfs:subClassOf :CreationObject .
+
+:Sell a owl:Class ;
+	rdfs:comment "The ownership of the corresponding physical support is transferred permanently, there is not a duration. However, there is a condition, an economic transfer on exchange of which the ownership is transferred."@en ;
+	rdfs:label "Sell"@en ;
+	rdfs:subClassOf _:node184868itpx89 .
+
+_:node184868itpx89 a owl:Restriction ;
+	owl:onProperty :duration ;
+	owl:cardinality "0"^^xsd:int .
+
+:Sell rdfs:subClassOf _:node184868itpx90 .
+
+_:node184868itpx90 a owl:Restriction ;
+	owl:someValuesFrom :EconomicTransfer ;
+	owl:onProperty :condition .
+
+:Sell rdfs:subClassOf :Distribute ;
+	rdfs:comment """RULE:
+The right of distribution is usually subject to exhaustion upon first sale or other transfer of ownership of a particular copy. This means that, there are are not Distribute actions that have a previously distributed Instance as theme.
+(∀v:Sell)(∀i:Instance)(theme(v,i)
+→ ¬(∃v':Sell)(theme(v',i)∧v≠v'))"""@en ;
+	rdfs:subClassOf :Ambient .
+
+:RecordingCommunicate owl:disjointWith :LiveCommunicate ;
+	rdfs:comment "A Communicate of a previous recording."@en ;
+	rdfs:subClassOf _:node184868itpx91 .
+
+_:node184868itpx91 a owl:Restriction ;
+	owl:allValuesFrom :Recording ;
+	owl:onProperty :theme .
+
+:RecordingCommunicate rdfs:label "Recording Communicate"@en ;
+	rdfs:subClassOf :Communicate .
+
+:Use rdfs:subClassOf :Temporal , _:node184868itpx92 .
+
+_:node184868itpx92 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:cardinality "1"^^xsd:int .
+
+:Use rdfs:subClassOf :Action ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subClassOf :Spatial , _:node184868itpx93 .
+
+_:node184868itpx93 a owl:Restriction ;
+	owl:onProperty :pointInTime ;
+	owl:cardinality "1"^^xsd:int .
+
+:Use rdfs:subClassOf _:node184868itpx94 .
+
+_:node184868itpx94 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:Use rdfs:label "Use"@en ;
+	rdfs:subClassOf _:node184868itpx95 .
+
+_:node184868itpx95 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:PrivateCopyRight a owl:Class ;
+	rdfs:subClassOf :UsersRights ;
+	rdfs:label "Private Copy Right"@en ;
+	rdfs:comment "To reproduce a work exclusively for the personal and private use of the person who makes the reproduction, e.g. a backup."@en .
+
+:BroadcastersRights a owl:Class ;
+	rdfs:subClassOf :RelatedRights ;
+	rdfs:label "Broadcasters Rights"@en ;
+	rdfs:comment "Broadcasters have exclusive Broadcasting, Fixation and Reproduction Rights over their broadcasts. Here broadcasting of a broadcast is understood as re-broadcasting. Re-broadcasting is either simultaneous transmission of a broadcast of a program being received from another source or a new deferred broadcast of a formerly recorded program transmitted or received earlier. These rights must be considered in addition to the rights of copyright owners when applicable."@en .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx96 .
+
+_:node184868itpx96 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:EconomicRights rdfs:subClassOf :Copyright , _:node184868itpx97 .
+
+_:node184868itpx97 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:cardinality "1"^^xsd:int .
+
+:EconomicRights rdfs:comment "The economic rights are related to the productive and commercial aspects of copyright."@en ;
+	rdfs:subClassOf _:node184868itpx98 .
+
+_:node184868itpx98 a owl:Class ;
+	owl:unionOf _:node184868itpx100 .
+
+_:node184868itpx100 rdf:first _:node184868itpx99 .
+
+_:node184868itpx99 a owl:Restriction ;
+	owl:onProperty :patient .
+
+:patient a owl:ObjectProperty .
+
+_:node184868itpx99 owl:cardinality "1"^^xsd:int .
+
+_:node184868itpx100 rdf:rest _:node184868itpx102 .
+
+_:node184868itpx102 rdf:first _:node184868itpx101 .
+
+_:node184868itpx101 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+_:node184868itpx102 rdf:rest rdf:nil .
+
+:EconomicRights rdfs:label "Economic Rights"@en ;
+	rdfs:subClassOf _:node184868itpx103 .
+
+_:node184868itpx103 a owl:Restriction ;
+	owl:onProperty :patient ;
+	owl:allValuesFrom <http://schema.org/CreativeWork> .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx104 .
+
+_:node184868itpx104 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom <http://schema.org/CreativeWork> .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx105 .
+
+_:node184868itpx105 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:MotionPictureRight a owl:Class ;
+	rdfs:subClassOf :FixationRight ;
+	rdfs:label "Motion Picture Right"@en ;
+	rdfs:subClassOf _:node184868itpx106 .
+
+_:node184868itpx106 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :MotionPicture .
+
+:MotionPicture a owl:Class .
+
+:Record a owl:Class ;
+	rdfs:subClassOf _:node184868itpx107 .
+
+_:node184868itpx107 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Record rdfs:subClassOf _:node184868itpx108 .
+
+_:node184868itpx108 a owl:Restriction ;
+	owl:allValuesFrom :Recording ;
+	owl:onProperty :result .
+
+:Record rdfs:subClassOf _:node184868itpx109 .
+
+_:node184868itpx109 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Performance .
+
+:Record rdfs:comment """Generically, a work is considered fixed when it is stored on some medium in which it can be perceived, reproduced, or otherwise communicated. For example, a song is considered fixed when it is written down on paper. The paper is the medium on which the song can be perceived, reproduced and communicated. 
+It is not necessary that the medium be such that a human can perceive the work, as long as the work can be perceived by a machine. Thus, the song is also fixed the moment the author records it onto a cassette tape. Similarly, a computer program is fixed when stored on a computer hard drive.
+From the legal point of view, the fixations that are governed are those that store performances of works. The more important kinds of fixations are sound recordings and motion pictures. 
+The theme of a Record is a Performance but it is not necessarily a public performance. For instance, it can be a studio performance, which is governed by copyright because this fixation is intended for commercial exploitation."""@en ;
+	rdfs:subClassOf :FixationRight , _:node184868itpx110 .
+
+_:node184868itpx110 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:cardinality "1"^^xsd:int .
+
+:Record rdfs:label "Record"@en ;
+	rdfs:comment """RULE:
+(∀r:Record)
+((∃!p:Performance)(∃!f:Fixation)
+(theme(r,p)∧result(r,f))
+→
+isFixationOf(f,p))"""@en .
+
+:Perform a owl:Class ;
+	rdfs:comment """This corresponds to the action of public performance. To perform a work means to recite, render, play, dance, or act it, either directly or by means of any device or process or, in the case of a motion picture or other audiovisual work, to show its images in any sequence or to make the sounds accompanying it audible.
+It is important to note that the performance is considered public when it takes place at a place open to the public or at any place where a substantial number of persons outside of a normal circle of a family and its social acquaintances is involved. Therefore, it will not be considered public when it is performed in a strictly domestic domain."""@en , """RULE:
+(∀p:Perform)
+((∃!m:Manifestation)(∃!pe:Performance)
+(theme(p,m)∧result(p,pe))
+→
+isPerformanceOf(pe,m))"""@en ;
+	rdfs:subClassOf _:node184868itpx111 .
+
+_:node184868itpx111 a owl:Restriction ;
+	owl:onProperty :pointInTime ;
+	owl:cardinality "1"^^xsd:int .
+
+:Perform rdfs:subClassOf _:node184868itpx112 .
+
+_:node184868itpx112 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:allValuesFrom :PublicPlace .
+
+:Perform rdfs:subClassOf :PublicPerformanceRight , _:node184868itpx113 .
+
+_:node184868itpx113 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Manifestation .
+
+:Perform rdfs:subClassOf _:node184868itpx114 .
+
+_:node184868itpx114 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Perform rdfs:subClassOf _:node184868itpx115 .
+
+_:node184868itpx115 a owl:Restriction ;
+	owl:allValuesFrom :Performance ;
+	owl:onProperty :result .
+
+:Perform rdfs:subClassOf _:node184868itpx116 .
+
+_:node184868itpx116 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:cardinality "1"^^xsd:int .
+
+:Perform rdfs:label "Perform"@en .
+
+:Attribute a owl:Class ;
+	rdfs:subClassOf :AttributionRight , :Action .
+
+:PerformersRights a owl:Class ;
+	rdfs:label "Performers Rights"@en ;
+	rdfs:comment "Performers have exclusive Fixation, Communication, Reproduction, Public Performance and Distribution Rights over their performances. These rights, when the performance is of a copyrighted work, will be in addition to the rights of copyright owners with respect to the performance and subsequent exploitation of the performance."@en ;
+	rdfs:subClassOf :RelatedRights .
+
+:MakingAvailableRight rdfs:label "Making Available Right"@en ;
+	rdfs:subClassOf :CommunicationRight .
+
+:LiveCommunication owl:disjointWith :RecordedCommunication ;
+	rdfs:label "Live Communication"@en ;
+	rdfs:subClassOf _:node184868itpx117 .
+
+_:node184868itpx117 a owl:Restriction ;
+	owl:onProperty :isCommunicationOf ;
+	owl:allValuesFrom :Performance .
+
+:LiveCommunication rdfs:subClassOf :Communication .
+
+:MotionPicture rdfs:subClassOf :Recording ;
+	rdfs:label "Motion Picture"@en .
+
+:Offer a owl:Class ;
+	rdfs:label "Offer"^^xsd:string ;
+	rdfs:subClassOf :Ambient ;
+	rdfs:comment "An event in which a party makes known the terms on which an agreement may be made."^^xsd:string .
+
+:InformationRight a owl:Class ;
+	rdfs:label "Information Right"@en ;
+	rdfs:comment "News incorporating other news and news incorporating other works."@en ;
+	rdfs:subClassOf :UsersRights .
+
+:EditionContract a owl:Class ;
+	rdfs:label "EditionContract"^^xsd:string ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subClassOf :IPRAgreement .
+
+:DistributionRight rdfs:subClassOf :EconomicRights ;
+	rdfs:comment "It regulates actions geared to distribute previously made copies incorporated in tangible articles. The ownership of the corresponding physical support can be transferred permanently, i.e. the distribute act is a sale, or just temporally, i.e. a rent if there is a significant economic compensation or a loan if not."@en ;
+	rdfs:label "Distribution Right"@en ;
+	rdfs:subClassOf _:node184868itpx118 .
+
+_:node184868itpx118 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Instance .
+
+:Copy a owl:Class ;
+	rdfs:comment """RULE:
+(∀c:Copy)
+((∃!o:CreationObject)(∃!i:Instance)
+(theme(c,o)∧result(c,i))
+→
+isInstanceOf(i,o))"""@en ;
+	rdfs:subClassOf _:node184868itpx119 .
+
+_:node184868itpx119 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :CreationObject .
+
+:Copy rdfs:subClassOf _:node184868itpx120 .
+
+_:node184868itpx120 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Copy rdfs:subClassOf :ReproductionRight , _:node184868itpx121 .
+
+_:node184868itpx121 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Copy rdfs:comment "This action is formally known as Reproduce. However, it is commonly referred to as Copy. Copies have been traditionally the basic medium for Work commercialisation. They are produced from a Manifestation, from a Fixation of a Performance or from another Instance. The result is an Instance that is the item employed for the physical commercialisation of works, i.e. when a physical item is used as the vehicle to make the Work arrive to its consumers."@en ;
+	rdfs:subClassOf _:node184868itpx122 .
+
+_:node184868itpx122 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :Instance .
+
+:Copy rdfs:label "Copy"@en .
+
+:ProductionContract a owl:Class ;
+	rdfs:subClassOf :IPRAgreement ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:label "ProductionContract"^^xsd:string .
+
+:theme rdfs:domain _:node184868itpx123 .
+
+_:node184868itpx123 a owl:Class ;
+	owl:unionOf _:node184868itpx124 .
+
+_:node184868itpx124 rdf:first :Action ;
+	rdf:rest _:node184868itpx125 .
+
+_:node184868itpx125 rdf:first :Process ;
+	rdf:rest _:node184868itpx126 .
+
+_:node184868itpx126 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:theme rdfs:label "theme"@en ;
+	rdfs:comment """An essential participant that may be moved, said, or experienced, but is not structurally changed.
+Example: Billy likes [the Beer]."""@en .
+
+:start rdfs:comment """A determinant temporal source.
+Example: Bill waited from [noon] to three."""@en ;
+	rdfs:domain :Temporal ;
+	rdfs:label "start"@en .
+
+:creationModelProperty a owl:ObjectProperty .
+
+:experiencer a owl:ObjectProperty ;
+	rdfs:label "experiencer"@en ;
+	rdfs:comment """An active animate goal of an experience.
+Example: [Yojo] sees the fish."""@en ;
+	rdfs:domain :Transfer .
+
+:isImprovisationOf a owl:ObjectProperty ;
+	rdfs:domain :Improvisation ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:label "is improvisation of"@en ;
+	owl:inverseOf :hasImprovisation .
+
+:hasImprovisation a owl:ObjectProperty .
+
+:isImprovisationOf rdfs:range :Work ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	a owl:FunctionalProperty .
+
+:agent rdfs:comment """The voluntary initiator of an event.
+Example: [Eve] bit an apple."""@en ;
+	rdfs:label "agent"@en ;
+	rdfs:domain _:node184868itpx127 .
+
+_:node184868itpx127 a owl:Class ;
+	owl:unionOf _:node184868itpx128 .
+
+_:node184868itpx128 rdf:first :Action ;
+	rdf:rest _:node184868itpx129 .
+
+_:node184868itpx129 rdf:first :Process ;
+	rdf:rest _:node184868itpx130 .
+
+_:node184868itpx130 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:result rdfs:comment """An inanimate goal of an event.
+Example: Eric built a [house]."""@en ;
+	rdfs:domain _:node184868itpx131 .
+
+_:node184868itpx131 a owl:Class ;
+	owl:unionOf _:node184868itpx132 .
+
+_:node184868itpx132 rdf:first :Action ;
+	rdf:rest _:node184868itpx133 .
+
+_:node184868itpx133 rdf:first :Process ;
+	rdf:rest rdf:nil .
+
+:result rdfs:label "result"@en .
+
+:destination a owl:ObjectProperty ;
+	rdfs:comment """A goal of a spatial process.
+Example: Bob went to [Danbury]."""@en ;
+	rdfs:label "destination"@en ;
+	rdfs:domain :Spatial .
+
+:condition rdfs:domain :Ambient ;
+	rdfs:comment """The necessary circumstance for an action.
+Example: In order to see the film [you must pay the entrance]."""@en ;
+	rdfs:label "condition"@en .
+
+:instrument a owl:ObjectProperty ;
+	rdfs:domain _:node184868itpx134 .
+
+_:node184868itpx134 a owl:Class ;
+	owl:unionOf _:node184868itpx135 .
+
+_:node184868itpx135 rdf:first :Action ;
+	rdf:rest _:node184868itpx136 .
+
+_:node184868itpx136 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:instrument rdfs:label "instrument"@en ;
+	rdfs:comment """A resource that is not changed by an event.
+Example: [The key] opened the door."""@en .
+
+:patient rdfs:domain _:node184868itpx137 .
+
+_:node184868itpx137 a owl:Class ;
+	owl:unionOf _:node184868itpx138 .
+
+_:node184868itpx138 rdf:first :Process ;
+	rdf:rest _:node184868itpx139 .
+
+_:node184868itpx139 rdf:first :Action ;
+	rdf:rest rdf:nil .
+
+:patient rdfs:label "patient"@en ;
+	rdfs:comment """An essential participant that undergoes some structural change as a result of the event.
+Example: The cat swallowed [the canary]."""@en .
+
+:hasPart a owl:ObjectProperty ;
+	rdfs:label "has part"@en ;
+	owl:inverseOf :isPartOf .
+
+:isPartOf a owl:ObjectProperty .
+
+:hasPart a owl:TransitiveProperty .
+
+:isDirectPartOf a owl:ObjectProperty ;
+	owl:inverseOf :hasDirectPart .
+
+:hasDirectPart a owl:ObjectProperty .
+
+:isDirectPartOf rdfs:subPropertyOf :isPartOf ;
+	rdfs:label "is direct part of directly"@en .
+
+:effector a owl:ObjectProperty ;
+	rdfs:domain :Action ;
+	rdfs:comment """The involuntary initiator of an event.
+Example: [The tree] produced new leaves."""@en ;
+	rdfs:label "effector"@en .
+
+:recipient rdfs:domain _:node184868itpx140 .
+
+_:node184868itpx140 a owl:Class ;
+	owl:unionOf _:node184868itpx141 .
+
+_:node184868itpx141 rdf:first :Action ;
+	rdf:rest _:node184868itpx142 .
+
+_:node184868itpx142 rdf:first :Process ;
+	rdf:rest _:node184868itpx143 .
+
+_:node184868itpx143 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:recipient rdfs:label "recipient"@en ;
+	rdfs:comment """An animate goal of an event.
+Example: Sue sent the gift to [Bob]."""@en .
+
+:isInstanceOf a owl:ObjectProperty ;
+	owl:inverseOf :hasInstance .
+
+:hasInstance a owl:InverseFunctionalProperty .
+
+:isInstanceOf rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:label "is instance of"@en ;
+	rdfs:domain :Instance ;
+	rdfs:range :ManifestationOrRecording ;
+	a owl:FunctionalProperty .
+
+:completion a owl:ObjectProperty ;
+	rdfs:label "completion"@en ;
+	rdfs:comment """The goal of a temporal process.
+Example: Mary waited until [noon]."""@en ;
+	rdfs:domain :Temporal .
+
+:reason a owl:ObjectProperty ;
+	rdfs:label "reason"@en ;
+	rdfs:domain :Ambient ;
+	rdfs:comment """The initial cause of an event.
+Example: The airplane fell due to [a malfunction]."""@en .
+
+:aim rdfs:comment """The voluntary goal of an action.
+Example: The player tries [to hit the ball]."""@en ;
+	rdfs:domain :Ambient ;
+	rdfs:label "aim"@en .
+
+:hasDirectPart rdfs:subPropertyOf :hasPart ;
+	owl:inverseOf :isDirectPartOf ;
+	rdfs:label "has direct part"@en .
+
+:location rdfs:comment """An spatial essential participant.
+Example: Vehicles arrive at [a station]."""@en ;
+	rdfs:domain :Spatial ;
+	rdfs:label "location"@en ;
+	rdfs:range <http://schema.org/Place> .
+
+:manner rdfs:comment """The way an event develops.
+Example: The car moved [slowly]."""@en ;
+	rdfs:domain :Ambient ;
+	rdfs:label "manner"@en .
+
+:consequence a owl:ObjectProperty ;
+	rdfs:comment """The involuntary goal of an action.
+Example: The player missed [to hit the ball]."""@en ;
+	rdfs:domain :Ambient ;
+	rdfs:label "consequence"@en .
+
+:origin rdfs:comment """A passive determinant source.
+Example: The chapter begins on [page 20]."""@en ;
+	rdfs:domain _:node184868itpx144 .
+
+_:node184868itpx144 a owl:Class ;
+	owl:unionOf _:node184868itpx145 .
+
+_:node184868itpx145 rdf:first :Process ;
+	rdf:rest _:node184868itpx146 .
+
+_:node184868itpx146 rdf:first :Transfer ;
+	rdf:rest _:node184868itpx147 .
+
+_:node184868itpx147 rdf:first :Spatial ;
+	rdf:rest rdf:nil .
+
+:origin rdfs:label "origin"@en .
+
+:path a owl:ObjectProperty ;
+	rdfs:label "path"@en ;
+	rdfs:comment """A spatial resource.
+Example: The pizza was shipped via [Albany and Buffalo]."""@en ;
+	rdfs:domain :Spatial .
+
+:hasImprovisation rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:domain :Work ;
+	rdfs:range :Improvisation ;
+	rdfs:label "has improvisation"@en ;
+	owl:inverseOf :isImprovisationOf ;
+	a owl:InverseFunctionalProperty .
+
+:hasRecording a owl:ObjectProperty ;
+	rdfs:range :Recording ;
+	rdfs:label "has recording"@en ;
+	owl:inverseOf :isFixationOf .
+
+:isFixationOf a owl:FunctionalProperty .
+
+:hasRecording rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:domain :CreationProcess ;
+	a owl:InverseFunctionalProperty .
+
+:hasPerformance a owl:ObjectProperty ;
+	rdfs:range :Performance ;
+	owl:inverseOf :isPerformanceOf .
+
+:isPerformanceOf a owl:FunctionalProperty .
+
+:hasPerformance rdfs:label "has performance"@en ;
+	rdfs:domain :Manifestation ;
+	a owl:InverseFunctionalProperty .
+
+:isPartOf owl:inverseOf :hasPart ;
+	a owl:TransitiveProperty .
+
+:matter a owl:ObjectProperty ;
+	rdfs:label "matter"@en ;
+	rdfs:domain :Process ;
+	rdfs:comment """A resource that is changed by the event.
+Example: The gun was carved out of [soap]."""@en .
+
+:medium rdfs:comment """A physical resource for transmitting information, such as the sound of speech or the electromagnetic signals that transmit data.
+Example: Bill told Boris by [phone]."""@en ;
+	rdfs:label "medium"@en ;
+	rdfs:domain :Transfer .
+
+:duration rdfs:label "duration"@en ;
+	rdfs:comment """A resource of a temporal process.
+Example: The truck was serviced for [5 hours]."""@en ;
+	rdfs:domain :Temporal .
+
+:pointInTime rdfs:label "time"@en ;
+	rdfs:domain :Temporal ;
+	rdfs:comment """A temporal essential participant.
+Example: [At 5:25 PM], Erin left."""@en .
+
+:count a owl:DatatypeProperty ;
+	rdfs:range xsd:integer ;
+	rdfs:domain <http://schema.org/Action> ;
+	rdfs:label "count"@en ;
+	rdfs:comment "The maximum number of instances that a class modelling a licensing pattern might have."@en .
+
+:isExclusive a owl:DatatypeProperty ;
+	rdfs:label "is exclusive"@en ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain <http://schema.org/Action> .
+
+:sharePercentage a owl:DatatypeProperty ;
+	rdfs:domain <http://schema.org/Action> ;
+	rdfs:label "share percentage"@en ;
+	rdfs:range xsd:integer .
+
+:hasDerivation a owl:TransitiveProperty ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:domain :Work ;
+	rdfs:label "has derivation"@en ;
+	owl:inverseOf :isDerivationOf .
+
+:isDerivationOf a owl:TransitiveProperty .
+
+:hasDerivation rdfs:range :Work ;
+	a owl:ObjectProperty .
+
+:isDerivationOf rdfs:domain :Work ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:label "is derivation of"@en ;
+	rdfs:range :Work ;
+	owl:inverseOf :hasDerivation ;
+	a owl:ObjectProperty .
+
+:isFixationOf owl:inverseOf :hasRecording ;
+	rdfs:domain :Recording ;
+	rdfs:range :CreationProcess ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:label "is recording of"@en ;
+	a owl:ObjectProperty .
+
+:isPerformanceOf owl:inverseOf :hasPerformance ;
+	rdfs:label "is performance of"@en ;
+	rdfs:range :Manifestation ;
+	rdfs:domain :Performance ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	a owl:ObjectProperty .
+
+:isCommunicationOf rdfs:domain :Communication ;
+	rdfs:label "is communication of"@en ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	owl:inverseOf :hasCommunication .
+
+:hasCommunication a owl:InverseFunctionalProperty .
+
+:isCommunicationOf rdfs:range :RecordingOrPerformance ;
+	a owl:ObjectProperty .
+
+:isManifestationOf a owl:FunctionalProperty ;
+	rdfs:label "is manifestation of"@en ;
+	rdfs:domain :Manifestation ;
+	owl:inverseOf :hasManifestation .
+
+:hasManifestation a owl:InverseFunctionalProperty .
+
+:isManifestationOf rdfs:range :Work ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	a owl:ObjectProperty .
+
+:hasInstance rdfs:domain :ManifestationOrRecording ;
+	owl:inverseOf :isInstanceOf ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:range :Instance ;
+	rdfs:label "has instance"@en ;
+	a owl:ObjectProperty .
+
+:hasCommunication rdfs:range :Communication ;
+	owl:inverseOf :isCommunicationOf ;
+	rdfs:domain :RecordingOrPerformance ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	rdfs:label "has communication"@en ;
+	a owl:ObjectProperty .
+
+:hasManifestation rdfs:label "has manifestation"@en ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:range :Manifestation ;
+	owl:inverseOf :isManifestationOf ;
+	rdfs:domain :Work ;
+	rdfs:subPropertyOf :creationModelProperty ;
+	a owl:ObjectProperty .
+
+<http://schema.org/Sculpture> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/TVEpisode> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Recipe> rdfs:subClassOf :CreationObject .
+
+dct:license a owl:AnnotationProperty .
+
+dct:creator a owl:AnnotationProperty .
+
+<http://schema.org/MusicPlaylist> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Blog> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Movie> rdfs:subClassOf :MotionPicture .
+
+<http://schema.org/Book> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Comment> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Map> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/ItemList> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Dataset> rdfs:subClassOf :CreationObject .
+
+owl:AllDifferent owl:distinctMembers _:node184868itpx148 .
+
+_:node184868itpx148 rdf:first :non-commercial .
+
+:non-commercial a :Aim ;
+	rdfs:label "non-commercial"@en .
+
+_:node184868itpx148 rdf:rest _:node184868itpx149 .
+
+_:node184868itpx149 rdf:first :parody .
+
+:parody a :Aim ;
+	rdfs:label "parody"@en .
+
+_:node184868itpx149 rdf:rest _:node184868itpx150 .
+
+_:node184868itpx150 rdf:first :education .
+
+:education a :Aim ;
+	rdfs:label "education"@en .
+
+_:node184868itpx150 rdf:rest _:node184868itpx151 .
+
+_:node184868itpx151 rdf:first :information .
+
+:information a :Aim ;
+	rdfs:label "information"@en .
+
+_:node184868itpx151 rdf:rest _:node184868itpx152 .
+
+_:node184868itpx152 rdf:first :legal .
+
+:legal a :Aim ;
+	rdfs:label "legal"@en .
+
+_:node184868itpx152 rdf:rest _:node184868itpx153 .
+
+_:node184868itpx153 rdf:first :private .
+
+:private a :Aim ;
+	rdfs:label "private"@en .
+
+_:node184868itpx153 rdf:rest _:node184868itpx154 .
+
+_:node184868itpx154 rdf:first :research .
+
+:research a :Aim ;
+	rdfs:label "research"@en .
+
+_:node184868itpx154 rdf:rest rdf:nil .
+
+<http://schema.org/TVSeries> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/TVSeason> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/SoftwareApplication> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/MusicRecording> rdfs:subClassOf :SoundRecording .
+
+<http://schema.org/Review> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/WebPageElement> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Article> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/DataCatalog> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/WebPage> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Painting> rdfs:subClassOf :CreationObject .
+
+dct:date a owl:AnnotationProperty .
+
+<http://schema.org/MediaObject> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Code> rdfs:subClassOf :CreationObject .
+
+<http://schema.org/Photograph> rdfs:subClassOf :CreationObject .
+
+:Rent rdfs:subClassOf _:node184868itpx155 .
+
+_:node184868itpx155 a owl:Restriction ;
+	owl:onProperty :condition ;
+	owl:someValuesFrom :EconomicTransfer .
+
+:Rent rdfs:subClassOf _:node184868itpx156 .
+
+_:node184868itpx156 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:Manifest rdfs:subClassOf _:node184868itpx157 .
+
+_:node184868itpx157 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :Manifestation .
+
+:Manifest rdfs:subClassOf _:node184868itpx158 .
+
+_:node184868itpx158 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :pointInTime .
+
+:Manifest rdfs:subClassOf _:node184868itpx159 .
+
+_:node184868itpx159 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:Manifest rdfs:subClassOf _:node184868itpx160 .
+
+_:node184868itpx160 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Manifest rdfs:subClassOf _:node184868itpx161 .
+
+_:node184868itpx161 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :location .
+
+:Manifest rdfs:subClassOf _:node184868itpx162 .
+
+_:node184868itpx162 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:Manifest rdfs:subClassOf _:node184868itpx163 .
+
+_:node184868itpx163 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:Manifest rdfs:subClassOf _:node184868itpx164 .
+
+_:node184868itpx164 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Tune rdfs:subClassOf _:node184868itpx165 .
+
+_:node184868itpx165 a owl:Restriction ;
+	owl:onProperty :start ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx166 .
+
+_:node184868itpx166 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx167 .
+
+_:node184868itpx167 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx168 .
+
+_:node184868itpx168 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:allValuesFrom :BroadcastMedium .
+
+:Tune rdfs:subClassOf _:node184868itpx169 .
+
+_:node184868itpx169 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :BroadcastedCommunication .
+
+:Tune rdfs:subClassOf _:node184868itpx170 .
+
+_:node184868itpx170 a owl:Restriction ;
+	owl:onProperty :manner ;
+	owl:minCardinality "0"^^xsd:int .
+
+:Tune rdfs:subClassOf _:node184868itpx171 .
+
+_:node184868itpx171 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:LiveCommunicate rdfs:subClassOf _:node184868itpx172 .
+
+_:node184868itpx172 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Performance .
+
+:Access rdfs:subClassOf _:node184868itpx173 .
+
+_:node184868itpx173 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :InteractiveCommunication .
+
+:Access rdfs:subClassOf _:node184868itpx174 .
+
+_:node184868itpx174 a owl:Restriction ;
+	owl:minCardinality "0"^^xsd:int ;
+	owl:onProperty :manner .
+
+:Access rdfs:subClassOf _:node184868itpx175 .
+
+_:node184868itpx175 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Access rdfs:subClassOf _:node184868itpx176 .
+
+_:node184868itpx176 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :start .
+
+:Access rdfs:subClassOf _:node184868itpx177 .
+
+_:node184868itpx177 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :medium .
+
+:Access rdfs:subClassOf _:node184868itpx178 .
+
+_:node184868itpx178 a owl:Restriction ;
+	owl:maxCardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:Access rdfs:subClassOf _:node184868itpx179 .
+
+_:node184868itpx179 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:allValuesFrom :InteractiveMedium .
+
+:ImportationRight rdfs:subClassOf _:node184868itpx180 .
+
+_:node184868itpx180 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :origin .
+
+:Improvise rdfs:subClassOf _:node184868itpx181 .
+
+_:node184868itpx181 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:Improvise rdfs:subClassOf _:node184868itpx182 .
+
+_:node184868itpx182 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :pointInTime .
+
+:Improvise rdfs:subClassOf _:node184868itpx183 .
+
+_:node184868itpx183 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minCardinality "1"^^xsd:int .
+
+:Improvise rdfs:subClassOf _:node184868itpx184 .
+
+_:node184868itpx184 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :Performance .
+
+:Improvise rdfs:subClassOf _:node184868itpx185 .
+
+_:node184868itpx185 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Improvise rdfs:subClassOf _:node184868itpx186 .
+
+_:node184868itpx186 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:Improvise rdfs:subClassOf _:node184868itpx187 .
+
+_:node184868itpx187 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Improvise rdfs:subClassOf _:node184868itpx188 .
+
+_:node184868itpx188 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :location .
+
+:Communicate rdfs:subClassOf _:node184868itpx189 .
+
+_:node184868itpx189 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:cardinality "1"^^xsd:int .
+
+:Communicate rdfs:subClassOf _:node184868itpx190 .
+
+_:node184868itpx190 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:allValuesFrom :LegalPerson .
+
+:Communicate rdfs:subClassOf _:node184868itpx191 .
+
+_:node184868itpx191 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Communicate rdfs:subClassOf _:node184868itpx192 .
+
+_:node184868itpx192 a owl:Restriction ;
+	owl:allValuesFrom :RecordingOrPerformance ;
+	owl:onProperty :theme .
+
+:Communicate rdfs:subClassOf _:node184868itpx193 .
+
+_:node184868itpx193 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Communicate rdfs:subClassOf _:node184868itpx194 .
+
+_:node184868itpx194 a owl:Restriction ;
+	owl:onProperty :medium ;
+	owl:allValuesFrom :CommunicationMedium .
+
+:Communicate rdfs:subClassOf _:node184868itpx195 .
+
+_:node184868itpx195 a owl:Restriction ;
+	owl:onProperty :origin ;
+	owl:maxCardinality "1"^^xsd:int .
+
+:Communicate rdfs:subClassOf _:node184868itpx196 .
+
+_:node184868itpx196 a owl:Restriction ;
+	owl:allValuesFrom :Communication ;
+	owl:onProperty :result .
+
+:Derive rdfs:subClassOf _:node184868itpx197 .
+
+_:node184868itpx197 a owl:Restriction ;
+	owl:onProperty :aim ;
+	owl:cardinality "1"^^xsd:int .
+
+:Derive rdfs:subClassOf _:node184868itpx198 .
+
+_:node184868itpx198 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Derive rdfs:subClassOf _:node184868itpx199 .
+
+_:node184868itpx199 a owl:Restriction ;
+	owl:allValuesFrom :Work ;
+	owl:onProperty :aim .
+
+:Derive rdfs:subClassOf _:node184868itpx200 .
+
+_:node184868itpx200 a owl:Restriction ;
+	owl:allValuesFrom :Manifestation ;
+	owl:onProperty :result .
+
+:Derive rdfs:subClassOf _:node184868itpx201 .
+
+_:node184868itpx201 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:Derive rdfs:subClassOf _:node184868itpx202 .
+
+_:node184868itpx202 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:cardinality "1"^^xsd:int .
+
+:SoundRecordingRight rdfs:subClassOf _:node184868itpx203 .
+
+_:node184868itpx203 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :SoundRecording .
+
+:Lend rdfs:subClassOf _:node184868itpx204 .
+
+_:node184868itpx204 a owl:Restriction ;
+	owl:onProperty :condition ;
+	owl:allValuesFrom _:node184868itpx205 .
+
+_:node184868itpx205 a owl:Class ;
+	owl:complementOf :EconomicTransfer .
+
+:Lend rdfs:subClassOf _:node184868itpx206 .
+
+_:node184868itpx206 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :duration .
+
+:FixationRight rdfs:subClassOf _:node184868itpx207 .
+
+_:node184868itpx207 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Performance .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx208 .
+
+_:node184868itpx208 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx209 .
+
+_:node184868itpx209 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :recipient .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx210 .
+
+_:node184868itpx210 a owl:Restriction ;
+	owl:onProperty :aim ;
+	owl:someValuesFrom :VerbOrAim .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx211 .
+
+_:node184868itpx211 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:allValuesFrom :LegalPerson .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx212 .
+
+_:node184868itpx212 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:EconomicTransfer rdfs:subClassOf _:node184868itpx213 .
+
+_:node184868itpx213 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:TransformationRight rdfs:subClassOf _:node184868itpx214 .
+
+_:node184868itpx214 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Work .
+
+:MakeAvailable rdfs:subClassOf _:node184868itpx215 .
+
+_:node184868itpx215 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :InteractiveCommunication .
+
+:MakeAvailable rdfs:subClassOf _:node184868itpx216 .
+
+_:node184868itpx216 a owl:Restriction ;
+	owl:allValuesFrom :InteractiveMedium ;
+	owl:onProperty :medium .
+
+:VerbOrAim owl:unionOf _:node184868itpx217 .
+
+_:node184868itpx217 rdf:first <http://schema.org/Action> ;
+	rdf:rest _:node184868itpx218 .
+
+_:node184868itpx218 rdf:first :Aim ;
+	rdf:rest rdf:nil .
+
+:Attend rdfs:subClassOf _:node184868itpx219 .
+
+_:node184868itpx219 a owl:Restriction ;
+	owl:allValuesFrom :Performance ;
+	owl:onProperty :theme .
+
+:Attend rdfs:subClassOf _:node184868itpx220 .
+
+_:node184868itpx220 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Broadcast rdfs:subClassOf _:node184868itpx221 .
+
+_:node184868itpx221 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :BroadcastedCommunication .
+
+:Broadcast rdfs:subClassOf _:node184868itpx222 .
+
+_:node184868itpx222 a owl:Restriction ;
+	owl:allValuesFrom :BroadcastMedium ;
+	owl:onProperty :medium .
+
+:ReproductionRight rdfs:subClassOf _:node184868itpx223 .
+
+_:node184868itpx223 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :CreationObject .
+
+:Give rdfs:subClassOf _:node184868itpx224 .
+
+_:node184868itpx224 a owl:Restriction ;
+	owl:allValuesFrom _:node184868itpx225 .
+
+_:node184868itpx225 a owl:Class ;
+	owl:complementOf :EconomicTransfer .
+
+_:node184868itpx224 owl:onProperty :condition .
+
+:Give rdfs:subClassOf _:node184868itpx226 .
+
+_:node184868itpx226 a owl:Restriction ;
+	owl:onProperty :duration ;
+	owl:cardinality "0"^^xsd:int .
+
+:CommunicationRight rdfs:subClassOf _:node184868itpx227 .
+
+_:node184868itpx227 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :RecordingOrPerformance .
+
+:RecordingOrPerformance owl:unionOf _:node184868itpx228 .
+
+_:node184868itpx228 rdf:first :Recording ;
+	rdf:rest _:node184868itpx229 .
+
+_:node184868itpx229 rdf:first :Performance ;
+	rdf:rest rdf:nil .
+
+:Distribute rdfs:subClassOf _:node184868itpx230 .
+
+_:node184868itpx230 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:allValuesFrom :LegalPerson .
+
+:Distribute rdfs:subClassOf _:node184868itpx231 .
+
+_:node184868itpx231 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Instance .
+
+:Distribute rdfs:subClassOf _:node184868itpx232 .
+
+_:node184868itpx232 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Distribute rdfs:subClassOf _:node184868itpx233 .
+
+_:node184868itpx233 a owl:Restriction ;
+	owl:onProperty :recipient ;
+	owl:minCardinality "1"^^xsd:int .
+
+:MoralRights rdfs:subClassOf _:node184868itpx234 .
+
+_:node184868itpx234 a owl:Restriction ;
+	owl:allValuesFrom :Work ;
+	owl:onProperty :theme .
+
+:MoralRights rdfs:subClassOf _:node184868itpx235 .
+
+_:node184868itpx235 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :pointInTime .
+
+:MoralRights rdfs:subClassOf _:node184868itpx236 .
+
+_:node184868itpx236 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:MoralRights rdfs:subClassOf _:node184868itpx237 .
+
+_:node184868itpx237 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:cardinality "1"^^xsd:int .
+
+:MoralRights rdfs:subClassOf _:node184868itpx238 .
+
+_:node184868itpx238 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:MoralRights rdfs:subClassOf _:node184868itpx239 .
+
+_:node184868itpx239 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:minCardinality "1"^^xsd:int .
+
+:RecordedCommunication rdfs:subClassOf _:node184868itpx240 .
+
+_:node184868itpx240 a owl:Restriction ;
+	owl:allValuesFrom :Recording ;
+	owl:onProperty :isCommunicationOf .
+
+:ManifestationOrRecording owl:unionOf _:node184868itpx241 .
+
+_:node184868itpx241 rdf:first :Manifestation ;
+	rdf:rest _:node184868itpx242 .
+
+_:node184868itpx242 rdf:first :Recording ;
+	rdf:rest rdf:nil .
+
+:Sell rdfs:subClassOf _:node184868itpx243 .
+
+_:node184868itpx243 a owl:Restriction ;
+	owl:onProperty :duration ;
+	owl:cardinality "0"^^xsd:int .
+
+:Sell rdfs:subClassOf _:node184868itpx244 .
+
+_:node184868itpx244 a owl:Restriction ;
+	owl:someValuesFrom :EconomicTransfer ;
+	owl:onProperty :condition .
+
+:RecordingCommunicate rdfs:subClassOf _:node184868itpx245 .
+
+_:node184868itpx245 a owl:Restriction ;
+	owl:allValuesFrom :Recording ;
+	owl:onProperty :theme .
+
+:Use rdfs:subClassOf _:node184868itpx246 .
+
+_:node184868itpx246 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:cardinality "1"^^xsd:int .
+
+:Use rdfs:subClassOf _:node184868itpx247 .
+
+_:node184868itpx247 a owl:Restriction ;
+	owl:onProperty :pointInTime ;
+	owl:cardinality "1"^^xsd:int .
+
+:Use rdfs:subClassOf _:node184868itpx248 .
+
+_:node184868itpx248 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:Use rdfs:subClassOf _:node184868itpx249 .
+
+_:node184868itpx249 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx250 .
+
+_:node184868itpx250 a owl:Restriction ;
+	owl:onProperty :agent ;
+	owl:allValuesFrom :LegalPerson .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx251 .
+
+_:node184868itpx251 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:cardinality "1"^^xsd:int .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx252 .
+
+_:node184868itpx252 a owl:Class ;
+	owl:unionOf _:node184868itpx254 .
+
+_:node184868itpx254 rdf:first _:node184868itpx253 .
+
+_:node184868itpx253 a owl:Restriction ;
+	owl:onProperty :patient ;
+	owl:cardinality "1"^^xsd:int .
+
+_:node184868itpx254 rdf:rest _:node184868itpx256 .
+
+_:node184868itpx256 rdf:first _:node184868itpx255 .
+
+_:node184868itpx255 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+_:node184868itpx256 rdf:rest rdf:nil .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx257 .
+
+_:node184868itpx257 a owl:Restriction ;
+	owl:onProperty :patient ;
+	owl:allValuesFrom <http://schema.org/CreativeWork> .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx258 .
+
+_:node184868itpx258 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom <http://schema.org/CreativeWork> .
+
+:EconomicRights rdfs:subClassOf _:node184868itpx259 .
+
+_:node184868itpx259 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:int ;
+	owl:onProperty :agent .
+
+:MotionPictureRight rdfs:subClassOf _:node184868itpx260 .
+
+_:node184868itpx260 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :MotionPicture .
+
+:Record rdfs:subClassOf _:node184868itpx261 .
+
+_:node184868itpx261 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Record rdfs:subClassOf _:node184868itpx262 .
+
+_:node184868itpx262 a owl:Restriction ;
+	owl:allValuesFrom :Recording ;
+	owl:onProperty :result .
+
+:Record rdfs:subClassOf _:node184868itpx263 .
+
+_:node184868itpx263 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Performance .
+
+:Record rdfs:subClassOf _:node184868itpx264 .
+
+_:node184868itpx264 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:cardinality "1"^^xsd:int .
+
+:Perform rdfs:subClassOf _:node184868itpx265 .
+
+_:node184868itpx265 a owl:Restriction ;
+	owl:onProperty :pointInTime ;
+	owl:cardinality "1"^^xsd:int .
+
+:Perform rdfs:subClassOf _:node184868itpx266 .
+
+_:node184868itpx266 a owl:Restriction ;
+	owl:onProperty :location ;
+	owl:allValuesFrom :PublicPlace .
+
+:Perform rdfs:subClassOf _:node184868itpx267 .
+
+_:node184868itpx267 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Manifestation .
+
+:Perform rdfs:subClassOf _:node184868itpx268 .
+
+_:node184868itpx268 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :theme .
+
+:Perform rdfs:subClassOf _:node184868itpx269 .
+
+_:node184868itpx269 a owl:Restriction ;
+	owl:allValuesFrom :Performance ;
+	owl:onProperty :result .
+
+:Perform rdfs:subClassOf _:node184868itpx270 .
+
+_:node184868itpx270 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:cardinality "1"^^xsd:int .
+
+:LiveCommunication rdfs:subClassOf _:node184868itpx271 .
+
+_:node184868itpx271 a owl:Restriction ;
+	owl:onProperty :isCommunicationOf ;
+	owl:allValuesFrom :Performance .
+
+:DistributionRight rdfs:subClassOf _:node184868itpx272 .
+
+_:node184868itpx272 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :Instance .
+
+:Copy rdfs:subClassOf _:node184868itpx273 .
+
+_:node184868itpx273 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:allValuesFrom :CreationObject .
+
+:Copy rdfs:subClassOf _:node184868itpx274 .
+
+_:node184868itpx274 a owl:Restriction ;
+	owl:onProperty :theme ;
+	owl:cardinality "1"^^xsd:int .
+
+:Copy rdfs:subClassOf _:node184868itpx275 .
+
+_:node184868itpx275 a owl:Restriction ;
+	owl:cardinality "1"^^xsd:int ;
+	owl:onProperty :result .
+
+:Copy rdfs:subClassOf _:node184868itpx276 .
+
+_:node184868itpx276 a owl:Restriction ;
+	owl:onProperty :result ;
+	owl:allValuesFrom :Instance .
+
+:theme rdfs:domain _:node184868itpx277 .
+
+_:node184868itpx277 a owl:Class ;
+	owl:unionOf _:node184868itpx278 .
+
+_:node184868itpx278 rdf:first :Action ;
+	rdf:rest _:node184868itpx279 .
+
+_:node184868itpx279 rdf:first :Process ;
+	rdf:rest _:node184868itpx280 .
+
+_:node184868itpx280 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:agent rdfs:domain _:node184868itpx281 .
+
+_:node184868itpx281 a owl:Class ;
+	owl:unionOf _:node184868itpx282 .
+
+_:node184868itpx282 rdf:first :Action ;
+	rdf:rest _:node184868itpx283 .
+
+_:node184868itpx283 rdf:first :Process ;
+	rdf:rest _:node184868itpx284 .
+
+_:node184868itpx284 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:result rdfs:domain _:node184868itpx285 .
+
+_:node184868itpx285 a owl:Class ;
+	owl:unionOf _:node184868itpx286 .
+
+_:node184868itpx286 rdf:first :Action ;
+	rdf:rest _:node184868itpx287 .
+
+_:node184868itpx287 rdf:first :Process ;
+	rdf:rest rdf:nil .
+
+:instrument rdfs:domain _:node184868itpx288 .
+
+_:node184868itpx288 a owl:Class ;
+	owl:unionOf _:node184868itpx289 .
+
+_:node184868itpx289 rdf:first :Action ;
+	rdf:rest _:node184868itpx290 .
+
+_:node184868itpx290 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:patient rdfs:domain _:node184868itpx291 .
+
+_:node184868itpx291 a owl:Class ;
+	owl:unionOf _:node184868itpx292 .
+
+_:node184868itpx292 rdf:first :Process ;
+	rdf:rest _:node184868itpx293 .
+
+_:node184868itpx293 rdf:first :Action ;
+	rdf:rest rdf:nil .
+
+:recipient rdfs:domain _:node184868itpx294 .
+
+_:node184868itpx294 a owl:Class ;
+	owl:unionOf _:node184868itpx295 .
+
+_:node184868itpx295 rdf:first :Action ;
+	rdf:rest _:node184868itpx296 .
+
+_:node184868itpx296 rdf:first :Process ;
+	rdf:rest _:node184868itpx297 .
+
+_:node184868itpx297 rdf:first :Transfer ;
+	rdf:rest rdf:nil .
+
+:origin rdfs:domain _:node184868itpx298 .
+
+_:node184868itpx298 a owl:Class ;
+	owl:unionOf _:node184868itpx299 .
+
+_:node184868itpx299 rdf:first :Process ;
+	rdf:rest _:node184868itpx300 .
+
+_:node184868itpx300 rdf:first :Transfer ;
+	rdf:rest _:node184868itpx301 .
+
+_:node184868itpx301 rdf:first :Spatial ;
+	rdf:rest rdf:nil .
+
+owl:AllDifferent owl:distinctMembers _:node184868itpx302 .
+
+_:node184868itpx302 rdf:first :non-commercial ;
+	rdf:rest _:node184868itpx303 .
+
+_:node184868itpx303 rdf:first :parody ;
+	rdf:rest _:node184868itpx304 .
+
+_:node184868itpx304 rdf:first :education ;
+	rdf:rest _:node184868itpx305 .
+
+_:node184868itpx305 rdf:first :information ;
+	rdf:rest _:node184868itpx306 .
+
+_:node184868itpx306 rdf:first :legal ;
+	rdf:rest _:node184868itpx307 .
+
+_:node184868itpx307 rdf:first :private ;
+	rdf:rest _:node184868itpx308 .
+
+_:node184868itpx308 rdf:first :research ;
+	rdf:rest rdf:nil .

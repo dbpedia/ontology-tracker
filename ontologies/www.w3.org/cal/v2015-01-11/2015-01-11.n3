@@ -1,0 +1,956 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix dt:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix spec:  <http://www.w3.org/2002/12/cal/icalSpec#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cal:   <http://www.w3.org/2002/12/cal/ical#> .
+@prefix h:     <http://www.w3.org/1999/xhtml> .
+
+cal:location  a         owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "The property defines the intended venue for the activity defined by a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo )
+                        ] ;
+        rdfs:label      "LOCATION" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:dtstart  a          owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DATE-TIME" , "This property specifies when the calendar component begins." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vfreebusy cal:Vtimezone cal:Vevent cal:Vevent cal:Vfreebusy cal:Vtimezone cal:Vtimezone )
+                        ] ;
+        rdfs:label      "DTSTART" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DATE-TIME cal:Value_DATE cal:Value_DATE )
+                        ] ;
+        spec:valueType  "DATE-TIME" .
+
+cal:completed  a        owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: DATE-TIME" , "This property defines the date and time that a to-do was actually completed." ;
+        rdfs:domain     cal:Vtodo ;
+        rdfs:label      "COMPLETED" ;
+        rdfs:range      cal:Value_DATE-TIME ;
+        spec:valueType  "DATE-TIME" .
+
+dc:source  a    owl:ObjectProperty .
+
+cal:tzname  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property specifies the customary designation for a time zone description." ;
+        rdfs:domain     cal:Vtimezone ;
+        rdfs:label      "TZNAME" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:recurrenceId  a     owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DATE-TIME" , "This property is used in conjunction with the \"UID\" and \"SEQUENCE\" property to identify a specific instance of a recurring \"VEVENT\", \"VTODO\" or \"VJOURNAL\" calendar component. The property value is the effective value of the \"DTSTART\" property of the recurrence instance." ;
+        rdfs:domain     cal:DomainOf_rrule ;
+        rdfs:label      "RECURRENCE-ID" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DATE-TIME cal:Value_DATE cal:Value_DATE cal:Value_DATE )
+                        ] ;
+        spec:valueType  "DATE-TIME" .
+
+cal:Valarm  a            owl:Class ;
+        rdfs:comment     "Provide a grouping of component properties that define an alarm." ;
+        rdfs:label       "VALARM" ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attendee
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:repeat
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:summary
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:trigger
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:action
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:description
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:duration
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attach
+                         ] .
+
+cal:action  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the action to be invoked when an alarm is triggered." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Valarm cal:Valarm )
+                        ] ;
+        rdfs:label      "ACTION" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:priority  a         owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: INTEGER" , "The property defines the relative priority for a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vevent cal:Vtodo )
+                        ] ;
+        rdfs:label      "PRIORITY" ;
+        rdfs:range      dt:integer ;
+        spec:valueType  "INTEGER" .
+
+cal:requestStatus  a    owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the status code returned for a scheduling request." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "REQUEST-STATUS" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:geo  a                  owl:ObjectProperty ;
+        rdfs:comment        "\n\t    value type: list of FLOAT" , "This property specifies information related to the global position for the activity specified by a calendar component." ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( cal:Vevent cal:Vtodo )
+                            ] ;
+        rdfs:label          "GEO" ;
+        rdfs:range          cal:List_of_Float ;
+        spec:valueListType  "FLOAT" .
+
+cal:Value_CAL-ADDRESS
+        a       owl:Class .
+
+cal:tzurl  a            owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: URI" , "The TZURL provides a means for a VTIMEZONE component to point to a network location that can be used to retrieve an up-to- date version of itself." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vtimezone cal:Vtimezone cal:Vtimezone )
+                        ] ;
+        rdfs:label      "TZURL" ;
+        spec:valueType  "URI" .
+
+cal:Vjournal  a          owl:Class ;
+        rdfs:comment     "Provide a grouping of component properties that describe a journal entry." ;
+        rdfs:label       "VJOURNAL" ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:uid
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:requestStatus
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:sequence
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attendee
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:status
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:comment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:class
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:lastModified
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:url
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:recurrenceId
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attach
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:description
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:relatedTo
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstamp
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:summary
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:contact
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:categories
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:organizer
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:created
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rdate
+                         ] .
+
+cal:tzid  a             owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property specifies the text value that uniquely identifies the \"VTIMEZONE\" calendar component." ;
+        rdfs:domain     cal:Vtimezone ;
+        rdfs:label      "TZID" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:DomainOf_rrule  a  owl:Class .
+
+cal:due  a              owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DATE-TIME" , "This property defines the date and time that a to-do is expected to be completed." ;
+        rdfs:domain     cal:Vtodo ;
+        rdfs:label      "DUE" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DATE-TIME cal:Value_DATE )
+                        ] ;
+        spec:valueType  "DATE-TIME" .
+
+cal:tzoffsetto  a       owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: UTC-OFFSET" , "This property specifies the offset which is in use in this time zone observance." ;
+        rdfs:domain     cal:Vtimezone ;
+        rdfs:label      "TZOFFSETTO" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "UTC-OFFSET" .
+
+cal:relatedTo  a        owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "The property is used to represent a relationship or reference between one calendar component and another." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "RELATED-TO" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:resources  a        owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the equipment or resources anticipated for an activity specified by a calendar entity.." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo )
+                        ] ;
+        rdfs:label      "RESOURCES" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:Value_DURATION  a  owl:Class .
+
+cal:url  a              owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: URI" , "This property defines a Uniform Resource Locator (URL) associated with the iCalendar object." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "URL" ;
+        spec:valueType  "URI" .
+
+cal:Value_RECUR  a  owl:Class .
+
+cal:transp  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines whether an event is transparent or not to busy time searches." ;
+        rdfs:domain     cal:Vevent ;
+        rdfs:label      "TRANSP" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:lastModified  a     owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: DATE-TIME" , "The property specifies the date and time that the information associated with the calendar component was last revised in the calendar store. Note: This is analogous to the modification date and time for a file in the file system." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vtimezone )
+                        ] ;
+        rdfs:label      "LAST-MODIFIED" ;
+        rdfs:range      cal:Value_DATE-TIME ;
+        spec:valueType  "DATE-TIME" .
+
+cal:Value_DATE-TIME  a  owl:Class .
+
+cal:description  a      owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property provides a more complete description of the calendar component, than that provided by the \"SUMMARY\" property." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Valarm cal:Vjournal cal:Vevent cal:Vtodo cal:Vjournal cal:Valarm )
+                        ] ;
+        rdfs:label      "DESCRIPTION" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:Vevent  a            owl:Class ;
+        rdfs:comment     "Provide a grouping of component properties that describe an event." ;
+        rdfs:label       "VEVENT" ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:created
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:priority
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:relatedTo
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:contact
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:resources
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:location
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:comment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attendee
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:lastModified
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:duration
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:uid
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:geo
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:categories
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstamp
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:requestStatus
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:status
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attach
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:organizer
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:recurrenceId
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:sequence
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtend
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstart
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:description
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:summary
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:url
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:class
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:trigger
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:transp
+                         ] .
+
+cal:organizer  a        owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: CAL-ADDRESS" , "The property defines the organizer for a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "ORGANIZER" ;
+        rdfs:range      cal:Value_CAL-ADDRESS ;
+        spec:valueType  "CAL-ADDRESS" .
+
+dt:integer  a   rdfs:Datatype .
+
+spec:valueListType  a  owl:AnnotationProperty .
+
+cal:method  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the iCalendar object method associated with the calendar object." ;
+        rdfs:label      "METHOD" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:tzoffsetfrom  a     owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: UTC-OFFSET" , "This property specifies the offset which is in use prior to this time zone observance." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vtimezone cal:Vtimezone cal:Vtimezone )
+                        ] ;
+        rdfs:label      "TZOFFSETFROM" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "UTC-OFFSET" .
+
+cal:dtend  a            owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DATE-TIME" , "This property specifies the date and time that a calendar component ends." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vfreebusy cal:Vevent cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "DTEND" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DATE-TIME cal:Value_DATE )
+                        ] ;
+        spec:valueType  "DATE-TIME" .
+
+cal:calscale  a         owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the calendar scale used for the calendar information specified in the iCalendar object." ;
+        rdfs:label      "CALSCALE" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:contact  a          owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "The property is used to represent contact information or alternately a reference to contact information associated with the calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "CONTACT" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:created  a          owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: DATE-TIME" , "This property specifies the date and time that the calendar information was created by the calendar user agent in the calendar store. Note: This is analogous to the creation date and time for a file in the file system." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "CREATED" ;
+        rdfs:range      cal:Value_DATE-TIME ;
+        spec:valueType  "DATE-TIME" .
+
+cal:comment  a          owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property specifies non-processing information intended to provide a comment to the calendar user." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vtimezone cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "COMMENT" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:trigger  a          owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DURATION" , "This property specifies when an alarm will trigger." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Valarm cal:Valarm cal:Vevent cal:Vtodo cal:Vevent cal:Vtodo )
+                        ] ;
+        rdfs:label      "TRIGGER" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DURATION cal:Value_DATE cal:Value_DATE )
+                        ] ;
+        spec:valueType  "DURATION" .
+
+cal:duration  a         owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: DURATION" , "The property specifies a positive duration of time." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vfreebusy cal:Valarm cal:Vevent cal:Vtodo cal:Vfreebusy cal:Valarm )
+                        ] ;
+        rdfs:label      "DURATION" ;
+        rdfs:range      cal:Value_DURATION ;
+        spec:valueType  "DURATION" .
+
+cal:class  a            owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the access classification for a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "CLASS" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:percentComplete  a  owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: INTEGER" , "This property is used by an assignee or delegatee of a to-do to convey the percent completion of a to-do to the Organizer." ;
+        rdfs:domain     cal:Vtodo ;
+        rdfs:label      "PERCENT-COMPLETE" ;
+        rdfs:range      dt:integer ;
+        spec:valueType  "INTEGER" .
+
+cal:Vtodo  a             owl:Class ;
+        rdfs:comment     "Provide a grouping of calendar properties that describe a to-do." ;
+        rdfs:label       "VTODO" ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:organizer
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:priority
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attach
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:created
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:percentComplete
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:duration
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:geo
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:comment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:summary
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstart
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:uid
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:recurrenceId
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:url
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:status
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:resources
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:contact
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:completed
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:trigger
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attendee
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:requestStatus
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:description
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:location
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:class
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:sequence
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:relatedTo
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:lastModified
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:due
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:categories
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstamp
+                         ] .
+
+<http://www.w3.org/2002/12/cal/ical>
+        a                owl:Thing ;
+        rdfs:seeAlso     <http://esw.w3.org/topic/RdfCalendar> , <http://lists.w3.org/Archives/Public/www-rdf-calendar/> , <http://www.w3.org/2002/12/cal/> ;
+        dc:source        <http://www.ietf.org/rfc/rfc2445.txt> ;
+        owl:versionInfo  "subject to change with notice to www-rdf-calendar@w3.org" , "$Id$" .
+
+cal:categories  a       owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the categories for a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "CATEGORIES" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:Value_PERIOD  a  owl:Class .
+
+cal:rrule  a            owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: RECUR" , "This property defines a rule or repeating pattern for recurring events, to-dos, or time zone definitions." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vtimezone cal:Vtimezone cal:Vtimezone cal:Vtimezone )
+                        ] ;
+        rdfs:label      "RRULE" ;
+        rdfs:range      cal:Value_RECUR ;
+        spec:valueType  "RECUR" .
+
+spec:valueType  a  owl:AnnotationProperty .
+
+cal:prodid  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property specifies the identifier for the product that created the iCalendar object." ;
+        rdfs:label      "PRODID" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:freebusy  a         owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: PERIOD" , "The property defines one or more free or busy time intervals." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vfreebusy cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "FREEBUSY" ;
+        rdfs:range      cal:Value_PERIOD ;
+        spec:valueType  "PERIOD" .
+
+cal:attendee  a         owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: CAL-ADDRESS" , "The property defines an \"Attendee\" within a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Valarm cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy cal:Valarm )
+                        ] ;
+        rdfs:label      "ATTENDEE" ;
+        rdfs:range      cal:Value_CAL-ADDRESS ;
+        spec:valueType  "CAL-ADDRESS" .
+
+cal:exrule  a           owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: RECUR" , "This property defines a rule or repeating pattern for an exception to a recurrence set." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "EXRULE" ;
+        rdfs:range      cal:Value_RECUR ;
+        spec:valueType  "RECUR" .
+
+cal:rdate  a            owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DATE-TIME" , "This property defines the list of date/times for a recurrence set." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vtimezone )
+                        ] ;
+        rdfs:label      "RDATE" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DATE-TIME cal:Value_DATE cal:Value_PERIOD )
+                        ] ;
+        spec:valueType  "DATE-TIME" .
+
+cal:version  a          owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property specifies the identifier corresponding to the highest version number or the minimum and maximum range of the iCalendar specification that is required in order to interpret the iCalendar object." ;
+        rdfs:label      "VERSION" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:Vtimezone  a         owl:Class ;
+        rdfs:comment     "Provide a grouping of component properties that defines a time zone." ;
+        rdfs:label       "VTIMEZONE" ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:tzoffsetfrom
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:recurrenceId
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:lastModified
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:tzoffsetto
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:comment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rrule
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:exdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:tzname
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:tzurl
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstart
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:rdate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:tzid
+                         ] .
+
+cal:attach  a           owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: URI" , "The property provides the capability to associate a document object with a calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Valarm cal:Vevent cal:Vtodo cal:Vjournal cal:Valarm )
+                        ] ;
+        rdfs:label      "ATTACH" ;
+        spec:valueType  "URI" .
+
+cal:sequence  a         owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: integer" , "This property defines the revision sequence number of the calendar component within a sequence of revisions." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "SEQUENCE" ;
+        rdfs:range      dt:integer ;
+        spec:valueType  "integer" .
+
+<http://www.ietf.org/rfc/rfc2445.txt>
+        a       owl:Thing .
+
+cal:X-  a               owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This class of property provides a framework for defining non-standard properties." ;
+        rdfs:label      "Any property name with a \"X-\" prefix" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+dt:string  a    rdfs:Datatype .
+
+cal:uid  a              owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the persistent, globally unique identifier for the calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy cal:Vevent cal:Vtodo cal:Vjournal cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "UID" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:exdate  a           owl:ObjectProperty ;
+        rdfs:comment    "\n\t    default value type: DATE-TIME" , "This property defines the list of date/time exceptions for a recurring calendar component." ;
+        rdfs:domain     cal:DomainOf_rrule ;
+        rdfs:label      "EXDATE" ;
+        rdfs:range      [ a            owl:Class ;
+                          owl:unionOf  ( cal:Value_DATE-TIME cal:Value_DATE )
+                        ] ;
+        spec:valueType  "DATE-TIME" .
+
+cal:repeat  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: INTEGER" , "This property defines the number of time the alarm should be repeated, after the initial trigger." ;
+        rdfs:domain     cal:Valarm ;
+        rdfs:label      "REPEAT" ;
+        rdfs:range      dt:integer ;
+        spec:valueType  "INTEGER" .
+
+cal:Vfreebusy  a         owl:Class ;
+        rdfs:comment     "Provide a grouping of component properties that describe either a request for free/busy time, describe a response to a request for free/busy time or describe a published set of busy time." ;
+        rdfs:label       "VFREEBUSY" ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstamp
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:freebusy
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtend
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:duration
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:uid
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:comment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:dtstart
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:url
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:organizer
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:requestStatus
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:attendee
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  0 ;
+                           owl:onProperty      cal:contact
+                         ] .
+
+cal:Value_DATE  a  owl:Class .
+
+cal:List_of_Float  a  owl:Class .
+
+cal:dtstamp  a          owl:ObjectProperty ;
+        rdfs:comment    "\n\t    value type: DATE-TIME" , "The property indicates the date/time that the instance of the iCalendar object was created." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vfreebusy )
+                        ] ;
+        rdfs:label      "DTSTAMP" ;
+        rdfs:range      cal:Value_DATE-TIME ;
+        spec:valueType  "DATE-TIME" .
+
+cal:status  a           owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines the overall status or confirmation for the calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Vevent cal:Vtodo cal:Vjournal )
+                        ] ;
+        rdfs:label      "STATUS" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .
+
+cal:summary  a          owl:DatatypeProperty ;
+        rdfs:comment    "\n\t    value type: TEXT" , "This property defines a short summary or subject for the calendar component." ;
+        rdfs:domain     [ a            owl:Class ;
+                          owl:unionOf  ( cal:Vevent cal:Vtodo cal:Vjournal cal:Valarm cal:Vevent cal:Vtodo cal:Vjournal cal:Valarm )
+                        ] ;
+        rdfs:label      "SUMMARY" ;
+        rdfs:range      dt:string ;
+        spec:valueType  "TEXT" .

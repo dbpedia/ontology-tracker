@@ -1,0 +1,95 @@
+@prefix :      <http://rdf.myexperiment.org/ontologies/snarm/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+dc:language  a  owl:AnnotationProperty .
+
+:       a                owl:Ontology ;
+        rdfs:comment     " This ontology is designed for representing access rights within a simple network of associated users/groups." ;
+        rdfs:label       "SNARM Ontology v1.1" ;
+        dc:contributor   "David R Newman"^^xsd:string ;
+        dc:creator       <http://id.ecs.soton.ac.uk/person/9421> ;
+        dc:date          "2009-01-28"^^xsd:date ;
+        dc:format        "rdf/xml"^^xsd:string ;
+        dc:language      "en" ;
+        dc:publisher     <http://rdf.myexperiment.org> ;
+        dc:title         "Simple Network Access Rights Management (SNARM) Ontology"@en ;
+        owl:versionInfo  "$Date: 2011/09/02 $" , "" .
+
+dc:publisher  a  owl:AnnotationProperty .
+
+dc:creator  a   owl:AnnotationProperty .
+
+dc:format  a    owl:AnnotationProperty .
+
+:Accesser  a              owl:Class ;
+        rdfs:comment      "The Accesser that is getting access" ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "Accesser" ;
+        owl:disjointWith  :Policy , :AccessType , :Access .
+
+dc:title  a     owl:AnnotationProperty .
+
+:AccessType  a            owl:Class ;
+        rdfs:comment      "The AccessType that is being giving, e.g. view, edit, download, etc." ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "AccessType" ;
+        owl:disjointWith  :Policy , :Accesser , :Access .
+
+:has-accesser  a          owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "An Accesser that a Mode provides access to" ;
+        rdfs:domain       :Access ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "has-accesser" ;
+        rdfs:range        :Accesser .
+
+:Access  a                owl:Class ;
+        rdfs:comment      "The Unrestricted Access to an AccessType" ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "Access" ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   :has-access-type
+                          ] ;
+        owl:disjointWith  :Policy , :AccessType , :Accesser .
+
+:RestrictedAccess  a      owl:Class ;
+        rdfs:comment      "The restricted Access to an AccessType" ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "RestrictedAccess" ;
+        rdfs:subClassOf   :Access ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   :has-accesser
+                          ] .
+
+dcterms:RightsStatement
+        a       owl:Class .
+
+:Policy  a                owl:Class ;
+        rdfs:comment      "A Policy for the access rights to an object for users in the social network" ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "Policy" ;
+        rdfs:subClassOf   dcterms:RightsStatement ;
+        owl:disjointWith  :AccessType , :Accesser , :Access .
+
+:has-access  a            owl:ObjectProperty ;
+        rdfs:comment      "An Access that a Policy provides" ;
+        rdfs:domain       :Policy ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "has-access" ;
+        rdfs:range        :Access .
+
+:has-access-type  a       owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "The AccessType an Access provides" ;
+        rdfs:isDefinedBy  : ;
+        rdfs:label        "has-access-type" ;
+        rdfs:range        :AccessType .
+
+dc:contributor  a  owl:AnnotationProperty .
+
+dc:date  a      owl:AnnotationProperty .

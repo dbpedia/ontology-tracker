@@ -1,0 +1,200 @@
+@prefix : <http://purl.org/configurationontology#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+
+<http://purl.org/configurationontology> a owl:Ontology ;
+	rdfs:label "'Configuration as Linked Data' ontology"@en ;
+	rdfs:comment """Ontology for the description of customizable products. It models the configuration process as the traversal of a graph of partially defined products, or \"Configurations\"
+"""@en ;
+	<http://purl.org/vocab/vann/preferredNamespacePrefix> "cold" ;
+	<http://creativecommons.org/ns#license> <http://creativecommons.org/licenses/by/3.0/> ;
+	<http://purl.org/dc/terms/creator> <http://data.semanticweb.org/person/edouard-chevalier> , <http://data.semanticweb.org/person/francois-paul-servant> , <http://dbpedia.org/resource/Renault> .
+
+vs:term_status a owl:AnnotationProperty .
+
+:alternative a owl:ObjectProperty ;
+	rdfs:comment "Models the possibility of changing a choice already done."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink ;
+	rdfs:subPropertyOf :link .
+
+:choiceSeq a owl:ObjectProperty ;
+	rdfs:comment "To be used to specify to advanced clients the order in which choices were done in the Configuration. Any item of this rdf:Seq should be a Specification linked from from the Configuration by chosenSpec."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf :definingChoice ;
+	rdfs:range rdf:Seq .
+
+:chosenSpec a owl:ObjectProperty ;
+	rdfs:comment "A Specification chosen in this Configuration."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Specification ;
+	rdfs:subPropertyOf :definingChoice .
+
+:completed a owl:ObjectProperty ;
+	rdfs:comment "Links a Configuration to a completely defined one (that is, a Completely Defined Product that matches the configuration in question). The price of the linked configuration may be higher than this configuration price. Configurations completed at the same price are given by the completedAtSamePrice property."@en ;
+	rdfs:range :CompletelyDefinedProduct ;
+	rdfs:domain :Configuration .
+
+:completedAtSamePrice a owl:ObjectProperty ;
+	rdfs:comment "Links a Configuration to a completely defined one, which has the same price."@en ;
+	rdfs:range :CompletelyDefinedProduct ;
+	rdfs:domain :Configuration .
+
+:defaultSpec a owl:ObjectProperty ;
+	rdfs:comment "Specification included by default in a Completely Defined Product matching this configuration"@en ;
+	vs:term_status "unstable" ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Specification .
+
+:definingChoice a owl:ObjectProperty ;
+	rdfs:comment "Parent property of all properties used to define a Configuration, i.e. used to define the choices done by the user: a Configuration is defined by the list of its definingChoices."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:hasValue a owl:ObjectProperty ;
+	vs:term_status "unstable" ;
+	rdfs:comment "Used in a Lexicon to list the values (specifications) of a ConfigurationVariable. Alternatively, we could say that these specifications have rdf:type the ConfigurationVariable in question."@en ;
+	rdfs:domain :ConfigurationVariable ;
+	rdfs:range :Specification .
+
+:impliedSpec a owl:ObjectProperty ;
+	rdfs:comment "A Specification that is implied by the conjunction of the definingChoice(s) of this Configuration."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :Specification .
+
+:impossible a owl:ObjectProperty ;
+	rdfs:comment "Models a choice that conflicts with the definition of this configuration: some of the previous choices must be changed (and will be if following this link)"@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink ;
+	rdfs:subPropertyOf :link .
+
+:lexicon a owl:ObjectProperty ;
+	rdfs:comment "used to relate something to a Lexicon"@en ;
+	rdfs:range :Lexicon .
+
+:link a owl:ObjectProperty ;
+	rdfs:comment "Parent property of all the properties linking a Configuration to another one in the configuration process."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink .
+
+:linkedConf a owl:ObjectProperty ;
+	rdfs:comment "the linked configuration that contains choices of current Configuration plus the specifications that will be added and listed in the configuration link it belongs to."@en ;
+	rdfs:range :Configuration ;
+	rdfs:domain :ConfigurationLink .
+
+:maxPrice a owl:ObjectProperty ;
+	rdfs:domain :Configuration ;
+	rdfs:subPropertyOf :definingChoice ;
+	rdfs:range gr:UnitPriceSpecification .
+
+:possible a owl:ObjectProperty ;
+	rdfs:comment "Models a choice (or a set of choices) that can done without changing any of the previous choices done in the configuration: links to a Configuration whose list of definingChoice(s) contains the list of definingChoice(s) of this configuration."@en ;
+	rdfs:domain :Configuration ;
+	rdfs:range :ConfigurationLink ;
+	rdfs:subPropertyOf :link .
+
+:proposedConf a owl:ObjectProperty ;
+	rdfs:comment "Links a Configuration to another one supposed to be of interest for a customer at this point of the configuration process. The semantics is rather vague, leaving open the possibility to link to a Configuration that matches the defining choices of the subject configuration, or not (to be used by marketing people for bargains, 'upselling', etc.)"@en ;
+	rdfs:range :Configuration ;
+	rdfs:domain :Configuration .
+
+:specToBeAdded a owl:ObjectProperty ;
+	rdfs:comment "Specification to be added to a Configuration in a ConfigurationLink"@en ;
+	rdfs:domain :ConfigurationLink ;
+	rdfs:range :Specification .
+
+:specToBeRemoved a owl:ObjectProperty ;
+	rdfs:comment "Specification to be removed from a Configuration in a ConfigurationLink"@en ;
+	rdfs:domain :ConfigurationLink ;
+	rdfs:range :Specification .
+
+:confVarId a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:comment "Code identifying a ConfigurationVariable within the Lexicon it belongs to."@en ;
+	vs:term_status "unstable"@en ;
+	rdfs:domain :ConfigurationVariable ;
+	rdfs:range rdfs:Literal .
+
+:specId a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:comment "Code identifying a Specification within the Lexicon it belongs to."@en ;
+	vs:term_status "unstable"@en ;
+	rdfs:domain :Specification ;
+	rdfs:range rdfs:Literal .
+
+:CompletelyDefinedProduct a owl:Class ;
+	rdfs:subClassOf :Configuration ;
+	vs:term_status "unstable" .
+
+:Configuration a owl:Class ;
+	rdfs:label "Configuration"@en , "Configuration"@fr ;
+	rdfs:subClassOf gr:Offering ;
+	rdfs:comment "A valid partially defined product - valid in the sense that it can be completed into an existing product, one that can be ordered, without changing any of the current selections."@en .
+
+:ConfigurationLink a owl:Class ;
+	rdfs:comment "Models the link to another Configuration: typically, the association of a Specification to be selected, and a resulting Configuration."@en .
+
+:ConfigurationVariable a owl:Class .
+
+_:node17sdtdh55x6 a owl:Restriction ;
+	owl:onProperty :lexicon ;
+	owl:onClass :Lexicon ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:ConfigurationVariable rdfs:subClassOf _:node17sdtdh55x6 ;
+	rdfs:comment "A variable in a Lexicon. List of alternative specifications"@en .
+
+:Lexicon a owl:Class ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "Defines a set of specifications and their variables"@en .
+
+:Model a owl:Class ;
+	rdfs:subClassOf :Specification .
+
+_:node17sdtdh55x7 a owl:Restriction ;
+	owl:onProperty :lexicon ;
+	owl:onClass :Lexicon ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:Model rdfs:subClassOf _:node17sdtdh55x7 ;
+	rdfs:comment "A specification that identifies a model (like \"Ford T\"). Corresponding configurations are supposed to share the same lexicon."@en .
+
+:ProductRange a owl:Class .
+
+:QualitativeOrQuantitativeValue a owl:Class .
+
+_:node17sdtdh55x8 a owl:Class .
+
+_:node17sdtdh55x9 rdf:first gr:QualitativeValue ;
+	rdf:rest _:node17sdtdh55x10 .
+
+_:node17sdtdh55x10 rdf:first gr:QuantitativeValue ;
+	rdf:rest rdf:nil .
+
+_:node17sdtdh55x8 owl:unionOf _:node17sdtdh55x9 .
+
+:QualitativeOrQuantitativeValue owl:equivalentClass _:node17sdtdh55x8 ;
+	rdfs:comment """Superclass for GoodRelation's Quantitative and QualitativeValue classes, which are disjoint. At the moment you identify a new class of value, you may not be able to choose between them. Hence the need for this class.
+In the initial release of this ontology, and until 2013-02, Specification was a subClass of gr:QualitativeValue. But that was bad.""" .
+
+:Specification a owl:Class ;
+	rdfs:subClassOf :QualitativeOrQuantitativeValue ;
+	rdfs:comment "Feature, option, any kind of AP 214 specification"@en .
+
+gr:Offering a owl:Class .
+
+gr:ProductOrServiceModel a owl:Class ;
+	rdfs:subClassOf owl:Thing .
+
+gr:QualitativeValue a owl:Class ;
+	rdfs:subClassOf :QualitativeOrQuantitativeValue .
+
+gr:QuantitativeValue a owl:Class ;
+	rdfs:subClassOf :QualitativeOrQuantitativeValue .
+
+gr:UnitPriceSpecification a owl:Class .
+
+rdf:Seq a owl:Class .

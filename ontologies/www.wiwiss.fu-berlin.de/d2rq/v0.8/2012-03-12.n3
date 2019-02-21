@@ -1,0 +1,426 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+<http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1> a owl:Ontology ;
+	rdfs:seeAlso <http://www.wiwiss.fu-berlin.de/suhl/bizer/d2rq/spec/> ;
+	dc:format "Turtle" ;
+	dc:contributor "Richard Cyganiak" , "Chris Bizer" ;
+	dc:description "This document specifies the D2RQ mapping language. D2RQ is a declarative language to describe mappings between relational database schemata and OWL/RDFS ontologies. See D2RQ Users Manual for detailed explanations and examples (http://www.wiwiss.fu-berlin.de/suhl/bizer/d2rq/spec/)." ;
+	dc:title "D2RQ - Language Specification v0.8" .
+
+d2rq:D2RQModel a rdfs:Class ;
+	ja:assembler "de.fuberlin.wiwiss.d2rq.assembler.D2RQAssembler" ;
+	rdfs:comment "Jena Assemler specification for a relational database, mapped to RDF using the D2RQ tool." ;
+	rdfs:label "D2RQ model" ;
+	rdfs:subClassOf ja:Object .
+
+d2rq:Configuration a rdfs:Class ;
+	rdfs:comment "Represents general settings." ;
+	rdfs:label "Configuration" .
+
+d2rq:Database a rdfs:Class ;
+	rdfs:comment "Represents a database." ;
+	rdfs:label "Database" .
+
+d2rq:ClassMap a rdfs:Class ;
+	rdfs:comment "Maps an RDFS or OWL class to its database representation." ;
+	rdfs:label "Class map" ;
+	rdfs:subClassOf d2rq:ResourceMap .
+
+d2rq:ResourceMap a rdfs:Class .
+
+d2rq:AdditionalProperty a rdfs:Class ;
+	rdfs:comment "Represents an additional property that may be added to instances as well as class and property definitions." ;
+	rdfs:label "Additional property" .
+
+d2rq:ResourceMap rdfs:comment "A database-to-RDF mapping from one or more database columns to a set of RDF resources. An abstract class, usually not used directly." ;
+	rdfs:label "Resource map" .
+
+d2rq:Translation a rdfs:Class ;
+	rdfs:comment "Translation Key/Value Pair." ;
+	rdfs:label "Translation" .
+
+d2rq:TranslationTable a rdfs:Class ;
+	rdfs:comment "Lookup table for translations used in the mapping process." ;
+	rdfs:label "Translation table" .
+
+d2rq:DownloadMap a rdfs:Class ;
+	rdfs:comment "Makes the contents of some database column downloadable." ;
+	rdfs:label "Download map" ;
+	rdfs:subClassOf d2rq:ResourceMap .
+
+d2rq:PropertyBridge a rdfs:Class ;
+	rdfs:comment "Maps an RDF property to one or more database columns." ;
+	rdfs:label "Property bridge" ;
+	rdfs:subClassOf d2rq:ResourceMap .
+
+d2rq:timeColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of type TIME." ;
+	rdfs:label "TIME column" .
+
+d2rq:uriPattern a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "URI pattern with placeholders that will be filled with values from a database column." ;
+	rdfs:label "URI pattern" .
+
+d2rq:numericColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of a numeric type, such as INT or DOUBLE or DECIMAL." ;
+	rdfs:label "Numeric column" .
+
+d2rq:limit a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "The number of results to retrieve from the database for this PropertyBridge" ;
+	rdfs:label "Limit" .
+
+d2rq:class a rdf:Property ;
+	owl:inverseOf d2rq:classMap .
+
+d2rq:classMap a owl:DeprecatedProperty ;
+	owl:inverseOf d2rq:class ;
+	rdfs:range d2rq:ClassMap ;
+	rdfs:domain rdfs:Class ;
+	rdfs:comment "Used to link RDFS or OWL classes to d2r:classMaps. Deprecated, use inverse d2rq:class instead." ;
+	rdfs:label "Class map" ;
+	a rdf:Property .
+
+d2rq:class rdfs:range rdfs:Class ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:comment "Links d2rq:classMaps to RDFS or OWL classes." ;
+	rdfs:label "Class" .
+
+d2rq:dataStorage a rdf:Property ;
+	rdfs:range d2rq:Database ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:label "Data storage" .
+
+d2rq:orderAsc a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "The column after which to sort results in ascending order for this PropertyBridge" ;
+	rdfs:label "Order ascending" .
+
+d2rq:rdfValue a rdf:Property ;
+	rdfs:domain d2rq:Translation ;
+	rdfs:label "RDF value" .
+
+d2rq:propertyDefinitionComment a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "A comment to be served as rdfs:comment for all associated properties" ;
+	rdfs:label "Property definition comment" .
+
+d2rq:fetchSize a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "The number of rows that should be fetched from the database at once" ;
+	rdfs:label "Fetch size" .
+
+d2rq:dateColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of type DATE." ;
+	rdfs:label "DATE column" .
+
+d2rq:databaseValue a rdf:Property ;
+	rdfs:domain d2rq:Translation ;
+	rdfs:label "Database value" .
+
+d2rq:username a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:label "User name" .
+
+d2rq:password a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:label "Password" .
+
+d2rq:dynamicProperty a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "Links a d2rq:PropertyBridge to a dynamic property." ;
+	rdfs:label "Property" .
+
+d2rq:mediaType a rdf:Property ;
+	rdfs:domain d2rq:DownloadMap ;
+	rdfs:comment "The Internet media type, such as image/png, of the downloadable content, suitable for use in the HTTP Content-Type header." ;
+	rdfs:label "Media type" .
+
+d2rq:condition a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "SQL WHERE condition that must be satisfied for a database row to be mapped." ;
+	rdfs:label "Condition" .
+
+d2rq:limitInverse a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "The number of results to retrieve from the database for the inverse statements for this PropertyBridge" ;
+	rdfs:label "Limit inverse" .
+
+d2rq:timestampColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of type TIMESTAMP." ;
+	rdfs:label "TIMESTAMP column" .
+
+d2rq:translation a rdf:Property ;
+	rdfs:range d2rq:Translation ;
+	rdfs:domain d2rq:TranslationTable ;
+	rdfs:label "Translation" .
+
+d2rq:textColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of a character type, such as CHAR, VARCHAR, NVARCHAR or CLOB." ;
+	rdfs:label "Text column" .
+
+d2rq:uriColumn a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "Database column which contains URIs." ;
+	rdfs:label "URI column" .
+
+d2rq:valueMaxLength a rdf:Property ;
+	rdfs:range xsd:decimal ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "Optimizing hint: the maximum length of values of this resource map." ;
+	rdfs:label "Value max length" .
+
+d2rq:uriSqlExpression a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "An SQL expression whose result will be the URI value of this property bridge." ;
+	rdfs:label "URI SQL expression" .
+
+d2rq:valueRegex a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "Optimizing hint: a regular expression matching every value of this resource map." ;
+	rdfs:label "Value regex" .
+
+d2rq:startupSQLScript a rdf:Property ;
+	rdfs:range foaf:Document ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "URL of a SQL script that will be run on startup." ;
+	rdfs:label "Startup SQL script" .
+
+d2rq:additionalClassDefinitionProperty a rdf:Property ;
+	rdfs:range d2rq:AdditionalProperty ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:comment "An additional property to be served for all associated class definitions" ;
+	rdfs:label "Additional class definition property" .
+
+d2rq:sqlExpression a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "A SQL expression whose result will be the value of this property bridge." ;
+	rdfs:label "SQL expression" .
+
+d2rq:mappingFile a rdf:Property ;
+	rdfs:domain d2rq:D2RQModel ;
+	rdfs:comment "URL of a D2RQ mapping file." ;
+	rdfs:label "Mapping file" .
+
+d2rq:resultSizeLimit a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Enforced upper limit for the size of SQL result sets." ;
+	rdfs:label "Result size limit" .
+
+d2rq:classDefinitionLabel a rdf:Property ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:comment "A label to be served as rdfs:label for all associated class definitions" ;
+	rdfs:label "Class definition label" .
+
+d2rq:property a rdf:Property ;
+	owl:inverseOf d2rq:propertyBridge .
+
+d2rq:propertyBridge a owl:DeprecatedProperty ;
+	owl:inverseOf d2rq:property ;
+	rdfs:range d2rq:PropertyBridge ;
+	rdfs:domain rdf:Property ;
+	rdfs:comment "Used for linking RDFS properties to D2R property bridges. Deprecated, use inverse d2rq:property instead." ;
+	rdfs:label "Property bridge" ;
+	a rdf:Property .
+
+d2rq:property rdfs:range rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "Links a d2rq:PropertyBridge to an RDF property." ;
+	rdfs:label "Property" .
+
+d2rq:booleanColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of type BOOLEAN." ;
+	rdfs:label "BOOLEAN column" .
+
+d2rq:additionalPropertyDefinitionProperty a rdf:Property ;
+	rdfs:range d2rq:AdditionalProperty ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "An additional property to be served for all associated property definitions" ;
+	rdfs:label "Additional property definition property" .
+
+d2rq:binaryColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of a binary type, such as BINARY, VARBINARY or BLOB." ;
+	rdfs:label "BINARY column" .
+
+d2rq:lang a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "The language tag of literals created by this bridge." ;
+	rdfs:label "Language" .
+
+d2rq:constantValue a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "A constant RDF node to be used as the value of this property bridge, or as the resource of a singleton class map." ;
+	rdfs:label "Constant value" .
+
+d2rq:propertyValue a rdf:Property ;
+	rdfs:domain d2rq:AdditionalProperty ;
+	rdfs:label "Property value" .
+
+d2rq:containsDuplicates a rdf:Property ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "Set to true if the table, after applying d2rq:joins and d2rq:conditions, may contain duplicate records." ;
+	rdfs:label "Contains duplicates" .
+
+d2rq:orderDesc a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "The column after which to sort results in descending order for this PropertyBridge" ;
+	rdfs:label "Order descending" .
+
+d2rq:pattern a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:label "Pattern" .
+
+d2rq:additionalProperty a rdf:Property ;
+	rdfs:range d2rq:AdditionalProperty ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:label "Additional property" .
+
+d2rq:propertyDefinitionLabel a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "A label to be served as rdfs:label for all associated properties" ;
+	rdfs:label "Property definition label" .
+
+d2rq:refersToClassMap a rdf:Property ;
+	rdfs:range d2rq:ClassMap ;
+	rdfs:comment "Has to be used if a join refers to a different classMap." ;
+	rdfs:domain d2rq:ObjectPropertyBridge .
+
+d2rq:ObjectPropertyBridge a owl:DeprecatedClass ;
+	rdfs:comment "(Deprecated) Maps an object property to one or more database columns." ;
+	rdfs:subClassOf d2rq:PropertyBridge ;
+	rdfs:label "Object property bridge" ;
+	a rdfs:Class .
+
+d2rq:refersToClassMap rdfs:label "Refers to class map" .
+
+d2rq:resourceBaseURI a rdf:Property ;
+	rdfs:domain d2rq:D2RQModel ;
+	rdfs:comment "Base URI for resources generated by relative URI patterns." ;
+	rdfs:label "Resource base URI" .
+
+d2rq:serveVocabulary a rdf:Property ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain d2rq:Configuration ;
+	rdfs:comment "Whether to serve inferred and user-supplied vocabulary data" ;
+	rdfs:label "Serve vocabulary" .
+
+d2rq:intervalColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of type INTERVAL." ;
+	rdfs:label "INTERVAL column" .
+
+d2rq:propertyName a rdf:Property ;
+	rdfs:domain d2rq:AdditionalProperty ;
+	rdfs:label "Property name" .
+
+d2rq:bitColumn a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Name of a column of type BIT." ;
+	rdfs:label "BIT column" .
+
+d2rq:valueContains a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "Optimizing hint: a string contained in every value of this resource map." ;
+	rdfs:label "Value contains" .
+
+d2rq:href a rdf:Property ;
+	rdfs:comment "Link to a translation table in an external CSV file." ;
+	rdfs:domain d2rq:TranslationTable ;
+	rdfs:label "Href" .
+
+d2rq:javaClass a rdf:Property ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:comment "Qualified name of a Java class that implements de.fuberlin.wiwiss.d2rq.Translator and translates between database and RDF." ;
+	rdfs:label "Java class" .
+
+d2rq:column a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:label "Column" .
+
+d2rq:useAllOptimizations a rdf:Property ;
+	rdfs:domain d2rq:Configuration ;
+	rdfs:comment "Whether to use bleeding edge optimizations" ;
+	rdfs:label "Use all optimizations" .
+
+d2rq:datatype a rdf:Property ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:comment "The datatype of literals created by this bridge." ;
+	rdfs:label "Datatype" .
+
+d2rq:belongsToClassMap a rdf:Property ;
+	rdfs:range d2rq:ClassMap ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:label "Belongs to class map" .
+
+d2rq:translateWith a rdf:Property ;
+	rdfs:range d2rq:TranslationTable ;
+	rdfs:domain d2rq:PropertyBridge ;
+	rdfs:label "Translate with" .
+
+d2rq:classDefinitionComment a rdf:Property ;
+	rdfs:domain d2rq:ClassMap ;
+	rdfs:comment "A comment to be served as rdfs:comment for all associated class definitions" ;
+	rdfs:label "Class definition comment" .
+
+d2rq:join a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "SQL join condition over tables in the database." ;
+	rdfs:label "Join" .
+
+d2rq:jdbcDSN a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "JDBC data source name." ;
+	rdfs:label "JDBC DSN" .
+
+d2rq:alias a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "TABLE AS ALIAS declaration for establishing an alternate table name." ;
+	rdfs:label "Alias" .
+
+d2rq:jdbcDriver a rdf:Property ;
+	rdfs:domain d2rq:Database ;
+	rdfs:label "JDBC driver" .
+
+d2rq:contentDownloadColumn a rdf:Property ;
+	rdfs:domain d2rq:DownloadMap ;
+	rdfs:comment "A database column containing data to be made downloadable." ;
+	rdfs:label "Content download column" .
+
+d2rq:bNodeIdColumns a rdf:Property ;
+	rdfs:domain d2rq:ResourceMap ;
+	rdfs:comment "Comma-separated list of database columns used for construction of blank nodes." ;
+	rdfs:label "Blank node ID columns" .
+
+d2rq:DatatypePropertyBridge a owl:DeprecatedClass ;
+	rdfs:comment "(Deprecated) Maps a datatype property to one or more database columns." ;
+	rdfs:subClassOf d2rq:PropertyBridge ;
+	rdfs:label "Datatype property bridge" ;
+	a rdfs:Class .
+
+d2rq:allowDistinct a owl:DeprecatedProperty ;
+	rdfs:domain d2rq:Database ;
+	rdfs:comment "Value: true/false that describe the databases ability to handle DISTINCT correctly. Deprecated, the engine now determines this automatically." ;
+	rdfs:label "Allow distinct" ;
+	a rdf:Property .
+
+d2rq:odbcDSN a owl:DeprecatedProperty ;
+	rdfs:domain d2rq:Database ;
+	rdfs:label "ODBC data source name. Deprecated, use JDBC instead (with ODBC-JDBC bridge if necessary)." ;
+	rdfs:comment "ODBC DSN" ;
+	a rdf:Property .

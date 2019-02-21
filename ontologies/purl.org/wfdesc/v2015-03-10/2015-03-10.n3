@@ -1,0 +1,136 @@
+@prefix :      <http://purl.org/wf4ever/wfdesc> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ro:    <http://purl.org/wf4ever/ro#> .
+@prefix wfdesc: <http://purl.org/wf4ever/wfdesc#> .
+@prefix parrot: <http://vocab.ctic.es/parrot#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+wfdesc:Input  a          owl:Class ;
+        rdfs:comment     "wfdesc:Input represents an input parameter to a wfdesc:Process. This can be compared to a function parameter, command line argument, files read, or parameter set by a user interface.\n\nIt is out of scope of wfdesc to define the nature or classification of the parameter, such as giving it a name, position or data type. This can be done with subclasses and/or subproperties."@en ;
+        rdfs:subClassOf  wfdesc:Parameter .
+
+wfdesc:Description  a  owl:Class .
+
+wfdesc:Configuration  a   owl:Class ;
+        rdfs:comment      "A configuration is a kind of parameter to a wfdesc:Process (linked using wfdesc:hasConfiguration) to indicate a setting, flag or customization which somewhat modifies or controls the behaviour of the wfdesc:Process. \n\nDifferent workflow systems have stronger or weaker differentiation between inputs and configurations, so a wfdesc:Configuration MAY also be a wfdesc:Input in the case of a dynamic configuration provided by the workflow itself.\n\nNote that attributes which define or specify the process to invoke, like a wf4ever:script, or a wf4ever:serviceURI of a wf4ever:WebService, are not normally considered Configurations."@en ;
+        rdfs:subClassOf   wfdesc:Parameter ;
+        owl:disjointWith  wfdesc:Output .
+
+wfdesc:WorkflowInstance
+        a                owl:Class ;
+        rdfs:comment     "A wfdesc:WorkflowInstance is a specialisation of a wfdesc:Workflow description which defines all data/parameters/settings that are required to form a wfprov:WorkflowRun."@en ;
+        rdfs:subClassOf  wfdesc:Workflow .
+
+wfdesc:Artifact  a       owl:Class ;
+        rdfs:comment     "wfdesc:Artifact is used to provide information about a class of artifacts. For example, it can be used to specify the datatype of a dataset or the structure of a document.\n\nAn wfdesc:Artifact is associated with a wfdesc:Parameter using wfdesc:hasArtifact.\n\nThe distinction between a parameter and artifact is that the parameter can be customized to describe the particular role the artifact plays with regards to the process (and can be linked using wfdesc:DataLink) - while the wfdesc:Artifact can describe the syntactic and semantic datatype."@en ;
+        rdfs:subClassOf  wfdesc:Description .
+
+wfdesc:ProcessImplementation
+        a                owl:Class ;
+        rdfs:comment     "The implementation that is invoked when running the wfdesc:Process, like a wf4ever:Script or wf4ever:WebService. \n\nThe process specifies the implementation using wfdesc:hasImplementation."@en ;
+        rdfs:seeAlso     wfdesc:hasImplementation ;
+        rdfs:subClassOf  wfdesc:Description .
+
+wfdesc:hasConfiguration
+        a             owl:ObjectProperty ;
+        rdfs:comment  "This object property is used to specify the wfdesc:Configuration parameter of a given wfdesc:Process."@en ;
+        rdfs:domain   wfdesc:Process ;
+        rdfs:range    wfdesc:Configuration .
+
+wfdesc:Workflow  a       owl:Class ;
+        rdfs:comment     "A wfdesc:Workflow is a directed graph in which the nodes are wfdesc:Process instances and the edges (wfdesc:DataLink instances) represent data dependencies between the constituent wfdesc:Process descriptions.\n\nThe resource that contains the wfdesc:WorkflowDefinition (say the XML file saved from a workflow designer tool) can be specified with wfdesc:hasWorkflowDefinition. Research objects might aggregate a wfdesc:Workflow, a wfdesc:WorkflowDefinition, or (recommended) both.\n\nA wfdesc:Workflow defines associated wfdesc:Process using wfdesc:hasSubProcess. A specialisation of this property is wfdesc:hasSubWorkflow, signifying that the process is a wfdesc:Workflow itself, which is further described in a similar fashion.\n\nAs a subclass of wfdesc:Process a wfdesc:Workflow can also define wfdesc:hasInput/wfdesc:hasOutput parameters - these would be inputs taken at workflow execution time, and final outputs of the workflow. (Note: Not all dataflow systems have this concept of workflow parameters)\n\nwfdesc:Parameter descriptions are linked using wfdesc:DataLink descriptions associated with the wfdesc:Workflow using wfdesc:hasDataLink.\n\nA wfdesc:Parameter defined with wfdesc:hasInput on a wfdesc:Workflow is considered an wfdesc:Input \"outside\" the workflow (ie. if it is a subworkflow), but an wfdesc:Output \"inside\" the workflow (where it can be connected to a wfdesc:Input of a wfdesc:Process). Thus such parameters can be linked \"through\" the workflow without having a \"mirrored\" port inside.\n\n\nExample:\n##\n@prefix wfdesc: <http://purl.org/wf4ever/wfdesc#> .\n:outerWorkflow a wfdesc:Workflow ;\n  wfdesc:hasSubWorkflow :innerWorkflow ;\n  wfdesc:hasSubProcess :procA, :procC .\n\n:procA a wfdesc:Process ;\n  wfdesc:hasOutput :param1 .\n\n:procC a wfdesc:Process ;\n  wfdesc:hasInput :param2 ;\n  wfdesc:hasOutput :param3 .\n\n\n:innerWorkflow a wfdesc:Workflow ;\n  wfdesc:hasInput :param4 ;\n  wfdesc:hasOutput :param5 ;\n  wfdesc:hasProcess :procB .\n\n:procB a wfdesc:Process ;\n  wfdesc:hasInput :param6 ;\n  wfdesc:hasOutput :param7 .\n\n:innerWorkflow wfdesc:hasDataLink \n   [ wfdesc:hasSource :param4; wfdesc:hasSink :param6 ], \n   [ wfdesc:hasSource :param7; wfdesc:hasSink :param5 ] .\n\n:outerWorkflow wfdesc:hasDataLink\n  [ wfdesc:hasSource :param1; wfdesc:hasSink :param4 ],\n  [ wfdesc:hasSource :param5; wfdesc:hasSink :param2 ] .\n\n##\n\n\nIn this example :param1 is the output of :procA. :param1 is the source in a datalink that goes to the input :param4 of the :innerWorkflow. :param4 is however also the source of an inner datalink, going to input :param6 of the nested :procB.\n\nFrom this :param4 is both an wfdesc:Input and wfdesc:Output (which is why these two classes are not disjoint)"@en ;
+        rdfs:seeAlso     wfdesc:WorkflowDefinition ;
+        rdfs:subClassOf  wfdesc:Process .
+
+wfdesc:WorkflowDefinition
+        a                owl:Class ;
+        rdfs:comment     "The definition of this workflow, typically a file natively understood by the wfdesc:WorkflowEngine. Examples include .t2flow XML files from Taverna 2 and Galaxy workflows saved as JSON.\n\nA wfdesc:Workflow description can specify its wfdesc:WorkflowDefinition using wfdesc:hasWorkflowDefinition. This is typically only done for the top-level workflow - subworkflows without a wfdesc:hasWorkflowDefinition are assumed to be embedded within the definition of the parent workflow, except where the sub-workflows are included in the parent by reference, in which case they would have a different wfdesc:hasWorkflowDefinition."@en ;
+        rdfs:seeAlso     wfdesc:hasWorkflowDefinition ;
+        rdfs:subClassOf  wfdesc:ProcessImplementation .
+
+wfdesc:hasSubWorkflow
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "This object property is used to associate a wfdesc:Workflow description to another wfdesc:Workflow, specifying that the first workflow has the given sub-workflow as a contained process. \n\nThis is a specialisation of wfdesc:hasSubProcess."@en ;
+        rdfs:domain         wfdesc:Workflow ;
+        rdfs:range          wfdesc:Workflow ;
+        rdfs:subPropertyOf  wfdesc:hasSubProcess .
+
+wfdesc:hasSubProcess  a  owl:ObjectProperty ;
+        rdfs:comment  "This object property is used to specify that the given workflow  contains the given process as part of its definition.\n\nAlthough not a requirement, such sub processes should have wfdesc:DataLink within the containing workflow connecting their parameters with parameters of the containing workflow, or with parameters other contained wfdesc:Process instances.\n\nA specialialisation of sub process is wfdesc:hasSubWorkflow where the sub process is a nested wfdesc:Workflow."@en ;
+        rdfs:domain   wfdesc:Workflow ;
+        rdfs:range    wfdesc:Process .
+
+wfdesc:Parameter  a          owl:Class ;
+        rdfs:comment         "This class represent a parameter of a wfdesc:Process. A wfdesc:Parameter must be a wfdesc:Input, a wfdesc:Output, or a wfdesc:Configuration. \n\nNote that a parameter MAY be both an wfdesc:Input and wfdesc:Output when it is used on both sides of a subworkflow - see wfdesc:Workflow and wfdesc:DataLink for details.\n\nA wfdesc:Configuration MAY also be a wfdesc:Input, indicating that the configuration is of a dynamic nature, decided by the workflow."@en ;
+        rdfs:subClassOf      wfdesc:Description ;
+        owl:equivalentClass  [ a            owl:Class ;
+                               owl:unionOf  ( wfdesc:Configuration wfdesc:Input wfdesc:Output )
+                             ] .
+
+rdfs:comment  a  owl:AnnotationProperty .
+
+wfdesc:DataLink  a       owl:Class ;
+        rdfs:comment     "wfdesc:DataLink is used to represent data dependencies between wfdesc:Process descriptions. It means that the artifact generated at an wfdesc:Output (identified using wfdesc:hasSource) will be used by a wfdescInput (identified using wfdesc:hasSink).\n\nThe wfdesc:Processes that owns the wfdesc:Parameter instances which are the source and sink of a wfdesc:DataLink must be wfdesc:hasSubProcess of a the same wfdesc:Workflow which wfdesc:hasDataLink the data link, or be be parameters of that same workflow.\n\nThus links can only be made within a wfdesc:Workflow - although ports owned by the workflow itself appear both inside and outside the workflow (in opposite roles)."@en ;
+        rdfs:subClassOf  wfdesc:Description .
+
+wfdesc:Process  a        owl:Class ;
+        rdfs:comment     "A wfdesc:Process is used to describe a class of actions that when enacted give rise to processes. A process can have 0 or more wfdesc:Parameter instances associated using wfdesc:hasInput and wfdesc:hasOutput, signifying what kind of parameters the process will require and return.\n\nIt is out of scope for wfdesc to classify or specify the nature of the process, this should be done by subclassing and additional subproperties, for instance ex:perlScript or ex:restServiceURI"@en ;
+        rdfs:subClassOf  wfdesc:Description .
+
+:       a                   owl:Ontology ;
+        rdfs:comment        "This ontology (\"wfdesc\") describes an abstract workflow description structure, which on the top level is defined as a wfdesc:Workflow. \n\nA wfdesc:Workflow contains several wfdesc:Process instances, associated using the wfdesc:hasSubProcess property. Each of these (and the workflow itself) wfdesc:hasInput and wfdesc:hasOutput some wfdesc:Parameter (wfdesc:Input or wfdesc:Output). An wfdesc:Artifact is associated with a wfdesc:Parameter using wfdesc:hasArtifact. The wfdesc:Workflow also wfdesc:hasDataLink several wfdesc:DataLink instances, which forms the connection between parameters.\n\nThus this ontology allows the description a direct acyclic graph, or a dataflow. \n\nThis ontology is meant as an upper ontology for more specific workflow definitions, and as a way to express abstract workflows. The wfprov ontology shows how to link these descriptions to a provenance trace of a workflow execution."@en ;
+        parrot:hasPrologue  <http://purl.org/wf4ever/index.html#ro> ;
+        owl:versionIRI      <https://raw.github.com/wf4ever/ro/master/wfdesc.owl> .
+
+wfdesc:hasSource  a         owl:ObjectProperty ;
+        rdfs:comment        "This property is used to specify the wfdesc:Output parameter that acts as a source to a given wfdesc:DataLink, providing data into the link."@en ;
+        rdfs:domain         wfdesc:DataLink ;
+        rdfs:range          wfdesc:Output ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+wfdesc:hasWorkflowDefinition
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "The definition of this workflow, typically a file natively understood by the wfdesc:WorkflowEngine."@en ;
+        rdfs:domain         wfdesc:Workflow ;
+        rdfs:range          wfdesc:WorkflowDefinition ;
+        rdfs:subPropertyOf  wfdesc:hasImplementation .
+
+wfdesc:Output  a         owl:Class ;
+        rdfs:comment     "wfdesc:Output represents an output parameter from a wfdesc:Process. This can be compared to functional return values, stdout/stdin, files written, or results shown in a user interface.\n\nIt is out of scope of wfdesc to define the nature or classification of the parameter, such as giving it a name, position or data type. This can be done with subclasses and/or subproperties."@en ;
+        rdfs:subClassOf  wfdesc:Parameter .
+
+wfdesc:hasInput  a    owl:ObjectProperty ;
+        rdfs:comment  "This object property is used to specify the wfdesc:Input parameter of a given wfdesc:Process."@en ;
+        rdfs:domain   wfdesc:Process ;
+        rdfs:range    wfdesc:Input .
+
+wfdesc:hasOutput  a   owl:ObjectProperty ;
+        rdfs:comment  "This object property is used to specify the wfdesc:Output parameter of a given wfdesc:Process.\n"@en ;
+        rdfs:domain   wfdesc:Process ;
+        rdfs:range    wfdesc:Output .
+
+wfdesc:hasImplementation
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The implementation that is invoked when running the wfdesc:Process, like a wf4ever:Script or wf4ever:WebService. "@en ;
+        rdfs:domain   wfdesc:Process ;
+        rdfs:range    wfdesc:ProcessImplementation .
+
+wfdesc:hasSink  a           owl:ObjectProperty ;
+        rdfs:comment        "This property is used to specify the wfdesc:Input parameter that acts as a sink from a given wfdesc:DataLink, consuming data from the link."@en ;
+        rdfs:domain         wfdesc:DataLink ;
+        rdfs:range          wfdesc:Input ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+wfdesc:hasArtifact  a       owl:ObjectProperty ;
+        rdfs:comment        "This property associates a wfdesc:Parameter with an wfdesc:Artifact which can describe the artifact which would be used/generated on execution of the workflow."@en ;
+        rdfs:domain         wfdesc:Parameter ;
+        rdfs:range          wfdesc:Artifact ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+wfdesc:hasDataLink  a       owl:ObjectProperty ;
+        rdfs:comment        "This property is used to specify the wfdesc:DataLink instances of a given wfdesc:Workflow."@en ;
+        rdfs:domain         wfdesc:Workflow ;
+        rdfs:range          wfdesc:DataLink ;
+        rdfs:subPropertyOf  owl:topObjectProperty .

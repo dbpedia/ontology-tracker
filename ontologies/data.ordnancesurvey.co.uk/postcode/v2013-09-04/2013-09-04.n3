@@ -1,0 +1,249 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix :      <http://data.ordnancesurvey.co.uk/ontology/postcode/> .
+@prefix rdf-schema: <http://data.ordnancesurvey.co.uk/ontology/postcode/http://www.w3.org/2000/01/rdf-schema#> .
+@prefix spatialrelations: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix place: <http://data.ordnancesurvey.co.uk/ontology/place/> .
+@prefix admingeo: <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+rdfs:comment  a  owl:AnnotationProperty .
+
+:RH     a                 owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment      "NHS regional health authority code" ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "RH" ;
+        rdfs:seeAlso      :nhsRegionalHA .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/30>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "Approximate to within 50 m of true position (postcodes relating to developing sites may be within 100 m of true position)."^^xsd:string ;
+        rdfs:label         "30"^^xsd:string ;
+        skos:notation      "30" ;
+        skos:topConceptOf  :pqi .
+
+:country  a               owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "The country that the Code-Point Open location coordinate lies in." ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "country" .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/50>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "Estimated position based on surrounding postcode coordinates, usually to 100m resolution, but 10 m in Scotland."^^xsd:string ;
+        rdfs:label         "50"^^xsd:string ;
+        skos:notation      "50" ;
+        skos:topConceptOf  :pqi .
+
+admingeo:MetropolitanDistrict
+        a       owl:Class .
+
+admingeo:UnitaryAuthority
+        a       owl:Class .
+
+:nhsHA  a                 owl:ObjectProperty ;
+        rdfs:comment      "English Strategic Health Authority or Scottish Health Board in which Code-Point Open location coordinate falls."^^xsd:string ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "NHS Health Authority"^^xsd:string .
+
+:ward   a                 owl:ObjectProperty ;
+        rdfs:comment      "Electoral Ward or Division in which Code-Point Open location coordinate falls." ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "ward" ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( admingeo:UnitaryAuthorityElectoralDivision admingeo:Ward )
+                          ] .
+
+dct:creator  a  owl:AnnotationProperty .
+
+rdfs:isDefinedBy  a  owl:AnnotationProperty .
+
+:positionalQualityIndicator
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "Indicates the source of the data indicator used and, hence, the quality of the\ncoordinates provided for each record. It is determined by the best available\ndata in ADDRESS-POINT."^^xsd:string ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Positional Quality Indicator"^^xsd:string ;
+        rdfs:range        :PositionalQualityIndicator .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/90>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "No coordinates available."^^xsd:string ;
+        rdfs:label         "90"^^xsd:string ;
+        skos:notation      "90" ;
+        skos:topConceptOf  :pqi .
+
+:PostcodeArea  a          owl:Class ;
+        rdfs:comment      "An area given a unique alphabetic coding by Royal Mail to facilitate the delivering of mail. The area is identified by one or two alpha characters at the start of the full postcode, the letters being derived from a town, city or district falling within the postcode area. There are, at present, 120 postcode areas in Great Britain, for example, SO for Southampton, MK for Milton Keynes, B for Birmingham or W for London West. The postcode area code constitutes the first part of the outward code." ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Postcode Area"^^xsd:string ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      spatialrelations:contains ;
+                            owl:someValuesFrom  :PostcodeDistrict
+                          ] .
+
+dc:creator  a   owl:AnnotationProperty .
+
+:PQ     a                 owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment      "Positional Quality Indicator (see http://www.ordnancesurvey.co.uk/oswebsite/products/codepoint/pdf/cpuserguide.pdf)" ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "PQ" ;
+        rdfs:seeAlso      :positionalQualityIndicator .
+
+dct:publisher  a  owl:AnnotationProperty .
+
+:county  a                owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "County in which Code-Point Open location coordinate falls." ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "county" ;
+        rdfs:range        admingeo:County .
+
+:PostcodeUnit  a          owl:Class ;
+        rdfs:comment      "An area covered by a particular postcode. Postcodes are an alphanumeric abbreviated form of address. Postcode units are unique references and identify an average of 15 addresses. In some cases, where an address receives a substantial amount of mail, a postcode will apply to only one address (a large-user postcode). The maximum number of addresses in a postcode is 100.\n\nA sub-area of a postcode sector, indicated by the two letters of the inward postcode, which identifies one or more small-user postcode delivery points or an individual large-user postcode. There are approximately 1.7 million postcode units in the UK." ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Postcode Unit"^^xsd:string ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      spatialrelations:within ;
+                            owl:someValuesFrom  :PostcodeSector
+                          ] .
+
+:PostcodeSector  a        owl:Class ;
+        rdfs:comment      "A sub-area of a postcode district, whose area is identified by the number third from the end of a full postcode. There are approximately 9000 postcode sectors in Great Britain. An example of a postcode sector code is 3, from GU12 3DH." ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Postcode Sector"^^xsd:string ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      spatialrelations:within ;
+                            owl:someValuesFrom  :PostcodeDistrict
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      spatialrelations:contains ;
+                            owl:someValuesFrom  :PostcodeUnit
+                          ] .
+
+rdfs:label  a   owl:AnnotationProperty .
+
+:postcode  a                owl:ObjectProperty ;
+        rdfs:comment        "This property lets you relate an object to its PostcodeUnit. "^^xsd:string ;
+        rdfs:label          "postcode"^^xsd:string ;
+        rdfs:range          :PostcodeUnit ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+:pqi    a                   owl:NamedIndividual ;
+        rdfs:label          "Positional Quality Indicator Concept Scheme"^^xsd:string ;
+        skos:hasTopConcept  <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/90> , <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/60> , <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/50> , <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/40> , <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/30> , <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/20> , <http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/10> .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/20>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "As above, but determined by visual inspection by NRS."^^xsd:string ;
+        rdfs:label         "20"^^xsd:string ;
+        skos:notation      "20" ;
+        skos:topConceptOf  :pqi .
+
+spatialrelations:easting
+        a       owl:DatatypeProperty .
+
+:PositionalQualityIndicator
+        a                 owl:Class ;
+        rdfs:comment      "The importance of checking the Positional Quality Indicator (PQI), to establish Code-Point Open location coordinate (CPLC) positional quality, cannot be overemphasised.\n\nIt indicates the positional accuracy of the Code-Point Open coordinates. There are seven PQI values for the positional quality of CPLCs. The order shown indicates the level of quality associated with the PQI; PQ10 is the most accurate and PQ90 the least. The PQI assigned to the CPLC will depend on the coordinates available in ADDRESS-POINT to generate the CPLC. If the ADDRESS-POINT PQI is PQ3, the best it can be, then the Code-Point Open PQI will be PQ10."^^xsd:string ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Positional Quality Indicator"^^xsd:string ;
+        rdfs:subClassOf   skos:Concept .
+
+:PostCodeType  a    owl:Class ;
+        rdfs:label  "Postcode Type"^^xsd:string .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/40>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "The mean of the positions of addresses previously matched in ADDRESS-POINT but that have subsequently been deleted or recoded (very rarely used)."^^xsd:string ;
+        rdfs:label         "40"^^xsd:string ;
+        skos:notation      "40" ;
+        skos:topConceptOf  :pqi .
+
+:       a                 owl:Ontology ;
+        rdfs:comment      "An ontology describing the postcode geography in Great Britain."@en ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Postcode Ontology"@en ;
+        dc:creator        "Ordnance Survey"@en ;
+        dct:creator       <http://data.ordnancesurvey.co.uk/id/ordnancesurvey> ;
+        dct:publisher     <http://data.ordnancesurvey.co.uk/id/ordnancesurvey> ;
+        owl:imports       <http://www.w3.org/2004/02/skos/core> , admingeo: .
+
+spatialrelations:within
+        a       owl:ObjectProperty .
+
+skos:notation  a    owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:range  rdfs:Literal .
+
+admingeo:District  a  owl:Class .
+
+owl:topObjectProperty
+        a       owl:ObjectProperty .
+
+admingeo:Ward  a  owl:Class .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/60>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "Postcode sector mean (direct copy from ADDRESS-POINT)."^^xsd:string ;
+        rdfs:label         "60"^^xsd:string ;
+        skos:notation      "60" ;
+        skos:topConceptOf  :pqi .
+
+admingeo:County  a  owl:Class .
+
+:LH     a                 owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment      "NHS health authority code" ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "LH" ;
+        rdfs:seeAlso      :nhsHA .
+
+:nhsRegionalHA  a         owl:ObjectProperty ;
+        rdfs:comment      "English Pan Strategic Health Authority in which Code-Point Open location coordinate falls."^^xsd:string ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "NHS Regional Health Authority"^^xsd:string .
+
+:PostcodeDistrict  a      owl:Class ;
+        rdfs:comment      "A sub-area of the postcode area, specified by the character sub-string within the first half of a full postcode, which may be numeric, alphabetic or alphanumeric; for example, 42 from MK42 6GH or 1A from W1A 4WW. There are approximately 2 800 postcode districts in Great Britain.\nNOTE: there are certain non-geographic districts. In these instances, a district code is allocated to cover all large users in the postcode area." ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "Postcode District"^^xsd:string ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      spatialrelations:contains ;
+                            owl:someValuesFrom  :PostcodeSector
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      spatialrelations:within ;
+                            owl:someValuesFrom  :PostcodeArea
+                          ] .
+
+spatialrelations:northing
+        a       owl:DatatypeProperty .
+
+admingeo:LondonBorough
+        a       owl:Class .
+
+:district  a              owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Unitary Authority, Metropolitan and Non- Metropolitan District, London\nBorough or Scottish Council Area in which Code-Point Open location coordinate falls." ;
+        rdfs:domain       :PostcodeUnit ;
+        rdfs:isDefinedBy  <http://www.ordnancesurvey.co.uk/ontology/postcode.owl> ;
+        rdfs:label        "district" ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( admingeo:District admingeo:LondonBorough admingeo:MetropolitanDistrict admingeo:UnitaryAuthority )
+                          ] .
+
+admingeo:UnitaryAuthorityElectoralDivision
+        a       owl:Class .
+
+<http://data.ordnancesurvey.co.uk/ontology/postcode/pqi/10>
+        a                  owl:NamedIndividual ;
+        rdfs:comment       "Within the building of the matched address closest to the postcode mean determined automatically by Ordnance Survey."^^xsd:string ;
+        rdfs:label         "10"^^xsd:string ;
+        skos:notation      "10" ;
+        skos:topConceptOf  :pqi .

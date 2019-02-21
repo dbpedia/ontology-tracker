@@ -1,0 +1,344 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix tm:    <http://def.seegrid.csiro.au/isotc211/iso19108/2002/temporal#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix h2o:   <http://def.seegrid.csiro.au/isotc211/iso19150/-2/2012/basic#> .
+@prefix gf:    <http://def.seegrid.csiro.au/isotc211/iso19109/2005/feature#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix md:    <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#> .
+@prefix basic: <http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix om:    <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+om:ComplexObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a vector, record, tuple or other complex value"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Complex Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        skos:notation     "OM_ComplexObservation"^^h2o:ISOClassName .
+
+om:TruthObservation  a    owl:Class ;
+        rdfs:comment      "Observation whose result is either true or false" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Truth Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  xsd:boolean ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_TruthObservation"^^h2o:ISOClassName .
+
+om:metadata  a            owl:ObjectProperty ;
+        rdfs:comment      "generic metadata about an observation" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "observation metadata"@en ;
+        rdfs:range        md:Metadata ;
+        skos:definition   "the association Metadata shall link the OM_Observation to descriptive metadata."^^xsd:string .
+
+om:name  a                owl:ObjectProperty ;
+        rdfs:comment      "key indicating the type of a named value" ;
+        rdfs:domain       om:NamedValue ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "named value key"^^xsd:string .
+
+om:GeometryObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a spatial object or geometry"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Geometry Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  <http://def.seegrid.csiro.au/isotc211/iso19107/2003/geometry#Object> ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_GeometryObservation"^^h2o:ISOClassName .
+
+om:Measurement  a         owl:Class ;
+        rdfs:comment      "Observation whose result is a scaled number" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Measurement"@en , "Mesure"@fr ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  basic:Measure ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_Measurement"^^h2o:ISOClassName .
+
+om:ObservationContext
+        a                    owl:Class ;
+        rdfs:comment         "Context linking two or more observations" , "Some observations depend on other observations to provide context which is important, sometimes essential, in understanding the result. These dependencies are stronger than mere spatio-temporal coincidences, requiring explicit representation. If present, the association class class ObservationContext (Figure 2) shall link a OM_Observation to another OM_Observation, with the role name relatedObservation for the target. It shall support one attribute.\r\n\r\nEXAMPLES\tSome examples include the conditions associated with experimental replicates (e.g., experimental plots and treatments used), biotic factors (e.g., ecological community), interactions among features (e.g., predator-prey), or other temporary relationships occurring at the time of observation that are are not inherent to the observed features themselves (i.e., they change over time), or the related observation may provide input to a process that generates a new result.\r\nThis association complements the Intention association which describes relationships between a sampling feature and domain features."^^xsd:string ;
+        rdfs:isDefinedBy     <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label           "Observation context"@en ;
+        rdfs:subClassOf      owl:Thing ;
+        owl:equivalentClass  [ a                owl:Restriction ;
+                               owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onProperty   om:relatedObservation
+                             ] ;
+        owl:equivalentClass  [ a                owl:Restriction ;
+                               owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onProperty   om:role
+                             ] ;
+        skos:notation        "ObservationContext"^^h2o:ISOClassName .
+
+om:value  a               rdf:Property ;
+        rdfs:comment      "value of named value" ;
+        rdfs:domain       om:NamedValue ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "named value value"^^xsd:string .
+
+om:TemporalObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a temporal object, such as a time instant or period" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Temporal Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  tm:Object ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_TemporalObservation"^^h2o:ISOClassName .
+
+om:Observation  a         owl:Class ;
+        rdfs:comment      "An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. It involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. The result of an observation is an estimate of the value of a property of some feature. Use of a common model allows observation data using different procedures to be combined unambiguously.\r\n\r\nThe observation itself is also a feature, since it has properties and identity.\r\n\r\nObservation details are important for data discovery and for data quality estimation.\r\n\r\nThe observation could be considered to carry “property-level” instance metadata, which complements the dataset-level and feature-level metadata that have been conventionally considered (e.g. ISO 19115)."^^xsd:string , "Generic observation" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Observation"@en ;
+        rdfs:subClassOf   gf:AnyFeature ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty      om:metadata
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:procedure
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:observedProperty
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:featureOfInterest
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:resultTime
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:phenomenonTime
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:result
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:minCardinality  "0"^^xsd:nonNegativeInteger ;
+                            owl:onProperty      om:observationContext
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:minCardinality  "0"^^xsd:nonNegativeInteger ;
+                            owl:onProperty      om:resultQuality
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty      om:validTime
+                          ] ;
+        owl:disjointWith  om:Process ;
+        skos:notation     "OM_Observation"^^h2o:ISOClassName .
+
+om:featureOfInterest  a   owl:ObjectProperty ;
+        rdfs:comment      "feature of interest of an observation" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "feature of interest"@en ;
+        rdfs:range        gf:AnyFeature ;
+        skos:definition   "The association Domain shall link the OM_Observation to the GFI_Feature (C.2.1) that is the subject of the observation and carries the observed property. This feature has the role featureOfInterest with respect to the observation. This feature is the real-world object whose properties are under observation, or is a feature intended to sample the real-world object, as described in Clause 9 of this International Standard. An observation instance serves as a propertyValueProvider for its feature-of-interest."^^xsd:string .
+
+om:resultTime  a          owl:ObjectProperty ;
+        rdfs:comment      "time at which the result became available, after all processing steps were completed" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "result time"@en ;
+        rdfs:range        tm:Instant ;
+        skos:definition   "The attribute resultTime:TM_Instant shall describe the time when the result became available, typically when the procedure (7.2.2.10) associated with the observation was completed. For some observations, this is identical to the phenomenonTime. However, there are important cases where they differ.\r\n\r\nEXAMPLE 1 Where a measurement is made on a specimen in a laboratory, the phenomenonTime is the time the specimen was retrieved from its host, while the resultTime is the time the laboratory procedure was applied.\r\n\r\nEXAMPLE 2 The resultTime also supports disambiguation of repeat measurements made of the same property of a feature using the same procedure.\r\n\r\nEXAMPLE 3 Where sensor observation results are post-processed, the resultTime is the post-processing time, while the phenomenonTime is the time of initial interaction with the world.\r\n\r\nEXAMPLE 4 Simulations can estimate the values for phenomena in the future or past. The phenomenonTime is the time that the result applies to, while the resultTime is the time that the simulation was executed."^^xsd:string .
+
+om:observationContext
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "link to related observation"^^xsd:string , "This property is named 'relatedObservation' in the XML implementation. The rule for association classes needs clarification."^^xsd:string ;
+        rdfs:domain       om:Observation ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "observation context"@en ;
+        rdfs:range        om:ObservationContext .
+
+om:DiscreteCoverageObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a discrete representation of a spatio-temporal field, including images and time-series" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Discrete Coverage Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  <http://def.seegrid.csiro.au/isotc211/iso19123/2005/coverage#DiscreteCoverage> ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_DiscreteCoverageObservation"^^h2o:ISOClassName .
+
+om:procedure  a           owl:ObjectProperty ;
+        rdfs:comment      "procedure used in making observation. Typically a sensor or sensor-system, algorithm, computational procedure." ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "observation procedure"@en ;
+        rdfs:range        om:Process ;
+        skos:definition   "The association ProcessUsed shall link the OM_Observation to the OM_Process (7.2.3) used to generate the result. The process has the role procedure with respect to the observation. A process might be responsible for more than one generatedObservation.\r\n\r\nThe OM_Process shall be suitable for the observed property. As a corollary, details of the observed property are constrained by the procedure used.\r\n\r\nEXAMPLE Observed radiance wavelength is determined by the response characteristics of the sensor.\r\n\r\nA description of the observation procedure provides or implies an indication of the reliability or quality of the observation result."^^xsd:string .
+
+om:validTime  a           owl:ObjectProperty ;
+        rdfs:comment      "time during which the observation result is recommended for use. Most often used in relation to forecasts, but may be used any time the observation procedure (including inputs) is liable to modification. " ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "valid time"@en ;
+        rdfs:range        tm:Period ;
+        skos:definition   "the attribute validTime:TM_Period shall describe the time period during which the result is intended to be used.\r\n\r\nNOTE This attribute is commonly required in forecasting applications."^^xsd:string .
+
+om:Process  a             owl:Class ;
+        rdfs:comment      "Process used in an observation, including sensors, algorithms, computation methods" , "The class OM_Process (Figure 2) is an instance of the «metaclass» GF_FeatureType (ISO 19109:2005), which therefore represents a feature type. OM_Process is abstract, and has no attributes, operations or associations. It serves as the base class for observation processes. The purpose of an observation process is to generate an observation result. An instance of OM_Process is often an instrument or sensor, but may be a human observer, a simulator, or a process or algorithm applied to more primitive results used as inputs. \r\n\r\nNOTE\tISO 19115-2:2008 provides MI_Instrument, LE_Processing and LE_Algorithm, which could all be modelled as specializations of OM_Process. OGC SensorML [10] provides a model which is suitable for many observation procedures."^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Observation process"@en ;
+        rdfs:subClassOf   gf:AnyFeature ;
+        owl:disjointWith  om:Observation ;
+        skos:notation     "OM_Process"^^h2o:ISOClassName .
+
+om:NamedValue  a          owl:Class ;
+        rdfs:comment      "Typed value" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Named value"^^xsd:string ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:name
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   om:value
+                          ] .
+
+om:TimeSeriesObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a time-series" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Time Series Observation"@en ;
+        rdfs:subClassOf   om:DiscreteCoverageObservation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  <http://def.seegrid.csiro.au/isotc211/iso19123/2005/coverage#DiscreteTimeInstantCoverage> ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_TimeSeriesObservation"^^h2o:ISOClassName .
+
+om:phenomenonTime  a      owl:ObjectProperty ;
+        rdfs:comment      "time at which the estimate of the property that is the result of the observation is associated with the feature of interest" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "phenomenon time"@en ;
+        rdfs:range        tm:Object ;
+        skos:definition   "The attribute phenomenonTime:TM_Object shall describe the time that the result (7.2.2.9) applies to the property of the feature-of-interest (7.2.2.7). This is often the time of interaction by a sampling procedure (9.1.3) or observation procedure (7.2.2.10) with a real-world feature.\r\n\r\nNOTE The phenomenonTime is the temporal parameter normally used in geospatial analysis of the result.\r\n\r\nIf the observedProperty of an observation is ‘occurrence time’ then the result should be the same as the phenomenonTime."^^xsd:string .
+
+om:CategoryObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a classification from some vocabulary or taxonomy"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Category Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  owl:Thing ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_CategoryObservation"^^h2o:ISOClassName .
+
+om:role  a                owl:ObjectProperty ;
+        rdfs:comment      "role of related observation with respect to the observation of interest" ;
+        rdfs:domain       om:ObservationContext ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "role"@en .
+
+om:CountObservation  a    owl:Class ;
+        rdfs:comment      "Observation whose result is an integer" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Count Observation"@en ;
+        rdfs:subClassOf   om:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  xsd:integer ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_CountObservation"^^h2o:ISOClassName .
+
+om:result  a              rdf:Property ;
+        rdfs:comment      "estimate of the value of the observed property" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "observation result"@en ;
+        skos:definition   "The association Range shall link the OM_Observation to the value generated by the procedure. The value has the role result with respect to the observation. The type of the result is shown as “Any”, since it may represent the value of any feature property.\r\n\r\nNOTE 1 OGC SWE Common [20] provides a model suitable for describing many kinds of observation results.\r\n\r\nThe type of the observation result shall be consistent with the observed property, and the scale or scope for the value shall be consistent with the quantity or category type. If the observed property (7.2.2.8) is a spatial operation or function, the type of the result may be a coverage.\r\n\r\nNOTE 2 In some contexts, particularly in earth and environmental sciences, the term “observation” is used to refer to the result itself."^^xsd:string .
+
+om:relatedObservation
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "related observation" ;
+        rdfs:domain       owl:Thing ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "related observation"@en ;
+        rdfs:range        om:Observation .
+
+om:parameter  a           owl:ObjectProperty ;
+        rdfs:comment      "observation-specific parameter not accommodated by the standard observation properties. Often used to record environmental parameters" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "parameter"@en ;
+        rdfs:range        om:NamedValue ;
+        skos:definition   "the attributes parameter:NamedValue shall describe an arbitrary event-specific parameter. This might be an environmental parameter, an instrument setting or input, or an event-specific sampling parameter that is not tightly bound to either the feature-of-interest (7.2.2.7) or to the observation procedure (7.2.2.10). To avoid ambiguity, there shall be no more than one parameter with the same name.\r\n\r\nNOTE Parameters that are tightly bound to the procedure can be recorded as part of the procedure description.\r\n\r\nIn some contexts, the Observation::procedure (7.2.2.10) is a generic or standard procedure, rather than an event-specific process. In this context, parameters bound to the observation act, such as instrument settings, calibrations or inputs, local position, detection limits, asset identifier, operator, may augment the description of a standard procedure.\r\n\r\nEXAMPLE A time sequence of observations of water quality in a well might be made at variable depths within the well. While these can be associated with specimens taken from the well at this depth as the features-of-interest, a more common approach is to identify the well itself as the feature-of-interest, and add a “samplingDepth” parameter to the\r\nobservation (Figure 3). The sampling depth is of secondary interest compared to the temporal variation of water quality at the site."^^xsd:string .
+
+om:PointCoverageObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a spatio-temporal field sampled at discete points" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "Point Coverage Observation"@en ;
+        rdfs:subClassOf   om:DiscreteCoverageObservation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  <http://def.seegrid.csiro.au/isotc211/iso19123/2005/coverage#DiscretePointCoverage> ;
+                            owl:onProperty     om:result
+                          ] ;
+        skos:notation     "OM_PointCoverageObservation"^^h2o:ISOClassName .
+
+om:resultQuality  a       owl:ObjectProperty ;
+        rdfs:comment      "assessment of the quality of the observation result. The value should be specific to this observation instance, in addition to any quality that is inferred from the observation procedure used" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "result quality"@en ;
+        rdfs:range        <http://def.seegrid.csiro.au/isotc211/iso19115/2003/dataquality#Element> ;
+        skos:definition   "the attributes resultQuality:DQ_Element shall describe the quality of the result (7.2.2.9). This instance-specific description complements the description of the observation procedure (7.2.2.10), which provides information concerning the quality of all observations using this procedure. The quality of a result may be assessed following the procedures in ISO 19157. Multiple measures may be provided."^^xsd:string .
+
+om:observedProperty  a    owl:ObjectProperty ;
+        rdfs:comment      "property whose value is the result of the observation" ;
+        rdfs:domain       gf:AnyFeature ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        rdfs:label        "observed property"@en ;
+        skos:definition   "The association Phenomenon shall link the OM_Observation to the GF_PropertyType for which the OM_Observation:result (7.2.2.9) provides an estimate of its value. The property type has the role observedProperty with respect to the observation.\r\n\r\nThe observed property shall be a phenomenon associated with the feature-of-interest.\r\n\r\nAn observed property may be, but need not be, modelled as a property (in the sense of the General Feature Model) in a formal application schema that defines the type of the feature-of-interest.\r\n\r\nAn instance of GF_PropertyType shall describe a property that is either assignable or observable (7.1.2), such as “temperature”, “height”, “colour”, “material”. A property type may be an operation or function such as a spatiotemporal coverage. Property-type definitions may be organized into a hierarchy or ontology and managed in a register and catalogued to support discovery functions. The observed property supports semantic or thematic classification of observations, which is useful for discovery and data fusion.\r\n\r\nNOTE In general, the value of a specific observedProperty can be associated with different feature types in different observations, thus allowing the results of observations made in different projects or campaigns, and even from different disciplines, to be combined when required. A property-type register used in observations is most useful if each property type is not tied to a single feature type, or if equivalence relationships between similar property types from different feature types are provided."^^xsd:string .
+
+<http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation>
+        a                              owl:Ontology , voaf:Vocabulary ;
+        rdfs:comment                   "An OWL representation of the Observation Schema described in clause 6 of ISO 19156:2011 Geographic Information - Observations and Measurements. \r\n\r\nThe rationale for design decisions made in this implementation, and a comparison with the SSN ontology, was presented in a paper at the 6th International Semantic Sensor Web workshop, Sydney, 2013-10-21.\r\n\r\nThis vocabulary is provisional, pending finalization of ISO 19150-2.\r\n\r\nNOTE: The URI stem http://def.seegrid.csiro.au/isotc211/ is temporary. The vocabulary is expected to be ultimately published in the domain http://def.isotc211.org/"^^xsd:string ;
+        rdfs:seeAlso                   <http://ceur-ws.org/Vol-1063/paper1.pdf> , <http://www.slideshare.net/drshorthair/an-explicit-owl-representation-of-isoogc-observations-and-measurements> ;
+        dc:creator                     "Simon Jonathan David COX\nCSIRO"^^xsd:string ;
+        dc:description                 "An OWL representation of the Observation Schema described in clause 6 of ISO 19156:2011 Geographic Information - Observations and Measurements"^^xsd:string ;
+        dc:rights                      "Copyright © 2012-2013 CSIRO"^^xsd:string ;
+        dc:source                      "ISO 19156:2011"^^xsd:string ;
+        dc:title                       "OWL representation of ISO 19156 (Observation model)"^^xsd:string ;
+        dct:created                    "2011-07-07T00:00:00"^^xsd:dateTime ;
+        dct:hasPart                    om:Measurement , om:observedProperty , om:PointCoverageObservation , om:validTime , om:TruthObservation , om:DiscreteCoverageObservation , om:role , om:resultQuality , om:relatedObservation , om:value , om:Process , om:result , om:resultTime , om:GeometryObservation , om:featureOfInterest , om:ObservationContext , om:observationContext , om:Observation , om:metadata , om:phenomenonTime , om:CategoryObservation , om:TemporalObservation , om:NamedValue , om:parameter , om:ComplexObservation , om:procedure , om:TimeSeriesObservation , om:CountObservation , om:name ;
+        dct:license                    <http://creativecommons.org/licenses/by/3.0/> ;
+        dct:modified                   "2013-11-14T00:00:00"^^xsd:dateTime ;
+        vann:preferredNamespacePrefix  "om"^^xsd:string ;
+        vann:preferredNamespaceUri     om: ;
+        owl:imports                    <http://def.seegrid.csiro.au/isotc211/iso19150/-2/2012/basic> , <http://def.seegrid.csiro.au/isotc211/iso19103/2005/basic> , <http://def.seegrid.csiro.au/isotc211/iso19107/2003/geometry> , <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata> , <http://def.seegrid.csiro.au/isotc211/iso19123/2005/coverage> , <http://def.seegrid.csiro.au/isotc211/iso19108/2002/temporal> , <http://def.seegrid.csiro.au/isotc211/iso19109/2005/feature> ;
+        owl:priorVersion               <https://www.seegrid.csiro.au/subversion/xmml/ontologies/tags/201305/ISOTC211/HM/observation.rdf> ;
+        owl:versionIRI                 <https://www.seegrid.csiro.au/subversion/xmml/ontologies/tags/201311/ISOTC211/HM/observation.rdf> .

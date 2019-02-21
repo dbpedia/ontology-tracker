@@ -1,0 +1,234 @@
+@prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix test: <http://www.w3.org/2006/03/test-description#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> :seeAlso <http://www.w3.org/TR/2005/NOTE-test-metadata-20050914/> .
+
+test:ReviewStatus a owl:Class ;
+	:comment "A particular stage in a review process" ;
+	:label "Status in a review process"@en .
+
+test:SimpleReviewStatus a owl:Class ;
+	:label "A status for a simple review process containing 6 possible stages"@en ;
+	:subClassOf test:ReviewStatus ;
+	owl:oneOf _:node18olb26i9x1 .
+
+_:node18olb26i9x1 rdf:first test:unreviewed ;
+	rdf:rest _:node18olb26i9x2 .
+
+_:node18olb26i9x2 rdf:first test:accepted ;
+	rdf:rest _:node18olb26i9x3 .
+
+_:node18olb26i9x3 rdf:first test:assigned ;
+	rdf:rest _:node18olb26i9x4 .
+
+_:node18olb26i9x4 rdf:first test:approved ;
+	rdf:rest _:node18olb26i9x5 .
+
+_:node18olb26i9x5 rdf:first test:rejected ;
+	rdf:rest _:node18olb26i9x6 .
+
+_:node18olb26i9x6 rdf:first test:onhold ;
+	rdf:rest rdf:nil .
+
+test:SpecificationTestCase a owl:Class ;
+	:comment "A test case which relates to a requirement set in a specification" ;
+	:label "A Test Case based on a specification"@en ;
+	:subClassOf test:TestCase , _:node18olb26i9x7 .
+
+_:node18olb26i9x7 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:specificationReference .
+
+test:TestCase a owl:Class ;
+	:comment "A set of test inputs, execution conditions, and expected results developed for a particular objective, such as to exercise a particular program path or to verify compliance with a specific requirement" ;
+	:label "A Test Case"@en ;
+	:subClassOf _:node18olb26i9x8 .
+
+_:node18olb26i9x8 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/title> .
+
+test:TestCase :subClassOf _:node18olb26i9x9 .
+
+_:node18olb26i9x9 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/title> .
+
+test:TestCase :subClassOf _:node18olb26i9x10 .
+
+_:node18olb26i9x10 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:purpose .
+
+test:TestCase :subClassOf _:node18olb26i9x11 .
+
+_:node18olb26i9x11 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:purpose .
+
+test:TestCase :subClassOf _:node18olb26i9x12 .
+
+_:node18olb26i9x12 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/description> .
+
+test:TestCase :subClassOf _:node18olb26i9x13 .
+
+_:node18olb26i9x13 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:reviewStatus .
+
+test:TestCase :subClassOf _:node18olb26i9x14 .
+
+_:node18olb26i9x14 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/contributor> .
+
+test:TestCase :subClassOf _:node18olb26i9x15 .
+
+_:node18olb26i9x15 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/rights> .
+
+test:accepted a test:ReviewStatus ;
+	:comment "the item has gone through a first review, which shows it as valid for further processing" ;
+	:label "accepted"@en .
+
+test:approved a test:ReviewStatus ;
+	:comment "the item has gone through the review process and was approved" ;
+	:label "approved"@en .
+
+test:assigned a test:ReviewStatus ;
+	:comment "a more specific review of the item has been assigned to someone" ;
+	:label "assigned"@en .
+
+test:expectedResults a rdf:Property ;
+	:comment "The results that a conformant implementation is expected to produce when this test is executed" ;
+	:domain test:TestCase ;
+	:label "expected results"@en .
+
+test:informationResourceInput a owl:ObjectProperty ;
+	:comment "Information Resource (e.g. a file) used as input for the test case"@en ;
+	:label "information resource as input"@en ;
+	:range <http://www.w3.org/2006/gen/ont#InformationResource> ;
+	:subPropertyOf test:input .
+
+test:informationResourceResults a owl:ObjectProperty ;
+	:comment "Information Resource (e.g. a file) that contains the expected results for the test case" ;
+	:label "information resource as expected results"@en ;
+	:range <http://www.w3.org/2006/gen/ont#InformationResource> ;
+	:subPropertyOf test:expectedResults .
+
+test:input a rdf:Property ;
+	:comment "Parameters or data that are needed for the test execution."@en ;
+	:domain test:TestCase ;
+	:label "input"@en .
+
+test:onhold a test:ReviewStatus ;
+	:comment "the item had already gone through the review process, but the results of the review need to be re-assessed due to new input" ;
+	:label "on hold" .
+
+test:preCondition a owl:DatatypeProperty ;
+	:comment "a condition that must be met before the test is executed"@en ;
+	:domain test:TestCase ;
+	:label "precondition"@en ;
+	:range :Literal .
+
+test:purpose a owl:DatatypeProperty ;
+	:domain test:TestCase ;
+	:label "purpose"@en ;
+	:range :Literal .
+
+test:rejected a test:ReviewStatus ;
+	:comment "the item has gone through the review process and was rejected" ;
+	:label "rejected"@en .
+
+test:reviewStatus a owl:ObjectProperty ;
+	:label "status of review"@en ;
+	:range test:ReviewStatus .
+
+test:specificationReference a owl:DatatypeProperty ;
+	:comment "a description or a link of what part of which specification lead to the creation of this test case"@en ;
+	:domain test:TestCase ;
+	:label "reference in specification"@en ;
+	:range :Literal .
+
+test:unreviewed a test:ReviewStatus ;
+	:comment "the item has been proposed, but hasn't been reviewed (e.g. for completeness) yet" ;
+	:label "unreviewed"@en .
+
+test:SimpleReviewStatus owl:oneOf _:node18olb26i9x16 .
+
+_:node18olb26i9x16 rdf:first test:unreviewed ;
+	rdf:rest _:node18olb26i9x17 .
+
+_:node18olb26i9x17 rdf:first test:accepted ;
+	rdf:rest _:node18olb26i9x18 .
+
+_:node18olb26i9x18 rdf:first test:assigned ;
+	rdf:rest _:node18olb26i9x19 .
+
+_:node18olb26i9x19 rdf:first test:approved ;
+	rdf:rest _:node18olb26i9x20 .
+
+_:node18olb26i9x20 rdf:first test:rejected ;
+	rdf:rest _:node18olb26i9x21 .
+
+_:node18olb26i9x21 rdf:first test:onhold ;
+	rdf:rest rdf:nil .
+
+test:SpecificationTestCase :subClassOf _:node18olb26i9x22 .
+
+_:node18olb26i9x22 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:specificationReference .
+
+test:TestCase :subClassOf _:node18olb26i9x23 .
+
+_:node18olb26i9x23 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/title> .
+
+test:TestCase :subClassOf _:node18olb26i9x24 .
+
+_:node18olb26i9x24 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/title> .
+
+test:TestCase :subClassOf _:node18olb26i9x25 .
+
+_:node18olb26i9x25 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:purpose .
+
+test:TestCase :subClassOf _:node18olb26i9x26 .
+
+_:node18olb26i9x26 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:purpose .
+
+test:TestCase :subClassOf _:node18olb26i9x27 .
+
+_:node18olb26i9x27 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/description> .
+
+test:TestCase :subClassOf _:node18olb26i9x28 .
+
+_:node18olb26i9x28 a owl:Restriction ;
+	owl:maxCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty test:reviewStatus .
+
+test:TestCase :subClassOf _:node18olb26i9x29 .
+
+_:node18olb26i9x29 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/contributor> .
+
+test:TestCase :subClassOf _:node18olb26i9x30 .
+
+_:node18olb26i9x30 a owl:Restriction ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:onProperty <http://purl.org/dc/elements/1.1/rights> .

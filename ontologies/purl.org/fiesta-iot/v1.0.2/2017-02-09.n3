@@ -1,0 +1,3173 @@
+@prefix :      <http://purl.org/iot/ontology/fiesta-iot#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix ns:    <http://creativecommons.org/ns#> .
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix ssn:   <http://purl.oclc.org/NET/ssnx/ssn#> .
+@prefix iot-lite: <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#> .
+@prefix mthreelite: <http://purl.org/iot/vocab/m3-lite#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix qudt:  <http://data.qudt.org/qudt/owl/1.0.0/unit.owl#> .
+@prefix onemtom: <http://www.onem2m.org/ontology/Base_Ontology/base_ontology#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix dul:   <http://www.loa.istc.cnr.it/ontologies/DUL.owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix qu:    <http://purl.org/NET/ssnx/qu/qu#> .
+@prefix fiesta-iot: <http://purl.org/iot/ontology/fiesta-iot#> .
+
+mthreelite:Microgram  a  owl:Class ;
+        rdfs:comment     "It is a unit of mass equal to one billionth (1×10^−9) of a kilogram."@en ;
+        rdfs:label       "Microgram (ug)"@en ;
+        rdfs:subClassOf  mthreelite:Gram .
+
+iot-lite:exposedBy  a  owl:ObjectProperty ;
+        rdfs:comment   "A device is exposed by a service."@en ;
+        rdfs:domain    ssn:Device ;
+        rdfs:label     "Exposed By"@en ;
+        rdfs:range     iot-lite:Service ;
+        owl:inverseOf  iot-lite:exposes .
+
+mthreelite:Index  a      owl:Class ;
+        rdfs:comment     "Arbitrary indirect reference which should be translated into meaningful measurements by using the corresponding decoding algorithm detailed in the resource description. In this case the returned values can only take certain values from a finite set." ;
+        rdfs:label       "Index"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:OccupancyDetector
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect if on object is occupied or not."@en ;
+        rdfs:label       "Occupancy Detector"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#PassiveInfraredSensor> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+iot-lite:id  a        owl:DatatypeProperty ;
+        rdfs:comment  "Defines the ID of the Object or Device"@en ;
+        rdfs:domain   ssn:Device ;
+        rdfs:label    "ID"@en ;
+        rdfs:range    xsd:string .
+
+mthreelite:TimeRelatedStateDriver1
+        a                owl:Class ;
+        rdfs:comment     "Indicates if the first driver approaches or exceeds working time limits (or other limits)."@en ;
+        rdfs:label       "Time Related State Driver 1"@en ;
+        rdfs:subClassOf  mthreelite:TimeRelatedStateDriver .
+
+mthreelite:RoadOccupancy
+        a                owl:Class ;
+        rdfs:comment     "Ratio of time on which a road lane section is occupied by vehicles within a given period of time." ;
+        rdfs:label       "Road Occupancy"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:PresenceStateParking
+        a                owl:Class ;
+        rdfs:comment     "The presence or absence of a vehicle parked." ;
+        rdfs:label       "Presence State Parking"@en ;
+        rdfs:subClassOf  mthreelite:Presence .
+
+mthreelite:SunPositionDirectionSensor
+        a                owl:Class ;
+        rdfs:comment     "Sensor used to detect sun position."@en ;
+        rdfs:label       "Sun Position Direction Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] .
+
+mthreelite:SecondTime
+        a                owl:Class ;
+        rdfs:comment     "Qualitatively defined as the second division of the hour by sixty, the first division by sixty being the minute. SI definition of second is \"the duration of 9 192 631 770 periods of the radiation corresponding to the transition between the two hyperfine levels of the ground state of the cesium 133 atom."@en ;
+        rdfs:label       "Second Time"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Scale  a      owl:Class ;
+        rdfs:comment     "Arbitrary indirect reference which should be translated into meaningful measurements by using the corresponding decoding algorithm detailed in the resource description. In this case the returned values are part of a continuous variable which can take any numeric value."@en ;
+        rdfs:label       "Scale"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+terms:created  a  owl:AnnotationProperty .
+
+mthreelite:FillLevel  a  owl:Class ;
+        rdfs:comment     "Property used to determine the level a certain object such as waste bin is filled upto."@en ;
+        rdfs:label       "Fill Level"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:MinuteTime
+        a                owl:Class ;
+        rdfs:comment     "A unit of time equal to 60 seconds or 1/60th of an hour."@en ;
+        rdfs:label       "Minute Time"@en ;
+        rdfs:subClassOf  mthreelite:SecondTime .
+
+ssn:hasValue  a       owl:ObjectProperty ;
+        rdfs:comment  "Provides a relation between observationValue and actual value."@en ;
+        rdfs:domain   ssn:SensorOutput ;
+        rdfs:label    "Has Value"@en ;
+        rdfs:range    ssn:ObservationValue .
+
+mthreelite:MillimeterPerHour
+        a                owl:Class ;
+        rdfs:comment     "A unit of both speed (scalar) and velocity (vector), defined as the distance of one millimeter travelled per unit hour."@en ;
+        rdfs:label       "Millimeter Per Hour, Millimetre Per Hour"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#millimetrePerHour" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:FoodTemperature
+        a                owl:Class ;
+        rdfs:comment     "Measure of temperature of the food."@en ;
+        rdfs:label       "Food Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:KilogramPerCubicMetre
+        a                owl:Class ;
+        rdfs:comment     "It is SI derived unit of density, defined by mass in kilograms divided by volume in cubic metres."@en ;
+        rdfs:label       "Kilogram Per Cubic Metre, Kilogram Per Cubic Meter"@en ;
+        rdfs:subClassOf  mthreelite:GramPerCubicMetre .
+
+owl:equivalentClass  a  owl:AnnotationProperty .
+
+mthreelite:GyroscopeSensor
+        a                owl:Class ;
+        rdfs:comment     "A gyroscope is a device for measuring or maintening orientation."@en ;
+        rdfs:label       "Gyroscope Sensor"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#Gyroscope> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:PresenceStateEmergencyVehicle
+        a                owl:Class ;
+        rdfs:comment     "The presence or absence of an emergency vehicle (ambulance, fire fighters, etc.)." ;
+        rdfs:label       "Presence State Emergency Vehicle"@en ;
+        rdfs:subClassOf  mthreelite:Presence .
+
+mthreelite:MmHg  a       owl:Class ;
+        rdfs:comment     "A millimeter of mercury is a manometric unit of pressure, formerly defined as the extra pressure generated by a column of mercury one millimetre high and now defined as precisely 133.322387415 pascals. It is denoted by the symbol mmHg. It  is used to measure blood pressure measurements (systolic and diastolic)."@en ;
+        rdfs:label       "MmHg"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+dc:source  a    owl:AnnotationProperty .
+
+mthreelite:Microwave  a  owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the Microwave."@en ;
+        rdfs:label       "Microwave Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Telephone  a  owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the Telephone."@en ;
+        rdfs:label       "Telephone Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Environment
+        a                owl:Class ;
+        rdfs:comment     "Environment (earthquake, flooding, fire, pollution) as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Environment DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:WindChill  a  owl:Class ;
+        rdfs:comment     "The cooling effect of wind blowing on a surface."@en ;
+        rdfs:label       "Wind Chill"@en ;
+        rdfs:seeAlso     <http://openiot.eu/ontology/ns/WindChill> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:TimeRelatedStateDriver
+        a                owl:Class ;
+        rdfs:comment     "Indicator of whether the driver of a vehicle approaches or exceeds his/her working time limits."@en ;
+        rdfs:label       "Time Related State Driver"@en ;
+        rdfs:subClassOf  mthreelite:TimeRelatedState .
+
+mthreelite:Cupboard  a   owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the cupboard."@en ;
+        rdfs:label       "Cupboard Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+onemtom:hasService  a  owl:ObjectProperty ;
+        rdfs:comment  "The Functionalities of a Device are exposed in the network as Services of the Device" ;
+        rdfs:label    "Has Service"@en .
+
+iot-lite:radius  a    owl:DatatypeProperty ;
+        rdfs:comment  "Specifies the radius of a circle coverage defined by a point -the center of the circle- and its radius." ;
+        rdfs:domain   iot-lite:Circle ;
+        rdfs:label    "Radius"@en ;
+        rdfs:range    xsd:double .
+
+mthreelite:MilligramPerSquareMetre
+        a                owl:Class ;
+        rdfs:comment     "A dose unit which is equal to 1 milligram of a substance per square meter of surface area of the recipient subject."@en ;
+        rdfs:label       "Milligram Per Square Metre"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#milligramPerSquareMetre" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:TemperatureWasteContainer
+        a                owl:Class ;
+        rdfs:comment     "The temperature of the air that would be indicated by a thermometer exposed to the air inside a waste container."@en ;
+        rdfs:label       "Temperature Waste Container"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:Blind  a      owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the window blinds."@en ;
+        rdfs:label       "Blind Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Sodium  a     owl:Class ;
+        rdfs:comment     "Measure of Blood Sodium level."@en ;
+        rdfs:label       "Sodium"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:LocationQK
+        a                owl:Class ;
+        rdfs:comment     "A particular place or position."@en ;
+        rdfs:label       "Location Quantity Kind"@en ;
+        rdfs:seeAlso     geo:SpatialThing ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Percent  a    owl:Class ;
+        rdfs:comment     "It is the amount in or for every hundred."@en ;
+        rdfs:label       "Percent"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#percent> , qudt:Percent ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Barcode  a    owl:Class ;
+        rdfs:comment     "A tagging device can be Barcode."@en ;
+        rdfs:label       "Barcode Tagging Device"@en ;
+        rdfs:subClassOf  iot-lite:TagDevice .
+
+mthreelite:Degree  a     owl:Class ;
+        rdfs:comment     "Degree"@en ;
+        rdfs:label       "Degree"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:TouchSensor
+        a                owl:Class ;
+        rdfs:comment     "Device that captures and records physical touch or embrace on a device and/or object."@en ;
+        rdfs:label       "Touch Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:Boiler  a     owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the boiler."@en ;
+        rdfs:label       "Boiler Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:DomainOfInterest
+        a             owl:Class ;
+        rdfs:comment  "Domain of Interest."@en ;
+        rdfs:label    "Domain Of Interest"@en .
+
+mthreelite:SpeedMedian
+        a                owl:Class ;
+        rdfs:comment     "A measure of the median rate of motion of an object." ;
+        rdfs:label       "Speed Median"@en ;
+        rdfs:subClassOf  mthreelite:Speed .
+
+mthreelite:Decibel  a    owl:Class ;
+        rdfs:comment     "Decibel is a logarithmic unit used to express the ratio of two values of a physical quantity. It is often used to measure sound level."@en ;
+        rdfs:label       "Decibel (dB)"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#decibel" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:ActivePower
+        a                owl:Class ;
+        rdfs:comment     "The product of the voltage across a branch of an alternating-current circuit and the component of the electric current that is in phase with the voltage."@en ;
+        rdfs:label       "Active Power"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/quantity#activePower" ;
+        rdfs:subClassOf  mthreelite:Power .
+
+mthreelite:Hydrophone
+        a                owl:Class ;
+        rdfs:comment     "A hydrophone is a microphone designed to be used underwater for recording or listening to underwater sound."@en ;
+        rdfs:label       "Hydrophone"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:RadianPerSecond
+        a                owl:Class ;
+        rdfs:comment     "The radian per second is defined as the change in the orientation of an object, in radians, every second. The radian per second is the SI unit of angular (rotational) speed."@en ;
+        rdfs:label       "Radian Per Second"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#radianPerSecond" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Coordinates
+        a                owl:Class ;
+        rdfs:comment     "Triples for location in the (Latitude, Longitude, Altitude) format."@en ;
+        rdfs:label       "Coordinates"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:AlcoholLevelSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect and measure Alcohol Level in the system."@en ;
+        rdfs:label       "Alcohol Level Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+ssn:observationResult
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Relation linking an Observation (i.e., a description of the context, the Situation, in which the observatioin was made) and a Result, which contains a value representing the value associated with the observed Property." ;
+        rdfs:domain   ssn:Observation ;
+        rdfs:label    "Observation Result"@en ;
+        rdfs:range    ssn:SensorOutput ;
+        dc:source     "skos:closeMatch 'result' [O&M - ISO/DIS 19156] \n\t\t                    http://portal.opengeospatial.org/files/?artifact_id=41579" .
+
+ssn:hasDeployment  a  owl:ObjectProperty ;
+        rdfs:comment  "Relation between a System and a Deployment, recording that the System/Sensor was deployed in that Deployment." ;
+        rdfs:domain   ssn:System ;
+        rdfs:label    "Has Deployment"@en ;
+        rdfs:range    ssn:Deployment .
+
+mthreelite:Tourism  a    owl:Class ;
+        rdfs:comment     "Tourism as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Tourism DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:CloudCoverSensor
+        a                owl:Class ;
+        rdfs:comment     "Cloud Cover Sensor is used to detect whether it is sunny, cloudy, etc."@en ;
+        rdfs:label       "Cloud Cover Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] .
+
+iot-lite:TagDevice  a    owl:Class ;
+        rdfs:comment     "Device that can redirect to a resource with information (i.e. RFID, NFC, QR-codes, bar-codes)."@en ;
+        rdfs:label       "Tagging Device"@en ;
+        rdfs:subClassOf  ssn:Device .
+
+mthreelite:Visibility
+        a                owl:Class ;
+        rdfs:comment     "The state of being able to see or be seen."@en ;
+        rdfs:label       "Visibility"@en ;
+        rdfs:seeAlso     <http://openiot.eu/ontology/ns/AtmosphereVisibility> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:CholesterolSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to measure the cholesterol level in a system."@en ;
+        rdfs:label       "Cholesterol Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+mthreelite:ElectricField2100MHz
+        a                owl:Class ;
+        rdfs:comment     "A field of force associated with a moving electric charge equivalent to an electric field and a magnetic field at right angles to each other and to the direction of propagation. Applied to the 2100 MHz UHF band."@en ;
+        rdfs:label       "Electric Field 2100 MHz"@en ;
+        rdfs:subClassOf  mthreelite:ElectricField .
+
+mthreelite:LeafWetnessSensor
+        a                owl:Class ;
+        rdfs:comment     "Leaf Wetness Sensor is used in agriculture to check whether the plants need to be watered."@en ;
+        rdfs:label       "Leaf Wetness Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:Dimensionless
+        a                owl:Class ;
+        rdfs:comment     "Without dimensions; having no appreciable or noteworthy extent. Without physical meaning."@en ;
+        rdfs:label       "Dimensionless"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/dim#Dimensionless" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Tesla  a      owl:Class ;
+        rdfs:comment     "It is the SI unit of magnetic flux density."@en ;
+        rdfs:label       "Tesla"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Salinity  a   owl:Class ;
+        rdfs:comment     "It is the measure of all the salts dissolved in water."@en ;
+        rdfs:label       "Salinity"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Milligram  a  owl:Class ;
+        rdfs:comment     "One thousandth of a gram."@en ;
+        rdfs:label       "Milligram (mg)"@en ;
+        rdfs:subClassOf  mthreelite:Gram .
+
+mthreelite:LeafWetness
+        a                owl:Class ;
+        rdfs:comment     "Leaf wetness is a meteorological parameter that describes the amount of dew and precipitation left on surfaces. It is used for monitoring leaf moisture for agricultural purposes, such as fungus and disease control, for control of irrigation systems, and for detection of fog and dew conditions, and early detection of rainfall. (Source Wikipedia)."@en ;
+        rdfs:label       "Leaf Wetness"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Potassium  a  owl:Class ;
+        rdfs:comment     "It is the measure of Blood Potassium Level."@en ;
+        rdfs:label       "Potassium"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:VisibilitySensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect Visibility."@en ;
+        rdfs:label       "Visibility Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:PHSensor  a   owl:Class ;
+        rdfs:comment     "Device used to detect PH level."@en ;
+        rdfs:label       "PH Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:Power  a      owl:Class ;
+        rdfs:comment     "It is the rate, per unit time, at which electrical energy is transferred by an electric circuit."@en ;
+        rdfs:label       "Power"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:ElectricalResistance
+        a                owl:Class ;
+        rdfs:comment     "The electrical resitance of an electrical conductor is the opposition to the passage of an electric current through that conductor."@en ;
+        rdfs:label       "Electrical Resistance"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Shower  a     owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the shower."@en ;
+        rdfs:label       "Shower Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Hertz  a      owl:Class ;
+        rdfs:comment     "The SI unit of frequency, equal to one cycle per second."@en ;
+        rdfs:label       "Hertz"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:GPSSensor  a  owl:Class ;
+        rdfs:comment     "Device that allows an object to localize itself."@en ;
+        rdfs:label       "GPS Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:intUlPacketLoss
+        a                owl:Class ;
+        rdfs:comment     "Uplink Packet Loss."@en ;
+        rdfs:label       "Uplink Packet Loss"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:Ventilation
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the ventilation."@en ;
+        rdfs:label       "Ventilation Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:EnergyMeter
+        a                owl:Class ;
+        rdfs:comment     "Sensor to measure power or energy consumption."@en ;
+        rdfs:label       "Energy Meter"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:EnergyDOI
+                         ] .
+
+mthreelite:RevolutionsPerMinute
+        a                owl:Class ;
+        rdfs:comment     "Revolutions per minute (abbreviated rpm, RPM, rev/min, r/min) is a measure of the frequency of rotation, specifically the number of rotations around a fixed axis in one minute. It is used as a measure of rotational speed of a mechanical component." ;
+        rdfs:label       "Revolutions Per Minute"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:SnowChains
+        a                owl:Class ;
+        rdfs:comment     "The actuator that turn Snow chains on/off."@en ;
+        rdfs:label       "Snow Chains Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:PresenceStateDriverCard
+        a                owl:Class ;
+        rdfs:comment     "Indicates the presence of the first driver card."@en ;
+        rdfs:label       "Presence State Driver Card"@en ;
+        rdfs:subClassOf  mthreelite:Presence .
+
+iot-lite:interfaceDescription
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Description of the service." ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:label    "Interface Description"@en ;
+        rdfs:range    xsd:anyURI .
+
+mthreelite:PresenceStateDriverCard2
+        a                owl:Class ;
+        rdfs:comment     "Indicates the presence of the second driver card."@en ;
+        rdfs:label       "Presence State Driver Card 2"@en ;
+        rdfs:subClassOf  mthreelite:PresenceStateDriverCard .
+
+dc:creator  a   owl:AnnotationProperty .
+
+iot-lite:Attribute  a    owl:Class ;
+        rdfs:comment     "An attribute of an IoT object that can be exposed by an IoT service (i.e. a room (IoT Object) has a temperature (Attribute), that can be exposed by a temperature sensor (IoT device)."@en ;
+        rdfs:label       "Attribute"@en ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               qu:QuantityKind ;
+                           owl:onProperty            iot-lite:hasQuantityKind ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+mthreelite:AccelerationInstantaneous
+        a                owl:Class ;
+        rdfs:comment     "The acceleration at a given instant of time."@en ;
+        rdfs:label       "Instantaneous Acceleration"@en ;
+        rdfs:subClassOf  mthreelite:Acceleration .
+
+mthreelite:WindDirectionSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect wind direction."@en ;
+        rdfs:label       "Wind Direction Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] .
+
+mthreelite:Inch  a       owl:Class ;
+        rdfs:comment     "Length in inches."@en ;
+        rdfs:label       "Inch"@en ;
+        rdfs:subClassOf  mthreelite:Meter .
+
+mthreelite:CO2  a        owl:Class ;
+        rdfs:comment     "Carbon Dioxide (CO2) measure in the atmosphere."@en ;
+        rdfs:label       "Carbon Dioxide (CO2) Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:FillLevelGasTank
+        a                owl:Class ;
+        rdfs:comment     "Ratio of volume of combustible exhaust fluid to the total volume of diesel exhaust fluid storage container."@en ;
+        rdfs:label       "Fill Level Gas Tank"@en ;
+        rdfs:subClassOf  mthreelite:FillLevel .
+
+ssn:Platform  a          owl:Class ;
+        rdfs:comment     "An Entity to which other Entities can be attached - particuarly Sensors and other Platforms.  For example, a post might act as the Platform, a bouy might act as a Platform, or a fish might act as a Platform for an attached sensor." ;
+        rdfs:label       "Platform"@en ;
+        rdfs:seeAlso     "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Deploy#PlatformSite" ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               geo:Point ;
+                           owl:onProperty            geo:location ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  ssn:System ;
+                           owl:onProperty     ssn:attachedSystem
+                         ] ;
+        dc:source        "skos:exactMatch 'platform' [SensorML OGC-0700]\n                                  http://www.opengeospatial.org/standards/sensorml" .
+
+mthreelite:WorkingStateDriver
+        a                owl:Class ;
+        rdfs:comment     "Indicator of whether the driver of a vehicle is present or not"@en ;
+        rdfs:label       "Working State Driver"@en ;
+        rdfs:subClassOf  mthreelite:WorkingState .
+
+mthreelite:TimeRelatedStateDriver2
+        a                owl:Class ;
+        rdfs:comment     "Indicates if the second driver approaches or exceeds working time limits (or other limits)."@en ;
+        rdfs:label       "Time Related State Driver 2"@en ;
+        rdfs:subClassOf  mthreelite:TimeRelatedStateDriver .
+
+mthreelite:VoltAmpereReactive
+        a                owl:Class ;
+        rdfs:comment     "In electric power transmission and distribution, volt-ampere reactive (var) is a unit in which reactive power is expressed in an AC electric power system."@en ;
+        rdfs:label       "Volt Ampere Reactive, VAR"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#var" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Pedometer  a  owl:Class ;
+        rdfs:comment     "Pedometer is used to count the number of steps when walking, running, etc."@en ;
+        rdfs:label       "Pedometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+mthreelite:Kelvin  a     owl:Class ;
+        rdfs:comment     "Kelvin is a unit of measurement for temperature."@en ;
+        rdfs:label       "Kelvin, Degree Kelvin"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#kelvin> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:MillivoltPerMeter
+        a                owl:Class ;
+        rdfs:comment     "It is a measure of the intensity of the signal of a radio transmitter."@en ;
+        rdfs:label       "Millivolt Per Meter, Millivolt Per Metre"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:ECG  a        owl:Class ;
+        rdfs:comment     "ECG or EKG (Electrocardiogram) device."@en ;
+        rdfs:label       "ECG or EKG (Electrocardiogram)"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Emotion
+                         ] .
+
+mthreelite:COSensor  a   owl:Class ;
+        rdfs:comment     "Device to detect Carbon Monoxide (CO) in the environment."@en ;
+        rdfs:label       "Carbon Monoxide (CO) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+iot-lite:Metadata  a  owl:Class ;
+        rdfs:comment  "Class used to describe properties that cannot be described by QuantityKind and Units. i.e. the resolution of a sensor."@en ;
+        rdfs:label    "Metadata"@en .
+
+mthreelite:VoltageSensor
+        a                owl:Class ;
+        rdfs:comment     "A device designed to respond to physical stimuli such as temperature, light, magnetism, or movement, and to transmit resulting impulses for interpretation."@en ;
+        rdfs:label       "Voltage Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+ssn:observationSamplingTime
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The sampling time is the time that the result applies to the feature-of-interest. This is the time usually required for geospatial analysis of the result." , "Rebadged as phenomenon time in [O&M]. The phenomenon time shall describe the time that the result applies to the property of the feature-of-interest. This is often the time of interaction by a sampling procedure or observation procedure with a real-world feature." ;
+        rdfs:domain   ssn:Observation ;
+        rdfs:label    "Observation Sampling Time"@en ;
+        rdfs:range    time:Instant .
+
+mthreelite:WattPerSquareMeter
+        a                owl:Class ;
+        rdfs:comment     "It is the SI unit for radiative and other energy fluxes."@en ;
+        rdfs:label       "Watt Per Square Metre, Watt Per Square Meter"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#wattPerSquareMetre" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Pascal  a     owl:Class ;
+        rdfs:comment     "Unit for pressure (e.g., atmospheric pressure)."@en ;
+        rdfs:label       "Pascal"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:GramPerLiter
+        a                owl:Class ;
+        rdfs:comment     "It shows how many grams of a certain substance are present in one liter of a usually liquid or gaseous mixture."@en ;
+        rdfs:label       "Gram Per Liter (g/L)"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+ssn:Device  a            owl:Class ;
+        rdfs:comment     "A device is a physical piece of technology - a system in a box. Devices may of course be built of smaller devices and software components (i.e. systems have components)." ;
+        rdfs:label       "Device"@en ;
+        rdfs:seeAlso     "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Device#Device" ;
+        rdfs:subClassOf  ssn:System ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  iot-lite:Coverage ;
+                           owl:onProperty               iot-lite:hasCoverage
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  mthreelite:DomainOfInterest ;
+                           owl:onProperty               mthreelite:hasDomainOfInterest
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      iot-lite:exposedBy ;
+                           owl:someValuesFrom  iot-lite:Service
+                         ] ;
+        dc:source        "http://www.w3.org/2005/Incubator/ssn/" .
+
+dc:title  a     owl:AnnotationProperty .
+
+mthreelite:MobHoPrepSuccRate
+        a                owl:Class ;
+        rdfs:comment     "Handover Preparation Success Rate."@en ;
+        rdfs:label       "Handover Preparation Success Rate"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:SPO2  a       owl:Class ;
+        rdfs:comment     "It is a measure of the amount of oxygenated haemoglobin in the blood."@en ;
+        rdfs:label       "SPO2"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+iot-lite:Coverage  a     owl:Class ;
+        rdfs:comment     "The coverage of an IoT device (i.e. a temperature sensor inside a room has a coverage of that room)."@en ;
+        rdfs:label       "Coverage"@en ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               geo:Point ;
+                           owl:onProperty            geo:location ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+mthreelite:Pressure  a   owl:Class ;
+        rdfs:comment     "It is the physical force exerted on or against an object by something in contact with it."@en ;
+        rdfs:label       "Pressure"@en ;
+        rdfs:seeAlso     <http://archive.knoesis.org/research/semsci/application_domain/sem_sensor/ont/sensor-observation.owlPressureProperty> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:DewPointSensor
+        a                owl:Class ;
+        rdfs:comment     "Device that measures dew point."@en ;
+        rdfs:label       "Dew Point Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:MmolPerLiter
+        a                owl:Class ;
+        rdfs:comment     "It is the amount of a substance that corresponds to its formula mass in milligrams. MmolPerLiter is used to measure cholesterol."@en ;
+        rdfs:label       "Mmol Per Liter"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+ssn:System  a            owl:Class ;
+        rdfs:comment     "System is a unit of abstraction for pieces of infrastructure (and we largely care that they are) for sensing. A system has components, its subsystems, which are other systems." ;
+        rdfs:label       "System"@en ;
+        rdfs:seeAlso     "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Model#System" ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               ssn:Platform ;
+                           owl:onProperty            ssn:onPlatform ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               ssn:Deployment ;
+                           owl:onProperty            ssn:hasDeployment ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               ssn:System ;
+                           owl:onProperty            iot-lite:isSubSystemOf ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      ssn:hasSubSystem ;
+                           owl:someValuesFrom  ssn:System
+                         ] ;
+        dc:source        "http://www.w3.org/2005/Incubator/ssn/" .
+
+mthreelite:Crowd  a      owl:Class ;
+        rdfs:comment     "When the source of the sound was crowd."@en ;
+        rdfs:label       "Crowd Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:Precipitation
+        a                owl:Class ;
+        rdfs:comment     "It is any product of the condensation of atmospheric water vapor that falls under gravity."@en ;
+        rdfs:label       "Precipitation"@en ;
+        rdfs:seeAlso     <http://paul.staroch.name/thesis/SmartHomeWeather.owl#Precipitation> , <http://archive.knoesis.org/research/semsci/application_domain/sem_sensor/ont/sensor-observation.owlPrecipitationProperty> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:AutomaticSensing
+        a                owl:Class ;
+        rdfs:comment     "When the devices are set to take the observations Automatically without any external aid."@en ;
+        rdfs:label       "Automatic Measurement Type"@en ;
+        rdfs:subClassOf  mthreelite:MeasurementType .
+
+mthreelite:AccS1SigEstabSuccRate
+        a                owl:Class ;
+        rdfs:comment     "S1 (S1 standardized interface between eNB and Evolved Packet Core) signaling establishment success rate."@en ;
+        rdfs:label       "S1 Signaling Establishment Success Rate"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:Ampere  a     owl:Class ;
+        rdfs:comment     "The ampere is the SI unit for measuring an electric current which is the flow of electric charges through a surface at the rate of one coulomb per second.The ampere is the SI unit for measuring an electric current which is the flow of electric charges through a surface at the rate of one coulomb per second."@en ;
+        rdfs:label       "Ampere (A)"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#ampere" ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#ampere> , qudt:Ampere ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Millivolt  a  owl:Class ;
+        rdfs:comment     "One thousandth of a volt."@en ;
+        rdfs:label       "Millivolt (mV)"@en ;
+        rdfs:subClassOf  mthreelite:Volt .
+
+iot-lite:Object  a    owl:Class ;
+        rdfs:comment  "IoT entity"@en ;
+        rdfs:label    "IoT Entity or Object"@en .
+
+mthreelite:DegreeFahrenheit
+        a                owl:Class ;
+        rdfs:comment     "Measurement Unit to represent temperature on the Fahrenheit scale."@en ;
+        rdfs:label       "Degree Fahrenheit"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#degreeF> , <http://archive.knoesis.org/research/semsci/application_domain/sem_sensor/ont/weather.owlfahrenheit> ;
+        rdfs:subClassOf  mthreelite:Degree .
+
+mthreelite:Accelerometer
+        a                owl:Class ;
+        rdfs:comment     " Accelerometers are used to automatically determine the orientation in which the user is holding the IoT Object (portrait or landscape)."@en ;
+        rdfs:label       "Accelerometer"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#Accelerometer> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:PPM  a        owl:Class ;
+        rdfs:comment     "It describes the concentration of something in water or soil."@en ;
+        rdfs:label       "PPM (parts per million)"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:FillLevelGasTank1
+        a                owl:Class ;
+        rdfs:comment     "Ratio of volume of combustible exhaust fluid to the total volume of diesel exhaust fluid storage container. This is the value for the primary tank of the vehicle."@en ;
+        rdfs:label       "Fill Level Gas Tank 1"@en ;
+        rdfs:subClassOf  mthreelite:FillLevelGasTank .
+
+mthreelite:Sirens  a     owl:Class ;
+        rdfs:comment     "When source of the sound were sirens either from ambulence, police car or factory etc."@en ;
+        rdfs:label       "Sirens Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:LitrePer100Kilometres
+        a                owl:Class ;
+        rdfs:comment     "A consumption unit which is equal to the one of a vehicle which needs 1 fuel litre in order to traverse 100 kilometres." ;
+        rdfs:label       "Litre Per 100 Kilometres, Liter Per 100 Kilometers" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Lamp  a       owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the lamp."@en ;
+        rdfs:label       "Lamp Actuatating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:RelativeHumidity
+        a                owl:Class ;
+        rdfs:comment     "The ratio of vapour pressure to saturation vapour pressure, where vapour pressure is the pressure exerted by the molecules of water vapour and saturation vapour pressure is the pressure exerted by molecules of water vapour in AIR that has attained saturation."@en ;
+        rdfs:label       "Relative Humidity"@en ;
+        rdfs:seeAlso     "http://sweet.jpl.nasa.gov/ontology/property.owl#RelativeHumidity" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:EnergyDOI  a  owl:Class ;
+        rdfs:comment     "Energy or Smart Grid as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Energy DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:BloodPressureSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to measure Blood Pressure."@en ;
+        rdfs:label       "Blood Pressure Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+onemtom:ThingProperty
+        a             owl:Class ;
+        rdfs:comment  "A Value (Class: Value) denotes a property of a Thing. A Value can e.g. be observed or influenced by devices, or it constitutes static data about a Thing.\nE.g. the indoor temperature of the room could be a Value of a Thing \"room\".\nA Value of a thing can concern a certain Aspect, e.g. the indoor temperature concerns the Aspect \"Temperature\" that could be measured by a temperature sensor.\nA Value of a Thing can have meta data" ;
+        rdfs:label    "Thing Property"@en .
+
+mthreelite:Candela  a    owl:Class ;
+        rdfs:comment     "Candela is the luminous intensity, in a given direction, of a source that emits monochromatic radiation of frequency 540 x 10^12 hertz and that has a radiant intensity in that direction of 1/683 watt per steradian. (Source Wikipedia)."@en ;
+        rdfs:label       "Candela"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#candela> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Frequency  a  owl:Class ;
+        rdfs:comment     "Frequency is the number of occurrences of a repeating event per unit time."@en ;
+        rdfs:label       "Frequency"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:SpeedAverage
+        a                owl:Class ;
+        rdfs:comment     "A measure of the average rate of motion of an object." ;
+        rdfs:label       "Speed Average"@en ;
+        rdfs:subClassOf  mthreelite:Speed .
+
+mthreelite:VehicleOverspeedState
+        a                owl:Class ;
+        rdfs:comment     "Measure to indicates whether the vehicle is exceeding the legal speed limit."@en ;
+        rdfs:label       "Vehicle Overspeed State"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:QRCode  a     owl:Class ;
+        rdfs:comment     "A tagging device can be QRCode."@en ;
+        rdfs:label       "QR Code tagging Device"@en ;
+        rdfs:subClassOf  iot-lite:TagDevice .
+
+mthreelite:KiloWattHour
+        a                owl:Class ;
+        rdfs:comment     "Measure of electrical energy equivalent to a power consumption of one thousand watts for one hour."@en ;
+        rdfs:label       "Kilo Watt Hour"@en ;
+        rdfs:seeAlso     qudt:KiloWatthour ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:MagneticField
+        a                owl:Class ;
+        rdfs:comment     "A region around a magnetic material or a moving electric charge within which the force of magnetism acts."@en ;
+        rdfs:label       "Magnetic Field"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+iot-lite:Polygon  a      owl:Class ;
+        rdfs:comment     "The coverage is made up by linking several points by strait lines."@en ;
+        rdfs:label       "Polygon"@en ;
+        rdfs:subClassOf  iot-lite:Coverage .
+
+mthreelite:CloudCover
+        a                owl:Class ;
+        rdfs:comment     "Measure of cloud cover at a certain time. "@en ;
+        rdfs:label       "Cloud Cover Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:AlarmSystem
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the alarm system."@en ;
+        rdfs:label       "Alarm System Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice .
+
+iot-lite:isMobile  a  owl:DatatypeProperty ;
+        rdfs:comment  "It is the property to identify is the platform is mobile or not."@en ;
+        rdfs:domain   ssn:Platform ;
+        rdfs:label    "Is Mobile"@en ;
+        rdfs:range    xsd:boolean .
+
+mthreelite:FillLevelWasteContainer
+        a                owl:Class ;
+        rdfs:comment     "Ratio between the current filleage level and the total capacity of a waste container."@en ;
+        rdfs:label       "Fill Level Waste Container"@en ;
+        rdfs:subClassOf  mthreelite:FillLevel .
+
+mthreelite:UltrasonicSensor
+        a                owl:Class ;
+        rdfs:comment     "Ultrasonic sensors are used to deduce human posture in smart home for example."@en ;
+        rdfs:label       "Ultrasonic Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+onemtom:Thing  a      owl:Class ;
+        rdfs:comment  "A Thing in oneM2M  (Class: Thing) is an entity that can be identified in the oneM2M System. \nA Thing that is not a Device is not able to conmmunicate electronically with its environment. However, the sub-class of Thing that is able to interact electronically is called a \"Device\".\nA Thing may have ThingProperties (Object Property: hasThingProperty). A Thing can have relations to other things (Object Property: hasThingRelation).\nSince a Thing that is not a Device is not able to conmmunicate electronically it cannot influence the value of its ThingProperties or being influenced by it. Similarly a Thing cannot document its - real-world - relationships (via hasThingRelation) to other Things.\n\nE.g. A room that is modelled in oneM2M would be a Thing that could have a room-temperature as a ThingProperty and could have a relationship \"isAdjacentTo\" to another room" ;
+        rdfs:label    "Thing"@en .
+
+mthreelite:Window  a     owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the window."@en ;
+        rdfs:label       "Window Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Liter  a      owl:Class ;
+        rdfs:comment     "A metric unit of capacity defined as the volume of one kilogram of water under standard conditions. It is equal to 1,000 cubic centimetres."@en ;
+        rdfs:label       "Liter, Litre"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#litre" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:AlcoholLevel
+        a                owl:Class ;
+        rdfs:comment     "Measure of Alcohol Level in the system."@en ;
+        rdfs:label       "Alcohol Level Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Place  a      owl:Class ;
+        rdfs:comment     "Location, Place, GPS coordinates as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Place DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:Glucometer
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect glucometer, blood sugar, blood glucose level"@en ;
+        rdfs:label       "Glucometer Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+rdfs:isDefinedBy  a  owl:AnnotationProperty .
+
+mthreelite:Milliwatt  a  owl:Class ;
+        rdfs:comment     "A unit of power equal to one thousandth of a watt."@en ;
+        rdfs:label       "Milliwatt (mW)"@en ;
+        rdfs:subClassOf  mthreelite:Watt .
+
+mthreelite:SoundSource
+        a                owl:Class ;
+        rdfs:comment     "Source where the sound originated."@en ;
+        rdfs:label       "Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:Source .
+
+mthreelite:MeterPerSecondSquare
+        a                owl:Class ;
+        rdfs:comment     "It is the unit of acceleration."@en ;
+        rdfs:label       "Meter Per Second Square"@en ;
+        rdfs:seeAlso     <http://purl.oclc.org/NET/ssnx/qu/unit#metrePerSecondSquared> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:FuelConsumption
+        a                owl:Class ;
+        rdfs:comment     "The amount of fuel a vehicle uses to travel a particular distance at a particular speed."@en ;
+        rdfs:label       "Fuel Consumption Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+qudt:Bar  a              owl:Class ;
+        rdfs:comment     "Metric unit of atmospheric pressure equal to 14.50 pounds per square inch (lb/in2), 1.02 kilograms per square centimeter (kg/cm2), 29.53 inches of mercury (in Hg), or 0.9869 atmosphere."@en ;
+        rdfs:label       "Bar"@en ;
+        rdfs:seeAlso     "http://qudt.org/vocab/unit#Bar" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:AngularSpeed
+        a                owl:Class ;
+        rdfs:comment     "It is the rate of change of angular displacement and is a vector quantity (more precisely, a pseudovector) that specifies the angular speed (rotational speed) of an object and the axis about which the object is rotating. (Source Wikipedia)."@en ;
+        rdfs:label       "Angular Speed"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+ssn:hasSubSystem  a   owl:ObjectProperty ;
+        rdfs:comment  "Haspart relation between a system and its parts." ;
+        rdfs:domain   ssn:System ;
+        rdfs:label    "Has Sub System"@en ;
+        rdfs:range    ssn:System .
+
+onemtom:OperationOutput
+        a             owl:Class ;
+        rdfs:comment  "OperationOutput (Class: OperationOutput) describes an output of an Operation. OperationOutput also describes the output of a Command. \n - An Operation/Command may have multiple OperationInputs and/or OperationOutputs" ;
+        rdfs:label    "Operiation Output"@en .
+
+mthreelite:SeatBeltTensionSensor
+        a                owl:Class ;
+        rdfs:comment     " Actuator used to turn Seat Belt Tension Actuator on or off. "@en ;
+        rdfs:label       "Seat Belt Tension Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+iot-lite:Circle  a       owl:Class ;
+        rdfs:comment     "Circle coverage it needs the location of the sensor as the centre of the circle and the radius as a DataProperty."@en ;
+        rdfs:label       "Circle"@en ;
+        rdfs:subClassOf  iot-lite:Coverage .
+
+mthreelite:WorkingStateDriver1
+        a                owl:Class ;
+        rdfs:comment     "State of work of the first driver as defined in the FMS standard." ;
+        rdfs:label       "Working State Driver 1"@en ;
+        rdfs:subClassOf  mthreelite:WorkingStateDriver .
+
+iot-lite:Service  a      owl:Class ;
+        rdfs:comment     "Service provided by an IoT Device"@en ;
+        rdfs:label       "Service"@en ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  ssn:Device ;
+                           owl:onProperty               iot-lite:exposes
+                         ] .
+
+iot-lite:hasUnit  a             owl:ObjectProperty ;
+        rdfs:comment            "Links the sensor with the units of the quantity kind it measures (e.g. A sensor -sensor1- measures temperature in Celsius: senso1 hasUnit celsius)." ;
+        rdfs:domain             ssn:Sensor , ssn:ObservationValue ;
+        rdfs:label              "Has Unit"@en ;
+        rdfs:range              qu:Unit ;
+        owl:equivalentProperty  onemtom:hasMetaData .
+
+mthreelite:BatteryLevel
+        a                owl:Class ;
+        rdfs:comment     "Measure of the percentage of the battery capacity that remains available."@en ;
+        rdfs:label       "Battery Level Quantity Kind"@en ;
+        rdfs:seeAlso     "http://www.w3.org/2007/uwa/context/deliveryContext.owl#BatteryLevel" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Microvolt  a  owl:Class ;
+        rdfs:comment     "It is a unit of electromotive force or potential difference equal to one millionth of a volt. "@en ;
+        rdfs:label       "Microvolt (uV)"@en ;
+        rdfs:subClassOf  mthreelite:Volt .
+
+ns:license  a   owl:AnnotationProperty .
+
+mthreelite:Speed  a      owl:Class ;
+        rdfs:comment     "The rate at which someone or something moves or operates or is able to move or operate."@en ;
+        rdfs:label       "Speed"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/quantity#speed" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:VehicleCountSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to count the number of vehicles (e.g., used within the Citypulse project)."@en ;
+        rdfs:label       "Vehicle Count Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:Lux  a        owl:Class ;
+        rdfs:comment     "The SI unit of illuminance, equal to one lumen per square metre."@en ;
+        rdfs:label       "Lux (lx)"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#lux" ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#lux> , qudt:Lux ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:MotionState
+        a                owl:Class ;
+        rdfs:comment     "Indicator of whether a person (or object) is detected upon his/her/its movement."@en ;
+        rdfs:label       "Motion State"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:DirectionHeading
+        a                owl:Class ;
+        rdfs:comment     "The course or direction in which a object (vehicle, person, ...) is moving."@en ;
+        rdfs:label       "Direction Heading"@en ;
+        rdfs:subClassOf  mthreelite:Direction .
+
+mthreelite:Lumen  a      owl:Class ;
+        rdfs:comment     "The SI unit of luminous flux, equal to the amount of light emitted per second in a unit solid angle of one steradian from a uniform source of one candela."@en ;
+        rdfs:label       "Lumen (lm)"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#lumen" ;
+        rdfs:subClassOf  qu:Unit .
+
+time:inXSDDateTime  a  owl:DatatypeProperty ;
+        rdfs:comment  "It is the property relating Time Instant with the datetime value"@en ;
+        rdfs:domain   time:Instant ;
+        rdfs:label    "In XSD DateTime"@en ;
+        rdfs:range    xsd:dateTime .
+
+mthreelite:GramPerCubicMetre
+        a                owl:Class ;
+        rdfs:comment     "It is defined by mass in grams divided by volume in cubic metres."@en ;
+        rdfs:label       "Gram Per Cubic Metre"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+ssn:madeObservation  a          owl:ObjectProperty ;
+        rdfs:comment            "Relation between a Sensor and Observations it has made." ;
+        rdfs:domain             ssn:Sensor ;
+        rdfs:label              "Made Observation"@en ;
+        rdfs:range              ssn:Observation ;
+        owl:equivalentProperty  onemtom:hasService ;
+        owl:inverseOf           ssn:observedBy .
+
+mthreelite:OxygenSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect Oxygen (O2) in the environment."@en ;
+        rdfs:label       "Oxygen Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+mthreelite:Millimetre
+        a                owl:Class ;
+        rdfs:comment     "One thousandth of a metre (0.039 in)."@en ;
+        rdfs:label       "Millimetre, Millimeter"@en ;
+        rdfs:subClassOf  mthreelite:Meter .
+
+mthreelite:Pound  a      owl:Class ;
+        rdfs:comment     "A unit of weight equal to 16 oz. 1 pound= 453.592 grams"@en ;
+        rdfs:label       "Pound"@en ;
+        rdfs:subClassOf  mthreelite:Gram .
+
+mthreelite:WeatherPrecipitation
+        a                owl:Class ;
+        rdfs:comment     "Weather Precipitation."@en ;
+        rdfs:label       "Weather Precipitation"@en ;
+        rdfs:subClassOf  mthreelite:Precipitation .
+
+mthreelite:MileageTotal
+        a                owl:Class ;
+        rdfs:comment     "The total distance travelled by the particular vehicle since its initial production."@en ;
+        rdfs:label       "Mileage Total"@en ;
+        rdfs:subClassOf  mthreelite:Mileage .
+
+mthreelite:SpeedSensor
+        a                owl:Class ;
+        rdfs:comment     "Sensor used to detect speed."@en ;
+        rdfs:label       "Speed Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:Others  a     owl:Class ;
+        rdfs:comment     "Relates to phenomenon and unit that are not available currently in the current version of Taxonomy."@en ;
+        rdfs:label       "Others"@en ;
+        rdfs:subClassOf  mthreelite:Source , mthreelite:SoundSource , mthreelite:MeasurementType , qu:Unit , qu:QuantityKind .
+
+mthreelite:SO2Sensor  a  owl:Class ;
+        rdfs:comment     "Device use to detect Sulphur Dioxide (SO2) level in the environment."@en ;
+        rdfs:label       "Sulphur Dioxide (SO2) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+mthreelite:NO2Sensor  a  owl:Class ;
+        rdfs:comment     "Sensor detecting levels of Nitrogen Dioxide (NO2) in the environment."@en ;
+        rdfs:label       "Nitrogen Dioxide (NO2) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] .
+
+mthreelite:MicroWattPerSquareCentiMeter
+        a                owl:Class ;
+        rdfs:comment     "It is one of the unit for radiative and other energy fluxes."@en ;
+        rdfs:label       "Microwatt Per Square Centimetre, Microwatt Per Square Centimeter"@en ;
+        rdfs:subClassOf  qu:WattPerSquareMeter .
+
+mthreelite:Curtain  a    owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the curtain."@en ;
+        rdfs:label       "Curtain Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+iot-lite:altRelative  a  owl:AnnotationProperty ;
+        rdfs:domain  geo:Point ;
+        rdfs:range   xsd:string .
+
+ssn:attachedSystem  a  owl:ObjectProperty ;
+        rdfs:comment   "Relation between a Platform and any Systems (e.g., Sensors) that are attached to the Platform." ;
+        rdfs:domain    ssn:Platform ;
+        rdfs:label     "Attached System"@en ;
+        rdfs:range     ssn:System ;
+        owl:inverseOf  ssn:onPlatform .
+
+mthreelite:RoadSurfaceThermometer
+        a                owl:Class ;
+        rdfs:comment     "Device used to measure the road Surface temperature."@en ;
+        rdfs:label       "Road Surface Thermometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:NOSensor  a   owl:Class ;
+        rdfs:comment     "Device used to detect Nitrogen Oxide (NO) in the environment."@en ;
+        rdfs:label       "Nitrogen Oxide (NO) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+iot-lite:interfaceType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Defines the type of interface of the service endpoint." ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:label    "Interface Type"@en ;
+        rdfs:range    xsd:string .
+
+geo:location  a       owl:ObjectProperty ;
+        rdfs:comment  "Provides relation between object and its physical location."@en ;
+        rdfs:range    geo:Point .
+
+rdfs:comment  a  owl:AnnotationProperty .
+
+mthreelite:Kilometre  a  owl:Class ;
+        rdfs:comment     "A metric unit of measurement equal to 1,000 metres (approx 0.62 miles)."@en ;
+        rdfs:label       "Kilometre, Kilometer"@en ;
+        rdfs:subClassOf  mthreelite:Meter .
+
+mthreelite:LightSensor
+        a                owl:Class ;
+        rdfs:comment     "Light/Illuminance Sensor is used to adjust the brightness of the surface."@en ;
+        rdfs:label       "Light Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Gram  a       owl:Class ;
+        rdfs:comment     "It is a metric system unit of mass" ;
+        rdfs:label       "Gram (g)" ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:MobMobilitySuccRate
+        a                owl:Class ;
+        rdfs:comment     "Handover Mobility Success Rate."@en ;
+        rdfs:label       "Handover Mobility Success Rate"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:Centibar  a   owl:Class ;
+        rdfs:comment     "The centibar is a unit of pressure defined as 1e-2 bar."@en ;
+        rdfs:label       "Centibar"@en ;
+        rdfs:subClassOf  qudt:Bar .
+
+mthreelite:EAQI  a       owl:Class ;
+        rdfs:comment     "Unit to measure Air Quality in European cities."@en ;
+        rdfs:label       "European Air Quality Index (EAQI)"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:ABS  a        owl:Class ;
+        rdfs:comment     "The ABS (Anti-lock Braking System) receives information from ABS computer to control the pressure on the breaks, This helps the wheels not to get locked up, it adjust the break pressure and prevents the wheels from locking. (Definition Source Google)."@en ;
+        rdfs:label       "ABS (Anti-lock Braking System) Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:Neighbors  a  owl:Class ;
+        rdfs:comment     "When the source of the sound were noisy neighbors."@en ;
+        rdfs:label       "Neighbors Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:FillLevelGasTank2
+        a                owl:Class ;
+        rdfs:comment     "Ratio of volume of combustible exhaust fluid to the total volume of diesel exhaust fluid storage container. This is the value for the secondary tank of the vehicle."@en ;
+        rdfs:label       "Fill Level Gas Tank 2"@en ;
+        rdfs:subClassOf  mthreelite:FillLevelGasTank .
+
+mthreelite:Microwatt  a  owl:Class ;
+        rdfs:comment     "It is a unit of power."@en ;
+        rdfs:label       "Microwatt (uW)"@en ;
+        rdfs:subClassOf  mthreelite:Watt .
+
+mthreelite:hasDomainOfInterest
+        a             owl:ObjectProperty ;
+        rdfs:comment  "This property is used to classify devices by DomainOfInterest (e.g., blood pressure sensor is used in healthcare)"@en ;
+        rdfs:domain   ssn:Device ;
+        rdfs:label    "Has Domain Of Interest"@en ;
+        rdfs:range    mthreelite:DomainOfInterest .
+
+iot-lite:metadataType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Defines the type pf the metadata value (e.g. resolution of the sensor)." ;
+        rdfs:domain   iot-lite:Metadata ;
+        rdfs:label    "Metadata Type"@en ;
+        rdfs:range    xsd:string .
+
+mthreelite:ReactivePower
+        a                owl:Class ;
+        rdfs:comment     "The portion of electricity that establishes and sustains the electric and magnetic fields of alternating-current equipment."@en ;
+        rdfs:label       "Reactive Power"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/dim#ReactivePower" ;
+        rdfs:subClassOf  mthreelite:Power .
+
+mthreelite:RetERabDrop
+        a                owl:Class ;
+        rdfs:comment     "ERAB Drop."@en ;
+        rdfs:label       "ERAB Drop"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:VehiclesPerMinute
+        a                owl:Class ;
+        rdfs:comment     "Number of vehicles that traverse a concrete region of the space in one minute."@en ;
+        rdfs:label       "Vehicles Per Minute"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Motion  a     owl:Class ;
+        rdfs:comment     "It is the action or process of moving or being moved."@en ;
+        rdfs:label       "Motion"@en ;
+        rdfs:seeAlso     <http://spitfire-project.eu/ontology/ns/Motion> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:DistanceSensor
+        a                owl:Class ;
+        rdfs:comment     "Distance Sensor is used to detect distance between two objects for example:  the safety distance with other cars. Distance sensor can be a laser."@en ;
+        rdfs:label       "Distance Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:Ohm  a        owl:Class ;
+        rdfs:comment     "Ohm is the unit of electrical resistance."@en ;
+        rdfs:label       "Ohm"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#ohm> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:AirConditioner
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the air conditioner."@en ;
+        rdfs:label       "Air Conditioner Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Calcium  a    owl:Class ;
+        rdfs:comment     "Measure of blood calcium level."@en ;
+        rdfs:label       "Calcium Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:hasSource  a  owl:ObjectProperty ;
+        rdfs:comment  "This property links sensed phenomena to its environmental source."@en ;
+        rdfs:domain   qu:QuantityKind ;
+        rdfs:label    "Has Source"@en ;
+        rdfs:range    mthreelite:Source .
+
+mthreelite:Door  a       owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the door."@en ;
+        rdfs:label       "Door Accuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:CO2Sensor  a  owl:Class ;
+        rdfs:comment     "Carbon Dioxide (CO2) Sensor used to measure level of CO2 in the atmosphere."@en ;
+        rdfs:label       "Carbon Dioxide (CO2) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+rdfs:seeAlso  a  owl:AnnotationProperty .
+
+mthreelite:BuildingTemperature
+        a                owl:Class ;
+        rdfs:comment     "Measure of building or room temperature."@en ;
+        rdfs:label       "Building/Room Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+onemtom:MetaData  a   owl:Class ;
+        rdfs:comment  "MetaData (Class: MetaData) contain data (like units, precision-ranges …) about a Variable or about an Aspect. \nE.g. the indoor temperature could have meta data: \"Degrees Celsius\"" ;
+        rdfs:label    "MetaData"@en .
+
+mthreelite:Weather  a    owl:Class ;
+        rdfs:comment     "Weather Forecasting, Meterology as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Weather Forecasting DOI"@en ;
+        rdfs:seeAlso     <http://archive.knoesis.org/research/semsci/application_domain/sem_sensor/ont/sensor-observation.owlWeatherObservation> ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+iot-lite:Rectangle  a    owl:Class ;
+        rdfs:comment     "Teh coverage is made up by giving two points which are the oposite corners of a rentangle."@en ;
+        rdfs:label       "Rectangle"@en ;
+        rdfs:subClassOf  iot-lite:Coverage .
+
+mthreelite:SoundPressureLevelAmbient
+        a                owl:Class ;
+        rdfs:comment     "Similar to Sound."@en ;
+        rdfs:label       "Sound Pressure Level Ambient"@en ;
+        rdfs:subClassOf  mthreelite:SoundPressureLevel .
+
+ssn:observedBy  a      owl:ObjectProperty ;
+        rdfs:comment   "Relation between a observation and it sensor."@en ;
+        rdfs:domain    ssn:Observation ;
+        rdfs:label     "observed by"@en ;
+        rdfs:range     ssn:Sensor ;
+        owl:inverseOf  ssn:madeObservation .
+
+dul:hasDataValue  a   owl:DatatypeProperty ;
+        rdfs:comment  "A datatype property that encodes values from a datatype for an Entity. \nThere are several ways to encode values in DOLCE (Ultralite):\n\n1) Directly assert an xsd:_ value to an Entity by using hasDataValue\n2) Assert a Region for an Entity by using hasRegion, and then assert an xsd:_ value to that Region, by using hasRegionDataValue\n3) Assert a Quality for an Entity by using hasQuality, then assert a Region for that Quality, and assert an xsd:_ value to that Region, by using hasRegionDataValue\n4) When the value is required, but not directly observed, assert a Parameter for an xsd:_ value by using hasParameterDataValue, and then associate the Parameter to an Entity by using isConstraintFor\n5) When the value is required, but not directly observed, you can also assert a Parameter for a Region by using parametrizes, and then assert an xsd:_ value to that Region, by using hasRegionDataValue\n\nThe five approaches obey different requirements. \nFor example, a simple value can be easily asserted by using pattern (1), but if one needs to assert an interval between two values, a Region should be introduced to materialize that interval, as pattern (2) suggests. \nFurthermore, if one needs to distinguish the individual Quality of a value, e.g. the particular nature of the density of a substance, pattern (3) can be used. \nPatterns (4) and (5) should be used instead when a constraint or a selection is modeled, independently from the actual observation of values in the real world." ;
+        rdfs:domain   ssn:ObservationValue ;
+        rdfs:label    "Has Data Value"@en ;
+        rdfs:range    xsd:double , xsd:boolean .
+
+mthreelite:ESP  a        owl:Class ;
+        rdfs:comment     "The actuator for turing ESP on/off."@en ;
+        rdfs:label       "ESP (Electronic Stability Program) Actuating device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:ChemicalAgentAtmosphericConcentration
+        a                owl:Class ;
+        rdfs:comment     "Measure of Chemical Agent Atmospheric Concentration"@en ;
+        rdfs:label       "Chemical Agent Atmospheric Concentration Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:FuelLevel  a  owl:Class ;
+        rdfs:comment     "Device used to detect fuel level in a system such a car."@en ;
+        rdfs:label       "Fuel Level Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:ElectricField900Mhz
+        a                owl:Class ;
+        rdfs:comment     "A field of force associated with a moving electric charge equivalent to an electric field and a magnetic field at right angles to each other and to the direction of propagation. Applied to the 900 MHz UHF band."@en ;
+        rdfs:label       "Electric Field 900 MHz"@en ;
+        rdfs:subClassOf  mthreelite:ElectricField .
+
+iot-lite:hasQuantityKind
+        a                       owl:ObjectProperty ;
+        rdfs:comment            "Links a sensor or an attribute with the quantity  kind it measures (e.g. A sensor -sensor1- measures temperature: sensor1 hasQuantityKind temperature)."@en ;
+        rdfs:domain             ssn:Sensor , iot-lite:Attribute ;
+        rdfs:label              "Has Quantity Kind"@en ;
+        rdfs:range              qu:QuantityKind ;
+        owl:equivalentProperty  onemtom:hasThingProperty .
+
+time:Instant  a  owl:Class .
+
+mthreelite:Kilogram  a   owl:Class ;
+        rdfs:comment     "The SI unit of mass, it is equal to the mass of the international prototype of the kilogram."@en ;
+        rdfs:label       "Kilogram (kg)"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#kilogram" ;
+        rdfs:subClassOf  mthreelite:Gram .
+
+ssn:Sensor  a                owl:Class ;
+        rdfs:comment         "A sensor can do (implements) sensing: that is, a sensor is any entity that can follow a sensing method and thus observe some Property of a FeatureOfInterest.  Sensors may be physical devices, computational methods, a laboratory setup with a person following a method, or any other thing that can follow a Sensing Method to observe a Property." ;
+        rdfs:label           "Sensor"@en ;
+        rdfs:seeAlso         "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Skeleton#Skeleton" ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               qu:Unit ;
+                               owl:onProperty            iot-lite:hasUnit ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               qu:QuantityKind ;
+                               owl:onProperty            iot-lite:hasQuantityKind ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:onProperty      ssn:madeObservation ;
+                               owl:someValuesFrom  ssn:Observation
+                             ] ;
+        dc:source            "skos:exactMatch 'sensor' [SensorML OGC-0700]\n\t\t                    http://www.opengeospatial.org/standards/sensorml \n\n                                skos:closeMatch 'observation procedure' [O&M] \n                                http://www.opengeospatial.org/standards/om \n\nO&M allows sensors, methods, instruments, systems, algorithms and process chains as the processUsed of an observation; this ontology allows a similar range of things (any thing that can do sensing), just they are all grouped under the term sensor (which is thus wider than the O&M concept)." ;
+        owl:equivalentClass  onemtom:Thing .
+
+mthreelite:WindDirection
+        a                owl:Class ;
+        rdfs:comment     "The geodetic azimuth of the direction from which the wind is blowing."@en ;
+        rdfs:label       "Wind Direction"@en ;
+        rdfs:seeAlso     <http://paul.staroch.name/thesis/SmartHomeWeather.owl#DirectionalWind> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:AirPollutantSensor
+        a                owl:Class ;
+        rdfs:comment     "Air Pollutant Sensor are devices that detect and monitor the presence of air pollution in the surrounding area (source Wikipedia)."@en ;
+        rdfs:label       "Air Pollutant Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] .
+
+mthreelite:WeightSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to weight an object."@en ;
+        rdfs:label       "Weight Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+mthreelite:CoffeeMachine
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the coffee machine."@en ;
+        rdfs:label       "Coffee Machine, Coffee Maker Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Fridge  a     owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the fridge."@en ;
+        rdfs:label       "Fridge, Refrigerator Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:ThrottleSensor
+        a                owl:Class ;
+        rdfs:comment     "It is a device used to monitor the throttle position of a vehicle."@en ;
+        rdfs:label       "Throttle Position Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:Timestamp  a  owl:Class ;
+        rdfs:comment     "Sequence of characters or encoded information identifying when a certain event occurred, usually giving date and time of day, sometimes accurate to a small fraction of a second. This representation should be encoded following ISO8601." ;
+        rdfs:label       "Timestamp"@en ;
+        rdfs:seeAlso     "http://sweet.jpl.nasa.gov/2.3/propTime.owl#Timestamp" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+iot-lite:hasMetadata  a  owl:ObjectProperty ;
+        rdfs:comment  "Links any concept with metadata about that concept."@en ;
+        rdfs:label    "Has Metadata"@en ;
+        rdfs:range    iot-lite:Metadata .
+
+mthreelite:Acceleration
+        a                owl:Class ;
+        rdfs:comment     "The rate of change of the velocity of a particle with respect to time."@en ;
+        rdfs:label       "Acceleration"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/dim#Acceleration" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Miles  a      owl:Class ;
+        rdfs:comment     "It is a unit of length that is equal to 1,760 yards (approx. 1.609 kilometres)."@en ;
+        rdfs:label       "Miles"@en ;
+        rdfs:subClassOf  mthreelite:Meter .
+
+mthreelite:WindSpeedSensor
+        a                owl:Class ;
+        rdfs:comment     "Wind Speed Sensor, Anemometer or Wind Velocity Sensor is used to measure the wind speed."@en ;
+        rdfs:label       "Wind Speed Sensor"@en ;
+        rdfs:subClassOf  mthreelite:SpeedSensor ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+iot-lite:hasCoverage  a  owl:ObjectProperty ;
+        rdfs:comment  "Links the devices with their coverages."@en ;
+        rdfs:domain   ssn:Device ;
+        rdfs:label    "Has Coverage"@en ;
+        rdfs:range    iot-lite:Coverage .
+
+mthreelite:Farad  a      owl:Class ;
+        rdfs:comment     "SI unit of electrical capacitance."@en ;
+        rdfs:label       "Farad"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#farad> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:WaterLevel
+        a                owl:Class ;
+        rdfs:comment     "The height reached by the water in a reservoir, river, storage tank, or similar."@en ;
+        rdfs:label       "Water Level"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:PresenceStatePeople
+        a                owl:Class ;
+        rdfs:comment     "The presence or absence of people passing." ;
+        rdfs:label       "Presence State People"@en ;
+        rdfs:subClassOf  mthreelite:Presence .
+
+mthreelite:WorkingStateDriver2
+        a                owl:Class ;
+        rdfs:comment     "State of work of the second driver as defined in the FMS standard." ;
+        rdfs:label       "Working State Driver 2"@en ;
+        rdfs:subClassOf  mthreelite:WorkingStateDriver .
+
+mthreelite:HeartBeat  a  owl:Class ;
+        rdfs:comment     "The number of times your heart beats each minute (bpm)."@en ;
+        rdfs:label       "Heart Beat"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Invalid  a    owl:Class ;
+        rdfs:comment     "If the measurement was tagged invalid."@en ;
+        rdfs:label       "Invalid Measurement Type"@en ;
+        rdfs:subClassOf  mthreelite:MeasurementType .
+
+mthreelite:KilobitsPerSecond
+        a                owl:Class ;
+        rdfs:comment     "It is a unit of data transfer rate equal to: 1,000 bits per second."@en ;
+        rdfs:label       "Kilobits Per Second"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Lavatory  a   owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the lavatory."@en ;
+        rdfs:label       "Lavatory"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:DewPoint  a   owl:Class ;
+        rdfs:comment     "It is the temperature to which air must be cooled at constant pressure to condense to form liquid."@en ;
+        rdfs:label       "Dew Point"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:AtmosphericPressureSensor
+        a                owl:Class ;
+        rdfs:comment     "Atmospheric Pressure Sensor, Barometer or Barometric Pressure Sensor is a scientific instrument used im meteorology to measure atmospheric pressure."@en ;
+        rdfs:label       "Atmospheric Pressure Sensor"@en ;
+        rdfs:seeAlso     <http://purl.oclc.org/NET/ssnx/meteo/aws#AtmosphericPressureSensor> , <http://casas.wsu.edu/owl/cose.owl#BarometricPressureSensor> , <http://archive.knoesis.org/research/semsci/application_domain/sem_sensor/ont/weather.owlPressure> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:PH  a         owl:Class ;
+        rdfs:comment     "It is a numeric scale used to specify the acidity or basicity of an aqueous solution."@en ;
+        rdfs:label       "PH"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:SoilHumidity
+        a                owl:Class ;
+        rdfs:comment     "It is the quantity of water contained in a material, such as soil. "@en ;
+        rdfs:label       "Soil Humidity"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:DegreeCelsius
+        a                owl:Class ;
+        rdfs:comment     "A temperature unit which is equal to one kelvin degree. However, they have their zeros at different points. The centigrade scale has its zero at 273.15 K."@en ;
+        rdfs:label       "Degree Celsius"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#degreeCelsius" ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#degreeC> , qudt:DegreeCelsius ;
+        rdfs:subClassOf  mthreelite:Degree .
+
+mthreelite:Drawer  a     owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the drawer."@en ;
+        rdfs:label       "Drawer Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:AirTemperature
+        a                owl:Class ;
+        rdfs:comment     "The temperature of the air that would be indicated by a thermometer exposed to the air at a location sheltered from direct solar radiation."@en ;
+        rdfs:label       "Air Temperature, Weather Temperature, Ambient Temperature"@en ;
+        rdfs:seeAlso     <http://paul.staroch.name/thesis/SmartHomeWeather.owl#Temperature> , <http://openiot.eu/ontology/ns/AirTemperature> ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:Presence  a   owl:Class ;
+        rdfs:comment     "Measure to know if an object is present. It is usually boolean."@en ;
+        rdfs:label       "Presence"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+ssn:onPlatform  a     owl:ObjectProperty ;
+        rdfs:comment  "Relation between a System (e.g., a Sensor) and a Platform.  The relation locates the sensor relative to other described entities entities: i.e., the Sensor s1's location is Platform p1.  More precise locations for sensors in space (relative to other entities, where attached to another entity, or in 3D space) are made using DOLCE's Regions (SpaceRegion)." ;
+        rdfs:domain   ssn:System ;
+        rdfs:label    "On Platform" ;
+        rdfs:range    ssn:Platform .
+
+fiesta-iot:  a                         owl:Ontology ;
+        rdfs:comment                   "After a thorough analysis of existing Internet of Things (IoT) related ontologies, we propose FIESTA-IoT Ontology that aims to achieve semantic interoperability among heterogeneous testbeds. The Ontology is framed within the EU H2020's FIESTA-IoT project, that aims to seamlessly support the federation of testbeds through the usage of semantic-based technologies. The  FIESTA-IoT ontology takes inspiration from the well-known Noy et al. methodology  for reusing and interconnecting existing ontologies. To build the ontology, we leverage a number of core concepts from various mainstream ontologies and taxonomies, such as Semantic Sensor Network (SSN), M3-lite (a lite version of M3 ontology), WGS84, IoT-lite, Time, and DUL ontology. Please report any errors to rachit.agarwal@inria.fr"@en ;
+        rdfs:label                     "FIESTA-IoT"^^xsd:string ;
+        dc:contributor                 "Garvita Bajaj, Inria, Paris" ;
+        dc:creator                     "Luis Sanchez, UC, Santander"@en , "Rachit Agarwal, Inria, Paris"@en , "Jorge Lanza, UC, Santander"@en , "David Gomez, UC, Santander"@en , "Tarek Elsaleh, UNIS, Surrey"@en , "Amelie Gyrard, NUIG, Galway"@en ;
+        dc:description                 "Many testbeds owning devices or applications interacting with the sensors, store their inherent observations and other related data in their own proprietary format. In other words, making a testbed independent and isolated from others that cannot directly interact with each other. Differences in the data format lead to interoperability issues between the testbeds and much work has to be done in order to ensure the compatibility. One has to understand different data formats and create the mapping between them. As a result, a testbed must understand other testbed's format and create the mapping both while sending and receiving information. One method to accomplish  interoperability is through the usage of semantic-based technologies to annotate all the information shared by the platforms. Nevertheless, some of the relevant existing ontologies promise interoperability but: \n\n- do not address the problem to describe the observation in an interoperable manner to ease further tasks, such as reasoning, \n- many of them are domain-specific and cannot be applied across domains, \n- they have missing concepts and do not suffice the needs of the measurements provided by the sensors, and \n- many ontologies do not follow best practices making it hard to correctly interpret and reuse concepts.\n\n\nIn order to address the above-mentioned limitations, we provide FIESTA-IoT ontology (a unified semantic model) that follows best practices. FIESTA-IoT Ontology is a merge of concepts from various ontologies such as IoT-lite, M3-lite Taxonomy, SSN, Time and DUL (see Figure 1). The FIESTA-IoT Ontology is diveded into 2 parts: resourse description and observations produced. One has to follow the Figure 2 and Figure 3, respectively, for understanding what all concepts are associated with resourse description and observation. Using such information testbeds can annotate their data to FIESTA-IoT specific requirements and the annotators developed can achieve FIESTA-IoT certification.\n\n\nFor more detials please see:\n\n- R. Agarwal, D. Farnandez, T. Elsaleh, A.Gyrard, J. Lanza, L. Sanchez, N. Georgantas, V. Issarny, \"Unified IoT Ontology to Enable Interoperability and Federation of Testbeds\", 3rd IEEE WF-IoT, Reston, VA, USA, 12-14 December 2016. (https://hal.inria.fr/hal-01386917/document)\n- FIESTA-IoT Consortium (R. Agarwal editor), \"Deliverable D3.1.2 Semantic Models for Testbeds, Interoperability and Mobility Support, and Best Practices\", project FIESTA-IoT deliverable, 2016.\n- FIESTA-IoT Consortium (R. Agarwal editor), \"Deliverable D3.1.1 Semantic Models for Testbeds, Interoperability and Mobility Support, and Best Practices\", project FIESTA-IoT deliverable, 2016.\n\n        "@en ;
+        dc:description                 <http://ontology.fiesta-iot.eu/ontologyDocs/fiesta-iot.png> ;
+        dc:identifier                  "http://ontology.fiesta-iot.eu/ontologyDocs/fiesta-iot" ;
+        dc:rights                      "Copyright 2015 - 2018 FIESTA-IoT." ;
+        dc:title                       "FIESTA-IoT Ontology"@en ;
+        terms:issued                   "2016-04-28" ;
+        terms:modified                 "2017-02-09" ;
+        vann:preferredNamespacePrefix  "fiesta-iot" ;
+        vann:preferredNamespaceUri     "http://purl.org/iot/ontology/fiesta-iot#" ;
+        owl:versionInfo                "\n            1.0.2\n        " .
+
+mthreelite:RoomTemperature
+        a                owl:Class ;
+        rdfs:comment     "Temperature of a room."@en ;
+        rdfs:label       "Room Temperature"@en ;
+        rdfs:seeAlso     <http://sensormeasurement.appspot.com/home#RoomTemperature> , <http://elite.polito.it/ontologies/dogont.owl#TemperatureMeasurementMNotification> ;
+        rdfs:subClassOf  mthreelite:BuildingTemperature .
+
+mthreelite:GaseousPollutantSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect poisonous gaseous in the environment."@en ;
+        rdfs:label       "Gaseous Pollutant Sensor"@en ;
+        rdfs:subClassOf  mthreelite:AirPollutantSensor .
+
+mthreelite:DiastolicBloodPressure
+        a                owl:Class ;
+        rdfs:comment     " Measure of the pressure in the arteries when the heart rests between beats."@en ;
+        rdfs:label       "Diastolic Blood Pressure"@en ;
+        rdfs:subClassOf  mthreelite:BloodPressure .
+
+mthreelite:MotionStateVehicle
+        a                owl:Class ;
+        rdfs:comment     "Indicates whether motion of the vehicle is detected or not." ;
+        rdfs:label       "Motion State Vehicle"@en ;
+        rdfs:subClassOf  mthreelite:MotionState .
+
+mthreelite:Coulomb  a    owl:Class ;
+        rdfs:comment     "SI unit of electric charge."@en ;
+        rdfs:label       "Coulomb"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#coulomb> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:RotationalSpeedEngine
+        a                owl:Class ;
+        rdfs:comment     "Rotational speed is a property that is the rate of rotation of a material around an axis, in this case the engine cylinders."@en ;
+        rdfs:label       "Rotational Speed Engine"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/quantity#rotationalSpeed" ;
+        rdfs:subClassOf  mthreelite:RotationalSpeed .
+
+iot-lite:Entity  a           owl:Class ;
+        rdfs:comment         "An IoT Object"@en ;
+        rdfs:label           "Entity"@en ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               geo:Point ;
+                               owl:onProperty            geo:location ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        rdfs:subClassOf      [ a                            owl:Restriction ;
+                               owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass                  iot-lite:Service ;
+                               owl:onProperty               iot-lite:isAssociatedWith
+                             ] ;
+        rdfs:subClassOf      [ a                            owl:Restriction ;
+                               owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onClass                  iot-lite:Attribute ;
+                               owl:onProperty               iot-lite:hasAttribute
+                             ] ;
+        owl:equivalentClass  iot-lite:Object .
+
+qudt:ElectricCurrent  a  owl:Class ;
+        rdfs:comment     "Electric current is the flow of electric charge. It is a base quantity in the International System of Units. Electric current is electric charge divided by time. Electric Current is the flow (movement) of electric charge. The amount of electric current through some surface, e.g., a section through a copper conductor, is defined as the amount of electric charge flowing through that surface over time."@en ;
+        rdfs:label       "Electric Current"@en ;
+        rdfs:seeAlso     "http://qudt.org/vocab/quantity#ElectricCurrent" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Irrigation
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically irrigate."@en ;
+        rdfs:label       "Irrigation Actuation Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:HouseholdApplianceTemperature
+        a                owl:Class ;
+        rdfs:comment     "Measure of Household Appliance Temperature."@en ;
+        rdfs:label       "Household Appliance Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:SaltMeter  a  owl:Class ;
+        rdfs:comment     "Device use to detect salinity of water."@en ;
+        rdfs:label       "Salt Meter"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] .
+
+ssn:Observation  a           owl:Class ;
+        rdfs:comment         "An Observation is a Situation in which a Sensing method has been used to estimate or calculate a value of a Property of a FeatureOfInterest.  Links to Sensing and Sensor describe what made the Observation and how; links to Property and Feature detail what was sensed; the result is the output of a Sensor; other metadata details times etc." ;
+        rdfs:label           "Observation"@en ;
+        rdfs:seeAlso         "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Skeleton#Skeleton" ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               qu:QuantityKind ;
+                               owl:onProperty            ssn:observedProperty ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               geo:Point ;
+                               owl:onProperty            geo:location ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:minCardinality  "0"^^xsd:nonNegativeInteger ;
+                               owl:onProperty      ssn:observationSamplingTime
+                             ] ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               ssn:Sensor ;
+                               owl:onProperty            ssn:observedBy ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:onProperty      mthreelite:hasMeasurementType ;
+                               owl:someValuesFrom  mthreelite:MeasurementType
+                             ] ;
+        dc:source            "skos:closeMatch 'observation' [O&M] \n\t\t                    http://www.opengeospatial.org/standards/om \n\nObservation in this ontology and O&M are described differently (O&M records an observation as an act/event), but they record the same thing and are essentially interchangeable.  The difference is in the ontological structure of the two, not the data or use.\n\nObservation here records a Situation (the estimation of the value of a Property) and a description of the method that was used (along with the participants), while O&M interprets an Observation as the event itself; there must, however, have been an event that lead to our situation, so both are records of events.  The distinction is between the event itself and the record of what happened in that event.\n\n\nskos:closeMatch 'measurement result' [VIM 2.9] http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf\n\nMeasurement result in VIM is the measured value plus any other relevant information, which means that measurement result and observation will often be associated to the same data (a value, a time, a property, etc.)." ;
+        owl:equivalentClass  onemtom:Service .
+
+mthreelite:ChemicalAgentAtmosphericConcentrationAirParticles
+        a                owl:Class ;
+        rdfs:comment     "Measure of the concentration of chemical particles suspended in the atmosphere."@en ;
+        rdfs:label       "Air Particles Chemical Agent Atmospheric Concentration"@en ;
+        rdfs:subClassOf  mthreelite:ChemicalAgentAtmosphericConcentration .
+
+mthreelite:Weight  a     owl:Class ;
+        rdfs:comment     "A body's relative mass or the quantity of matter contained by it, giving rise to a downward force; the heaviness of a person or thing."@en ;
+        rdfs:label       "Weight"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+rdfs:label  a   owl:AnnotationProperty .
+
+mthreelite:hasMeasurementType
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Each sensing device can have a different sensing mechanism which may result in different kinds of sensor data. This property links observation of the sensor to the associated MeasurementType."@en ;
+        rdfs:domain   ssn:Observation ;
+        rdfs:label    "Has Measurement Type"@en ;
+        rdfs:range    [ a                            owl:Restriction ;
+                        owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                        owl:onClass                  mthreelite:MeasurementType ;
+                        owl:onProperty               mthreelite:hasMeasurementType
+                      ] .
+
+mthreelite:BloodGlucose
+        a                owl:Class ;
+        rdfs:comment     "Measure of Blood glucose level or blood sugar level."@en ;
+        rdfs:label       "Blood Glucose Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Sink  a       owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the sink."@en ;
+        rdfs:label       "Sink Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+iot-lite:endpoint  a  owl:DatatypeProperty ;
+        rdfs:comment  "Endpoint of the service. It is usually a URL where the service is available." ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:label    "Endpoint"@en ;
+        rdfs:range    xsd:anyURI .
+
+mthreelite:Experiment
+        a                owl:Class ;
+        rdfs:comment     "Experiment based measurements."@en ;
+        rdfs:label       "Experiment Measurement Type"@en ;
+        rdfs:subClassOf  mthreelite:MeasurementType .
+
+mthreelite:H2SSensor  a  owl:Class ;
+        rdfs:comment     "Device used to measure of hydrogen sulfide in the environment."@en ;
+        rdfs:label       "H2S Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+qudt:DegreeAngle  a      owl:Class ;
+        rdfs:comment     "A plane angle unit which is equal to 1/360 of a full rotation or pi/180 rad."@en ;
+        rdfs:label       "Degree Angle"@en ;
+        rdfs:seeAlso     "http://qudt.org/vocab/unit#DegreeAngle" ;
+        rdfs:subClassOf  mthreelite:Degree .
+
+qu:Unit  a                   owl:Class ;
+        rdfs:comment         "A Unit is an abstract classifier that represents the concept of measurement unit that is defined as real scalar quantity, defined and adopted by convention, with which any other quantity of the same kind can be compared to express the ratio of the two quantities as a number.\n        "@en ;
+        rdfs:label           "Unit"@en ;
+        owl:equivalentClass  onemtom:MetaData .
+
+mthreelite:Wout  a       owl:Class ;
+        rdfs:comment     "This unit is used to measure delta dew point within the Com4Innov tesbed. Natural number (W/out unit)."@en ;
+        rdfs:label       "W/out"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:WeatherLuminosity
+        a                owl:Class ;
+        rdfs:comment     "Luminosity."@en ;
+        rdfs:label       "Weather Luminosity"@en ;
+        rdfs:subClassOf  mthreelite:Illuminance .
+
+mthreelite:DecibelA  a   owl:Class ;
+        rdfs:comment     "Sound pressure sensed by the human ear."@en ;
+        rdfs:label       "DecibelA (dB(A))"@en ;
+        rdfs:subClassOf  mthreelite:Decibel .
+
+mthreelite:AirThermometer
+        a                owl:Class ;
+        rdfs:comment     "Device to measure the Air temperature of either indoor or outdoor atmosphere."@en ;
+        rdfs:label       "Air Thermometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:FrequencySensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect the frequency."@en ;
+        rdfs:label       "Frequency Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:Direction  a  owl:Class ;
+        rdfs:comment  "Measurments of sensors are affected by the direction of the sensing device. This concept is used to reflect it."@en ;
+        rdfs:label    "Direction"@en .
+
+mthreelite:AirQuality
+        a                owl:Class ;
+        rdfs:comment     "Usually measured using an air quality index (AQI) that is a number used by government agencies to communicate to the public how polluted the air currently is or how polluted it is forecast to become. Different countries have their own air quality indices, corresponding to different national air quality standards. It is the measure of Air Quality of the environment. It is similar to Air Pollution. (Source Wikipedia)."@en ;
+        rdfs:label       "Air Quality Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Agriculture
+        a                owl:Class ;
+        rdfs:comment     "Agriculture, Smart farm as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Agriculture DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:Temperature
+        a                owl:Class ;
+        rdfs:comment     "It is the air temperature."@en ;
+        rdfs:label       "Temperature"@en ;
+        rdfs:seeAlso     <http://purl.oclc.org/NET/ssnx/meteo/aws#air_temperature> , <http://openiot.eu/ontology/ns/Temperature> , <http://archive.knoesis.org/research/semsci/application_domain/sem_sensor/ont/sensor-observation.owlTemperatureProperty> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Okta  a       owl:Class ;
+        rdfs:comment     "Okta is the unit to measure the cloud cover."@en ;
+        rdfs:label       "Okta"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+iot-lite:VirtualEntity
+        a                owl:Class ;
+        rdfs:comment     "A Virtual Entity"@en ;
+        rdfs:label       "Virtual Entity"@en ;
+        rdfs:subClassOf  iot-lite:Entity .
+
+mthreelite:KilometerPerHour
+        a                owl:Class ;
+        rdfs:comment     "It is a unit of speed, expressing the number of kilometres travelled in one hour."@en ;
+        rdfs:label       "Kilometer Per Hour"@en ;
+        rdfs:seeAlso     "http://data.qudt.org/qudt/owl/1.0.0/unit.owl#KilometerPerHour" ;
+        rdfs:subClassOf  mthreelite:MeterPerSecond .
+
+mthreelite:ElectricalSensor
+        a                owl:Class ;
+        rdfs:comment     "Electrical Sensor."@en ;
+        rdfs:label       "Electrical Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:AccInitialERabEstabSuccRate
+        a                owl:Class ;
+        rdfs:comment     "Initial E-UTRAN Radio Access Bearer establishment success rate."@en ;
+        rdfs:label       "Initial E-RAB Establishment Success Rate"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+iot-lite:hasAttribute
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Links the devices with their attributes."@en ;
+        rdfs:domain   iot-lite:Object , iot-lite:Entity ;
+        rdfs:label    "Has Attribute"@en ;
+        rdfs:range    iot-lite:Attribute .
+
+mthreelite:SkinConductanceSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detecte Skin Conductance."@en ;
+        rdfs:label       "Skin Conductance Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Emotion
+                         ] .
+
+mthreelite:O3Sensor  a   owl:Class ;
+        rdfs:comment     "Device used to detect Ozone (O3) in the environment."@en ;
+        rdfs:label       "Ozone (O3) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+mthreelite:Transportation
+        a                owl:Class ;
+        rdfs:comment     "Transportation, Smart Car/Vehicle, Intelligent Transport System (ITS) as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Transportation DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:SystolicBloodPressure
+        a                owl:Class ;
+        rdfs:comment     "It is the pressure when the heart beats while pumping blood."@en ;
+        rdfs:label       "Systolic Blood Pressure"@en ;
+        rdfs:subClassOf  mthreelite:BloodPressure .
+
+mthreelite:Odometer  a   owl:Class ;
+        rdfs:comment     "An odometer or odograph is an instrument that indicates distance traveled by a vehicle, such as bicycle or automobile."@en ;
+        rdfs:label       "Odometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:NFC  a        owl:Class ;
+        rdfs:comment     "A tagging device can be NFC (Near Field Communication)."@en ;
+        rdfs:label       "NFC Tagging Device"@en ;
+        rdfs:subClassOf  iot-lite:TagDevice .
+
+mthreelite:Milliampere
+        a                owl:Class ;
+        rdfs:comment     "One thousandth of an ampere."@en ;
+        rdfs:label       "Milliampere (mA)"@en ;
+        rdfs:subClassOf  mthreelite:Ampere .
+
+mthreelite:AirPollution
+        a                owl:Class ;
+        rdfs:comment     "Usually measured using Air Quality Index (AQI), it is the measure of Air Pollution in the environment. It is similar to Air Quality."@en ;
+        rdfs:label       "Air Pollution Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+terms:issued  a  owl:AnnotationProperty .
+
+mthreelite:SoilHumiditySensor
+        a                owl:Class ;
+        rdfs:comment     "Soil Humidity sensor, Soil moisture, Hygrometer are an instrument used for measuring the soil moisture or soil humidity."@en ;
+        rdfs:label       "Soil Humidity Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:GasDetector
+        a                owl:Class ;
+        rdfs:comment     "Device that detects the presence of gases in an area, often as part of a safety system."@en ;
+        rdfs:label       "Gas Detector"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:HeartBeatSensor
+        a                owl:Class ;
+        rdfs:comment     "Device to count heart beats per minute."@en ;
+        rdfs:label       "Heart Beat Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+mthreelite:SpeedInstantaneous
+        a                owl:Class ;
+        rdfs:comment     "A measure of the instantaneous rate of motion of an object." ;
+        rdfs:label       "Speed Instantaneous"@en ;
+        rdfs:subClassOf  mthreelite:Speed .
+
+dc:date  a      owl:AnnotationProperty .
+
+mthreelite:Heating  a    owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the heating."@en ;
+        rdfs:label       "Heating Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Meter  a      owl:Class ;
+        rdfs:comment     "It is the unit of length."@en ;
+        rdfs:label       "Meter"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#meter> , qudt:Meter ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Millibar  a   owl:Class ;
+        rdfs:comment     "One thousandth of a bar."@en ;
+        rdfs:label       "Millibar"@en ;
+        rdfs:subClassOf  qudt:Bar .
+
+mthreelite:Mileage  a    owl:Class ;
+        rdfs:comment     "Measure of the number of miles or the average distance that a vehicle can travel on a specified quantity of fuel"@en ;
+        rdfs:label       "Mileage"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Computer  a   owl:Class ;
+        rdfs:comment     "Actuating devices for Computer or PC."@en ;
+        rdfs:label       "Computer, PC Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice .
+
+mthreelite:DishWasher
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the dishwasher."@en ;
+        rdfs:label       "Dish Washer Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Thermometer
+        a                owl:Class ;
+        rdfs:comment     "A device to measure the temperature in a room or outside."@en ;
+        rdfs:label       "Thermometer"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#TempuratureSensor> , <http://purl.oclc.org/NET/ssnx/meteo/aws#TemperatureSensor> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:EnergyDOI
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] .
+
+ssn:ObservationValue  a      owl:Class ;
+        rdfs:comment         "The value of the result of an Observation.  An Observation has a result which is the output of some sensor, the result is an information object that encodes some value for a Feature." ;
+        rdfs:label           "Observation Value" ;
+        rdfs:seeAlso         "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Base#Data" ;
+        rdfs:subClassOf      [ a                         owl:Restriction ;
+                               owl:onClass               qu:Unit ;
+                               owl:onProperty            iot-lite:hasUnit ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        dc:source            "skos:exactMatch 'measured quantity value' [VIM 2.10]\n                                  http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf\n\nskos:exactMatch 'observed value' [SensorML OGC-0700]\nhttp://www.opengeospatial.org/standards/sensorml \n\nskos:closeMatch 'observation result' [O&M]\nhttp://www.opengeospatial.org/standards/om \n\nO&M conflates what we have as SensorOutput and ObservationValue into observation result, though the OGC standard does say \"result contains a value\" and \"a result which has a value\", which fits naturally with the model here." ;
+        owl:equivalentClass  onemtom:OperationOutput .
+
+mthreelite:WorkingState
+        a                owl:Class ;
+        rdfs:comment     "Indicator of whether a person (or object) is working or not"@en ;
+        rdfs:label       "Working State"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:hasDirection
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The observations made by the sensors are affected by the direction of the sensing device. This property allows observations of the sensor to be associated to the Direction concept"@en ;
+        rdfs:domain   ssn:Observation ;
+        rdfs:label    "Has Direction"@en ;
+        rdfs:range    [ a                            owl:Restriction ;
+                        owl:maxQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                        owl:onClass                  mthreelite:Direction ;
+                        owl:onProperty               mthreelite:hasDirection
+                      ] .
+
+mthreelite:Day  a        owl:Class ;
+        rdfs:comment     "Day is a unit of time."@en ;
+        rdfs:label       "Day"@en ;
+        rdfs:subClassOf  mthreelite:SecondTime .
+
+mthreelite:Energy  a     owl:Class ;
+        rdfs:comment     "Energy is the property that must be transferred to an object in order to perform work on. (Source Wikipedia)."@en ;
+        rdfs:label       "Energy"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:ResAverageLicConnectedUsers
+        a                owl:Class ;
+        rdfs:comment     "Connected Users to a communication channel/platform"@en ;
+        rdfs:label       "Connected Users"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:WaterTemperature
+        a                owl:Class ;
+        rdfs:comment     "Sea surface temperature (SST) is the water temperature close to the ocean's surface."@en ;
+        rdfs:label       "Water Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:MeasurementType
+        a             owl:Class ;
+        rdfs:comment  "Type of Measurement done using a device."@en ;
+        rdfs:label    "Measurement Type"@en .
+
+mthreelite:Capacitance
+        a                owl:Class ;
+        rdfs:comment     "Measure of the ability of a system to store an electric charge."@en ;
+        rdfs:label       "Capacitance"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Animals  a    owl:Class ;
+        rdfs:comment     "when the source of the sound were animals."@en ;
+        rdfs:label       "Animals as Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:DeltaDewPointSensor
+        a                owl:Class ;
+        rdfs:comment     "Device that measures the difference between Dewpoint and surface temperatures."@en ;
+        rdfs:label       "Delta Dew Point Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:SoilTemperature
+        a                owl:Class ;
+        rdfs:comment     "Soil temperature is the bulk temperature of the soil, not the surface (skin) temperature."@en ;
+        rdfs:label       "Soil Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:SoundSensor
+        a                owl:Class ;
+        rdfs:comment     "Sensor used to detect Noise level. It can be Sound Sensor, Noise level Sensor, Volume sensor, Microphone"@en ;
+        rdfs:label       "Sound Sensor"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#Microphone> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:SolarRadiationSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect Solar Radiation."@en ;
+        rdfs:label       "Solar Radiation Sensor"@en ;
+        rdfs:seeAlso     <http://spitfire-project.eu/ontology/ns/Light> , <http://purl.oclc.org/NET/ssnx/meteo/aws#RadiationSensor> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:LuminousFlux
+        a                owl:Class ;
+        rdfs:comment     "Luminous Flux is the measure of the perceived power of light."@en ;
+        rdfs:label       "Luminous Flux"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+dc:rights  a    owl:AnnotationProperty .
+
+geo:alt  a           owl:AnnotationProperty ;
+        rdfs:domain  geo:Point .
+
+mthreelite:Hour  a       owl:Class ;
+        rdfs:comment     "Hour of the day."@en ;
+        rdfs:label       "Hour"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#hour> ;
+        rdfs:subClassOf  mthreelite:SecondTime .
+
+mthreelite:ProximitySensor
+        a                owl:Class ;
+        rdfs:comment     "Detect if something is within proximity of a sensor."@en ;
+        rdfs:label       "Proximity Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:MicrogramPerCubicMetre
+        a                owl:Class ;
+        rdfs:comment     "Microgram per cubic metre is a unit of density defined as microgram divided by cubic metre. Milligram per cubic metre is a derived unit in the International System of Units."@en ;
+        rdfs:label       "Microgram Per Cubic Metre, Microgram Per Cubic Meter"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#microgramPerCubicMetre" ;
+        rdfs:subClassOf  mthreelite:GramPerCubicMetre .
+
+mthreelite:ConstructionWork
+        a                owl:Class ;
+        rdfs:comment     "When the source of the sound was a construction work."@en ;
+        rdfs:label       "Construction Work Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:Sound  a      owl:Class ;
+        rdfs:comment     "Measure of noise level in the environment"@en ;
+        rdfs:label       "Sound, Noise Level"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:SoilMoistureTension
+        a                owl:Class ;
+        rdfs:comment     "The force per unit area required to remove film water from soil."@en ;
+        rdfs:label       "Soil Moisture Tension"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:ShakeSensor
+        a                owl:Class ;
+        rdfs:comment     "Shake sensor is used to deduce the quality of the road, earthquakes."@en ;
+        rdfs:label       "Shake Sensor"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#ShakeSensor> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] .
+
+onemtom:hasMetaData  a  owl:ObjectProperty ;
+        rdfs:comment  "A Value of a Thing can have MetaData (like units, precision-ranges)." ;
+        rdfs:label    "Has MetaData"@en .
+
+mthreelite:FuelConsumptionInstantaneous
+        a                owl:Class ;
+        rdfs:comment     "A measure that displays the instantaneous fuel consumption of a vehicle during its operation."@en ;
+        rdfs:label       "Fuel Consumption Instantaneous"@en ;
+        rdfs:subClassOf  mthreelite:FuelConsumption .
+
+mthreelite:ConductivitySensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to measure the conductivity of a system."@en ;
+        rdfs:label       "Conductivity Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:Tonne  a      owl:Class ;
+        rdfs:comment     "It is a non-SI metric unit of mass equal to 1,000 kilograms."@en ;
+        rdfs:label       "Tonne"@en ;
+        rdfs:subClassOf  mthreelite:Gram .
+
+geo:lat  a           owl:AnnotationProperty ;
+        rdfs:domain  geo:Point .
+
+mthreelite:AccInitialERabSetupSuccRate
+        a                owl:Class ;
+        rdfs:comment     "Initial E-UTRAN Radio Access Bearer setup success rate."@en ;
+        rdfs:label       "Initial E-RAB Setup Success Rate"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:GyrometerSensor
+        a                owl:Class ;
+        rdfs:comment     "A gyrometer is an instrument which measures an angular speed."@en ;
+        rdfs:label       "Gyrometer Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+geo:Point  a                       owl:Class ;
+        rdfs:label                 "Point"@en ;
+        iot-lite:altRelative       "" ;
+        iot-lite:relativeLocation  "" ;
+        geo:alt                    "" ;
+        geo:lat                    "" ;
+        geo:long                   "" .
+
+geo:long  a          owl:AnnotationProperty ;
+        rdfs:domain  geo:Point .
+
+mthreelite:NH3Sensor  a  owl:Class ;
+        rdfs:comment     "Device used to detect NH3 level in the environment."@en ;
+        rdfs:label       "NH3 Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+mthreelite:ChemicalAgentAtmosphericConcentrationNO2
+        a                owl:Class ;
+        rdfs:comment     "Measure of the concentration of NO2 gas suspended in the atmosphere."@en ;
+        rdfs:label       "NO2 Chemical Agent Atmospheric Concentration"@en ;
+        rdfs:subClassOf  mthreelite:ChemicalAgentAtmosphericConcentration .
+
+mthreelite:TV  a         owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the television."@en ;
+        rdfs:label       "TV Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Cholesterol
+        a                owl:Class ;
+        rdfs:comment     "Measure of the cholesterol level in a system."@en ;
+        rdfs:label       "Cholesterol Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:BuildingAutomation
+        a                owl:Class ;
+        rdfs:comment     "Smart Home/Building Automation as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Smart Building DOI"@en ;
+        rdfs:seeAlso     <http://elite.polito.it/ontologies/dogont.owl#BuildingEnvironment> ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:PulseOxymeter
+        a                owl:Class ;
+        rdfs:comment     "Pulse Oxymeter, SpO2, Blood Oxygen Saturation Sensor are used to measure the concentration of oxygen in the blood."@en ;
+        rdfs:label       "Pulse Oxymeter"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+mthreelite:TimeRelatedState
+        a                owl:Class ;
+        rdfs:comment     "Indicator of whether a person (or object) has overpassed a particular time threshold (e.g. maximum number of hours driving, etc.)"@en ;
+        rdfs:label       "Time Related State"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+iot-lite:isAssociatedWith
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Defines the associations between objects and sensors (e.g. A table (object) has an attribute (temperature at the table) which is associated with a sensor (the temperature sensor of the room). " ;
+        rdfs:domain   iot-lite:Object , iot-lite:Entity ;
+        rdfs:label    "Is Associated With"@en ;
+        rdfs:range    iot-lite:Service .
+
+mthreelite:IntDlLatency
+        a                owl:Class ;
+        rdfs:comment     "Downlink Latency."@en ;
+        rdfs:label       "Downlink Latency"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:BeatPerMinute
+        a                owl:Class ;
+        rdfs:comment     "BeatPerMinute (bpm) is the unit to measure heart rate."@en ;
+        rdfs:label       "Beat Per Minute (bpm)"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:BoardTemperature
+        a                owl:Class ;
+        rdfs:comment     "Measure of board temperature."@en ;
+        rdfs:label       "Board Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:SunPositionDirection
+        a                owl:Class ;
+        rdfs:comment     "The position of the Sun in the sky is a function of both time and the geographic coordinates of the observer on the surface of the Earth. (Source Wikipedia)."@en ;
+        rdfs:label       "Sun Position Direction"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Manual  a     owl:Class ;
+        rdfs:comment     "If the measurement was taken when human effort was involved."@en ;
+        rdfs:label       "Manual Measurement Type"@en ;
+        rdfs:subClassOf  mthreelite:MeasurementType .
+
+mthreelite:City  a       owl:Class ;
+        rdfs:comment     "Smart City as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Smart City DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:ChemicalAgentAtmosphericConcentrationCO
+        a                owl:Class ;
+        rdfs:comment     "Measure of the concentration of Carbon Monoxide (CO) gas suspended in the atmosphere."@en ;
+        rdfs:label       "Carbon Monoxide (CO) Chemical Agent Atmospheric Concentration"@en ;
+        rdfs:subClassOf  mthreelite:ChemicalAgentAtmosphericConcentration .
+
+mthreelite:Gauss  a      owl:Class ;
+        rdfs:comment     "Gauss is the CGS unit of measurement of magnetic flux density (or magnetic induction) (B) (Source Wikipedia)"@en ;
+        rdfs:label       "Gauss"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:ElectricField2400MHz
+        a                owl:Class ;
+        rdfs:comment     "A field of force associated with a moving electric charge equivalent to an electric field and a magnetic field at right angles to each other and to the direction of propagation. Applied to the 2400 MHz UHF band."@en ;
+        rdfs:label       "Electric Field 2400 MHz"@en ;
+        rdfs:subClassOf  mthreelite:ElectricField .
+
+mthreelite:Proximity  a  owl:Class ;
+        rdfs:comment     "Measure to detect proximity."@en ;
+        rdfs:label       "Proximity"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Volt  a       owl:Class ;
+        rdfs:comment     "The SI unit of electromotive force, the difference of potential that would carry one ampere of current against one ohm resistance."@en ;
+        rdfs:label       "Volt"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#volt> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Millilitre
+        a                owl:Class ;
+        rdfs:comment     "One thousandth of a litre (0.002 pint)."@en ;
+        rdfs:label       "Millilitre"@en ;
+        rdfs:subClassOf  mthreelite:Liter .
+
+mthreelite:FallDetector
+        a                owl:Class ;
+        rdfs:comment     "Device to detect is a person has fallen."@en ;
+        rdfs:label       "Fall Detector"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:chemicalAgentAtmosphericConcentrationO3
+        a                owl:Class ;
+        rdfs:comment     "The concentration of ozone (O3) gas suspended in the atmosphere."@en ;
+        rdfs:label       "Chemical Agent Atmospheric Concentration O3"@en ;
+        rdfs:subClassOf  mthreelite:ChemicalAgentAtmosphericConcentration .
+
+mthreelite:ElectricField1800MHz
+        a                owl:Class ;
+        rdfs:comment     "A field of force associated with a moving electric charge equivalent to an electric field and a magnetic field at right angles to each other and to the direction of propagation. Applied to the 1800 MHz UHF band."@en ;
+        rdfs:label       "Electric Field 1800 MHz"@en ;
+        rdfs:subClassOf  mthreelite:ElectricField .
+
+mthreelite:RecognizedActivity
+        a                owl:Class ;
+        rdfs:comment     "Activity Recognized. This is usually made available as a part of analysis done by Google. The available activities recognized are IN_VEHICLE, ON_BICYCLE, ON_FOOT, RUNNING, STILL, TILTING, UNKNOWN, and WALKING."@en ;
+        rdfs:label       "Recognized Activity"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:AtmosphericPressure
+        a                owl:Class ;
+        rdfs:comment     "The pressure exerted by the atmosphere as a consequence of gravitational attraction exerted upon the column of air lying directly above the point in question."@en ;
+        rdfs:label       "Atmospheric Pressure"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/quantity#atmosphericPressure" ;
+        rdfs:seeAlso     <http://paul.staroch.name/thesis/SmartHomeWeather.owl#AtmosphericPressure> , <http://openiot.eu/ontology/ns/AtmospherePressure> ;
+        rdfs:subClassOf  mthreelite:Pressure .
+
+mthreelite:Fan  a        owl:Class ;
+        rdfs:comment     "When the source of the sound was Fan."@en ;
+        rdfs:label       "Fan Sound Source"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:MinuteAngle
+        a                owl:Class ;
+        rdfs:comment     "A Minute of Angle (MOA) is an angular measurement. A MOA is 1/60th of a degree."@en ;
+        rdfs:label       "Minute Angle"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:FuelConsumptionTotal
+        a                owl:Class ;
+        rdfs:comment     "Accumulated amount of fuel used during vehicle operation."@en ;
+        rdfs:label       "Fuel Consumption Total"@en ;
+        rdfs:subClassOf  mthreelite:FuelConsumption .
+
+mthreelite:DirectionAzimuth
+        a                owl:Class ;
+        rdfs:comment     "The geodetic azimuth of the direction towards which an object is point to."@en ;
+        rdfs:label       "Direction Azimuth"@en ;
+        rdfs:subClassOf  mthreelite:Direction .
+
+mthreelite:intDlThroughputKbps
+        a                owl:Class ;
+        rdfs:comment     "Downlink Throughput."@en ;
+        rdfs:label       "Downlink Throughput"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+qu:QuantityKind  a           owl:Class ;
+        rdfs:comment         "A QuantityKind is an abstract classifier that represents the concept of kind of quantity that is defined as aspect common to mutually comparable quantities. A QuantityKind represents the essence of a quantity without any numerical value or unit. Quantities of the same kind within a given system of quantities have the same quantity dimension. However, quantities of the same dimension are not necessarily of the same kind."@en ;
+        rdfs:label           "Quantity Kind"@en ;
+        rdfs:subClassOf      [ a                   owl:Restriction ;
+                               owl:onProperty      mthreelite:hasSource ;
+                               owl:someValuesFrom  mthreelite:Source
+                             ] ;
+        owl:equivalentClass  onemtom:ThingProperty .
+
+mthreelite:RotationalSpeed
+        a                owl:Class ;
+        rdfs:comment     "Rotational speed (or speed of revolution) of an object rotating around an axis is the number of turns of the object divided by time, specified as revolutions per minute (rpm), revolutions per second (rev/s), or radians per second (rad/s). (Source Wikipedia)"@en ;
+        rdfs:label       "Rotational Speed"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Conductivity
+        a                owl:Class ;
+        rdfs:comment     "Measure of ability to conduct electricity. It is measured in siemens per meter (S/m)."@en ;
+        rdfs:label       "Conductivity"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:ElectricField
+        a                owl:Class ;
+        rdfs:comment     "Electric field is the electric force per unit charge."@en ;
+        rdfs:label       "Electric Field"@en ;
+        rdfs:seeAlso     "http://qudt.org/vocab/quantity#ElectricField" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Calibration
+        a                owl:Class ;
+        rdfs:comment     "Measure of blood calcium level."@en ;
+        rdfs:label       "Calcium Quantity Kind"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:Communication
+        a                owl:Class ;
+        rdfs:comment     "Communication related properties."@en ;
+        rdfs:label       "Communication Properties"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:TemperatureEngine
+        a                owl:Class ;
+        rdfs:comment     "The temperature of a vehicle engine."@en ;
+        rdfs:label       "Temperature Engine"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:SunPositionElevation
+        a                owl:Class ;
+        rdfs:comment     "It is the altitude of the sun, the angle between the horizon and the centre of the sun's disc."@en ;
+        rdfs:label       "Sun Position Elevation"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:BoardThermometer
+        a                owl:Class ;
+        rdfs:comment     "Device used to measure board temperature."@en ;
+        rdfs:label       "Board Thermometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+iot-lite:exposes  a   owl:ObjectProperty ;
+        rdfs:comment  "For service-oriented queries. The inverse of exposedBy."@en ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:label    "Exposes"@en ;
+        rdfs:range    ssn:Device .
+
+mthreelite:Year  a       owl:Class ;
+        rdfs:comment     "Year as a unit of time."@en ;
+        rdfs:label       "Year"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#year> ;
+        rdfs:subClassOf  mthreelite:SecondTime .
+
+mthreelite:Step  a       owl:Class ;
+        rdfs:comment     "It is a measure of number of Step taken."@en ;
+        rdfs:label       "Step"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+iot-lite:isSubSystemOf
+        a              owl:ObjectProperty ;
+        rdfs:comment   "Defines if a system is a subsystem of another system."@en ;
+        rdfs:domain    ssn:System ;
+        rdfs:label     "Is Sub System Of"@en ;
+        rdfs:range     ssn:System ;
+        owl:inverseOf  ssn:hasSubSystem .
+
+mthreelite:ElectricCharge
+        a                owl:Class ;
+        rdfs:comment     "It is the physical property of matter that causes it to experience a force when placed in an electromagnetic field. (Source Wikipedia)."@en ;
+        rdfs:label       "Electric Charge"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+dc:identifier  a  owl:AnnotationProperty .
+
+mthreelite:Mass  a       owl:Class ;
+        rdfs:comment     "Mass is a property of a physical body. It is the measure of an object's resistance to acceleration when a net force is applied."@en ;
+        rdfs:label       "Mass"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/quantity#mass" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:HumiditySensor
+        a                owl:Class ;
+        rdfs:comment     "Humidity sensor or hygrometer is an instrument used for measuring the moisture concent in the environment."@en ;
+        rdfs:label       "Humidity Sensor"@en ;
+        rdfs:seeAlso     <http://purl.oclc.org/NET/ssnx/meteo/aws#HumiditySensor> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Environment
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:Humidity  a   owl:Class ;
+        rdfs:comment     "A quantity representing the amount of water vapour in the atmosphere or in a gas."@en ;
+        rdfs:label       "Humidity"@en ;
+        rdfs:seeAlso     <http://paul.staroch.name/thesis/SmartHomeWeather.owl#Humidity> , <http://openiot.eu/ontology/ns/AtmosphereHumidity> , <http://elite.polito.it/ontologies/dogont.owl#HumidityMeasurementMNotification> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+ssn:observedProperty  a  owl:ObjectProperty ;
+        rdfs:comment  "Relation linking an Observation to the Property that was observed.  The observedProperty should be a Property (hasProperty) of the FeatureOfInterest (linked by featureOfInterest) of this observation." ;
+        rdfs:domain   ssn:Observation ;
+        rdfs:label    "Observed Property" ;
+        rdfs:range    qu:QuantityKind ;
+        dc:source     "skos:exactMatch 'observedProperty' [O&M - ISO/DIS 19156] \n\t\t                    http://portal.opengeospatial.org/files/?artifact_id=41579" .
+
+mthreelite:PublicTransit
+        a                owl:Class ;
+        rdfs:comment     "When the source of the sound was Public transit."@en ;
+        rdfs:label       "Public Transit"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:WashingMachine
+        a                owl:Class ;
+        rdfs:comment     "An actuator to automatically switch on/off the washing machine."@en ;
+        rdfs:label       "Washing Machine Actuation Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:FogLamp  a    owl:Class ;
+        rdfs:comment     "The actuator for turing on or off the fog lamp."@en ;
+        rdfs:label       "Fog Lamp Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Transportation
+                         ] .
+
+mthreelite:SolarRadiation
+        a                owl:Class ;
+        rdfs:comment     "It is the power per unit area received from the Sun in the form of electromagnetic radiation in the wavelength range of the measuring instrument. (Source Wikipedia)."@en ;
+        rdfs:label       "Solar Radiation Measurement, PAR Measurement (Photosynthetically Active Radiation)"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:PrecipitationSensor
+        a                owl:Class ;
+        rdfs:comment     "It is a device measuring the amount of precipitation."@en ;
+        rdfs:label       "Precipitation Sensor"@en ;
+        rdfs:seeAlso     <http://purl.oclc.org/NET/ssnx/meteo/aws#PrecipitationSensor> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Agriculture
+                         ] .
+
+mthreelite:BloodPressure
+        a                owl:Class ;
+        rdfs:comment     "Measure of the pressure in your blood vessels when your heart rests between beats."@en ;
+        rdfs:label       "Blood Pressure"@en ;
+        rdfs:subClassOf  mthreelite:Pressure .
+
+mthreelite:DeltaDewPoint
+        a                owl:Class ;
+        rdfs:comment     "Difference between Dewpoint and surface temperatures."@en ;
+        rdfs:label       "Delta Dew Point"@en ;
+        rdfs:subClassOf  mthreelite:DewPoint .
+
+mthreelite:AccRrcConnSetupSuccRate
+        a                owl:Class ;
+        rdfs:comment     "Radio Resource Control connection setup success rate."@en ;
+        rdfs:label       "RRC Connection Setup Success Rate"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:SoundPressureLevel
+        a                owl:Class ;
+        rdfs:comment     "Sound pressure level is a logarithmic measure of the RMS sound pressure of a sound relative to a reference value, the threshold of hearing. The reference sound pressure was chosen conventionally to correspond to the quietest sound at 1000 Hz that the human ear can detect (20 uPa). In this case, the specific parameter is measured in an open environment."@en ;
+        rdfs:label       "Sound Pressure Level"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/quantity#soundPressure" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:MeterPerSecond
+        a                owl:Class ;
+        rdfs:comment     "A speed/velocity unit which is equal to the speed of an object traveling 1 meter distance in one second."@en ;
+        rdfs:label       "Meter Per Second (m/s)"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/unit#metrePerSecond" ;
+        rdfs:seeAlso     qudt:MeterPerSecond ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Emotion  a    owl:Class ;
+        rdfs:comment     "Affective Science, Emotion, Mood, Emotional State, Brain Wave as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Emotion DOI"@en ;
+        rdfs:seeAlso     <http://sensormeasurement.appspot.com/naturopathy#Emotion> , <http://ns.inria.fr/emoca#Emotion> ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:Watt  a       owl:Class ;
+        rdfs:comment     "It is the SI unit of power, equivalent to one joule per second, corresponding to the rate of consumption of energy in an electric circuit where the potential difference is one volt and the current one ampere."@en ;
+        rdfs:label       "Watt (W)"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#watt> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:WindSpeed  a  owl:Class ;
+        rdfs:comment     "The ratio of the distance covered by moving air to the time quantity taken to cover it."@en ;
+        rdfs:label       "Wind Velocity, Wind Speed"@en ;
+        rdfs:seeAlso     <http://openiot.eu/ontology/ns/WindSpeed> ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:LuminousIntensity
+        a                owl:Class ;
+        rdfs:comment     " It is a measure of the wavelength-weighted power emitted by a light source in a particular direction per unit solid angle, based on the luminosity function, a standardized model of the sensitivity of the human eye. The SI unit of luminous intensity is the candela (cd), an SI base unit. (Source Wikipedia)"@en ;
+        rdfs:label       "Luminous Intensity"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:ElectricPotential
+        a                owl:Class ;
+        rdfs:comment     "Electric potential is the potential energy per unit charge associated with static (time-invariant) electric field."@en ;
+        rdfs:label       "Electric Potential"@en ;
+        rdfs:seeAlso     "http://purl.oclc.org/NET/ssnx/qu/dim#ElectricPotential" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:SmokeDetector
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect if there is a fire or the smoke."@en ;
+        rdfs:label       "Smoke Detector"@en ;
+        rdfs:seeAlso     <http://casas.wsu.edu/owl/cose.owl#SmokeAlarm> ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:Traffic  a    owl:Class ;
+        rdfs:comment     "When the source of the sound was traffic."@en ;
+        rdfs:label       "Traffic"@en ;
+        rdfs:subClassOf  mthreelite:SoundSource .
+
+mthreelite:Radian  a     owl:Class ;
+        rdfs:comment     "The radian is a unit of angular measure defined such that an angle of one radian subtended from the center of a unit circle produces an arc with arc length 1."@en ;
+        rdfs:label       "Radian"@en ;
+        rdfs:seeAlso     <http://sweet.jpl.nasa.gov/ontology/units.owl#radian> ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:MobHoExecSuccRate
+        a                owl:Class ;
+        rdfs:comment     "Handover Execution."@en ;
+        rdfs:label       "Handover Execution"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:BodyTemperature
+        a                owl:Class ;
+        rdfs:comment     "Measure of body temperature."@en ;
+        rdfs:label       "Body Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+mthreelite:hasSoundSource
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "This property links sound to its environmental source."@en ;
+        rdfs:domain         mthreelite:Sound ;
+        rdfs:label          "Has Sound Source"@en ;
+        rdfs:range          mthreelite:SoundSource ;
+        rdfs:subPropertyOf  mthreelite:hasSource .
+
+mthreelite:intUlThroughputKbps
+        a                owl:Class ;
+        rdfs:comment     "Uplink Throughput."@en ;
+        rdfs:label       "Uplink Throughput"@en ;
+        rdfs:subClassOf  mthreelite:Communication .
+
+mthreelite:ImageSensor
+        a                owl:Class ;
+        rdfs:comment     "Sensor that detects and conveys the information that constitutes an image."@en ;
+        rdfs:label       "Image Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:Illuminance
+        a                owl:Class ;
+        rdfs:comment     "Illuminance is the total luminous flux incident on a surface, per unit area."@en ;
+        rdfs:label       "Illuminance"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+onemtom:hasThingProperty
+        a             owl:ObjectProperty ;
+        rdfs:comment  "A Thing may have properties that can be described by Values" ;
+        rdfs:label    "Has Thing Property"@en .
+
+mthreelite:MagneticFluxDensity
+        a                owl:Class ;
+        rdfs:comment     "It is the magnetic flux  through a surface is the surface integral of the normal component of the magnetic field (B) passing through that surface. The SI unit of magnetic flux is the weber (Wb). (Source Wikipedia)."@en ;
+        rdfs:label       "Magnetic Flux Density"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+mthreelite:PressureSensor
+        a                owl:Class ;
+        rdfs:comment     "A device used to detect pressure. For example, it can be attached on the bed to infer if the user is lying, sleeping, sitting, bed occupancy, etc."@en ;
+        rdfs:label       "Pressure Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+vann:preferredNamespaceUri
+        a       owl:AnnotationProperty .
+
+dc:description  a  owl:AnnotationProperty .
+
+mthreelite:SunPositionElevationSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect sun elevation."@en ;
+        rdfs:label       "Sun Position Elevation Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] .
+
+mthreelite:MilligramPerCubicMetre
+        a                owl:Class ;
+        rdfs:comment     "It is a density measurement unit."@en ;
+        rdfs:label       "Milligram Per Cubic Metre, Milligram Per Cubic Meter"@en ;
+        rdfs:subClassOf  mthreelite:GramPerCubicMetre .
+
+mthreelite:Rainfall  a   owl:Class ;
+        rdfs:comment     "The depth of precipitation (water-equivalent) that accumulated over a measurement time quantity."@en ;
+        rdfs:label       "Rainfall"@en ;
+        rdfs:seeAlso     "http://sweet.jpl.nasa.gov/ontology/property.owl#Rainfall" ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+ssn:SensingDevice  a         owl:Class ;
+        rdfs:comment         "A sensing device is a device that implements sensing." ;
+        rdfs:label           "Sensing Device"@en ;
+        rdfs:seeAlso         "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#Measuring" ;
+        rdfs:subClassOf      ssn:Sensor , ssn:Device ;
+        dc:source            "http://www.w3.org/2005/Incubator/ssn/" ;
+        owl:equivalentClass  onemtom:Device .
+
+terms:contributor  a  owl:AnnotationProperty .
+
+mthreelite:Centimetre
+        a                owl:Class ;
+        rdfs:comment     "A metric unit of length, equal to one hundredth of a metre."@en ;
+        rdfs:label       "Centimetre, Centimeter"@en ;
+        rdfs:subClassOf  mthreelite:Meter .
+
+mthreelite:MileageDistanceToService
+        a                owl:Class ;
+        rdfs:comment     "The distance which can be travelled by the vehicle before the next service inspection is required.  A negative distance is transmitted if the service inspection has been passed."@en ;
+        rdfs:label       "Mileage Distance To Service"@en ;
+        rdfs:subClassOf  mthreelite:Mileage .
+
+iot-lite:relativeLocation
+        a            owl:AnnotationProperty ;
+        rdfs:domain  geo:Point ;
+        rdfs:range   xsd:string .
+
+onemtom:Device  a     owl:Class ;
+        rdfs:comment  "A Device (Class: Device) is a object designed to accomplish a particular task. A Device contains some logic and is producer and/or consumer of data that are exchanged via its Services with other oneM2M entities (Devices, Things) in the network. A Device may be a physical or non-physical entity.\nIn the context of oneM2M a Device is always assumed to be capable of communicating electronically via a network.\n - In order to accomplish its task, the device performs one or more functionalities \n - These functionalities are exposed in the network as Services of the Device.\n - A Device can be composed of several (sub-) Devices \n - Each Device (including sub-Devices) needs to be individually addressable in the network." ;
+        rdfs:label    "Device"@en .
+
+mthreelite:BodyThermometer
+        a                owl:Class ;
+        rdfs:comment     "Device used to measure body temperature."@en ;
+        rdfs:label       "Body Thermometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Health
+                         ] .
+
+mthreelite:MethaneSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect Methane in the environment."@en ;
+        rdfs:label       "Methane (CH4) Sensor"@en ;
+        rdfs:subClassOf  mthreelite:GaseousPollutantSensor .
+
+ssn:SensorOutput  a      owl:Class ;
+        rdfs:comment     "A sensor outputs a piece of information (an observed value), the value itself being represented by an ObservationValue." ;
+        rdfs:label       "Sensor Output"@en ;
+        rdfs:seeAlso     "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Skeleton#Skeleton" ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               ssn:ObservationValue ;
+                           owl:onProperty            ssn:hasValue ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+mthreelite:Source  a  owl:Class ;
+        rdfs:comment  "Environmental Source."@en ;
+        rdfs:label    "Source"@en .
+
+terms:modified  a  owl:AnnotationProperty .
+
+mthreelite:Health  a     owl:Class ;
+        rdfs:comment     "Healthcare as an Internet of Things (IoT) applicative domain."@en ;
+        rdfs:label       "Health Care DOI"@en ;
+        rdfs:subClassOf  mthreelite:DomainOfInterest .
+
+mthreelite:RFID  a       owl:Class ;
+        rdfs:comment     "A tagging device can be RFID."@en ;
+        rdfs:label       "RFID Tagging Device"@en ;
+        rdfs:subClassOf  iot-lite:TagDevice .
+
+mthreelite:SkinConductance
+        a                owl:Class ;
+        rdfs:comment     "Skin conductance (or GSR: Galvanic Skin Response)"@en ;
+        rdfs:label       "Skin conductance, GSR"@en ;
+        rdfs:subClassOf  qu:QuantityKind ;
+        dc:description   "Electroderal activity (also known as skin conductance or galvanic skin response) directly correlates to the sympathetic nervous system activity and thus provides a powerful tool for monitoring arousal and certain aspects of autonomic regulation."@en .
+
+mthreelite:Millisecond
+        a                owl:Class ;
+        rdfs:comment     "One thousandth of a second."@en ;
+        rdfs:label       "Millisecond"@en ;
+        rdfs:subClassOf  mthreelite:SecondTime .
+
+mthreelite:RoadTemperature
+        a                owl:Class ;
+        rdfs:comment     "Temperature of the road."@en ;
+        rdfs:label       "Road Temperature"@en ;
+        rdfs:subClassOf  mthreelite:Temperature .
+
+dul:mappableTo  a   owl:AnnotationProperty ;
+        rdfs:label  "mappable to"@en .
+
+mthreelite:Distance  a   owl:Class ;
+        rdfs:comment     "Measure of how far apart objects are."@en ;
+        rdfs:label       "Distance"@en ;
+        rdfs:subClassOf  qu:QuantityKind .
+
+onemtom:Service  a    owl:Class ;
+        rdfs:comment  "A Service (Class: Service) is a electronic representation of a Functionality in a network. The Service exposes the Functionality to the network and makes it discoverable, registerable and remotely controllable in the network. \nA Service is offered by a device that wants (a certain set of) its Functionalities to be discoverable, registerable, remotely controllable by other devices in the network. \nA Service can expose one or more Functionalities and a Functionality can be exposed by one or more Services.\nThe Input- and Output DataPoints and Operations of a Service may have the same names as for a different Service, however the Service to which they belong differentiates how they are addressed in the Device (e.g. via a port specific to the Service).\nNOTE: While a Functionality  describes the – human understandable – meaning of a Service of the device the Service is used to describe how such functionality is represented in a communication network and can be accessed by electronic means. The Service and its Operations is therefore dependent on the technology of the network, hard- and software of the device." ;
+        rdfs:comment  ssn:Observation ;
+        rdfs:label    "Service"@en .
+
+mthreelite:SecondAngle
+        a                owl:Class ;
+        rdfs:comment     "It is a unit of angular measurement equal to 1/60 of one degree."@en ;
+        rdfs:label       "Second Angle"@en ;
+        rdfs:subClassOf  qu:Unit .
+
+mthreelite:Freezer  a    owl:Class ;
+        rdfs:comment     "An actuator to automatically open/close the freezer."@en ;
+        rdfs:label       "Freezer, Chiller Actuating Device"@en ;
+        rdfs:subClassOf  iot-lite:ActuatingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+mthreelite:WindChillSensor
+        a                owl:Class ;
+        rdfs:comment     "Device used to detect Wind Chill."@en ;
+        rdfs:label       "Wind Chill Sensor"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:Weather
+                         ] .
+
+mthreelite:DewPointTemperature
+        a                owl:Class ;
+        rdfs:comment     "The temperature at which dew forms and is a measure of atmospheric moisture. It is the temperature to which air must be cooled at constant pressure and water content to reach saturation. A higher dew point indicates more moisture in the air; a dew point greater than 20 Degree C (68 Degree F) is considered uncomfortable and greater than 22 Degree C (72 Degree F) is considered to be extremely humid."@en ;
+        rdfs:label       "Dew Point Temperature"@en ;
+        rdfs:subClassOf  mthreelite:DewPoint .
+
+ssn:Deployment  a     owl:Class ;
+        rdfs:comment  "The ongoing Process of Entities (for the purposes of this ontology, mainly sensors) deployed for a particular purpose.  For example, a particular Sensor deployed on a Platform, or a whole network of Sensors deployed for an observation campaign.  The deployment may have sub processes, such as installation, maintenance, addition, and decomissioning and removal." ;
+        rdfs:label    "Deployment"@en ;
+        rdfs:seeAlso  "http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Deploy#Deployment" ;
+        dc:source     "skos:closeMatch 'Deployment' [MMI Dev]\n                                 http://marinemetadata.org/community/teams/ontdevices" .
+
+mthreelite:Seismometer
+        a                owl:Class ;
+        rdfs:comment     "Seismometers are instruments that measure motions of the ground, including those of seismic waves generated by earthquakes, volcanic eruptions, and other seismic sources."@en ;
+        rdfs:label       "Seismometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice .
+
+mthreelite:PresenceStateDriverCard1
+        a                owl:Class ;
+        rdfs:comment     "Indicates the presence of the first driver card."@en ;
+        rdfs:label       "Presence State Driver Card 1"@en ;
+        rdfs:subClassOf  mthreelite:PresenceStateDriverCard .
+
+iot-lite:ActuatingDevice
+        a                owl:Class ;
+        rdfs:comment     "Device that can actuate over an object or QuantityKind (e.g., switch on/off the light)."@en ;
+        rdfs:label       "Actuating Device"@en ;
+        rdfs:subClassOf  ssn:Device .
+
+mthreelite:Magnetometer
+        a                owl:Class ;
+        rdfs:comment     "A magnetometer is an device that measures magnetism—either magnetization of magnetic material like a ferromagnet, or the strength and, in some cases, direction of the magnetic field at a point in space. (Source Wikipedia)."@en ;
+        rdfs:label       "Magnetometer"@en ;
+        rdfs:subClassOf  ssn:SensingDevice ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      mthreelite:hasDomainOfInterest ;
+                           owl:someValuesFrom  mthreelite:BuildingAutomation
+                         ] .
+
+iot-lite:metadataValue
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Value of the metadata" ;
+        rdfs:domain   iot-lite:Metadata ;
+        rdfs:label    "Metadata Value"@en ;
+        rdfs:range    xsd:string .
+
+vann:preferredNamespacePrefix
+        a       owl:AnnotationProperty .
+
+mthreelite:Microampere
+        a                owl:Class ;
+        rdfs:comment     "It is a unit of electric current, or amount of electric charge per second."@en ;
+        rdfs:label       "Microampere (uA)"@en ;
+        rdfs:subClassOf  mthreelite:Ampere .

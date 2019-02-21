@@ -1,0 +1,210 @@
+@prefix :      <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix m3-lite: <http://purl.org/iot/vocab/m3-lite#> .
+@prefix ssn:   <http://purl.oclc.org/NET/ssnx/ssn#> .
+@prefix iot-lite: <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml:   <http://www.w3.org/XML/1998/namespace> .
+@prefix qu:    <http://purl.org/NET/ssnx/qu/qu#> .
+@prefix qu-rec20: <http://purl.org/NET/ssnx/qu/qu-rec20#> .
+
+ssn:hasSubSystem  a  owl:ObjectProperty ;
+        rdfs:domain  ssn:System ;
+        rdfs:range   ssn:System .
+
+ssn:SensingDevice  a     owl:Class ;
+        rdfs:subClassOf  ssn:Sensor , ssn:Device .
+
+iot-lite:hasCoverage  a  owl:ObjectProperty ;
+        rdfs:comment  "Links the devices with their coverages." ;
+        rdfs:domain   ssn:Device ;
+        rdfs:range    iot-lite:Coverage .
+
+iot-lite:hasSensingDevice
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Links a sensor with a sensing device the same way as SSN." ;
+        rdfs:domain   ssn:Sensor ;
+        rdfs:range    ssn:SensingDevice .
+
+iot-lite:Object  a    owl:Class ;
+        rdfs:comment  "IoT entity"@en .
+
+iot-lite:interfaceType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Defines the type of interface of the service endpoint." ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:range    xsd:string .
+
+iot-lite:metadataValue
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Value of the metadata" ;
+        rdfs:domain   iot-lite:Metadata ;
+        rdfs:range    xsd:string .
+
+iot-lite:isMobile  a  owl:DatatypeProperty ;
+        rdfs:domain  ssn:Platform ;
+        rdfs:range   xsd:boolean .
+
+geo:lat  a           owl:AnnotationProperty ;
+        rdfs:domain  geo:Point .
+
+geo:Point  a                       owl:Class ;
+        iot-lite:altRelative       "" ;
+        iot-lite:relativeLocation  "" ;
+        geo:alt                    "" ;
+        geo:lat                    "" ;
+        geo:long                   "" .
+
+iot-lite:hasAttribute
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Links the devices with their attributes." ;
+        rdfs:domain   iot-lite:Object , iot-lite:Entity ;
+        rdfs:range    iot-lite:Attribute .
+
+iot-lite:id  a       owl:DatatypeProperty ;
+        rdfs:domain  ssn:Device ;
+        rdfs:range   xsd:string .
+
+iot-lite:Metadata  a  owl:Class ;
+        rdfs:comment  "Class used to describe properties that cannot be described by QuantityKind and Units. i.e. the resolution of a sensor."@en .
+
+iot-lite:Circle  a       owl:Class ;
+        rdfs:comment     "Circle coverage it needs the location of the sensor as the centre of the circle and the radius as a DataProperty."@en ;
+        rdfs:subClassOf  iot-lite:Coverage .
+
+iot-lite:radius  a    owl:DatatypeProperty ;
+        rdfs:comment  "Specifies the radius of a circle coverage defined by a point -the center of the circle- and its radius." ;
+        rdfs:domain   iot-lite:Circle ;
+        rdfs:range    xsd:double .
+
+iot-lite:Polygon  a      owl:Class ;
+        rdfs:comment     "The coverage is made up by linking several points by strait lines."@en ;
+        rdfs:subClassOf  iot-lite:Coverage .
+
+geo:location  a     owl:ObjectProperty ;
+        rdfs:range  geo:Point .
+
+iot-lite:Attribute  a  owl:Class ;
+        rdfs:comment  "An attribute of an IoT object that can be exposed by an IoT service (i.e. a room (IoT Object) has a temperature (Attribute), that can be exposed by a temperature sensor (IoT device)."@en .
+
+iot-lite:isSubSystemOf
+        a              owl:ObjectProperty ;
+        rdfs:domain    ssn:System ;
+        rdfs:range     ssn:System ;
+        owl:inverseOf  ssn:hasSubSystem .
+
+iot-lite:Coverage  a  owl:Class ;
+        rdfs:comment  "The coverage of an IoT device (i.e. a temperature sensor inside a room has a coverage of that room)."@en .
+
+iot-lite:endpoint  a  owl:DatatypeProperty ;
+        rdfs:comment  "Endpoint of the service. It is usually a URL where the service is available." ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:range    xsd:anyURI .
+
+iot-lite:  a             owl:Ontology ;
+        rdfs:comment     "iot-lite is a lightweight ontology based on SSN to describe Internet of Things (IoT) concepts and relationships."@en ;
+        rdfs:label       "iot-lite" ;
+        owl:versionInfo  "0.3 fiesta" .
+
+iot-lite:Rectangle  a    owl:Class ;
+        rdfs:comment     "Teh coverage is made up by giving two points which are the oposite corners of a rentangle."@en ;
+        rdfs:subClassOf  iot-lite:Coverage .
+
+geo:long  a          owl:AnnotationProperty ;
+        rdfs:domain  geo:Point .
+
+qu:QuantityKind  a  owl:Class .
+
+ssn:onPlatform  a    owl:ObjectProperty ;
+        rdfs:domain  ssn:System ;
+        rdfs:range   ssn:Platform .
+
+iot-lite:altRelative  a  owl:AnnotationProperty ;
+        rdfs:domain  geo:Point ;
+        rdfs:range   xsd:string .
+
+ssn:System  a   owl:Class .
+
+geo:alt  a           owl:AnnotationProperty ;
+        rdfs:domain  geo:Point .
+
+iot-lite:TagDevice  a    owl:Class ;
+        rdfs:comment     "Tag Device such as QR code or bar code."@en ;
+        rdfs:subClassOf  ssn:Device .
+
+iot-lite:hasUnit  a   owl:ObjectProperty ;
+        rdfs:comment  "Links the sensor with the units of the quantity kind it measures (e.g. A sensor -sensor1- measures temperature in Celsius: senso1 hasUnit celsius)." ;
+        rdfs:domain   ssn:Sensor ;
+        rdfs:range    qu:Unit .
+
+iot-lite:relativeLocation
+        a            owl:AnnotationProperty ;
+        rdfs:domain  geo:Point ;
+        rdfs:range   xsd:string .
+
+qu:Unit  a      owl:Class .
+
+iot-lite:ActuatingDevice
+        a                owl:Class ;
+        rdfs:comment     "Device that can actuate over an object or QuantityKind."@en ;
+        rdfs:subClassOf  ssn:Device .
+
+iot-lite:interfaceDescription
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Description of the service." ;
+        rdfs:domain   iot-lite:Service ;
+        rdfs:range    xsd:anyURI .
+
+ssn:Sensor  a   owl:Class .
+
+iot-lite:Entity  a           owl:Class ;
+        owl:equivalentClass  iot-lite:Object .
+
+iot-lite:Service  a   owl:Class ;
+        rdfs:comment  "Service provided by an IoT Device"@en .
+
+iot-lite:exposes  a    owl:ObjectProperty ;
+        rdfs:comment   "For service-oriented queries. The inverse of exposedBy." ;
+        rdfs:domain    iot-lite:Service ;
+        rdfs:range     ssn:Device ;
+        owl:inverseOf  iot-lite:exposedBy .
+
+iot-lite:isAssociatedWith
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Defines the associations between objects and sensors (e.g. A table (object) has an attribute (temperature at the table) which is associated with a sensor (the temperature sensor of the room). " ;
+        rdfs:domain   iot-lite:Object , iot-lite:Entity ;
+        rdfs:range    iot-lite:Service .
+
+ssn:Device  a            owl:Class ;
+        rdfs:subClassOf  ssn:System .
+
+iot-lite:VirtualEntity
+        a                owl:Class ;
+        rdfs:subClassOf  iot-lite:Entity .
+
+iot-lite:hasQuantityKind
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Links a sensor or an attribute with the quantity  kind it measures (e.g. A sensor -sensor1- measures temperature: sensor1 hasQuantityKind temperature)." ;
+        rdfs:domain   ssn:Sensor , iot-lite:Attribute ;
+        rdfs:range    qu:QuantityKind .
+
+ssn:Platform  a  owl:Class .
+
+iot-lite:exposedBy  a  owl:ObjectProperty ;
+        rdfs:comment  "A device is exposed by a service." ;
+        rdfs:domain   ssn:Device ;
+        rdfs:range    iot-lite:Service .
+
+iot-lite:hasMetadata  a  owl:ObjectProperty ;
+        rdfs:comment  "Links any concept with metadata about that concept." ;
+        rdfs:range    iot-lite:Metadata .
+
+iot-lite:metadataType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Defines the type pf the metadata value (e.g. resolution of the sensor)." ;
+        rdfs:domain   iot-lite:Metadata ;
+        rdfs:range    xsd:string .

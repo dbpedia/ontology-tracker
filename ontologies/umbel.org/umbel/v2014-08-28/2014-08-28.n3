@@ -1,0 +1,2586 @@
+@prefix : <http://umbel.org/umbel#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://umbel.org/umbel> a owl:Ontology ;
+	<http://purl.org/vocab/vann/preferredNamespaceUri> "http://umbel.org/umbel#" ;
+	<http://purl.org/vocab/vann/preferredNamespacePrefix> "umbel" ;
+	<http://purl.org/dc/elements/1.1/creator> "Ontotext AD"@en , "Structured Dynamics LLC"@en ;
+	skos:definition "UMBEL (Upper Mapping and Binding Exchange Layer) vocabulary provides a general vocabulary (the UMBEL \"vocabulary\") of classes and predicates for describing domain ontologies, with the specific aim of promoting interoperability with external datasets and domains."@en ;
+	skos:prefLabel "Upper Mapping and Binding Exchange Layer (UMBEL) Vocabulary"@en ;
+	owl:versionIRI <http://umbel.org/umbel/v100#> ;
+	owl:imports <http://www.w3.org/TR/skos-reference/skos-owl1-dl.rdf> .
+
+<http://purl.org/dc/elements/1.1/creator> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/contributor> a owl:AnnotationProperty .
+
+<http://purl.org/vocab/vann/preferredNamespaceUri> a owl:AnnotationProperty .
+
+skos:prefLabel a owl:AnnotationProperty .
+
+:superPropertyOf a owl:AnnotationProperty ;
+	skos:definition "Specifies that a property is a super property of another property. This is the inverse of rdfs:subPropertyOf"@en ;
+	skos:prefLabel "super property of"@en ;
+	rdfs:domain rdf:Property .
+
+<http://purl.org/vocab/vann/preferredNamespacePrefix> a owl:AnnotationProperty .
+
+skos:definition a owl:AnnotationProperty .
+
+:hasCharacteristic a owl:AnnotationProperty ;
+	skos:definition "The property umbel:hasCharacteristic is used to assert the relation between a Reference Concept and external properties that may be used in external ontologies to characterize, describe, or provide attributes for data records associated with that concept. It is via this property or its inverse, umbel:isCharacteristicOf, that external data characterizations may be incorporated and modeled within a domain ontology based on the UMBEL vocabulary."@en ;
+	skos:prefLabel "has characteristic"@en .
+
+:isCharacteristicOf a owl:AnnotationProperty ;
+	skos:definition "The property umbel:isCharacteristicOf is used to assert the relation between a property and a Reference Concept (or its punned individual) to which it applies. Such properties may be used in external ontologies to characterize, describe, or provide attributes for data records associated with that concept. It is via this property or its inverse, umbel:hasCharacteristic, that external data characterizations may be incorporated and modeled within a domain ontology based on the UMBEL vocabulary."@en ;
+	skos:prefLabel "is characteristic of"@en .
+
+rdfs:comment a owl:AnnotationProperty .
+
+skos:altLabel a owl:AnnotationProperty .
+
+:correspondsTo a owl:ObjectProperty , owl:ReflexiveProperty , owl:SymmetricProperty , owl:TransitiveProperty ;
+	rdfs:comment """The property umbel:correspondsTo is used to assert a close correspondence between an external class, named entity, individual or instance with a Reference Concept class. umbel:correspondsTo relates the external class, named entity, individual or instance to the class through the basis of both its subject matter and intended scope. This predicate should be used where the correspondence between the two entities is felt to be nearly equivalent to a sameAs assertion, and is reflexive, but without the full entailments of intensional class memberships. In these cases, both entities are understood to have the same type and intended scope, but without asserting a full class-level or sameAs individual relationship.
+
+This predicate is designed for the circumstance of aligning two different ontologies or knowledge bases based on node-level correspondences, but without entailing the actual ontological relationships and structure of the object source. For example, the umbel:correspondsTo predicate is used to assert close correspondence between UMBEL Reference Concepts and Wikipedia categories or pages, yet without entailing the actual Wikipedia category structure.
+
+This property asserts a different and stronger relationship than umbel:isAbout. One practical use is to guide specific instance member determinations when, say, the native structure of the external ontology or knowledge base is to be analyzed and replaced with an UMBEL-based structure.
+
+This property is therefore used to create a nearly equivalent assertion (however, with the degree of that equivalence being unknown or unknowable) between an external instance or class and a Reference Concept class"""@en ;
+	rdfs:range :RefConcept ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:hasMapping a owl:ObjectProperty ;
+	skos:definition "This property is used to reify a umbel:isAbout or a umbel:isRelatedTo property to a mapping percentage value, some quantitative metric value, or a qualitative descriptor characterizing the linkage degree or overlap between the two classes, predicates, individuals or datatypes. This value might be calculated from some external utility. "@en ;
+	skos:prefLabel "has mapping"@en ;
+	rdfs:domain rdf:Statement ;
+	rdfs:range owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:isAbout a owl:ObjectProperty ;
+	skos:definition """The property umbel:isAbout is used to assert the relation between a named entity (individual) and a Reference Concept class. umbel:isAbout relates the named entity (individual) to the class through the basis of its subject matter. The relation acknowledges that the scope of the class can not be determined solely by the aggregation or extent of its associated individual entity members, and that the nature of the Reference Concept class may not alone bound or define the individual entity.
+
+This property is therefore used to create a topical assertion between an individual and a Reference Concept."""@en ;
+	skos:prefLabel "is about"@en ;
+	rdfs:range :RefConcept ;
+	owl:inverseOf :isRelatedTo ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:isLike a owl:ObjectProperty , owl:SymmetricProperty ;
+	skos:definition """The property umbel:isLike is used to assert an associative link between similar individuals who may or may not be identical, but are believed to be so. This property is not intended as a general expression of similarity, but rather the likely but uncertain same identity of the two resources being related.
+
+This property can and should be changed if the certainty of the sameness of identity is subsequently determined.
+
+In general, we may not be able to assert that two individuals are the same based solely on current information on hand. However, there may be quite reasonable bases or methods that the two individuals are likely the same without being one hundred percent sure.
+
+umbel:isLike has the semantics of likely identity, but where there is some uncertainty that the two resources indeed refer to the exact same individual with the same identity. Such uncertainty can arise when, for example, common names may be used for different individuals (e.g., John Smith).
+
+It is appropriate to use this property when there is strong belief the two resources refer to the same individual with the same identity, but that association can not be asserted at the present time with certitude. """@en ;
+	skos:prefLabel "is like"@en ;
+	rdfs:range owl:Thing ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:isRelatedTo a owl:ObjectProperty ;
+	skos:definition "Check the definition of umbel:isAbout for the definition of this property; isRelatedTo is the inverse property of isAbout. "@en ;
+	skos:prefLabel "links entity"@en ;
+	rdfs:domain :RefConcept ;
+	rdfs:range owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToAbstraction a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has abstraction"@en ;
+	rdfs:range :AbstractLevel ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToActivity a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has activity"@en ;
+	rdfs:range :Activities ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToAnimal a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "relates to animal"@en ;
+	rdfs:range :Animals ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToAttribute a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has attribute"@en ;
+	rdfs:range :Attributes ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToAudioInfo a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "relates to audio information"@en ;
+	rdfs:range :AudioInfo ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToChemistry a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to chemistry"@en ;
+	rdfs:range :Chemistry ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToDisease a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to disease"@en ;
+	rdfs:range :Diseases ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToDrug a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to drug"@en ;
+	rdfs:range :Drugs ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToEarth a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to earthscape"@en ;
+	rdfs:range :Earthscape ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToEvent a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has event"@en ;
+	rdfs:range :Events ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToFacility a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to facility"@en ;
+	rdfs:range :Facilities ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToFinanceEconomy a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to finance or economy"@en ;
+	rdfs:range :FinanceEconomy ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToFoodDrink a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has food drink"@en ;
+	rdfs:range :FoodDrink ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToGeoEntity a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to geopolitical entity"@en ;
+	rdfs:range :Geopolitical ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToHeavens a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to extraterrestrial entity"@en ;
+	rdfs:range :Extraterrestrial ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToMarketIndustry a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to market or industry"@en ;
+	rdfs:range :MarketsIndustries ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToNotation a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has notation"@en ;
+	rdfs:range :Notations ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToNumbers a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to numbers"@en ;
+	rdfs:range :Numbers ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToOrganizationType a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has organization type"@en ;
+	rdfs:range :Organizations ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToOtherOrganism a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to other organism"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+_:node190ebnpm4x646 a owl:Class .
+
+_:node190ebnpm4x647 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x648 .
+
+_:node190ebnpm4x648 rdf:first :ProtistsFungus ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x646 owl:unionOf _:node190ebnpm4x647 .
+
+:relatesToOtherOrganism rdfs:range _:node190ebnpm4x646 .
+
+:relatesToPersonType a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has person type"@en ;
+	rdfs:range :PersonTypes ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToPhenomenon a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to natural phenomenon"@en ;
+	rdfs:range :NaturalPhenomena ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToPlant a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to plant"@en ;
+	rdfs:range :Plants ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToProductType a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has product type"@en ;
+	rdfs:range :Products ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToSociety a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to society"@en ;
+	rdfs:range :Society ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToStructuredInfo a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to structured information"@en ;
+	rdfs:range :StructuredInfo ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToSubstance a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to natural substance"@en ;
+	rdfs:range :NaturalSubstances ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToTime a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has time"@en ;
+	rdfs:range :Time ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToTopic a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has topic"@en ;
+	rdfs:range :TopicsCategories ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToVisualInfo a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to visual information"@en ;
+	rdfs:range :VisualInfo ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToWorkplace a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship "@en ;
+	skos:prefLabel "has workplace"@en ;
+	rdfs:range :Workplaces ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:relatesToWrittenInfo a owl:ObjectProperty ;
+	skos:definition "This predicate relates an external entity to the SuperType (ST) shown. It indicates there is a relationship to the ST of a verifiable nature, but which is undetermined as to strength or a full rdf:type relationship."@en ;
+	skos:prefLabel "relates to written information"@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:superPropertyOf a owl:ObjectProperty ;
+	rdfs:range rdf:Property .
+
+owl:topObjectProperty a owl:ObjectProperty .
+
+owl:topDataProperty a owl:DatatypeProperty .
+
+:AbstractLevel a owl:Class ;
+	rdfs:subClassOf :SuperType ;
+	skos:definition "This general SuperType category is largely composed of former AbstractConcepts, and represent some of the more abstract upper-level nodes for connecting the UMBEL structure together. This SuperType also includes theories or processes or methods for humans to do stuff or any human technology "@en ;
+	skos:prefLabel "abstract level"@en .
+
+:Activities a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x649 a owl:Class .
+
+_:node190ebnpm4x650 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x651 .
+
+_:node190ebnpm4x651 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x652 .
+
+_:node190ebnpm4x652 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x653 .
+
+_:node190ebnpm4x653 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x654 .
+
+_:node190ebnpm4x654 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x655 .
+
+_:node190ebnpm4x655 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x656 .
+
+_:node190ebnpm4x656 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x657 .
+
+_:node190ebnpm4x657 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x658 .
+
+_:node190ebnpm4x658 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x659 .
+
+_:node190ebnpm4x659 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x660 .
+
+_:node190ebnpm4x660 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x661 .
+
+_:node190ebnpm4x661 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x662 .
+
+_:node190ebnpm4x662 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x663 .
+
+_:node190ebnpm4x663 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x664 .
+
+_:node190ebnpm4x664 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x665 .
+
+_:node190ebnpm4x665 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x666 .
+
+_:node190ebnpm4x666 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x667 .
+
+_:node190ebnpm4x667 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x649 owl:unionOf _:node190ebnpm4x650 .
+
+:Activities owl:disjointWith _:node190ebnpm4x649 ;
+	skos:definition "These are ongoing activities that result (mostly) from human effort, often conducted by organizations to assist other organizations or individuals (in which case they are known as services, such as medicine, law, printing, consulting or teaching) or individual or group efforts for leisure, fun, sports, games or personal interests (activities) "@en ;
+	skos:prefLabel "activities"@en .
+
+:Animals a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x668 a owl:Class .
+
+_:node190ebnpm4x669 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x670 .
+
+_:node190ebnpm4x670 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x671 .
+
+_:node190ebnpm4x671 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x672 .
+
+_:node190ebnpm4x672 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x673 .
+
+_:node190ebnpm4x673 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x674 .
+
+_:node190ebnpm4x674 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x675 .
+
+_:node190ebnpm4x675 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x676 .
+
+_:node190ebnpm4x676 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x677 .
+
+_:node190ebnpm4x677 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x678 .
+
+_:node190ebnpm4x678 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x679 .
+
+_:node190ebnpm4x679 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x680 .
+
+_:node190ebnpm4x680 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x681 .
+
+_:node190ebnpm4x681 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x682 .
+
+_:node190ebnpm4x682 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x683 .
+
+_:node190ebnpm4x683 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x684 .
+
+_:node190ebnpm4x684 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x685 .
+
+_:node190ebnpm4x685 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x686 .
+
+_:node190ebnpm4x686 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x687 .
+
+_:node190ebnpm4x687 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x688 .
+
+_:node190ebnpm4x688 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x689 .
+
+_:node190ebnpm4x689 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x668 owl:unionOf _:node190ebnpm4x669 .
+
+:Animals owl:disjointWith _:node190ebnpm4x668 ;
+	skos:definition "This large SuperType includes all animal types, including specific animal types and vertebrates, invertebrates, insects, crustaceans, fish, reptiles, amphibia, birds, mammals, and animal body parts. Animal parts are specifically included. Also, groupings of such animals are included. Humans, as an animal, are included (versus as an individual Person). Diseases are specifically excluded. Animals have many of the similar overlaps to Plants. However, in addition, there are more terms for animal groups, animal parts, animal secretions, etc. Also Animals can include some human traits (posture, dead animal, etc) "@en ;
+	skos:prefLabel "animals"@en .
+
+:Attributes a owl:Class ;
+	rdfs:subClassOf :SuperType ;
+	skos:definition "This general SuperType category is for descriptive attributes of all kinds. Think of the specific attributes in Wikipedia \"infoboxes\" to understand the purpose and coverage of this SuperType. It includes colors, shapes, sizes, or other descriptive characteristics about an object."@en ;
+	skos:prefLabel "attributes"@en .
+
+:AudioInfo a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x690 a owl:Class .
+
+_:node190ebnpm4x691 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x692 .
+
+_:node190ebnpm4x692 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x693 .
+
+_:node190ebnpm4x693 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x694 .
+
+_:node190ebnpm4x694 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x695 .
+
+_:node190ebnpm4x695 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x696 .
+
+_:node190ebnpm4x696 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x697 .
+
+_:node190ebnpm4x697 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x698 .
+
+_:node190ebnpm4x698 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x699 .
+
+_:node190ebnpm4x699 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x700 .
+
+_:node190ebnpm4x700 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x701 .
+
+_:node190ebnpm4x701 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x702 .
+
+_:node190ebnpm4x702 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x703 .
+
+_:node190ebnpm4x703 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x704 .
+
+_:node190ebnpm4x704 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x705 .
+
+_:node190ebnpm4x705 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x706 .
+
+_:node190ebnpm4x706 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x707 .
+
+_:node190ebnpm4x707 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x708 .
+
+_:node190ebnpm4x708 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x709 .
+
+_:node190ebnpm4x709 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x710 .
+
+_:node190ebnpm4x710 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x711 .
+
+_:node190ebnpm4x711 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x712 .
+
+_:node190ebnpm4x712 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x713 .
+
+_:node190ebnpm4x713 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x714 .
+
+_:node190ebnpm4x714 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x690 owl:unionOf _:node190ebnpm4x691 .
+
+:AudioInfo owl:disjointWith _:node190ebnpm4x690 ;
+	skos:definition "This SuperType is for any audio-only human work. Examples include live music performances, record albums, or radion shows or individual radio broadcasts "@en ;
+	skos:prefLabel "audio information"@en .
+
+:Chemistry a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x715 a owl:Class .
+
+_:node190ebnpm4x716 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x717 .
+
+_:node190ebnpm4x717 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x718 .
+
+_:node190ebnpm4x718 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x719 .
+
+_:node190ebnpm4x719 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x720 .
+
+_:node190ebnpm4x720 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x721 .
+
+_:node190ebnpm4x721 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x722 .
+
+_:node190ebnpm4x722 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x723 .
+
+_:node190ebnpm4x723 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x724 .
+
+_:node190ebnpm4x724 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x725 .
+
+_:node190ebnpm4x725 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x726 .
+
+_:node190ebnpm4x726 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x727 .
+
+_:node190ebnpm4x727 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x728 .
+
+_:node190ebnpm4x728 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x729 .
+
+_:node190ebnpm4x729 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x730 .
+
+_:node190ebnpm4x730 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x731 .
+
+_:node190ebnpm4x731 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x732 .
+
+_:node190ebnpm4x732 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x733 .
+
+_:node190ebnpm4x733 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x734 .
+
+_:node190ebnpm4x734 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x735 .
+
+_:node190ebnpm4x735 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x736 .
+
+_:node190ebnpm4x736 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x737 .
+
+_:node190ebnpm4x737 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x715 owl:unionOf _:node190ebnpm4x716 .
+
+:Chemistry owl:disjointWith _:node190ebnpm4x715 ;
+	skos:definition "This SuperType is a residual category (n.o.c., not otherwise categorized) for chemical bonds, chemical composition groupings, and the like. It is formed by what is not a natural substance or living thing (organic) substance. "@en ;
+	skos:prefLabel "chemistry"@en .
+
+:Diseases a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x738 a owl:Class .
+
+_:node190ebnpm4x739 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x740 .
+
+_:node190ebnpm4x740 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x741 .
+
+_:node190ebnpm4x741 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x742 .
+
+_:node190ebnpm4x742 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x743 .
+
+_:node190ebnpm4x743 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x744 .
+
+_:node190ebnpm4x744 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x745 .
+
+_:node190ebnpm4x745 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x746 .
+
+_:node190ebnpm4x746 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x747 .
+
+_:node190ebnpm4x747 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x748 .
+
+_:node190ebnpm4x748 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x749 .
+
+_:node190ebnpm4x749 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x750 .
+
+_:node190ebnpm4x750 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x751 .
+
+_:node190ebnpm4x751 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x752 .
+
+_:node190ebnpm4x752 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x753 .
+
+_:node190ebnpm4x753 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x754 .
+
+_:node190ebnpm4x754 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x755 .
+
+_:node190ebnpm4x755 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x756 .
+
+_:node190ebnpm4x756 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x757 .
+
+_:node190ebnpm4x757 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x758 .
+
+_:node190ebnpm4x758 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x759 .
+
+_:node190ebnpm4x759 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x760 .
+
+_:node190ebnpm4x760 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x761 .
+
+_:node190ebnpm4x761 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x762 .
+
+_:node190ebnpm4x762 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x738 owl:unionOf _:node190ebnpm4x739 .
+
+:Diseases owl:disjointWith _:node190ebnpm4x738 ;
+	skos:definition "Diseases are atypical or unusual or unhealthy conditions for (mostly human) living things, generally known as conditions, disorders, infections, diseases or syndromes. Diseases only affect living things and sometimes are caused by living things. This SuperType also includes impairments, disease vectors, wounds and injuries, and poisoning."@en ;
+	skos:prefLabel "diseases"@en .
+
+:Drugs a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x763 a owl:Class .
+
+_:node190ebnpm4x764 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x765 .
+
+_:node190ebnpm4x765 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x766 .
+
+_:node190ebnpm4x766 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x767 .
+
+_:node190ebnpm4x767 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x768 .
+
+_:node190ebnpm4x768 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x769 .
+
+_:node190ebnpm4x769 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x770 .
+
+_:node190ebnpm4x770 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x771 .
+
+_:node190ebnpm4x771 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x772 .
+
+_:node190ebnpm4x772 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x773 .
+
+_:node190ebnpm4x773 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x774 .
+
+_:node190ebnpm4x774 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x775 .
+
+_:node190ebnpm4x775 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x776 .
+
+_:node190ebnpm4x776 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x777 .
+
+_:node190ebnpm4x777 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x778 .
+
+_:node190ebnpm4x778 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x779 .
+
+_:node190ebnpm4x779 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x780 .
+
+_:node190ebnpm4x780 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x781 .
+
+_:node190ebnpm4x781 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x782 .
+
+_:node190ebnpm4x782 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x783 .
+
+_:node190ebnpm4x783 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x784 .
+
+_:node190ebnpm4x784 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x785 .
+
+_:node190ebnpm4x785 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x763 owl:unionOf _:node190ebnpm4x764 .
+
+:Drugs owl:disjointWith _:node190ebnpm4x763 ;
+	skos:definition "This SuperType is an drug, medication or addictive substance "@en ;
+	skos:prefLabel "drugs"@en .
+
+:Earthscape a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x786 a owl:Class .
+
+_:node190ebnpm4x787 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x788 .
+
+_:node190ebnpm4x788 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x789 .
+
+_:node190ebnpm4x789 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x790 .
+
+_:node190ebnpm4x790 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x791 .
+
+_:node190ebnpm4x791 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x792 .
+
+_:node190ebnpm4x792 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x793 .
+
+_:node190ebnpm4x793 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x794 .
+
+_:node190ebnpm4x794 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x795 .
+
+_:node190ebnpm4x795 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x796 .
+
+_:node190ebnpm4x796 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x797 .
+
+_:node190ebnpm4x797 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x798 .
+
+_:node190ebnpm4x798 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x799 .
+
+_:node190ebnpm4x799 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x800 .
+
+_:node190ebnpm4x800 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x801 .
+
+_:node190ebnpm4x801 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x802 .
+
+_:node190ebnpm4x802 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x803 .
+
+_:node190ebnpm4x803 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x804 .
+
+_:node190ebnpm4x804 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x805 .
+
+_:node190ebnpm4x805 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x806 .
+
+_:node190ebnpm4x806 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x786 owl:unionOf _:node190ebnpm4x787 .
+
+:Earthscape owl:disjointWith _:node190ebnpm4x786 ;
+	skos:definition """The Natural Feature SuperType is the collection of cartographic features that occur on the surface of the Earth. Positive examples include Mountain, Ocean, and Mesa. Artificial features such as canals are excluded. Most instances of these features have a fixed location in space.
+
+Underground and underwater are also explicitly contained.
+
+This SuperType is explicitly disjoint with Extraterrestrial (see below). """@en ;
+	skos:prefLabel "earthscape"@en .
+
+:Events a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x807 a owl:Class .
+
+_:node190ebnpm4x808 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x809 .
+
+_:node190ebnpm4x809 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x810 .
+
+_:node190ebnpm4x810 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x811 .
+
+_:node190ebnpm4x811 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x812 .
+
+_:node190ebnpm4x812 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x813 .
+
+_:node190ebnpm4x813 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x814 .
+
+_:node190ebnpm4x814 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x815 .
+
+_:node190ebnpm4x815 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x816 .
+
+_:node190ebnpm4x816 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x817 .
+
+_:node190ebnpm4x817 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x818 .
+
+_:node190ebnpm4x818 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x819 .
+
+_:node190ebnpm4x819 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x820 .
+
+_:node190ebnpm4x820 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x821 .
+
+_:node190ebnpm4x821 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x807 owl:unionOf _:node190ebnpm4x808 .
+
+:Events owl:disjointWith _:node190ebnpm4x807 ;
+	skos:definition "These are nameable occasions, games, sports events, conferences, natural phenomena, natural disasters, wars, incidents, anniversaries, holidays, or notable moments or periods in time "@en ;
+	skos:prefLabel "events"@en .
+
+:Extraterrestrial a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x822 a owl:Class .
+
+_:node190ebnpm4x823 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x824 .
+
+_:node190ebnpm4x824 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x825 .
+
+_:node190ebnpm4x825 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x826 .
+
+_:node190ebnpm4x826 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x827 .
+
+_:node190ebnpm4x827 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x828 .
+
+_:node190ebnpm4x828 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x829 .
+
+_:node190ebnpm4x829 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x830 .
+
+_:node190ebnpm4x830 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x831 .
+
+_:node190ebnpm4x831 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x832 .
+
+_:node190ebnpm4x832 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x833 .
+
+_:node190ebnpm4x833 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x834 .
+
+_:node190ebnpm4x834 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x835 .
+
+_:node190ebnpm4x835 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x836 .
+
+_:node190ebnpm4x836 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x837 .
+
+_:node190ebnpm4x837 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x838 .
+
+_:node190ebnpm4x838 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x839 .
+
+_:node190ebnpm4x839 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x840 .
+
+_:node190ebnpm4x840 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x841 .
+
+_:node190ebnpm4x841 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x842 .
+
+_:node190ebnpm4x842 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x843 .
+
+_:node190ebnpm4x843 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x844 .
+
+_:node190ebnpm4x844 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x845 .
+
+_:node190ebnpm4x845 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x822 owl:unionOf _:node190ebnpm4x823 .
+
+:Extraterrestrial owl:disjointWith _:node190ebnpm4x822 ;
+	skos:prefLabel "Extraterrestrial"@en ;
+	skos:definition "This SuperType includes all natural things not specifically terrestrial, including celestial bodies (planets, asteroids, stars, galaxies, etc., that can be located within a sky map)."@en .
+
+:Facilities a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x846 a owl:Class .
+
+_:node190ebnpm4x847 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x848 .
+
+_:node190ebnpm4x848 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x849 .
+
+_:node190ebnpm4x849 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x850 .
+
+_:node190ebnpm4x850 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x851 .
+
+_:node190ebnpm4x851 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x852 .
+
+_:node190ebnpm4x852 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x853 .
+
+_:node190ebnpm4x853 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x854 .
+
+_:node190ebnpm4x854 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x855 .
+
+_:node190ebnpm4x855 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x856 .
+
+_:node190ebnpm4x856 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x857 .
+
+_:node190ebnpm4x857 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x858 .
+
+_:node190ebnpm4x858 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x859 .
+
+_:node190ebnpm4x859 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x860 .
+
+_:node190ebnpm4x860 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x861 .
+
+_:node190ebnpm4x861 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x862 .
+
+_:node190ebnpm4x862 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x863 .
+
+_:node190ebnpm4x863 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x864 .
+
+_:node190ebnpm4x864 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x865 .
+
+_:node190ebnpm4x865 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x866 .
+
+_:node190ebnpm4x866 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x867 .
+
+_:node190ebnpm4x867 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x846 owl:unionOf _:node190ebnpm4x847 .
+
+:Facilities owl:disjointWith _:node190ebnpm4x846 ;
+	skos:definition """Facilities are physical places or buildings constructed by humans, such as schools, public institutions, markets, museums, amusement parks, worship places, stations, airports, ports, carstops, lines, railroads, roads, waterways, tunnels, bridges, parks, sport facilities, monuments. All can be geospatially located.
+
+Facilities also include animal pens and enclosures and general human \"activity\" areas (golf course, archeology sites, etc.). Iportantly Facilities include infrastructure systems such as roadways and physical networks.
+
+Facilities also include the component parts that go into making them (such as foundations, doors, windows, roofs, etc.) """@en ;
+	skos:prefLabel "facilities"@en .
+
+:FinanceEconomy a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x868 a owl:Class .
+
+_:node190ebnpm4x869 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x870 .
+
+_:node190ebnpm4x870 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x871 .
+
+_:node190ebnpm4x871 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x872 .
+
+_:node190ebnpm4x872 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x873 .
+
+_:node190ebnpm4x873 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x874 .
+
+_:node190ebnpm4x874 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x875 .
+
+_:node190ebnpm4x875 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x876 .
+
+_:node190ebnpm4x876 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x877 .
+
+_:node190ebnpm4x877 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x878 .
+
+_:node190ebnpm4x878 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x879 .
+
+_:node190ebnpm4x879 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x880 .
+
+_:node190ebnpm4x880 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x881 .
+
+_:node190ebnpm4x881 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x882 .
+
+_:node190ebnpm4x882 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x883 .
+
+_:node190ebnpm4x883 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x884 .
+
+_:node190ebnpm4x884 rdf:first :VisualInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x868 owl:unionOf _:node190ebnpm4x869 .
+
+:FinanceEconomy owl:disjointWith _:node190ebnpm4x868 ;
+	skos:definition "This SuperType pertains to all things financial and with respect to the economy, including chartable company performance, stock index entities, money, local currencies, taxes, incomes, accounts and accounting, mortgages and property. "@en ;
+	skos:prefLabel "finance and economy"@en .
+
+:FoodDrink a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x885 a owl:Class .
+
+_:node190ebnpm4x886 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x887 .
+
+_:node190ebnpm4x887 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x888 .
+
+_:node190ebnpm4x888 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x889 .
+
+_:node190ebnpm4x889 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x890 .
+
+_:node190ebnpm4x890 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x891 .
+
+_:node190ebnpm4x891 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x892 .
+
+_:node190ebnpm4x892 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x893 .
+
+_:node190ebnpm4x893 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x894 .
+
+_:node190ebnpm4x894 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x895 .
+
+_:node190ebnpm4x895 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x896 .
+
+_:node190ebnpm4x896 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x897 .
+
+_:node190ebnpm4x897 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x898 .
+
+_:node190ebnpm4x898 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x899 .
+
+_:node190ebnpm4x899 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x900 .
+
+_:node190ebnpm4x900 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x901 .
+
+_:node190ebnpm4x901 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x902 .
+
+_:node190ebnpm4x902 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x903 .
+
+_:node190ebnpm4x903 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x904 .
+
+_:node190ebnpm4x904 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x885 owl:unionOf _:node190ebnpm4x886 .
+
+:FoodDrink owl:disjointWith _:node190ebnpm4x885 ;
+	skos:definition "This SuperType is any edible substance grown, made or harvested by humans. The category also specifically includes the concept of cuisines "@en ;
+	skos:prefLabel "food or drink"@en .
+
+:Geopolitical a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x905 a owl:Class .
+
+_:node190ebnpm4x906 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x907 .
+
+_:node190ebnpm4x907 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x908 .
+
+_:node190ebnpm4x908 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x909 .
+
+_:node190ebnpm4x909 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x910 .
+
+_:node190ebnpm4x910 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x911 .
+
+_:node190ebnpm4x911 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x912 .
+
+_:node190ebnpm4x912 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x913 .
+
+_:node190ebnpm4x913 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x914 .
+
+_:node190ebnpm4x914 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x915 .
+
+_:node190ebnpm4x915 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x916 .
+
+_:node190ebnpm4x916 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x917 .
+
+_:node190ebnpm4x917 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x918 .
+
+_:node190ebnpm4x918 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x919 .
+
+_:node190ebnpm4x919 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x920 .
+
+_:node190ebnpm4x920 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x921 .
+
+_:node190ebnpm4x921 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x922 .
+
+_:node190ebnpm4x922 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x923 .
+
+_:node190ebnpm4x923 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x924 .
+
+_:node190ebnpm4x924 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x925 .
+
+_:node190ebnpm4x925 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x926 .
+
+_:node190ebnpm4x926 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x927 .
+
+_:node190ebnpm4x927 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x905 owl:unionOf _:node190ebnpm4x906 .
+
+:Geopolitical owl:disjointWith _:node190ebnpm4x905 ;
+	skos:definition "Named places that have some informal or formal political (authorized) component. Important subcollections include Country, IndependentCountry, State_Geopolitical, City, and Province. "@en ;
+	skos:prefLabel "geopolitical"@en .
+
+:MarketsIndustries a owl:Class ;
+	rdfs:subClassOf :SuperType ;
+	skos:definition "This SuperType is a specialized classificatory system for markets and industries. It could be combined with the SuperType above, but is kept separate in order to provide a separate, economy-oriented system. "@en ;
+	skos:prefLabel "market industries"@en .
+
+:NaturalPhenomena a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x928 a owl:Class .
+
+_:node190ebnpm4x929 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x930 .
+
+_:node190ebnpm4x930 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x931 .
+
+_:node190ebnpm4x931 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x932 .
+
+_:node190ebnpm4x932 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x933 .
+
+_:node190ebnpm4x933 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x934 .
+
+_:node190ebnpm4x934 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x935 .
+
+_:node190ebnpm4x935 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x936 .
+
+_:node190ebnpm4x936 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x937 .
+
+_:node190ebnpm4x937 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x938 .
+
+_:node190ebnpm4x938 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x939 .
+
+_:node190ebnpm4x939 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x940 .
+
+_:node190ebnpm4x940 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x941 .
+
+_:node190ebnpm4x941 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x942 .
+
+_:node190ebnpm4x942 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x943 .
+
+_:node190ebnpm4x943 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x944 .
+
+_:node190ebnpm4x944 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x945 .
+
+_:node190ebnpm4x945 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x946 .
+
+_:node190ebnpm4x946 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x947 .
+
+_:node190ebnpm4x947 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x948 .
+
+_:node190ebnpm4x948 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x949 .
+
+_:node190ebnpm4x949 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x950 .
+
+_:node190ebnpm4x950 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x928 owl:unionOf _:node190ebnpm4x929 .
+
+:NaturalPhenomena owl:disjointWith _:node190ebnpm4x928 ;
+	skos:definition "This SuperType includes natural phenomena and natural processes such as weather, weathering, erosion, fires, lightning, earthquakes, tectonics, etc. Clouds and weather processes are specifically included. Also includes climate cycles, general natural events (such as hurricanes) that are not specifically named, and biochemical processes and pathways. "@en ;
+	skos:prefLabel "natural phenomena"@en .
+
+:NaturalSubstances a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x951 a owl:Class .
+
+_:node190ebnpm4x952 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x953 .
+
+_:node190ebnpm4x953 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x954 .
+
+_:node190ebnpm4x954 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x955 .
+
+_:node190ebnpm4x955 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x956 .
+
+_:node190ebnpm4x956 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x957 .
+
+_:node190ebnpm4x957 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x958 .
+
+_:node190ebnpm4x958 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x959 .
+
+_:node190ebnpm4x959 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x960 .
+
+_:node190ebnpm4x960 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x961 .
+
+_:node190ebnpm4x961 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x962 .
+
+_:node190ebnpm4x962 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x963 .
+
+_:node190ebnpm4x963 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x964 .
+
+_:node190ebnpm4x964 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x965 .
+
+_:node190ebnpm4x965 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x966 .
+
+_:node190ebnpm4x966 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x967 .
+
+_:node190ebnpm4x967 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x968 .
+
+_:node190ebnpm4x968 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x969 .
+
+_:node190ebnpm4x969 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x951 owl:unionOf _:node190ebnpm4x952 .
+
+:NaturalSubstances owl:disjointWith _:node190ebnpm4x951 ;
+	skos:definition "Notable inclusions are minerals, compounds, chemicals, or physical objects that are not the outcome of purposeful human effort, but are found naturally occurring. Other natural objects (such as rock, fossil, etc.) are also found under this SuperType. Natural Substances include subatomic particles. The contrast is with Earthscape, which covers natural \"features\" or living substances, which are covered under the appropriate SuperTypes. Chemicals can be Natural Substances, but only if they are naturally occurring, such as limestone or salt."@en ;
+	skos:prefLabel "natural substance"@en .
+
+:Notations a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x970 a owl:Class .
+
+_:node190ebnpm4x971 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x972 .
+
+_:node190ebnpm4x972 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x973 .
+
+_:node190ebnpm4x973 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x974 .
+
+_:node190ebnpm4x974 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x975 .
+
+_:node190ebnpm4x975 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x976 .
+
+_:node190ebnpm4x976 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x977 .
+
+_:node190ebnpm4x977 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x978 .
+
+_:node190ebnpm4x978 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x979 .
+
+_:node190ebnpm4x979 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x980 .
+
+_:node190ebnpm4x980 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x981 .
+
+_:node190ebnpm4x981 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x982 .
+
+_:node190ebnpm4x982 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x983 .
+
+_:node190ebnpm4x983 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x984 .
+
+_:node190ebnpm4x984 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x985 .
+
+_:node190ebnpm4x985 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x986 .
+
+_:node190ebnpm4x986 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x987 .
+
+_:node190ebnpm4x987 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x988 .
+
+_:node190ebnpm4x988 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x970 owl:unionOf _:node190ebnpm4x971 .
+
+:Notations owl:disjointWith _:node190ebnpm4x970 ;
+	skos:definition """Akin to conceptual works, these are codified means of human expression. Examples range from human languages themselves, to more domain-specific cases such as chemical symbols, genetic code (A-G-C-T), protocols, and computer languages, mathematical and set notations, etc. 
+
+Identifiers (numeric or alphanumeric identifiers for objects, often in a highly patterned way, such as phone numbers, URLs, zip and postal codes, SKUs, product codes, etc.), Units (any of the various ways in which measurement, space, volume, weight, speed, intensity, temperature, calories, siesmic intensity or other quantitative descriptions of phenomena can be made) and key reference types are also included in this SuperType """@en ;
+	skos:prefLabel "notations"@en .
+
+:Numbers a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x989 a owl:Class .
+
+_:node190ebnpm4x990 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x991 .
+
+_:node190ebnpm4x991 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x992 .
+
+_:node190ebnpm4x992 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x993 .
+
+_:node190ebnpm4x993 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x994 .
+
+_:node190ebnpm4x994 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x995 .
+
+_:node190ebnpm4x995 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x996 .
+
+_:node190ebnpm4x996 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x997 .
+
+_:node190ebnpm4x997 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x998 .
+
+_:node190ebnpm4x998 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x999 .
+
+_:node190ebnpm4x999 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1000 .
+
+_:node190ebnpm4x1000 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1001 .
+
+_:node190ebnpm4x1001 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1002 .
+
+_:node190ebnpm4x1002 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1003 .
+
+_:node190ebnpm4x1003 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1004 .
+
+_:node190ebnpm4x1004 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1005 .
+
+_:node190ebnpm4x1005 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1006 .
+
+_:node190ebnpm4x1006 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1007 .
+
+_:node190ebnpm4x1007 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1008 .
+
+_:node190ebnpm4x1008 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1009 .
+
+_:node190ebnpm4x1009 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1010 .
+
+_:node190ebnpm4x1010 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1011 .
+
+_:node190ebnpm4x1011 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1012 .
+
+_:node190ebnpm4x1012 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1013 .
+
+_:node190ebnpm4x1013 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1014 .
+
+_:node190ebnpm4x1014 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x1015 .
+
+_:node190ebnpm4x1015 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x989 owl:unionOf _:node190ebnpm4x990 .
+
+:Numbers owl:disjointWith _:node190ebnpm4x989 ;
+	skos:definition "This unique SuperType is for any abstract representation of numbers and numerics "@en ;
+	skos:prefLabel "numbers"@en .
+
+:Organizations a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1016 a owl:Class .
+
+_:node190ebnpm4x1017 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1018 .
+
+_:node190ebnpm4x1018 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1019 .
+
+_:node190ebnpm4x1019 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1020 .
+
+_:node190ebnpm4x1020 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1021 .
+
+_:node190ebnpm4x1021 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1022 .
+
+_:node190ebnpm4x1022 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1023 .
+
+_:node190ebnpm4x1023 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1024 .
+
+_:node190ebnpm4x1024 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1025 .
+
+_:node190ebnpm4x1025 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1026 .
+
+_:node190ebnpm4x1026 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1027 .
+
+_:node190ebnpm4x1027 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1028 .
+
+_:node190ebnpm4x1028 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1029 .
+
+_:node190ebnpm4x1029 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1030 .
+
+_:node190ebnpm4x1030 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1031 .
+
+_:node190ebnpm4x1031 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1032 .
+
+_:node190ebnpm4x1032 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1033 .
+
+_:node190ebnpm4x1033 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1034 .
+
+_:node190ebnpm4x1034 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1035 .
+
+_:node190ebnpm4x1035 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1036 .
+
+_:node190ebnpm4x1036 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1037 .
+
+_:node190ebnpm4x1037 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1016 owl:unionOf _:node190ebnpm4x1017 .
+
+:Organizations owl:disjointWith _:node190ebnpm4x1016 ;
+	skos:definition """Organization is a broad SuperType and includes formal collections of humans, sometimes by legal means, charter, agreement or some mode of formal understanding. Examples include geoplotical entities such as nations, municipalities or countries; or companies, institutes, governments, universities, militaries, political parties, game groups, international organizations, trade associations, etc. All institutions, for example, are organizations.
+
+Also included are informal collections of humans. Informal or less defined groupings of humans may result from ethnicity or tribes or nationality or from shared interests (such as social networks or mailing lists) or expertise (\"communities of practice\"). This dimension also includes the notion of identifiable human groups with set members at any given point in time. Examples include music groups, cast members of a play, directors on a corporate Board, TV show members, gangs, mobs, juries, generations, minorities, etc.
+
+Finally, Organizations contain the concepts of Industries and Programs and Communities. """@en ;
+	skos:prefLabel "organizations"@en .
+
+:PersonTypes a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1038 a owl:Class .
+
+_:node190ebnpm4x1039 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1040 .
+
+_:node190ebnpm4x1040 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1041 .
+
+_:node190ebnpm4x1041 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1042 .
+
+_:node190ebnpm4x1042 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1043 .
+
+_:node190ebnpm4x1043 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1044 .
+
+_:node190ebnpm4x1044 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1045 .
+
+_:node190ebnpm4x1045 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1046 .
+
+_:node190ebnpm4x1046 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1047 .
+
+_:node190ebnpm4x1047 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1048 .
+
+_:node190ebnpm4x1048 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1049 .
+
+_:node190ebnpm4x1049 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1050 .
+
+_:node190ebnpm4x1050 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1051 .
+
+_:node190ebnpm4x1051 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1052 .
+
+_:node190ebnpm4x1052 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1053 .
+
+_:node190ebnpm4x1053 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1054 .
+
+_:node190ebnpm4x1054 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1055 .
+
+_:node190ebnpm4x1055 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1056 .
+
+_:node190ebnpm4x1056 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1057 .
+
+_:node190ebnpm4x1057 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1058 .
+
+_:node190ebnpm4x1058 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1059 .
+
+_:node190ebnpm4x1059 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1060 .
+
+_:node190ebnpm4x1060 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1061 .
+
+_:node190ebnpm4x1061 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1062 .
+
+_:node190ebnpm4x1062 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x1063 .
+
+_:node190ebnpm4x1063 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1038 owl:unionOf _:node190ebnpm4x1039 .
+
+:PersonTypes owl:disjointWith _:node190ebnpm4x1038 ;
+	skos:definition "The appropriate SuperType for all named, individual human beings. This SuperType also includes the assignment of formal, honorific or cultural titles given to specific human individuals. It further includes names given to humans who conduct specific jobs or activities (the latter case is known as an avocation). Examples include steelworker, waitress, lawyer, plumber, artisan. Ethnic groups are specifically included."@en ;
+	skos:prefLabel "person types"@en .
+
+:Plants a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1064 a owl:Class .
+
+_:node190ebnpm4x1065 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1066 .
+
+_:node190ebnpm4x1066 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1067 .
+
+_:node190ebnpm4x1067 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1068 .
+
+_:node190ebnpm4x1068 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1069 .
+
+_:node190ebnpm4x1069 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1070 .
+
+_:node190ebnpm4x1070 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1071 .
+
+_:node190ebnpm4x1071 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1072 .
+
+_:node190ebnpm4x1072 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1073 .
+
+_:node190ebnpm4x1073 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1074 .
+
+_:node190ebnpm4x1074 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1075 .
+
+_:node190ebnpm4x1075 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1076 .
+
+_:node190ebnpm4x1076 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1077 .
+
+_:node190ebnpm4x1077 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1078 .
+
+_:node190ebnpm4x1078 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1079 .
+
+_:node190ebnpm4x1079 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1080 .
+
+_:node190ebnpm4x1080 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1081 .
+
+_:node190ebnpm4x1081 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1082 .
+
+_:node190ebnpm4x1082 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1083 .
+
+_:node190ebnpm4x1083 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1084 .
+
+_:node190ebnpm4x1084 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1085 .
+
+_:node190ebnpm4x1085 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1086 .
+
+_:node190ebnpm4x1086 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1087 .
+
+_:node190ebnpm4x1087 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1088 .
+
+_:node190ebnpm4x1088 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x1089 .
+
+_:node190ebnpm4x1089 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1064 owl:unionOf _:node190ebnpm4x1065 .
+
+:Plants owl:disjointWith _:node190ebnpm4x1064 ;
+	skos:definition "This SuperType includes all plant types and flora, including flowering plants, algae, non-flowering plants, gymnosperms, cycads, and plant parts and body types. Note that all Plant Parts are also included."@en ;
+	skos:prefLabel "plants"@en .
+
+:Products a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1090 a owl:Class .
+
+_:node190ebnpm4x1091 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1092 .
+
+_:node190ebnpm4x1092 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1093 .
+
+_:node190ebnpm4x1093 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1094 .
+
+_:node190ebnpm4x1094 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1095 .
+
+_:node190ebnpm4x1095 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1096 .
+
+_:node190ebnpm4x1096 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1097 .
+
+_:node190ebnpm4x1097 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1098 .
+
+_:node190ebnpm4x1098 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1099 .
+
+_:node190ebnpm4x1099 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1100 .
+
+_:node190ebnpm4x1100 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1101 .
+
+_:node190ebnpm4x1101 rdf:first :Time ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1090 owl:unionOf _:node190ebnpm4x1091 .
+
+:Products owl:disjointWith _:node190ebnpm4x1090 ;
+	skos:definition "This is the largest SuperType and includes any instance offered for sale or performed as a commercial service. Often physical object made by humans that is not a conceptual work or a facility, such as vehicles, cars, trains, aircraft, spaceships, ships, foods, beverages, clothes, drugs, weapons. Products also include the concept of 'state' (e/g/., on/off) "@en ;
+	skos:prefLabel "products"@en .
+
+:Prokaryotes a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1102 a owl:Class .
+
+_:node190ebnpm4x1103 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1104 .
+
+_:node190ebnpm4x1104 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1105 .
+
+_:node190ebnpm4x1105 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1106 .
+
+_:node190ebnpm4x1106 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1107 .
+
+_:node190ebnpm4x1107 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1108 .
+
+_:node190ebnpm4x1108 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1109 .
+
+_:node190ebnpm4x1109 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1110 .
+
+_:node190ebnpm4x1110 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1111 .
+
+_:node190ebnpm4x1111 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1112 .
+
+_:node190ebnpm4x1112 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1113 .
+
+_:node190ebnpm4x1113 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1114 .
+
+_:node190ebnpm4x1114 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1115 .
+
+_:node190ebnpm4x1115 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1116 .
+
+_:node190ebnpm4x1116 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1117 .
+
+_:node190ebnpm4x1117 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1118 .
+
+_:node190ebnpm4x1118 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1119 .
+
+_:node190ebnpm4x1119 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1120 .
+
+_:node190ebnpm4x1120 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1121 .
+
+_:node190ebnpm4x1121 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1122 .
+
+_:node190ebnpm4x1122 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1123 .
+
+_:node190ebnpm4x1123 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1124 .
+
+_:node190ebnpm4x1124 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1125 .
+
+_:node190ebnpm4x1125 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1126 .
+
+_:node190ebnpm4x1126 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1127 .
+
+_:node190ebnpm4x1127 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x1128 .
+
+_:node190ebnpm4x1128 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1102 owl:unionOf _:node190ebnpm4x1103 .
+
+:Prokaryotes owl:disjointWith _:node190ebnpm4x1102 ;
+	skos:definition "The Prokaryotes include all prokaryotic organisms, including the Monera, Archaebacteria, Bacteria, and Blue-green algas. Also included in this SuperType are viruses and prions."@en ;
+	skos:prefLabel "prokaryotes"@en .
+
+:ProtistsFungus a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1129 a owl:Class .
+
+_:node190ebnpm4x1130 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1131 .
+
+_:node190ebnpm4x1131 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1132 .
+
+_:node190ebnpm4x1132 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1133 .
+
+_:node190ebnpm4x1133 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1134 .
+
+_:node190ebnpm4x1134 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1135 .
+
+_:node190ebnpm4x1135 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1136 .
+
+_:node190ebnpm4x1136 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1137 .
+
+_:node190ebnpm4x1137 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1138 .
+
+_:node190ebnpm4x1138 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1139 .
+
+_:node190ebnpm4x1139 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1140 .
+
+_:node190ebnpm4x1140 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1141 .
+
+_:node190ebnpm4x1141 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1142 .
+
+_:node190ebnpm4x1142 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1143 .
+
+_:node190ebnpm4x1143 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1144 .
+
+_:node190ebnpm4x1144 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1145 .
+
+_:node190ebnpm4x1145 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1146 .
+
+_:node190ebnpm4x1146 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1147 .
+
+_:node190ebnpm4x1147 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1148 .
+
+_:node190ebnpm4x1148 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1149 .
+
+_:node190ebnpm4x1149 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1150 .
+
+_:node190ebnpm4x1150 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1151 .
+
+_:node190ebnpm4x1151 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1152 .
+
+_:node190ebnpm4x1152 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1153 .
+
+_:node190ebnpm4x1153 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x1154 .
+
+_:node190ebnpm4x1154 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1129 owl:unionOf _:node190ebnpm4x1130 .
+
+:ProtistsFungus owl:disjointWith _:node190ebnpm4x1129 ;
+	skos:definition "This is the remaining cluster of eukaryotic organisms, specifically including the fungus and the protista (protozoans and slime molds)."@en ;
+	skos:prefLabel "protists fungus"@en .
+
+:Qualifier a owl:Class ;
+	skos:definition "The Qualifier class is a set of descriptions that indicate the method used in order to establish an isAbout relationship between an UMBEL reference concept (RC) and an external entity. This description should be complete enough to aid understanding of the nature and reliability of the \"aboutness\" assertion and to be usable for filtering or user interface information. The descriptions may be literal strings or may refer to literal numeric values resulting from an automated alignment technique."@en ;
+	skos:prefLabel "qualifier"@en .
+
+:RefConcept a owl:Class ;
+	rdfs:subClassOf skos:Concept .
+
+_:node190ebnpm4x1155 a owl:Restriction ;
+	owl:onProperty :isRelatedTo ;
+	owl:allValuesFrom owl:Thing .
+
+:RefConcept rdfs:subClassOf _:node190ebnpm4x1155 ;
+	skos:definition """Reference Concepts are a distinct subset of the more broadly understood concept such as used in the SKOS RDFS controlled vocabulary or formal concept analysis or the very general or abstract concepts common to some upper ontologies.
+
+Reference Concepts are selected for their use as concrete, subject-related or commonly used notions for describing tangible ideas and referents in human experience and language. Reference Concepts are classes, the members of which are nameable instances or named entities, which by definition are held as distinct from these concepts. The UMBEL ontology is a coherently organized structure (or reference \"backbone\") of these Reference Concepts. """@en ;
+	skos:prefLabel "reference concept"@en .
+
+:Society a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1156 a owl:Class .
+
+_:node190ebnpm4x1157 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1158 .
+
+_:node190ebnpm4x1158 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1159 .
+
+_:node190ebnpm4x1159 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1160 .
+
+_:node190ebnpm4x1160 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1161 .
+
+_:node190ebnpm4x1161 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1162 .
+
+_:node190ebnpm4x1162 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1163 .
+
+_:node190ebnpm4x1163 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1164 .
+
+_:node190ebnpm4x1164 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1165 .
+
+_:node190ebnpm4x1165 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1166 .
+
+_:node190ebnpm4x1166 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1167 .
+
+_:node190ebnpm4x1167 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1168 .
+
+_:node190ebnpm4x1168 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1169 .
+
+_:node190ebnpm4x1169 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1170 .
+
+_:node190ebnpm4x1170 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1171 .
+
+_:node190ebnpm4x1171 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1172 .
+
+_:node190ebnpm4x1172 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1173 .
+
+_:node190ebnpm4x1173 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1174 .
+
+_:node190ebnpm4x1174 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1175 .
+
+_:node190ebnpm4x1175 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1176 .
+
+_:node190ebnpm4x1176 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1177 .
+
+_:node190ebnpm4x1177 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1178 .
+
+_:node190ebnpm4x1178 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1179 .
+
+_:node190ebnpm4x1179 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1180 .
+
+_:node190ebnpm4x1180 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1156 owl:unionOf _:node190ebnpm4x1157 .
+
+:Society owl:disjointWith _:node190ebnpm4x1156 ;
+	skos:definition "This category includes concepts related to political systems, laws, rules or cultural mores governing societal or community behavior, or doctrinal, faith or religious bases or entities (such as gods, angels, totems) governing spiritual human matters. Culture, Issues, beliefs and various activisms (most -isms) are included "@en ;
+	skos:prefLabel "society"@en .
+
+:StructuredInfo a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1181 a owl:Class .
+
+_:node190ebnpm4x1182 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1183 .
+
+_:node190ebnpm4x1183 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1184 .
+
+_:node190ebnpm4x1184 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1185 .
+
+_:node190ebnpm4x1185 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1186 .
+
+_:node190ebnpm4x1186 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1187 .
+
+_:node190ebnpm4x1187 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1188 .
+
+_:node190ebnpm4x1188 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1189 .
+
+_:node190ebnpm4x1189 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1190 .
+
+_:node190ebnpm4x1190 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1191 .
+
+_:node190ebnpm4x1191 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1192 .
+
+_:node190ebnpm4x1192 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1193 .
+
+_:node190ebnpm4x1193 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1194 .
+
+_:node190ebnpm4x1194 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1195 .
+
+_:node190ebnpm4x1195 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1196 .
+
+_:node190ebnpm4x1196 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1197 .
+
+_:node190ebnpm4x1197 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1198 .
+
+_:node190ebnpm4x1198 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1199 .
+
+_:node190ebnpm4x1199 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1200 .
+
+_:node190ebnpm4x1200 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1181 owl:unionOf _:node190ebnpm4x1182 .
+
+:StructuredInfo owl:disjointWith _:node190ebnpm4x1181 ;
+	skos:definition "This information SuperType is for all kinds of structured information and datasets, including compute programs, databases, files, Web pages and structured data that can be presented in tabular form "@en ;
+	skos:prefLabel "structured information"@en .
+
+:SuperType a owl:Class ;
+	skos:prefLabel "SuperType"@en ;
+	skos:definition "SuperTypes are a collection of (mostly) similar Reference Concepts. Most of the SuperType classes have been designed to be (mostly) disjoint from the other SuperType classes. SuperTypes thus provide a higher-level of clustering and organization of Reference Concepts for use in user interfaces and for reasoning purposes."@en .
+
+:Time a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1201 a owl:Class .
+
+_:node190ebnpm4x1202 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1203 .
+
+_:node190ebnpm4x1203 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1204 .
+
+_:node190ebnpm4x1204 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1205 .
+
+_:node190ebnpm4x1205 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1206 .
+
+_:node190ebnpm4x1206 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1207 .
+
+_:node190ebnpm4x1207 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1208 .
+
+_:node190ebnpm4x1208 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1209 .
+
+_:node190ebnpm4x1209 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1210 .
+
+_:node190ebnpm4x1210 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1211 .
+
+_:node190ebnpm4x1211 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1212 .
+
+_:node190ebnpm4x1212 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1213 .
+
+_:node190ebnpm4x1213 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1214 .
+
+_:node190ebnpm4x1214 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1215 .
+
+_:node190ebnpm4x1215 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1216 .
+
+_:node190ebnpm4x1216 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1217 .
+
+_:node190ebnpm4x1217 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1218 .
+
+_:node190ebnpm4x1218 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1219 .
+
+_:node190ebnpm4x1219 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1220 .
+
+_:node190ebnpm4x1220 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1221 .
+
+_:node190ebnpm4x1221 rdf:first :Products ;
+	rdf:rest _:node190ebnpm4x1222 .
+
+_:node190ebnpm4x1222 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1223 .
+
+_:node190ebnpm4x1223 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1224 .
+
+_:node190ebnpm4x1224 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1225 .
+
+_:node190ebnpm4x1225 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1226 .
+
+_:node190ebnpm4x1226 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1227 .
+
+_:node190ebnpm4x1227 rdf:first :Workplaces ;
+	rdf:rest _:node190ebnpm4x1228 .
+
+_:node190ebnpm4x1228 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1201 owl:unionOf _:node190ebnpm4x1202 .
+
+:Time owl:disjointWith _:node190ebnpm4x1201 ;
+	skos:definition "This SuperType is for specific time or date or period (such as eras, or days, weeks, months type intervals) references in various formats "@en ;
+	skos:prefLabel "time"@en .
+
+:TopicsCategories a owl:Class ;
+	rdfs:subClassOf :SuperType ;
+	skos:definition "This largely subject-oriented SuperType is a means for using controlled vocabularies and classification schemes for characterizing what content \"is about\". The key constituents of this category are Types, Classifications, Concepts, CCC, and controlled vocabularies "@en ;
+	skos:prefLabel "topics categories"@en .
+
+:VisualInfo a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1229 a owl:Class .
+
+_:node190ebnpm4x1230 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1231 .
+
+_:node190ebnpm4x1231 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1232 .
+
+_:node190ebnpm4x1232 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1233 .
+
+_:node190ebnpm4x1233 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1234 .
+
+_:node190ebnpm4x1234 rdf:first :FinanceEconomy ;
+	rdf:rest _:node190ebnpm4x1235 .
+
+_:node190ebnpm4x1235 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1236 .
+
+_:node190ebnpm4x1236 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1237 .
+
+_:node190ebnpm4x1237 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1238 .
+
+_:node190ebnpm4x1238 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1239 .
+
+_:node190ebnpm4x1239 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1240 .
+
+_:node190ebnpm4x1240 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1241 .
+
+_:node190ebnpm4x1241 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1242 .
+
+_:node190ebnpm4x1242 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1243 .
+
+_:node190ebnpm4x1243 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1244 .
+
+_:node190ebnpm4x1244 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1245 .
+
+_:node190ebnpm4x1245 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1246 .
+
+_:node190ebnpm4x1246 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1229 owl:unionOf _:node190ebnpm4x1230 .
+
+:VisualInfo owl:disjointWith _:node190ebnpm4x1229 ;
+	skos:definition "any still image or picture or streaming video human work, with or without audio. Examples include graphics, pictures, movies, TV shows, individual shows from a TV show, etc. "@en ;
+	skos:prefLabel "visual information"@en .
+
+:Workplaces a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1247 a owl:Class .
+
+_:node190ebnpm4x1248 rdf:first :Activities ;
+	rdf:rest _:node190ebnpm4x1249 .
+
+_:node190ebnpm4x1249 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1250 .
+
+_:node190ebnpm4x1250 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1251 .
+
+_:node190ebnpm4x1251 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1252 .
+
+_:node190ebnpm4x1252 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1253 .
+
+_:node190ebnpm4x1253 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1254 .
+
+_:node190ebnpm4x1254 rdf:first :Events ;
+	rdf:rest _:node190ebnpm4x1255 .
+
+_:node190ebnpm4x1255 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1256 .
+
+_:node190ebnpm4x1256 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1257 .
+
+_:node190ebnpm4x1257 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1258 .
+
+_:node190ebnpm4x1258 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1259 .
+
+_:node190ebnpm4x1259 rdf:first :Notations ;
+	rdf:rest _:node190ebnpm4x1260 .
+
+_:node190ebnpm4x1260 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1261 .
+
+_:node190ebnpm4x1261 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1262 .
+
+_:node190ebnpm4x1262 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1263 .
+
+_:node190ebnpm4x1263 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1264 .
+
+_:node190ebnpm4x1264 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1265 .
+
+_:node190ebnpm4x1265 rdf:first :Society ;
+	rdf:rest _:node190ebnpm4x1266 .
+
+_:node190ebnpm4x1266 rdf:first :StructuredInfo ;
+	rdf:rest _:node190ebnpm4x1267 .
+
+_:node190ebnpm4x1267 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1268 .
+
+_:node190ebnpm4x1268 rdf:first :VisualInfo ;
+	rdf:rest _:node190ebnpm4x1269 .
+
+_:node190ebnpm4x1269 rdf:first :WrittenInfo ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1247 owl:unionOf _:node190ebnpm4x1248 .
+
+:Workplaces owl:disjointWith _:node190ebnpm4x1247 ;
+	skos:definition "These are various workplaces and areas of human activities, ranging from single person workstations to large aggregations of people (but which are not formal political entities) "@en ;
+	skos:prefLabel "workplaces"@en .
+
+:WrittenInfo a owl:Class ;
+	rdfs:subClassOf :SuperType .
+
+_:node190ebnpm4x1270 a owl:Class .
+
+_:node190ebnpm4x1271 rdf:first :Animals ;
+	rdf:rest _:node190ebnpm4x1272 .
+
+_:node190ebnpm4x1272 rdf:first :AudioInfo ;
+	rdf:rest _:node190ebnpm4x1273 .
+
+_:node190ebnpm4x1273 rdf:first :Chemistry ;
+	rdf:rest _:node190ebnpm4x1274 .
+
+_:node190ebnpm4x1274 rdf:first :Diseases ;
+	rdf:rest _:node190ebnpm4x1275 .
+
+_:node190ebnpm4x1275 rdf:first :Drugs ;
+	rdf:rest _:node190ebnpm4x1276 .
+
+_:node190ebnpm4x1276 rdf:first :Earthscape ;
+	rdf:rest _:node190ebnpm4x1277 .
+
+_:node190ebnpm4x1277 rdf:first :Extraterrestrial ;
+	rdf:rest _:node190ebnpm4x1278 .
+
+_:node190ebnpm4x1278 rdf:first :Facilities ;
+	rdf:rest _:node190ebnpm4x1279 .
+
+_:node190ebnpm4x1279 rdf:first :FoodDrink ;
+	rdf:rest _:node190ebnpm4x1280 .
+
+_:node190ebnpm4x1280 rdf:first :Geopolitical ;
+	rdf:rest _:node190ebnpm4x1281 .
+
+_:node190ebnpm4x1281 rdf:first :NaturalPhenomena ;
+	rdf:rest _:node190ebnpm4x1282 .
+
+_:node190ebnpm4x1282 rdf:first :NaturalSubstances ;
+	rdf:rest _:node190ebnpm4x1283 .
+
+_:node190ebnpm4x1283 rdf:first :Numbers ;
+	rdf:rest _:node190ebnpm4x1284 .
+
+_:node190ebnpm4x1284 rdf:first :Organizations ;
+	rdf:rest _:node190ebnpm4x1285 .
+
+_:node190ebnpm4x1285 rdf:first :PersonTypes ;
+	rdf:rest _:node190ebnpm4x1286 .
+
+_:node190ebnpm4x1286 rdf:first :Plants ;
+	rdf:rest _:node190ebnpm4x1287 .
+
+_:node190ebnpm4x1287 rdf:first :Prokaryotes ;
+	rdf:rest _:node190ebnpm4x1288 .
+
+_:node190ebnpm4x1288 rdf:first :ProtistsFungus ;
+	rdf:rest _:node190ebnpm4x1289 .
+
+_:node190ebnpm4x1289 rdf:first :Time ;
+	rdf:rest _:node190ebnpm4x1290 .
+
+_:node190ebnpm4x1290 rdf:first :Workplaces ;
+	rdf:rest rdf:nil .
+
+_:node190ebnpm4x1270 owl:unionOf _:node190ebnpm4x1271 .
+
+:WrittenInfo owl:disjointWith _:node190ebnpm4x1270 ;
+	skos:definition "This SuperType includes any general material written by humans including books, blogs, articles, manuscripts, but any written information conveyed via text."@en ;
+	skos:prefLabel "written information"@en .
+
+:AutomaticInspectedSMatch a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Automatic - Inspected S-Match"@en ;
+	skos:definition "Mapping based on automatic scoring of concepts using S-Match, with specific alignment choice based on hand selection."@en .
+
+:AutomaticInspectedSV a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Automatic - Inspected SV"@en ;
+	skos:definition "Mapping based on automatic scoring of concepts using Semantic Vectors, with specific alignment choice based on hand selection."@en .
+
+:AutomaticNotSpecified a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Automatic - Not Specified"@en , "Mapping based on automatic scoring of concepts using a script or technique not otherwise specified."@en .
+
+:ExternalDBOntologyMapping a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "External - DBOntology Mapping"@en ;
+	skos:definition "Mapping based on existing DBOntology assertion."@en .
+
+:ExternalGeoNamesMapping a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "External - GeoNames Mapping"@en ;
+	skos:definition "Mapping based on existing GeoNames assertion."@en .
+
+:ExternalOpenCycMapping a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "External - OpenCyc Mapping"@en ;
+	skos:definition "Mapping based on existing OpenCyc assertion."@en .
+
+:HeuristicListOfBasis a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Heuristic - ListOf Basis"@en ;
+	skos:definition "Type assignment based on Wikipedia ListOf category."@en .
+
+:HeuristicNotSpecified a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Heuristic - Not Specified"@en ;
+	skos:definition "Heuristic mapping method applied; script or technique not otherwise specified."@en .
+
+:ManualNearlyEquivalent a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Manual - Nearly Equivalent"@en ;
+	skos:definition "The two mapped concepts are deemed to be nearly an equivalentClass or sameAs relationship, but not 100% so."@en .
+
+:ManualSimilarSense a :Qualifier , owl:NamedIndividual ;
+	skos:prefLabel "Manual - Similar Sense"@en ;
+	skos:definition "The two mapped concepts share much overlap, but are not the exact same sense, such as an action as related to the thing it acts upo."@en .

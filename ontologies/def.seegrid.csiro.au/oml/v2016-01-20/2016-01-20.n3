@@ -1,0 +1,340 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix my:    <http://example.org/my/> .
+@prefix oml:   <http://def.seegrid.csiro.au/ontology/om/om-lite#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+oml:ObservationCollection
+        a                 owl:Class ;
+        rdfs:comment      "A collection of observations. \r\n\r\nThe collection may be homogeneous in one or more of the feature-of-interest, observed-property, procedures, phenomenon-time or result-time. If only one value for any of these properties is provided on the collection, then it may be inferred to be a common (default) value for all the member observations, unless locally overridden."^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Collection of observations"@en ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty      oml:member
+                          ] ;
+        dct:description   "A collection of observations. \r\n\r\nThe collection may be homogeneous in one or more of the feature-of-interest, observed-property, procedures, phenomenon-time or result-time. If only one value for any of these properties is provided on the collection, then it may be inferred to be a common (default) value for all the member observations, unless locally overridden."^^xsd:string .
+
+oml:ObservationAgent  a      owl:Class ;
+        rdfs:comment         "Agent, device, sensor, software, protocol, computational method, algorithm or plan responsible for generating an observation result. Input may be a sensor stimulus, or the output from a previous process."^^xsd:string ;
+        rdfs:isDefinedBy     <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label           "Observation agent"@en ;
+        dct:description      "Agent, device, sensor, software, protocol, computational method, algorithm or plan responsible for generating an observation result. Input may be a sensor stimulus, or the output from a previous process."^^xsd:string ;
+        owl:disjointWith     oml:Observation ;
+        owl:equivalentClass  oml:Process .
+
+oml:Measurement  a        owl:Class ;
+        rdfs:comment      "Observation whose result is a scaled number"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Mesure"@fr , "Measurement"@en ;
+        rdfs:subClassOf   oml:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  oml:MeasureObject ;
+                            owl:onProperty     oml:result
+                          ] ;
+        dct:description   "Observation whose result is a scaled number"^^xsd:string .
+
+oml:member  a             owl:ObjectProperty ;
+        rdfs:domain       oml:ObservationCollection ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "has member"^^xsd:string ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] .
+
+oml:TemporalObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a temporal object, such as a time instant or period"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Temporal Observation"@en ;
+        rdfs:subClassOf   oml:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  oml:TemporalObject ;
+                            owl:onProperty     oml:result
+                          ] ;
+        dct:description   "Observation whose result is a temporal object, such as a time instant or period"^^xsd:string .
+
+oml:CountObservation  a   owl:Class ;
+        rdfs:comment      "Observation whose result is an integer"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Count Observation"@en ;
+        rdfs:subClassOf   oml:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  oml:CountObject ;
+                            owl:onProperty     oml:result
+                          ] ;
+        dct:description   "Observation whose result is an integer"^^xsd:string .
+
+oml:phenomenonTime  a     owl:ObjectProperty ;
+        rdfs:comment      "time at which the estimate of the property that is the result of the observation is associated with the feature of interest" ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "phenomenon time"@en ;
+        rdfs:range        oml:TemporalObject ;
+        skos:definition   "The attribute phenomenonTime:TM_Object shall describe the time that the result (7.2.2.9) applies to the property of the feature-of-interest (7.2.2.7). This is often the time of interaction by a sampling procedure (9.1.3) or observation procedure (7.2.2.10) with a real-world feature.\r\n\r\nNOTE The phenomenonTime is the temporal parameter normally used in geospatial analysis of the result.\r\n\r\nIf the observedProperty of an observation is ‘occurrence time’ then the result should be the same as the phenomenonTime."^^xsd:string .
+
+oml:Observation  a        owl:Class ;
+        rdfs:comment      "An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. It involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. The result of an observation is an estimate of the value of a property of some feature. Use of a common model allows observation data using different procedures to be combined unambiguously.\r\n\r\nThe observation itself is also a feature, since it has properties and identity.\r\n\r\nObservation details are important for data discovery and for data quality estimation.\r\n\r\nThe observation could be considered to carry metadata about an instance of a property (of the feature of interest). This property-value metadata complements the dataset and feature metadata that have been conventionally considered (e.g. ISO 19115).\r\n\r\nThe values for the properties 'procedure', 'featureOfInterest', 'observedProperty', 'phenomenonTime', 'resultTime' may be inherited from a container resource."^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Observation"@en ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:resultTime
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:phenomenonTime
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:result
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:observedProperty
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:procedure
+                          ] ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:featureOfInterest
+                          ] ;
+        dct:description   "An observation is an act associated with a discrete time instant or period through which a number, term or other symbol is assigned to a phenomenon [2]. It involves application of a specified procedure, such as a sensor, instrument, algorithm or process chain. The procedure may be applied in-situ, remotely, or ex-situ with respect to the sampling location. The result of an observation is an estimate of the value of a property of some feature. Use of a common model allows observation data using different procedures to be combined unambiguously.\r\n\r\nThe observation itself is also a feature, since it has properties and identity.\r\n\r\nObservation details are important for data discovery and for data quality estimation.\r\n\r\nThe observation could be considered to carry metadata about an instance of a property (of the feature of interest). This property-value metadata complements the dataset and feature metadata that have been conventionally considered (e.g. ISO 19115). "^^xsd:string ;
+        owl:disjointWith  oml:Process ;
+        skos:altLabel     "Generic observation"^^xsd:string ;
+        skos:changeNote   "A new property oml:samplingStrategy is scoped to this class. In this  formulation, the (mandatory) feature-of-interest always refers to the ultimate feature of interest, whose type can carry the observed property, and the (optional) sampling strategy allows the sampling feature to be made explicit as an additional relationship. This overcomes some semantic sleight-of-hand in ISO 19156, in which the constraint the the observed property was commensurate with the feature-of-interest was allowed to be 'transitive' via the sampledFeature property."^^xsd:string ;
+        skos:prefLabel    "Observation"@fr , "Observation"@en .
+
+oml:uom  a                owl:ObjectProperty ;
+        rdfs:comment      "Unit of measure or scale"^^xsd:string ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:SimpleMeasure oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> .
+
+oml:GeometryObservation
+        a                 owl:Class ;
+        rdfs:comment      "Observation whose result is a geometry object, such as a point, curve, surface or solid"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Geometry Observation"@en ;
+        rdfs:subClassOf   oml:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  oml:GeometryObject ;
+                            owl:onProperty     oml:result
+                          ] ;
+        dct:description   "Observation whose result is a geometry object, such as a point, curve, surface or solid"^^xsd:string .
+
+oml:GeometryObject  a     owl:Class ;
+        rdfs:comment      "This stub is included in the om: ontology to support references to geometry as the result of a GeometryObservation.  An existing OWL class that represents the notion of a geometry may be asserted to be a sub-class of this stub, without requiring use of a specific representation of Geometry in the context of observations instance."^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Geometry object"^^xsd:string ;
+        rdfs:subClassOf   owl:Thing ;
+        dct:description   "Geometry object has properties relating to geometry, incuding positional and topological attributes, reference system, accuracy and precision. Might be geolocated. "^^xsd:string .
+
+oml:Process  a               owl:Class ;
+        rdfs:comment         "Agent, device, sensor, software, protocol, computational method, algorithm or plan responsible for generating an observation result. Input may be a sensor stimulus, or the output from a previous process."^^xsd:string ;
+        rdfs:isDefinedBy     <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label           "Observation process"@en ;
+        dct:description      "Agent, device, sensor, software, protocol, computational method, algorithm or plan responsible for generating an observation result. Input may be a sensor stimulus, or the output from a previous process."^^xsd:string ;
+        owl:disjointWith     oml:Observation ;
+        owl:equivalentClass  oml:ObservationAgent ;
+        skos:historyNote     "Original description from OGC SensorML says:\r\n\r\nIn SensorML, all components are modeled as processes. This includes components normally viewed as hardware, including transducers, actuators, and processors (which are viewed as process components) and sensors and platforms (which are modeled as systems). All components are modeled as processes that take input, and which through the application of an algorithm defined by a method and parameter values, generate output. All such components can therefore participate in process chains. Process chains are themselves processes with inputs, outputs, and parameters.\r\n\r\nHence, SensorML can be viewed as a specialized process description language with an emphasis on application to sensor data. Process descriptions in SensorML are agnostic of the development environment in which they might be executed, or the protocol by which data is transported between process execution modules. SensorML does not try to replace other existing technologies (such as BPEL or MATLAB Simulink). It is also conceived that SensorML-defined processes could be imported and executed within other execution environments, such as BPEL or MATLAB Simulink, as well as within SenosrML-enabled process execution software."^^xsd:string , "Original description from ISO 19156 says: \r\n\r\nThe class OM_Process (Figure 2) is an instance of the «metaclass» GF_FeatureType (ISO 19109:2005), which therefore represents a feature type. OM_Process is abstract, and has no attributes, operations or associations. It serves as the base class for observation processes. The purpose of an observation process is to generate an observation result. An instance of OM_Process is often an instrument or sensor, but may be a human observer, a simulator, or a process or algorithm applied to more primitive results used as inputs. \r\n\r\nNOTE\tISO 19115-2:2008 provides MI_Instrument, LE_Processing and LE_Algorithm, which could all be modelled as specializations of OM_Process. OGC SensorML [10] provides a model which is suitable for many observation procedures."^^xsd:string .
+
+oml:TruthObject  a        owl:Class ;
+        rdfs:comment      "Object to wrap a truth value"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Truth object"^^xsd:string ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:truth
+                          ] .
+
+oml:observedProperty  a   owl:ObjectProperty , owl:FunctionalProperty ;
+        rdfs:comment      "property whose value is the result of the observation\r\n\r\nThe association Phenomenon shall link the OM_Observation to the GF_PropertyType for which the OM_Observation:result (7.2.2.9) provides an estimate of its value. The property type has the role observedProperty with respect to the observation.\r\n\r\nThe observed property shall be a phenomenon associated with the feature-of-interest.\r\n\r\nAn observed property may be, but need not be, modelled as a property (in the sense of the General Feature Model) in a formal application schema that defines the type of the feature-of-interest.\r\n\r\nAn instance of GF_PropertyType shall describe a property that is either assignable or observable (7.1.2), such as “temperature”, “height”, “colour”, “material”. A property type may be an operation or function such as a spatiotemporal coverage. Property-type definitions may be organized into a hierarchy or ontology and managed in a register and catalogued to support discovery functions. The observed property supports semantic or thematic classification of observations, which is useful for discovery and data fusion.\r\n\r\nNOTE In general, the value of a specific observedProperty can be associated with different feature types in different observations, thus allowing the results of observations made in different projects or campaigns, and even from different disciplines, to be combined when required. A property-type register used in observations is most useful if each property type is not tied to a single feature type, or if equivalence relationships between similar property types from different feature types are provided."^^xsd:string ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "observed property"@en ;
+        skos:definition   "The association Phenomenon shall link the OM_Observation to the GF_PropertyType for which the OM_Observation:result (7.2.2.9) provides an estimate of its value. The property type has the role observedProperty with respect to the observation.\r\n\r\nThe observed property shall be a phenomenon associated with the feature-of-interest.\r\n\r\nAn observed property may be, but need not be, modelled as a property (in the sense of the General Feature Model) in a formal application schema that defines the type of the feature-of-interest.\r\n\r\nAn instance of GF_PropertyType shall describe a property that is either assignable or observable (7.1.2), such as “temperature”, “height”, “colour”, “material”. A property type may be an operation or function such as a spatiotemporal coverage. Property-type definitions may be organized into a hierarchy or ontology and managed in a register and catalogued to support discovery functions. The observed property supports semantic or thematic classification of observations, which is useful for discovery and data fusion.\r\n\r\nNOTE In general, the value of a specific observedProperty can be associated with different feature types in different observations, thus allowing the results of observations made in different projects or campaigns, and even from different disciplines, to be combined when required. A property-type register used in observations is most useful if each property type is not tied to a single feature type, or if equivalence relationships between similar property types from different feature types are provided."^^xsd:string .
+
+oml:TemporalObject  a     owl:Class ;
+        rdfs:comment      "Temporal geometry or topology, collection or complex. \r\n\r\nTemporal object has properties relating to time only."^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Temporal object"^^xsd:string ;
+        dct:description   "Temporal object has properties relating to time only. "^^xsd:string .
+
+oml:ObservationContext
+        a                 owl:Class ;
+        rdfs:comment      "Some observations depend on other observations to provide context which is important, sometimes essential, in understanding the result. These dependencies are stronger than mere spatio-temporal coincidences, requiring explicit representation. If present, the association class class ObservationContext (Figure 2) shall link a OM_Observation to another OM_Observation, with the role name relatedObservation for the target. It shall support one attribute.\r\n\r\nEXAMPLES\tSome examples include the conditions associated with experimental replicates (e.g., experimental plots and treatments used), biotic factors (e.g., ecological community), interactions among features (e.g., predator-prey), or other temporary relationships occurring at the time of observation that are are not inherent to the observed features themselves (i.e., they change over time), or the related observation may provide input to a process that generates a new result.\r\nThis association complements the Intention association which describes relationships between a sampling feature and domain features."^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Observation context"@en ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:relatedObservation
+                          ] ;
+        dct:description   "Context linking two or more observations"^^xsd:string .
+
+oml:SimpleMeasure  a         owl:Class ;
+        rdfs:comment         "Simple implementation of a scaled number as an (amount, unit) pair"^^xsd:string ;
+        rdfs:isDefinedBy     <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label           "Simple measure (quantity)"^^xsd:string ;
+        rdfs:subClassOf      oml:MeasureObject ;
+        rdfs:subClassOf      [ a                owl:Restriction ;
+                               owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onProperty   oml:uom
+                             ] ;
+        dct:description      "Simple implementation of a scaled number as an (amount, unit) pair"^^xsd:string ;
+        owl:equivalentClass  [ a                owl:Restriction ;
+                               owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onProperty   oml:amount
+                             ] .
+
+oml:memberOf  a           owl:ObjectProperty ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "is member of"^^xsd:string ;
+        rdfs:range        oml:ObservationCollection ;
+        owl:inverseOf     oml:member .
+
+oml:TruthObservation  a   owl:Class ;
+        rdfs:comment      "Observation whose result is either true or false"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Truth Observation"@en ;
+        rdfs:subClassOf   oml:Observation ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  oml:TruthObject ;
+                            owl:onProperty     oml:result
+                          ] ;
+        dct:description   "Observation whose result is either true or false"^^xsd:string .
+
+oml:procedure  a          owl:ObjectProperty ;
+        rdfs:comment      "procedure used in making observation. Typically a sensor or sensor-system, algorithm, computational procedure." ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "observation procedure"@en ;
+        rdfs:range        oml:Process ;
+        skos:definition   "The association ProcessUsed shall link the OM_Observation to the OM_Process (7.2.3) used to generate the result. The process has the role procedure with respect to the observation. A process might be responsible for more than one generatedObservation.\r\n\r\nThe OM_Process shall be suitable for the observed property. As a corollary, details of the observed property are constrained by the procedure used.\r\n\r\nEXAMPLE Observed radiance wavelength is determined by the response characteristics of the sensor.\r\n\r\nA description of the observation procedure provides or implies an indication of the reliability or quality of the observation result."^^xsd:string .
+
+oml:featureOfInterest
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "feature of interest of an observation\r\n\r\nLinks the Observation to the Feature that is the ultimate subject of the observation and carries the observed property. This feature is the real-world object whose properties are under observation. An observation instance serves as a propertyValueProvider for its feature-of-interest."^^xsd:string ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "feature of interest"@en ;
+        skos:definition   "Links the Observation to the Feature that is the ultimate subject of the observation and carries the observed property. This feature is the real-world object whose properties are under observation. An observation instance serves as a propertyValueProvider for its feature-of-interest."^^xsd:string .
+
+<http://def.seegrid.csiro.au/ontology/om/om-lite>
+        a                              owl:Ontology ;
+        rdfs:comment                   "An OWL representation of the Observation Schema described in clauses 7-8 of ISO 19156:2011 Geographic Information - Observations and Measurements. \r\nIn contrast to previous versions developed through SSN and in conjunction with ISO 19150-2, this ontology has minimal dependencies on existing ontologies, particularly those that trigger extended chains of imports. Stub classes are provided for time, geometry and measure (scaled number), which can be substituted at run-time by a suitable concrete representation of the concept. \r\nObservation Collection has been (re-)introduced, to support the common case where a collection is homogeneous in one or more properties (feature-of-interest, phenomenon-time, observed-property, units-of-measure, procedure). The value of the common property may be recorded against the collection instead of repetitively against every member.   \r\n\r\nIn this revision, the observation result is an Object Property, in order to conform to strict OWL2 semantics. The type constraints on Observation specializations TruthObservation and CountObservation have been changed, so that the range of oml:result is an Object containing the xsd type, rather than the data-type itself. "^^xsd:string ;
+        rdfs:label                     "OWL for Observations"^^xsd:string ;
+        rdfs:seeAlso                   <http://www.semantic-web-journal.net/content/ontology-observations-and-sampling-features-alignments-existing-models-0> ;
+        dc:creator                     "Simon Jonathan David COX\nCSIRO"^^xsd:string ;
+        dc:description                 "An OWL representation of the Observation Schema described in clauses 7-8 of ISO 19156:2011 Geographic Information - Observations and Measurements / OGC Abstract Specification - Topic 20."^^xsd:string ;
+        dc:rights                      "Copyright © 2014, 2015, 2016 CSIRO"^^xsd:string ;
+        dc:source                      "ISO 19156:2011"^^xsd:string ;
+        dc:title                       "OWL for Observations"^^xsd:string ;
+        dct:created                    "2014-10-07"^^xsd:date ;
+        dct:license                    <http://creativecommons.org/licenses/by/3.0/au/> ;
+        dct:modified                   "2016-01-20"^^xsd:date ;
+        vann:preferredNamespacePrefix  "oml:"^^xsd:string ;
+        vann:preferredNamespaceUri     oml: ;
+        owl:imports                    dc: ;
+        owl:priorVersion               <http://def.seegrid.csiro.au/isotc211/iso19156/2011/observation> ;
+        skos:changeNote                "2016-01-20 In order to satisfy OWLAPI requirements, changed oml:result to an ObjectProperty; changed the constraints on CountObservation and TruthObservation to refer to newly created CountObject and TruthObject to encapsulate the values as objects. "^^xsd:string , "2015-11-17 Added oml:member property, with fixed domain (ObservationCollection) and range (Observation), in place of rdfs:member, which is not liked by OWL-API. "^^xsd:string , "2015-03-06\tAdded samplingStrategy property, in order to separate sampling from the feature of interest"^^xsd:string , "2015-08-18 Added ObservationCollection class; added to domain of key Observation properties (except oml:result) to support inheritance of common properties from a container. "^^xsd:string .
+
+oml:count  a              owl:DatatypeProperty ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Count value"^^xsd:string ;
+        rdfs:range        xsd:integer .
+
+oml:result  a             owl:ObjectProperty , owl:FunctionalProperty ;
+        rdfs:comment      "estimate of the value of the observed property" ;
+        rdfs:domain       oml:Observation ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "observation result"@en ;
+        skos:definition   "The association Range shall link the OM_Observation to the value generated by the procedure. The value has the role result with respect to the observation. The type of the result is shown as “Any”, since it may represent the value of any feature property.\r\n\r\nNOTE 1 OGC SWE Common [20] provides a model suitable for describing many kinds of observation results.\r\n\r\nThe type of the observation result shall be consistent with the observed property, and the scale or scope for the value shall be consistent with the quantity or category type. If the observed property (7.2.2.8) is a spatial operation or function, the type of the result may be a coverage.\r\n\r\nNOTE 2 In some contexts, particularly in earth and environmental sciences, the term “observation” is used to refer to the result itself."^^xsd:string .
+
+oml:samplingStrategy  a   owl:ObjectProperty ;
+        rdfs:comment      "description of the sampling strategy used in an observation (usually a sampling-feature). "^^xsd:string , "Links to a feature intended to sample the real-world object, as described in Clause 9 of ISO 19156:2011. \r\n\r\nN.B. this formulation varies from the UML model in ISO 19156, in which a sampling-feature is substitutable for the feature-of-interest. In this more explicit formulation, the (mandatory) feature-of-interest always refers to the ultimate feature of interest, whose type can carry the observed property, and the (optional) sampling strategy allows the sampling feature to be made explicit as an additional relationship. This overcomes some semantic sleight-of-hand in ISO 19156, in which the constraint the the observed property was commensurate with the feature-of-interest was allowed to be 'transitive' via the sampledFeature property."^^xsd:string ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "sampling strategy"@en ;
+        skos:definition   "Links to a feature intended to sample the real-world object, as described in Clause 9 of ISO 19156:2011. "^^xsd:string .
+
+oml:resultTime  a         owl:FunctionalProperty , owl:DatatypeProperty ;
+        rdfs:comment      "time at which the result became available, after all processing steps were completed" ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "result time"@en ;
+        rdfs:range        xsd:dateTime ;
+        skos:definition   "The attribute resultTime:TM_Instant shall describe the time when the result became available, typically when the procedure (7.2.2.10) associated with the observation was completed. For some observations, this is identical to the phenomenonTime. However, there are important cases where they differ.\r\n\r\nEXAMPLE 1 Where a measurement is made on a specimen in a laboratory, the phenomenonTime is the time the specimen was retrieved from its host, while the resultTime is the time the laboratory procedure was applied.\r\n\r\nEXAMPLE 2 The resultTime also supports disambiguation of repeat measurements made of the same property of a feature using the same procedure.\r\n\r\nEXAMPLE 3 Where sensor observation results are post-processed, the resultTime is the post-processing time, while the phenomenonTime is the time of initial interaction with the world.\r\n\r\nEXAMPLE 4 Simulations can estimate the values for phenomena in the future or past. The phenomenonTime is the time that the result applies to, while the resultTime is the time that the simulation was executed."^^xsd:string .
+
+oml:role  a               owl:ObjectProperty ;
+        rdfs:comment      "role of related observation with respect to the observation of interest" ;
+        rdfs:domain       oml:ObservationContext ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "role"@en .
+
+oml:context  a            owl:ObjectProperty ;
+        rdfs:comment      "link to related observation\r\n\r\nThe first half of the property named 'relatedObservation' in the UML model. (The rule for implementing association classes needs clarification.)"^^xsd:string ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( oml:Observation oml:ObservationCollection )
+                          ] ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "observation context"@en ;
+        rdfs:range        oml:ObservationContext ;
+        dct:description   "link to related observation"^^xsd:string .
+
+oml:CountObject  a        owl:Class ;
+        rdfs:comment      "Object to wrap a count value"^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Count object"^^xsd:string ;
+        rdfs:subClassOf   [ a                owl:Restriction ;
+                            owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onProperty   oml:count
+                          ] .
+
+oml:truth  a              owl:DatatypeProperty ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Truth value"^^xsd:string ;
+        rdfs:range        xsd:boolean .
+
+oml:relatedObservation
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "related observation" ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "related observation"@en ;
+        rdfs:range        oml:Observation .
+
+oml:MeasureObject  a      owl:Class ;
+        rdfs:comment      "Scaled number\r\n\r\nThis is an abstract class, which should be substituted by a suitable concrete representation of a measure or quantity at run-tme. \r\n\r\noml:SimpleMeasure \r\nqudt:QuantityValue <http://qudt.org/schema/qudt#QuantityValue> \r\nDUL:Region <http://www.loa-cnr.it/ontologies/DUL.owl#Region> \r\n\r\nare candidates. "^^xsd:string ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "Measure"^^xsd:string ;
+        dct:description   "Scaled number"^^xsd:string .
+
+oml:amount  a             owl:DatatypeProperty ;
+        rdfs:domain       oml:SimpleMeasure ;
+        rdfs:isDefinedBy  <http://def.seegrid.csiro.au/ontology/om/om-lite> ;
+        rdfs:label        "numeric amount value"^^xsd:string ;
+        rdfs:range        xsd:double .

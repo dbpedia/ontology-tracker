@@ -1,0 +1,549 @@
+@prefix tags: <http://www.holygoat.co.uk/owl/redwood/0.1/tags/> .
+@prefix : <http://purl.org/ontology/po/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix tl: <http://purl.org/NET/c4dm/timeline.owl#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix mo: <http://purl.org/ontology/mo/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix provenance: <http://www.bbc.co.uk/ontologies/provenance/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix event: <http://purl.org/NET/c4dm/event.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://purl.org/ontology/po/> a provenance:Ontology , owl:Ontology ;
+	rdfs:comment """
+		A vocabulary for programme data.
+		It defines concepts such as brands, series, episodes, but
+		also defined broadcasting events.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Programmes ontology" ;
+	dc:creator <http://moustaki.org/foaf.rdf#moustaki> ;
+	dc:date "$Date: 2007/11/19 15:25:11 $" ;
+	dcterms:license <http://creativecommons.org/licenses/by/4.0#id> ;
+	provenance:canonicalLocation "https://repo.dev.bbc.co.uk/services/linked-data/ontologies/domain/programmes"^^xsd:string ;
+	provenance:changeReason "Added fist meta"@en-gb ;
+	provenance:public "true"^^xsd:boolean ;
+	provenance:slug "po"^^xsd:string ;
+	provenance:version "0.1"^^xsd:double ;
+	owl:versionIRI <http://purl.org/ontology/po/0.1> ;
+	owl:versionInfo "0.1" .
+
+:AudioDescribedVersion a owl:Class ;
+	rdfs:comment """
+		A version holding an audio description.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Audio description" ;
+	rdfs:subClassOf :Version ;
+	vs:term_status "testing" .
+
+:Brand a owl:Class ;
+	rdfs:comment """
+		A brand, eg. `Flight of the Conchords'
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Brand" ;
+	rdfs:subClassOf :Programme ;
+	owl:disjointWith :Episode , :Series ;
+	vs:term_status "testing" .
+
+:Broadcast a owl:Class ;
+	rdfs:comment """
+		A broadcast event.
+		Subsumes the event concept defined in
+		the event ontology.
+		A broadcast is associated to a service, and to a
+		particular version of an episode.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Broadcast" ;
+	rdfs:subClassOf event:Event ;
+	vs:term_status "testing" .
+
+:Episode a owl:Class ;
+	rdfs:comment """
+		A particular episode, eg. `Flight of the Conchords, first episode of the first season'
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Episode" ;
+	rdfs:subClassOf :Programme ;
+	owl:disjointWith :Series ;
+	vs:term_status "testing" .
+
+:FirstBroadcast a owl:Class ;
+	rdfs:comment """
+		Specifies a broadcast as being the 
+		first one of a particular version.
+	 """ ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "First broadcast" ;
+	rdfs:subClassOf :Broadcast ;
+	owl:disjointWith :RepeatBroadcast ;
+	vs:term_status "unstable" .
+
+:Format a owl:Class ;
+	rdfs:comment """
+		The format of a particular version (should be of the episode, btw).
+		Instances of this concept include documentaries, talk shows, animation, etc.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Format" ;
+	vs:term_status "testing" .
+
+:Genre a skos:ConceptScheme ;
+	rdfs:comment """
+		A concept scheme for a genre taxonomy for programmes,
+		organised using SKOS (Simple Knowledge Organisation System).
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Genre" ;
+	vs:term_status "testing" .
+
+:LocalRadio a owl:Class ;
+	rdfs:comment """
+		Radio services aiming at a local coverage.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Local radio" ;
+	rdfs:subClassOf :Radio ;
+	owl:disjointWith :NationalRadio , :RegionalRadio ;
+	vs:term_status "testing" .
+
+:NationalRadio a owl:Class ;
+	rdfs:comment """
+		Radio services aiming at a national coverage.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "National radio" ;
+	rdfs:subClassOf :Radio ;
+	vs:term_status "testing" .
+
+:OriginalVersion a owl:Class ;
+	rdfs:comment """
+		An `original' version, the legacy version of
+		a particular episode.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Original version" ;
+	rdfs:subClassOf :Version ;
+	vs:term_status "testing" .
+
+:Programme a owl:Class ;
+	rdfs:comment """
+		A programme, can either be a brand, a series or an episode
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Programme" ;
+	vs:term_status "testing" .
+
+:Radio a owl:Class ;
+	rdfs:comment """
+		Services that use a radio medium.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Radio" ;
+	rdfs:subClassOf :Service ;
+	owl:disjointWith :TV , :Web ;
+	vs:term_status "testing" .
+
+:RegionalRadio a owl:Class ;
+	rdfs:comment """
+		Radio services aiming at a regional coverage.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Regional radio" ;
+	rdfs:subClassOf :Radio ;
+	owl:disjointWith :NationalRadio ;
+	vs:term_status "testing" .
+
+:RepeatBroadcast a owl:Class ;
+	rdfs:comment """
+		Specifies a broadcast as being a 
+		repeat.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Repeat" ;
+	rdfs:subClassOf :Broadcast ;
+	owl:disjointWith :FirstBroadcast ;
+	vs:term_status "unstable" .
+
+:Series a owl:Class ;
+	rdfs:comment """
+		A serie, eg. `Flight of the Conchors, first season'
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Serie" ;
+	rdfs:subClassOf :Programme ;
+	vs:term_status "testing" .
+
+:Service a owl:Class ;
+	rdfs:comment """
+		A service is a particular channel on which a broadcast occurrs.
+		Instances of this concept include BBC Radio Wales, BBC Radio 4, BBC News, etc.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Service" ;
+	vs:term_status "testing" .
+
+:ShortenedVersion a owl:Class ;
+	rdfs:comment """
+		A shortened version.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Shortened version" ;
+	rdfs:subClassOf :Version ;
+	owl:disjointWith :OriginalVersion ;
+	vs:term_status "testing" .
+
+:SignedVersion a owl:Class ;
+	rdfs:comment """
+		A version holding sign language.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Sign language" ;
+	rdfs:subClassOf :Version ;
+	vs:term_status "testing" .
+
+:Subtitle a owl:Class ;
+	rdfs:comment """
+		Subtitles associated to a particular version.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Subtitle" ;
+	vs:term_status "testing" .
+
+:TV a owl:Class ;
+	rdfs:comment """
+		Services that use a television medium.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "TV" ;
+	rdfs:subClassOf :Service ;
+	owl:disjointWith :Web ;
+	vs:term_status "testing" .
+
+:Version a owl:Class ;
+	rdfs:comment """
+		A particular version of an episode.
+		Such versions include shortened ones, audio described ones
+		or ones that holds sign language.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Version" ;
+	vs:term_status "testing" .
+
+:Web a owl:Class ;
+	rdfs:comment """
+		Services that use a Web medium.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "Web" ;
+	rdfs:subClassOf :Service ;
+	vs:term_status "testing" .
+
+:aspect_ratio a owl:DatatypeProperty ;
+	rdfs:comment """
+		The aspect ration of a particular version.
+	""" ;
+	rdfs:domain :Version ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "aspect ratio" ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dc:format ;
+	vs:term_status "testing" .
+
+:broadcast_of a owl:ObjectProperty ;
+	rdfs:comment """
+		Relates a particular broadcast to the version being broadcasted.
+		Sub-property of the event:factor one.
+	""" ;
+	rdfs:domain :Broadcast ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "broadcast of" ;
+	rdfs:range :Version ;
+	rdfs:subPropertyOf event:factor ;
+	vs:term_status "testing" .
+
+:broadcasted_on a owl:ObjectProperty ;
+	rdfs:comment """
+		Relates a particular broadcast to the service on which it was on.
+		Sub-property of the event:factor one.
+	""" ;
+	rdfs:domain :Broadcast ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "broadcasted on" ;
+	rdfs:range :Service ;
+	rdfs:subPropertyOf event:factor ;
+	vs:term_status "testing" .
+
+:creation_date a owl:DatatypeProperty ;
+	rdfs:comment "\n                The creation date of a thing.\n                Sub-property of dc:date.\n        " ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "creation date" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dc:date ;
+	vs:term_status "testing" .
+
+:duration a owl:DatatypeProperty ;
+	rdfs:comment "The duration, in seconds. Sub-property of mo:duration." ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "duration" ;
+	rdfs:range xsd:int ;
+	rdfs:subPropertyOf mo:duration ;
+	vs:term_status "testing" .
+
+:episode a owl:InverseFunctionalProperty , owl:ObjectProperty ;
+	rdfs:comment """
+		Associates a brand or a series to an episode constituting it.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "episode" ;
+	rdfs:range :Episode ;
+	rdfs:subPropertyOf dcterms:hasPart ;
+	vs:term_status "testing" .
+
+:format a owl:ObjectProperty ;
+	rdfs:comment """
+		Relates a version to a particular format (eg. `Animation', `Documentary', etc.).
+	""" ;
+	rdfs:domain :Version ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "format" ;
+	rdfs:range :Format ;
+	vs:term_status "testing" .
+
+:genre a owl:ObjectProperty ;
+	rdfs:comment """
+		Relates an episode to a corresponding genre in a SKOS taxonomy.
+	""" ;
+	rdfs:domain :Programme ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "genre" ;
+	rdfs:range :Genre ;
+	vs:term_status "testing" .
+
+:letter a owl:DatatypeProperty ;
+	rdfs:comment "Just a letter, aiming at sorting a set of resources" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "sort letter" ;
+	rdfs:range xsd:string ;
+	vs:term_status "testing" .
+
+:location a owl:ObjectProperty ;
+	rdfs:comment """
+		Associates a radio service to a geographic location, 
+		aiming at capturing what this service aims at covering.
+	""" ;
+	rdfs:domain :Radio ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "location" ;
+	rdfs:range geo:SpatialThing ;
+	rdfs:subPropertyOf foaf:based_near ;
+	vs:term_status "testing" .
+
+:long_synopsis a owl:DatatypeProperty ;
+	rdfs:comment """
+		A long synopsis of a serie, brand or episode.
+		Sub-property of po:synopsis.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "long synopsis" ;
+	rdfs:subPropertyOf :synopsis ;
+	vs:term_status "testing" .
+
+:medium_synopsis a owl:DatatypeProperty ;
+	rdfs:comment """
+		A medium synopsis of a serie, brand or episode.
+		Sub-property of po:synopsis.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "medium synopsis" ;
+	rdfs:subPropertyOf :synopsis ;
+	vs:term_status "testing" .
+
+:parent_series a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:comment """
+		Relates a series to a series constituting it (eg. `Waking the dead').
+	""" ;
+	rdfs:domain :Serie ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "parent serie" ;
+	rdfs:range :Serie ;
+	rdfs:subPropertyOf dcterms:isPartOf ;
+	vs:term_status "testing" .
+
+:parent_service a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:comment """
+		Relates a service to another service encapsulating it (eg. `BBC One' and `BBC One South')
+	""" ;
+	rdfs:domain :Service ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "parent service" ;
+	rdfs:range :Service ;
+	rdfs:subPropertyOf dcterms:isPartOf ;
+	vs:term_status "testing" .
+
+:pid a owl:DatatypeProperty ;
+	rdfs:comment "Just a BBC internal identifier - should be removed" ;
+	rdfs:domain :Brand ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "pid" ;
+	rdfs:range xsd:string ;
+	vs:term_status "unstable" .
+
+:pid_imi a owl:DatatypeProperty ;
+	rdfs:comment "Just a BBC internal identifier - should be removed" ;
+	rdfs:domain :Broadcast ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "pid imi" ;
+	rdfs:range xsd:string ;
+	vs:term_status "unstable" .
+
+:position a owl:DatatypeProperty ;
+	rdfs:comment "The position of a particular series or episode within its containing programme" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "position" ;
+	rdfs:range xsd:int ;
+	vs:term_status "testing" .
+
+:schedule_date a owl:DatatypeProperty ;
+	rdfs:comment """
+		The schedule date of a broadcast event.
+		Sub-property of dc:date.
+	""" ;
+	rdfs:domain :Broadcast ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "schedule date" ;
+	rdfs:range xsd:date ;
+	rdfs:subPropertyOf dc:date ;
+	vs:term_status "testing" .
+
+:series a owl:InverseFunctionalProperty , owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:comment """
+		Associates a brand or a series to a series constituting it.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "series" ;
+	rdfs:range :Series ;
+	rdfs:subPropertyOf dcterms:hasPart ;
+	vs:term_status "testing" .
+
+:service a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:comment """
+		Associate a brand, series or episode to the master brand service.
+	""" ;
+	rdfs:domain :Programme ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "service" ;
+	rdfs:range :Service ;
+	vs:term_status "testing" .
+
+:short_synopsis a owl:DatatypeProperty ;
+	rdfs:comment """
+		A short synopsis of a serie, brand or episode.
+		Sub-property of po:synopsis.
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "short synopsis" ;
+	rdfs:subPropertyOf :synopsis ;
+	vs:term_status "testing" .
+
+:slice_title a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "A sliced literal title" ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dc:title ;
+	vs:term_status "testing" .
+
+:sort_title a owl:DatatypeProperty ;
+	rdfs:comment "A literal title, aiming at being sorted on" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "sort title" ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dc:title ;
+	vs:term_status "testing" .
+
+:sound_format a owl:DatatypeProperty ;
+	rdfs:comment """
+		The sound format of a particular version.
+	""" ;
+	rdfs:domain :Version ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "sound format" ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dc:format ;
+	vs:term_status "testing" .
+
+:subtitle a owl:ObjectProperty ;
+	rdfs:comment "Relates a version to a subtitle" ;
+	rdfs:domain :Version ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "subtitle" ;
+	rdfs:range :Subtitle ;
+	vs:term_status "testing" .
+
+:subtitle_language a owl:DatatypeProperty ;
+	rdfs:comment "Language of a subtitle" ;
+	rdfs:domain :Subtitle ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "subtitle language" ;
+	rdfs:range xsd:string ;
+	vs:term_status "testing" .
+
+:subtitle_supplemental a owl:DatatypeProperty ;
+	rdfs:comment "Supplemental of a subtitle" ;
+	rdfs:domain :Subtitle ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "subtitle supplemental" ;
+	rdfs:range xsd:string ;
+	vs:term_status "unstable" .
+
+:subtitle_type a owl:DatatypeProperty ;
+	rdfs:comment "The type of a subtitle (open or closed)" ;
+	rdfs:domain :Subtitle ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "subtitle type" ;
+	rdfs:range xsd:string ;
+	vs:term_status "unstable" .
+
+:synopsis a owl:DatatypeProperty ;
+	rdfs:comment """
+		The synopsis of a serie, brand or episode.
+		This is a subproperty of dc:description.
+	""" ;
+	rdfs:domain :Programme ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "synopsis" ;
+	rdfs:range xsd:string ;
+	rdfs:subPropertyOf dc:description ;
+	vs:term_status "testing" .
+
+:update_date a owl:DatatypeProperty ;
+	rdfs:comment """
+		The update date of a thing (last update).
+		Sub-property of dc:date
+	""" ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "update date" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dc:date ;
+	vs:term_status "testing" .
+
+:version a owl:InverseFunctionalProperty , owl:ObjectProperty ;
+	rdfs:comment """
+		Associate an episode to a version of it.
+		Different versions of a same episode can exist (shortened version, version
+		designed for the hearing impaired, etc.). 
+	""" ;
+	rdfs:domain :Episode ;
+	rdfs:isDefinedBy <http://purl.org/ontology/po/> ;
+	rdfs:label "version" ;
+	rdfs:range :Version ;
+	vs:term_status "testing" .

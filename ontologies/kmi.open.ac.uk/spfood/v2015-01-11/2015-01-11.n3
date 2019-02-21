@@ -1,0 +1,773 @@
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix generic: <http://kmi.open.ac.uk/projects/smartproducts/ontologies/generic.owl#> .
+@prefix :      <http://kmi.open.ac.uk/projects/smartproducts/ontologies/food.owl#> .
+@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix xsp:   <http://www.owl-ontologies.com/2005/08/07/xsp.owl#> .
+@prefix ssn:   <http://purl.oclc.org/NET/ssnx/ssn#> .
+@prefix process: <http://kmi.open.ac.uk/projects/smartproducts/ontologies/process.owl#> .
+@prefix product: <http://kmi.open.ac.uk/projects/smartproducts/ontologies/product.owl#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix w3ctime: <http://www.w3.org/2006/time#> .
+@prefix dul:   <http://www.loa-cnr.it/ontologies/DUL.owl#> .
+@prefix context: <http://kmi.open.ac.uk/projects/smartproducts/ontologies/context.owl#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix user:  <http://kmi.open.ac.uk/projects/smartproducts/ontologies/user.owl#> .
+@prefix sptime: <http://kmi.open.ac.uk/projects/smartproducts/ontologies/time.owl#> .
+
+:MealNutritionPreference
+        a                owl:Class ;
+        rdfs:subClassOf  :MealPreference .
+
+:Supermarket  a          owl:Class ;
+        rdfs:subClassOf  :Store .
+
+:Ingredient  a  owl:NamedIndividual .
+
+:RecipeDescription  rdfs:comment  :SideCourse .
+
+:DishPreference  a       owl:Class ;
+        rdfs:subClassOf  :RecipePreference ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      user:preferenceValue ;
+                           owl:someValuesFrom  :FoodOrDrinkMatter
+                         ] .
+
+:HealthProfile  a        owl:Class ;
+        rdfs:subClassOf  user:UserProfile .
+
+:MediterraneanCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:MediterraneanBasin ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:producesFoodItem  a  owl:ObjectProperty ;
+        rdfs:domain  :Recipe ;
+        rdfs:range   :FoodOrDrinkItem .
+
+:LowInSaltDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:DairyProduct  a  owl:NamedIndividual .
+
+:ConcreteFoodOrDrinkItem
+        a                 owl:Class ;
+        rdfs:subClassOf   :FoodOrDrinkItem ;
+        owl:disjointWith  :VirtualFoodOrDrinkItem , :IngredientPortion .
+
+:RegionalCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :Recipe .
+
+generic:USA  a  owl:NamedIndividual , owl:Thing .
+
+generic:EnergyQuantity
+        a       owl:Class .
+
+generic:UK  a   owl:NamedIndividual , owl:Thing .
+
+generic:Japan  a  owl:NamedIndividual , owl:Thing .
+
+:MealPreference  a       owl:Class ;
+        rdfs:subClassOf  :FoodPreference .
+
+generic:Mexico  a  owl:NamedIndividual , owl:Thing .
+
+:FoodOrDrinkItem  a      owl:Class ;
+        rdfs:subClassOf  dul:PhysicalBody , generic:PhysicalEntityInSpace .
+
+:NutrientPortion  a      owl:Class ;
+        rdfs:subClassOf  dul:Substance ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  :Nutrient ;
+                           owl:onProperty     generic:madeOf
+                         ] .
+
+:CaribbeanCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Caribbean ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:SideCourse  a  owl:NamedIndividual , :MealCourseType , owl:Thing .
+
+:VegetarianDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:Drinks  a      :MealCourseType , owl:NamedIndividual .
+
+:Party  a                owl:Class ;
+        rdfs:subClassOf  :MealContext .
+
+generic:Assembly  a  owl:Class .
+
+generic:India  a  owl:NamedIndividual , owl:Thing .
+
+:ScottishCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :BritishCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Scotland ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:ThaiCuisineRecipe  a    owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Thailand ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+user:User  a    owl:Class .
+
+w3ctime:DayOfWeek  a  owl:Class .
+
+generic:MiddleEast  a  owl:NamedIndividual , owl:Thing .
+
+:canBeReplacedWith  a  owl:ObjectProperty ;
+        rdfs:domain  :FoodMatter ;
+        rdfs:range   :FoodMatter .
+
+:hasIngredient  a           owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( :FoodOrDrinkItem :Recipe )
+                            ] ;
+        rdfs:range          :IngredientPortion ;
+        rdfs:subPropertyOf  generic:hasSubComponent .
+
+:hasDietType  a             owl:ObjectProperty ;
+        rdfs:domain         :DietAssessment ;
+        rdfs:range          :DietType ;
+        rdfs:subPropertyOf  dul:hasRegion .
+
+generic:Scotland  a  owl:NamedIndividual , owl:Thing .
+
+:ChineseCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:China ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:EggFreeDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:producedByRecipe  a   owl:ObjectProperty ;
+        rdfs:domain    :FoodOrDrinkItem ;
+        rdfs:range     :Recipe ;
+        owl:inverseOf  :producesFoodItem .
+
+:MealNutritionEnergyPreference
+        a                owl:Class ;
+        rdfs:subClassOf  :MealNutritionPreference ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  generic:EnergyQuantity ;
+                           owl:onProperty     user:preferenceValue
+                         ] .
+
+:Proteins  a    owl:NamedIndividual , :Nutrient , owl:Thing .
+
+:KitchenTool  a          owl:Class ;
+        rdfs:subClassOf  product:ProductizedDevice .
+
+:NutritionalEnergy  a  owl:NamedIndividual , :Nutrient , owl:Thing .
+
+:cup    a       generic:VolumeMeasurementUnit , owl:NamedIndividual .
+
+:VolumeQuantityInTableSpoons
+        a                owl:Class ;
+        rdfs:subClassOf  generic:VolumeQuantity .
+
+generic:Vietnam  a  owl:NamedIndividual , owl:Thing .
+
+:hasDefaultPortion  a  owl:ObjectProperty ;
+        rdfs:domain  :FoodOrDrinkMatter ;
+        rdfs:range   :DefaultIngredientPortion .
+
+generic:hasSubComponent
+        a       owl:ObjectProperty .
+
+:RecipeCookingTimePreference
+        a                owl:Class ;
+        rdfs:subClassOf  :RecipePreference .
+
+:CookingGuide  a         owl:Class ;
+        rdfs:subClassOf  :KitchenTool .
+
+:hasAvailableIngredient
+        a           owl:ObjectProperty ;
+        rdfs:range  :IngredientPortion .
+
+:Fish   rdfs:comment  :SideCourse .
+
+generic:Thailand  a  owl:NamedIndividual , owl:Thing .
+
+:MiddleEasternCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:MiddleEast ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:MealPlanningTask  a     owl:Class ;
+        rdfs:subClassOf  generic:Task .
+
+:hasExpiryDate  a    owl:ObjectProperty ;
+        rdfs:domain  :ConcreteFoodOrDrinkItem .
+
+:DessertCourseRole  a    owl:Class ;
+        rdfs:subClassOf  :MealCourseRole .
+
+:FoodProduct  a          owl:Class ;
+        rdfs:subClassOf  product:Product , :FoodItem .
+
+:LowFatDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:MassQuantityInOunces
+        a                owl:Class ;
+        rdfs:subClassOf  generic:MassQuantity .
+
+:AmericanCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:USA ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:SpanishCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :MediterraneanCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Spain ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:Appetizer  a   owl:NamedIndividual , :MealCourseType , owl:Thing .
+
+product:Product  a  owl:Class .
+
+:IngredientPreference
+        a                owl:Class ;
+        rdfs:comment     :SideCourse ;
+        rdfs:subClassOf  :RecipePreference ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  :FoodOrDrinkMatter ;
+                           owl:onProperty     user:preferenceValue
+                         ] .
+
+generic:Matter  a  owl:Class .
+
+:MassQuantityInPounds
+        a                owl:Class ;
+        rdfs:subClassOf  generic:MassQuantity .
+
+:VegetableOil  a  owl:NamedIndividual .
+
+:Carbohydrate  a  owl:NamedIndividual , :Nutrient , owl:Thing .
+
+:FoodPreference  a       owl:Class ;
+        rdfs:subClassOf  user:Preference .
+
+:AtomicFoodOrDrinkItem
+        a                owl:Class ;
+        rdfs:subClassOf  :FoodOrDrinkItem ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  :FoodOrDrinkMatter ;
+                           owl:onProperty     generic:madeOf
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               :FoodOrDrinkMatter ;
+                           owl:onProperty            generic:madeOf ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:MainCourse  a  owl:NamedIndividual , :MealCourseType , owl:Thing .
+
+:hasScore  a         owl:DatatypeProperty ;
+        rdfs:domain  :DietAssessment ;
+        rdfs:range   xsd:double .
+
+:RecipeTypePreference
+        a                owl:Class ;
+        rdfs:subClassOf  :RecipePreference .
+
+:MealType  a             owl:Class ;
+        rdfs:subClassOf  dul:SocialObjectAttribute .
+
+:FingerFood  rdfs:comment  :SideCourse .
+
+:IngredientPortion  a    owl:Class ;
+        rdfs:subClassOf  dul:Substance , generic:AssemblyComponent , :VirtualFoodOrDrinkItem , :AtomicFoodOrDrinkItem .
+
+:Oven   a                owl:Class ;
+        rdfs:subClassOf  :KitchenTool .
+
+:ConcreteFoodItem  a     owl:Class ;
+        rdfs:subClassOf  :FoodItem , :ConcreteFoodOrDrinkItem .
+
+:Baking  a      owl:NamedIndividual , :CookingTaskType , owl:Thing .
+
+:FishProduct  a  owl:NamedIndividual .
+
+:NutritionPreference  a  owl:Class ;
+        rdfs:subClassOf  :RecipePreference .
+
+:GermanCuisineRecipe  a  owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Germany ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+generic:Spain  a  owl:NamedIndividual , owl:Thing .
+
+generic:MassQuantity  a  owl:Class .
+
+:DiabeticDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+user:UserProfile  a  owl:Class .
+
+generic:VolumeMeasurementUnit
+        a       owl:Class .
+
+:IrishCuisineRecipe  a   owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Ireland ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+generic:Thermometer  a  owl:Class .
+
+:hasMealStructure  a        owl:ObjectProperty ;
+        rdfs:domain         :MealContext ;
+        rdfs:range          :MealStructure ;
+        rdfs:subPropertyOf  dul:satisfies .
+
+<http://kmi.open.ac.uk/projects/smartproducts/ontologies/food.owl>
+        a               owl:Ontology ;
+        rdfs:comment    "Defines concepts and properties specific for the Philips use case (cooking domain)." ;
+        dc:description  "Defines concepts and properties specific for the Philips use case (cooking domain)."@en ;
+        dc:title        "SmartProducts Food Domain Model"@en ;
+        owl:imports     <http://kmi.open.ac.uk/projects/smartproducts/ontologies/product.owl> , <http://kmi.open.ac.uk/projects/smartproducts/ontologies/process.owl> .
+
+:Turkey  a      owl:NamedIndividual .
+
+:hasGuest  a                owl:ObjectProperty ;
+        rdfs:domain         :MealContext ;
+        rdfs:range          dul:Person ;
+        rdfs:subPropertyOf  dul:includesAgent .
+
+:Dessert  a     :MealCourseType , owl:NamedIndividual .
+
+generic:PhysicalEntityInSpace
+        a       owl:Class .
+
+:CookingTaskType  a      owl:Class ;
+        rdfs:subClassOf  dul:SocialObjectAttribute .
+
+:suitableForDiet  a         owl:ObjectProperty ;
+        rdfs:domain         :FoodOrDrinkItem ;
+        rdfs:range          :DietAssessment ;
+        rdfs:subPropertyOf  dul:hasQuality .
+
+:RecipePreference  a     owl:Class ;
+        rdfs:subClassOf  :FoodPreference .
+
+product:ProductizedDevice
+        a       owl:Class .
+
+:MoroccanCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :MediterraneanCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Morocco ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:CookingActivity  a      owl:Class ;
+        rdfs:subClassOf  process:ActivityDefinition .
+
+:courseType  a       owl:ObjectProperty ;
+        rdfs:domain  :MealCourseRole ;
+        rdfs:range   :MealCourseType .
+
+:hasCookingTaskType  a      owl:ObjectProperty ;
+        rdfs:domain         :CookingActivity ;
+        rdfs:range          :CookingTaskType ;
+        rdfs:subPropertyOf  dul:hasRegion .
+
+:VolumeQuantityInCups
+        a                owl:Class ;
+        rdfs:subClassOf  generic:VolumeQuantity .
+
+:hasHealthProfile  a        owl:ObjectProperty ;
+        rdfs:subPropertyOf  user:hasProfile .
+
+generic:contains  a  owl:ObjectProperty .
+
+:MealMaxNutritionEnergyPreference
+        a                owl:Class ;
+        rdfs:subClassOf  :MealNutritionEnergyPreference .
+
+generic:Italy  a  owl:NamedIndividual , owl:Thing .
+
+:Gorgonzola  a  owl:NamedIndividual .
+
+:MealCourseType  a       owl:Class ;
+        rdfs:subClassOf  generic:RoleType .
+
+:Cutting  a     owl:NamedIndividual , :CookingTaskType , owl:Thing .
+
+:Steamer  a              owl:Class ;
+        rdfs:subClassOf  :KitchenTool .
+
+generic:hasPhysicalQuantityUnit
+        a       owl:ObjectProperty .
+
+:VeganDiet  a   owl:NamedIndividual , :DietType , owl:Thing .
+
+:hasGeographicalProvenance
+        a            owl:ObjectProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( :FoodOrDrinkItem :Recipe )
+                     ] ;
+        rdfs:range   generic:PhysicalGeographicEntity .
+
+:Stilton  a     owl:NamedIndividual .
+
+process:hasStep  a  owl:ObjectProperty .
+
+generic:calorie  a  owl:NamedIndividual .
+
+w3ctime:DurationDescription
+        a       owl:Class .
+
+:impliesPreference  a  owl:ObjectProperty ;
+        rdfs:domain  :HealthProfile ;
+        rdfs:range   user:Preference .
+
+:VirtualFoodOrDrinkItem
+        a                owl:Class ;
+        rdfs:subClassOf  :FoodOrDrinkItem .
+
+:MealMinNutritionEnergyPreference
+        a                owl:Class ;
+        rdfs:subClassOf  :MealNutritionEnergyPreference .
+
+:VietnameseCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Vietnam ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+user:preferenceValue  a  owl:ObjectProperty .
+
+:PhilipsCookingGuideXYZ
+        a                owl:Class ;
+        rdfs:subClassOf  :PhilipsCookingGuide .
+
+:FoodOrDrinkMatter  a        owl:Class ;
+        rdfs:subClassOf      generic:MetaClass , generic:Matter ;
+        owl:equivalentClass  [ a               owl:Restriction ;
+                               owl:hasValue    :FoodOrDrink ;
+                               owl:onProperty  rdfs:subClassOf
+                             ] .
+
+:Food   a                owl:NamedIndividual , owl:Class ;
+        rdfs:subClassOf  :FoodOrDrink .
+
+:hasNutrient  a             owl:ObjectProperty ;
+        rdfs:domain         :FoodOrDrinkItem ;
+        rdfs:range          :NutrientPortion ;
+        rdfs:subPropertyOf  dul:hasPart .
+
+rdfs:subClassOf  a  owl:ObjectProperty .
+
+generic:Morocco  a  owl:NamedIndividual , owl:Thing .
+
+owl:Thing  a    owl:Class .
+
+:Grill  a                owl:Class ;
+        rdfs:subClassOf  :KitchenTool .
+
+:numberOfGuests  a  owl:DatatypeProperty ;
+        rdfs:range  xsd:int .
+
+:hasMealCourse  a           owl:ObjectProperty ;
+        rdfs:domain         :MealStructure ;
+        rdfs:range          :MealCourseRole ;
+        rdfs:subPropertyOf  dul:definesRole .
+
+:FryingPan  a            owl:Class ;
+        rdfs:subClassOf  :KitchenTool .
+
+:Store  a                owl:Class ;
+        rdfs:subClassOf  generic:Building .
+
+:DefaultIngredientPortion
+        a                owl:Class ;
+        rdfs:subClassOf  :IngredientPortion .
+
+:MaxCookingTimePreference
+        a                owl:Class ;
+        rdfs:subClassOf  :RecipeCookingTimePreference ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  w3ctime:DurationDescription ;
+                           owl:onProperty     user:preferenceValue
+                         ] .
+
+generic:VolumeQuantity
+        a       owl:Class .
+
+:Sodium  a      owl:NamedIndividual , :Nutrient , owl:Thing .
+
+:JapaneseCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Japan ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:FoodMatter  a               owl:Class ;
+        rdfs:subClassOf      :FoodOrDrinkMatter ;
+        owl:equivalentClass  [ a               owl:Restriction ;
+                               owl:hasValue    :Food ;
+                               owl:onProperty  rdfs:subClassOf
+                             ] .
+
+:MealContext  a          owl:Class ;
+        rdfs:subClassOf  generic:SituationalContext .
+
+:DrinkItem  a            owl:Class ;
+        rdfs:subClassOf  :FoodOrDrinkItem .
+
+:PhilipsCookingGuide  a  owl:Class ;
+        rdfs:subClassOf  :CookingGuide .
+
+:GreekCuisineRecipe  a   owl:Class ;
+        rdfs:subClassOf  :MediterraneanCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Greece ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+rdfs:comment  a  owl:AnnotationProperty .
+
+:EnergyQuantityInCalories
+        a                owl:Class ;
+        rdfs:subClassOf  generic:EnergyQuantity ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:calorie ;
+                           owl:onProperty  generic:hasPhysicalQuantityUnit
+                         ] .
+
+:suitableForMealCourse
+        a            owl:ObjectProperty ;
+        rdfs:domain  :FoodOrDrinkItem ;
+        rdfs:range   :MealCourseType .
+
+:DairyFreeDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:TimeOfDayMealType  a    owl:Class ;
+        rdfs:subClassOf  :MealType .
+
+:IndianCuisineRecipe  a  owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:India ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:Boiling  a     owl:NamedIndividual , :CookingTaskType , owl:Thing .
+
+:courseValue  a      owl:ObjectProperty ;
+        rdfs:domain  :MealCourseRole ;
+        rdfs:range   :FoodOrDrinkItem .
+
+:MainCourseRole  a       owl:Class ;
+        rdfs:subClassOf  :MealCourseRole .
+
+:MealCourseRole  a       owl:Class ;
+        rdfs:subClassOf  dul:Role .
+
+:Cholesterol  a  owl:NamedIndividual , :Nutrient , owl:Thing .
+
+process:WorkflowDefinition
+        a       owl:Class .
+
+generic:Ireland  a  owl:NamedIndividual , owl:Thing .
+
+:BakingOven  a           owl:Class ;
+        rdfs:subClassOf  :Oven .
+
+:Frying  a      owl:NamedIndividual , :CookingTaskType , owl:Thing .
+
+:Sauce  a       owl:NamedIndividual .
+
+:FrenchCuisineRecipe  a  owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:France ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:Moderate  a    owl:NamedIndividual , :CookingDifficultyCategory , owl:Thing .
+
+user:hasProfile  a  owl:ObjectProperty .
+
+:Recipe  a               owl:Class ;
+        rdfs:comment     :SideCourse ;
+        rdfs:subClassOf  process:WorkflowDefinition ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  :CookingActivity ;
+                           owl:onProperty     process:hasStep
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onClass                  :IngredientPortion ;
+                           owl:onProperty               :hasIngredient
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  :IngredientPortion ;
+                           owl:onProperty     :hasIngredient
+                         ] .
+
+:Cheese  a      owl:NamedIndividual .
+
+:CookingDifficultyCategory
+        a                owl:Class ;
+        rdfs:subClassOf  dul:SocialObjectAttribute .
+
+:GlutenFreeDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:FoodItem  a             owl:Class ;
+        rdfs:subClassOf  :FoodOrDrinkItem .
+
+:Fridge  a               owl:Class ;
+        rdfs:subClassOf  :KitchenTool ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  :ConcreteFoodOrDrinkItem ;
+                           owl:onProperty     generic:contains
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      generic:hasSubComponent ;
+                           owl:someValuesFrom  generic:Thermometer
+                         ] .
+
+:DietAssessment  a       owl:Class ;
+        rdfs:subClassOf  dul:Quality .
+
+:TESCO  a       :Supermarket , owl:NamedIndividual .
+
+:MaxCaloriesPreference
+        a                owl:Class ;
+        rdfs:subClassOf  :NutritionPreference .
+
+:ItalianCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :MediterraneanCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Italy ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+generic:Greece  a  owl:NamedIndividual , owl:Thing .
+
+:MeatProduct  a  owl:NamedIndividual .
+
+:DietType  a             owl:Class ;
+        rdfs:subClassOf  dul:Concept .
+
+:FoodOrDrink  a          owl:NamedIndividual , owl:Class ;
+        rdfs:subClassOf  :FoodOrDrinkItem .
+
+process:ActivityDefinition
+        a       owl:Class .
+
+:ConcreteDrinkItem  a    owl:Class ;
+        rdfs:subClassOf  :DrinkItem , :ConcreteFoodOrDrinkItem .
+
+:Drink  a                owl:Class ;
+        rdfs:subClassOf  :FoodOrDrink .
+
+:Easy   a       owl:NamedIndividual , :CookingDifficultyCategory , owl:Thing .
+
+generic:China  a  owl:NamedIndividual , owl:Thing .
+
+:MexicanCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:Mexico ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+:Disease  a              owl:Class ;
+        rdfs:subClassOf  :HealthProfile .
+
+:Nutrient  a             owl:Class ;
+        rdfs:subClassOf  generic:Matter .
+
+user:Preference  a  owl:Class .
+
+:BritishCuisineRecipe
+        a                owl:Class ;
+        rdfs:subClassOf  :RegionalCuisineRecipe ;
+        rdfs:subClassOf  [ a               owl:Restriction ;
+                           owl:hasValue    generic:UK ;
+                           owl:onProperty  :hasGeographicalProvenance
+                         ] .
+
+generic:AssemblyComponent
+        a       owl:Class .
+
+:hasDifficultyCategory
+        a                   owl:ObjectProperty ;
+        rdfs:domain         :Recipe ;
+        rdfs:range          :CookingDifficultyCategory ;
+        rdfs:subPropertyOf  dul:hasRegion .
+
+generic:MediterraneanBasin
+        a       owl:NamedIndividual , owl:Thing .
+
+:NutFreeDiet  a  owl:NamedIndividual , :DietType , owl:Thing .
+
+:CompositeFoodOrDrinkItem
+        a                owl:Class ;
+        rdfs:subClassOf  generic:Assembly , :FoodOrDrinkItem .
+
+:MealStructure  a        owl:Class ;
+        rdfs:subClassOf  dul:Description .
+
+generic:Germany  a  owl:NamedIndividual , owl:Thing .
+
+generic:France  a  owl:NamedIndividual , owl:Thing .
+
+generic:Temperature  a  owl:Class .
+
+:Fat    a       owl:NamedIndividual , :Nutrient , owl:Thing .
+
+generic:PhysicalQuantity
+        a       owl:Class .
+
+:Soup   a       owl:NamedIndividual , :MealCourseType , owl:Thing .
+
+:Expert  a      owl:NamedIndividual , :CookingDifficultyCategory , owl:Thing .
+
+generic:Caribbean  a  owl:NamedIndividual , owl:Thing .
+
+generic:PhysicalGeographicEntity
+        a       owl:Class .
+
+generic:madeOf  a  owl:ObjectProperty .

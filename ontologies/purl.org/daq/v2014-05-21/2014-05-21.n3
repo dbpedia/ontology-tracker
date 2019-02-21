@@ -1,0 +1,156 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+
+<http://purl.org/eis/vocab/daq#hasObservation> rdfs:range qb:Observation ;
+	a rdf:Property ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:inverseOf <http://purl.org/eis/vocab/daq#metric> ;
+	rdfs:label "has observation" ;
+	rdfs:comment "Computed metrics can have 1 or more quality observations, where each computed resource has one observation." ;
+	rdfs:domain <http://purl.org/eis/vocab/daq#Metric> ;
+	a owl:DatatypeProperty .
+
+_:node18ujdbbvux1 qb:measure <http://purl.org/eis/vocab/daq#value> .
+
+_:node18ujdbbvux2 owl:hasValue <http://purl.org/eis/vocab/daq#dsd> ;
+	owl:onProperty qb:structure ;
+	a owl:Restriction .
+
+<http://purl.org/dc/elements/1.1/date> rdfs:domain qb:Observation ;
+	owl:cardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+
+<http://purl.org/eis/vocab/daq#QualityGraph> rdfs:subClassOf qb:DataSet ;
+	rdfs:label "Quality Graph Statistics" ;
+	a owl:Class ;
+	rdfs:subClassOf <http://www.w3.org/2004/03/trix/rdfg-1Graph> , _:node18ujdbbvux2 ;
+	rdfs:comment "Defines a quality graph which will contain all metadata about quality metrics on the dataset." ;
+	a rdfs:Class .
+
+<http://purl.org/eis/vocab/daq#hasMetric> rdfs:domain <http://purl.org/eis/vocab/daq#Dimension> ;
+	rdfs:range <http://purl.org/eis/vocab/daq#Metric> ;
+	a rdf:Property ;
+	rdfs:comment "A dimension is an abstract concept which groups an number of more concrete metrics to measure quality of a dataset. This is an abstract property and should not be used directly. Specific sub-properties should be inherited for different metrics." ;
+	rdfs:label "hasMetric" ;
+	a owl:ObjectProperty .
+
+<http://purl.org/eis/vocab/daq#Metric> rdfs:label "Metric" ;
+	a owl:Class ;
+	rdfs:comment "The smallest unit of measuring a quality dimension is a metric. Each metric have a value which is associated to the quality computed. Since this value is multi-typed (i.e. one metric might return true/false whilst another might require a double value), then the value's (daq:hasValue) range is inherited by the metric's attributes. A metric might also require additional information (e.g. a gold standard dataset to compare with). Therefore, a concrete metric representation shall also define such properties (see daq:requires). Metrics are provided as subclasses of this abstract class, which is not intended for direct usage." ;
+	a rdfs:Class .
+
+_:node18ujdbbvux3 qb:attribute <http://purl.org/linked-data/sdmx/2009/attribute#unitMeasure> ;
+	qb:componentAttachment qb:DataSet ;
+	qb:componentRequired "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+
+<http://purl.org/eis/vocab/daq#> dct:creator _:node18ujdbbvux4 ;
+	dct:modified "2014-05-21"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	rdfs:comment "The Dataset Quality Vocabulary (daQ) is a lightweight, extensible core vocabulary for attaching the result of quality benchmarking of a linked open dataset (usually an expensive process) to that dataset.  daQ is designed to be extended by custom quality metrics.  Use cases include filtering and ranking datasets by quality." ;
+	a <http://purl.org/vocommons/voaf#Vocabulary> ;
+	dct:creator _:node18ujdbbvux5 ;
+	a owl:Ontology ;
+	rdfs:label "Dataset Quality Vocabulary (daQ)" .
+
+_:node18ujdbbvux6 qb:dimension <http://purl.org/eis/vocab/daq#metric> ;
+	qb:order "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://purl.org/eis/vocab/daq#computedOn> rdfs:range rdfs:Resource ;
+	a owl:ObjectProperty ;
+	rdfs:label "computed on" ;
+	a qb:DimensionProperty ;
+	rdfs:domain qb:Observation ;
+	a rdf:Property ;
+	rdfs:comment "Quality metrics can be (in principle) calculated on various forms of data (such as datasets, graphs, set of triples etc...). This vocabulary allow the owner/user of such RDF data to calculate metrics on multiple (and different) resources." .
+
+<http://purl.org/eis/vocab/daq#dsd> qb:component _:node18ujdbbvux3 , _:node18ujdbbvux6 , _:node18ujdbbvux7 ;
+	a qb:DataStructureDefinition ;
+	qb:component _:node18ujdbbvux1 .
+
+<http://purl.org/eis/vocab/daq#value> a owl:DatatypeProperty ;
+	rdfs:comment "Each metric will have a value computed. In order to deal with the different return type of the metric computation, this property links a metric with a value object (e.g. boolean, double, Literal)." ;
+	rdfs:domain qb:Observation ;
+	a qb:MeasureProperty ;
+	owl:cardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	rdfs:label "value" ;
+	a rdf:Property .
+
+<http://purl.org/eis/vocab/daq#expectedDataType> a owl:DatatypeProperty ;
+	rdfs:domain <http://purl.org/eis/vocab/daq#Metric> ;
+	rdfs:comment "Each metric should have an expect data type for it's observed value (e.g. xsd:boolean, xsd:double etc...)" ;
+	rdfs:range <http://www.w3.org/2001/XMLSchema#anySimpleType> ;
+	owl:cardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	rdfs:label "expected data type" ;
+	a rdf:Property .
+
+_:node18ujdbbvux4 rdfs:seeAlso <http://purl.org/net/clange> ;
+	foaf:name "Christoph Lange" ;
+	foaf:homepage <http://langec.wordpress.com/about/> .
+
+<http://purl.org/eis/vocab/daq#metric> rdfs:comment "Represents the metric being observed." ;
+	a owl:DatatypeProperty , qb:DimensionProperty ;
+	owl:minCardinality "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+	owl:inverseOf <http://purl.org/eis/vocab/daq#hasObservation> ;
+	rdfs:range <http://purl.org/eis/vocab/daq#Metric> ;
+	a rdf:Property ;
+	rdfs:label "metric" ;
+	rdfs:domain qb:Observation .
+
+_:node18ujdbbvux5 foaf:name "Jeremy Debattista" .
+
+_:node18ujdbbvux7 qb:dimension <http://purl.org/eis/vocab/daq#computedOn> ;
+	qb:order "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://purl.org/eis/vocab/daq#requires> rdfs:domain <http://purl.org/eis/vocab/daq#Metric> ;
+	a rdf:Property ;
+	rdfs:label "requires" ;
+	rdfs:comment "A metric might require a number of external resources (e.g. a gold standard) in order to be able to measure the quality. In order to cater for the most generic requirement, this abstract property links a metric to the required resource. This property should not be used directly." ;
+	rdfs:range rdfs:Resource ;
+	a owl:ObjectProperty .
+
+<http://purl.org/eis/vocab/daq#hasDimension> a rdf:Property ;
+	rdfs:range <http://purl.org/eis/vocab/daq#Dimension> ;
+	a owl:ObjectProperty ;
+	rdfs:comment "The category concept classifies dimensions related to the measurement of quality for a specific criteria. This is an abstract property and should not be used directly. Specific sub-properties should be inherited for different dimensions." ;
+	rdfs:label "hasDimension" ;
+	rdfs:domain <http://purl.org/eis/vocab/daq#Category> .
+
+<http://purl.org/eis/vocab/daq#Dimension> a rdfs:Class ;
+	rdfs:label "Dimension" ;
+	a owl:Class ;
+	rdfs:comment "Each dimension is part of a larger group called category (See daq:Category). Each dimension has a number of metrics which are associated to it. A dimension is linked with a category using the daq:hasDimension property. Dimensions are provided as subclasses of this abstract class, which is not intended for direct usage." .
+
+<http://purl.org/eis/vocab/daq#Category> rdfs:label "Category" ;
+	a rdfs:Class ;
+	rdfs:comment "The highest level of quality metric is a category. A category groups a number of dimensions relevant to each other which aims at measuring the quality of a dataset from different aspects. Categories are provided as subclasses of this abstract class, which is not intended for direct usage." ;
+	a owl:Class .
+
+_:node18ujdbbvux8 qb:measure <http://purl.org/eis/vocab/daq#value> .
+
+_:node18ujdbbvux9 owl:hasValue <http://purl.org/eis/vocab/daq#dsd> ;
+	owl:onProperty qb:structure ;
+	a owl:Restriction .
+
+<http://purl.org/eis/vocab/daq#QualityGraph> rdfs:subClassOf _:node18ujdbbvux9 .
+
+_:node18ujdbbvux10 qb:attribute <http://purl.org/linked-data/sdmx/2009/attribute#unitMeasure> ;
+	qb:componentAttachment qb:DataSet ;
+	qb:componentRequired "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+
+<http://purl.org/eis/vocab/daq#> dct:creator _:node18ujdbbvux11 , _:node18ujdbbvux12 .
+
+_:node18ujdbbvux13 qb:dimension <http://purl.org/eis/vocab/daq#metric> ;
+	qb:order "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://purl.org/eis/vocab/daq#dsd> qb:component _:node18ujdbbvux10 , _:node18ujdbbvux13 , _:node18ujdbbvux14 , _:node18ujdbbvux8 .
+
+_:node18ujdbbvux11 rdfs:seeAlso <http://purl.org/net/clange> ;
+	foaf:name "Christoph Lange" ;
+	foaf:homepage <http://langec.wordpress.com/about/> .
+
+_:node18ujdbbvux12 foaf:name "Jeremy Debattista" .
+
+_:node18ujdbbvux14 qb:dimension <http://purl.org/eis/vocab/daq#computedOn> ;
+	qb:order "2"^^<http://www.w3.org/2001/XMLSchema#integer> .

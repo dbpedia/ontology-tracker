@@ -1,0 +1,524 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.opmw.org/ontology/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ns: <http://purl.org/net/opmv/ns#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/ontology/> a owl:Ontology ;
+	terms:created "2014-07-11"^^xsd:date ;
+	owl:versionInfo "3.0"^^xsd:decimal ;
+	terms:creator "http://delicias.dia.fi.upm.es/members/DGarijo/#me"^^xsd:anyURI , "http://www.isi.edu/~gil/"^^xsd:anyURI ;
+	terms:description "OPMW is an OPMV, PROV and P-plan extension to model the executions and definitions of scientific workflows."@en ;
+	terms:license "http://creativecommons.org/licenses/by-nc-sa/2.0/" ;
+	foaf:homepage "http://www.opmw.org/" ;
+	vann:preferredNamespacePrefix "opmw" ;
+	rdfs:comment "OPMW is an OPMV, PROV and P-plan extension to model the executions and definitions of scientific workflows." ;
+	vann:preferredNamespaceUri "http://www.opmw.org/ontology/" ;
+	dc:title "The OPMW ontology"@en ;
+	owl:imports <http://openprovenance.org/model/opmo-20101012.owl> , <http://purl.org/net/p-plan#> , <http://www.w3.org/ns/prov-o-20130430> .
+
+:correspondsToTemplate a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "corresponds to Template"@en ;
+	rdfs:comment """Property that binds an execution account to the template of the whole workflow. The template contains the plan for the workflow.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionProcess/acc1>
+     a opmo:Account, opmw:workflowExecutionAccount;
+     opmw:correspondsToTemplate <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_EDM>."""@en ;
+	rdfs:subPropertyOf ns:wasDerivedFrom ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:range :WorkflowTemplate ;
+	rdfs:subPropertyOf owl:topObjectProperty , <http://www.w3.org/ns/prov#wasDerivedFrom> .
+
+:correspondsToTemplateArtifact a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "corresponds to Template Artifact"@en ;
+	rdfs:comment """Property that binds a workflow execution artifact to its correspondant workflow template artifact.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DEPTH1.2150836> 
+       a opmv:Artifact, opmw:WorkflowExecutionArtifact;
+       opmw:correspondsToTemplateArtifact <http://www.opmw.org/export/resource/ParameterVariable/AQUAFLOW_EDM_DEPTH>."""@en ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#correspondsToVariable> ;
+	rdfs:domain :WorkflowExecutionArtifact ;
+	rdfs:range :WorkflowTemplateArtifact ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:correspondsToTemplateProcess a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "corresponds to Template Process"@en ;
+	rdfs:comment """Property that binds a workflow execution process  to its correspondant process template.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionProcess/REAERATIONEDM133549210450086>
+     a opmv:Process, opmw:WorkflowExecutionProcess;
+     opmw:correspondsToTemplateProcess <http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_EDM_REAERATIONEDM>."""@en ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#correspondsToStep> ;
+	rdfs:domain :WorkflowExecutionProcess ;
+	rdfs:range :WorkflowTemplateProcess ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:executedInWorkflowSystem a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "executed in Workflow System"@en ;
+	rdfs:comment """Property to bind an execution account to the system where it was executed (which could be different from the one used for designing its workflow template).
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/acc1>
+      a opmo:Account, opmw:executionAccount;
+      opmw:executedInWorkflowSystem <http://www.opmw.org/export/resource/Agent/SHELL>.
+
+<http://www.opmw.org/export/resource/Agent/SHELL> 
+     a opmw:Agent."""@en ;
+	rdfs:range ns:Agent ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:subPropertyOf <http://www.w3.org/ns/prov#wasAttributedTo> .
+
+:hasExecutableComponent a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has Executable Component"@en ;
+	rdfs:comment """Property that binds a workflow execution process to the specific component (code, scripts, etc.) used in the execution.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionProcess/REAERATIONEDM133549210450086>
+     a opmv:Process, opmw:WorkflowExecutionProcess;
+     opmw:hasExecutableComponent <http://www.opmw.org/export/resource/ReaerationEDM/COMPONENTREAERATIONEDM>."""@en ;
+	rdfs:subPropertyOf ns:used ;
+	rdfs:domain :WorkflowExecutionProcess ;
+	rdfs:subPropertyOf owl:topObjectProperty , <http://www.w3.org/ns/prov#used> .
+
+:isGeneratedBy a owl:ObjectProperty ;
+	rdfs:label "is Generated By"@en ;
+	rdfs:comment """Property that binds a workflow template artifact to the workflow template process that generates it.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/DataVariable/AQUAFLOW_EDM_REAERATIONPARAMS>
+     a opmw:DataVariable, opmw:WorkflowTemplateArtifact;
+     opmw:isGeneratedBy <http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_EDM_REAERATIONEDM>."""@en ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#isOutputVarOf> ;
+	rdfs:domain :WorkflowTemplateArtifact ;
+	rdfs:range :WorkflowTemplateProcess .
+
+:isParameterOfTemplate a owl:ObjectProperty ;
+	rdfs:label "is Parameter of Template" ;
+	rdfs:comment """Property used to dessignate which workflow Parameter Variables belong to a workflow template.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/ParameterVariable/AQUAFLOW_EDM_DATE>
+     a opmw:ParameterVariable;
+     opmw:isParameterOfTemplate <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_EDM>.""" ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#isVariableOfPlan> ;
+	rdfs:domain :ParameterVariable ;
+	rdfs:range :WorkflowTemplate .
+
+:isStepOfTemplate a owl:ObjectProperty ;
+	rdfs:label "is Step of Template" ;
+	rdfs:comment """Property used to dessignate which workflow Steps (or Workflow Template Processes) belong to a workflow template.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_EDM_CALCULATEHOURLYAVERAGES>
+     a opmw:WorkflowTemplateProcess;
+     opmw:isStepOfTemplate <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_EDM>.""" ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#isStepOfPlan> ;
+	rdfs:range :WorkflowTemplate ;
+	rdfs:domain :WorkflowTemplateProcess .
+
+:isVariableOfTemplate a owl:ObjectProperty ;
+	rdfs:label "is Variable of Template" ;
+	rdfs:comment """Property used to dessignate which workflow Data Variables belong to a workflow template.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/page/resource/DataVariable/AQUAFLOW_EDM_HOURLYDATA>
+     a opmw:DataVariable;
+     opmw:isVariableOfTemplate <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_EDM>.""" ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#isVariableOfPlan> ;
+	rdfs:domain :DataVariable ;
+	rdfs:range :WorkflowTemplate .
+
+:uses a owl:ObjectProperty ;
+	rdfs:label "uses"@en ;
+	rdfs:comment """Property that binds a workflow template process to the workflow template artifact that generates it.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_EDM_REAERATIONEDM>
+     a opmw:WorkflowTemplateProcess;
+     opmw:uses <http://www.opmw.org/export/resource/DataVariable/PARAMETERSFILE>."""@en ;
+	rdfs:subPropertyOf <http://purl.org/net/p-plan#hasInputVar> ;
+	rdfs:range :WorkflowTemplateArtifact ;
+	rdfs:domain :WorkflowTemplateProcess .
+
+:createdInWorkflowSystem a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "created in Workflow System"@en ;
+	rdfs:comment """This data property binds a workflow template to the tool used for its design and creation. The tool is represented by its URL.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_EDM>
+         a opmw:WorkflowTemplate;
+         opmw:createdInWorkflowSystem \"http://wings.isi.edu\"^^xsd:anyURI."""@en ;
+	rdfs:domain :WorkflowTemplate ;
+	rdfs:range xsd:anyURI .
+
+:hasDimensionality a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Dimensionality"@en ;
+	rdfs:comment """Property that represents the dimensionality of the artifact: 0 is a single file, 1 for a collection, etc.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/DataVariable/AQUAFLOW_NTM_DAILYDATA>
+     a opmw:DataVariable, opmw:WorkflowTemplateArtifact;
+     opmw:hasDimensionality \"1\"^^xsd:int."""@en ;
+	rdfs:domain :WorkflowExecutionArtifact ;
+	rdfs:range xsd:int .
+
+:hasDocumentation a owl:DatatypeProperty ;
+	rdfs:label "has Documentation"@en ;
+	rdfs:comment """Property that binds a workflow template to its documentation.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+<http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM>
+      a opmw:WorkflowTemplate;
+      opmw:hasDocumentation \"A copy of the documentation related to this template \"^^xsd:string."""@en ;
+	rdfs:domain :WorkflowTemplate ;
+	rdfs:range xsd:string .
+
+:hasExecutionDiagram a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Execution Diagram"@en ;
+	rdfs:comment """Property that links an execution account to its diagram. The diagram shows how the template has been instantiated with different components.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335506667949>
+     a opmw:WorkflowExecutionAccount,opmo:Account;
+     opmw:hasExecutionDiagram \"http://wind.isi.edu/marbles/assets/components/workflow_portal/users/1/Water/runs/run_148.png\"^^sxd:anyURI."""@en ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:range xsd:anyURI .
+
+:hasFileName a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has File Name"@en ;
+	rdfs:comment """Property used to link an execution artifact to its file name (independently of its URI).
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DCF49186981194248009E24BAD6A6412>
+      a opmv:Artifact, opmw:WorkflowExecutionArtifact.
+      opmw:hasFileName \"NTMParams_SMN_2010_03_14Z\"^^xsd:string."""@en ;
+	rdfs:domain :WorkflowExecutionArtifact ;
+	rdfs:range xsd:string .
+
+:hasLocation a owl:DatatypeProperty ;
+	rdfs:label "has Location"@en ;
+	rdfs:comment """Property used to link an execution artifact to the physical location of its file in the server.
+
+Example
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DCF49186981194248009E24BAD6A6412>
+      a opmv:Artifact, opmw:WorkflowExecutionArtifact.
+      opmw:hasLocation \"http://www.opmw.org/datasets/resource/1/148/NTMParams_SMN_2010_03_14Z\"^^xsd:anyURI."""@en ;
+	rdfs:domain :WorkflowExecutionArtifact ;
+	rdfs:range xsd:anyURI .
+
+:hasNativeSystemTemplate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Native System Template"@en ;
+	rdfs:comment """Property used to link a workflow template to its native template (encoded in the syntax of the workflow system where it was designed: scufl, owl, etc.).
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM>
+     a opmw:WorkflowTemplate;
+     opmw:hasNativeSystemTemplate \"http://wind.isi.edu/marbles/assets/components/workflow_portal/users/1/Water/ontology/Water/AquaFlow_NTM.owl\"xsd:anyURI."""@en ;
+	rdfs:domain :WorkflowTemplate ;
+	rdfs:range xsd:anyURI .
+
+:hasOriginalLogFile a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Original Log File"@en ;
+	rdfs:comment """Property used to link an execution account to the log file produced by workflow engine where the original execution was performed.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335506667949>
+     a opmw:WorkflowExecutionAccount,opmo:Account;
+     opmw:hasOriginalLogFile \"http://wind.isi.edu/marbles/assets/components/workflow_portal/users/1/Water/runs/run_148.ttl\"^^sxd:anyURI."""@en ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:range xsd:anyURI .
+
+:hasSize a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Size"@en ;
+	rdfs:comment """Property used to annotate a workflow execution artifact with the size in bytes of its file.
+
+Example
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DCF49186981194248009E24BAD6A6412>
+      a opmv:Artifact, opmw:WorkflowExecutionArtifact.
+      opmw:hasLocation \"68\"^^xsd:int."""@en ;
+	rdfs:domain :WorkflowExecutionArtifact ;
+	rdfs:range xsd:int .
+
+:hasStatus a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Status"@en ;
+	rdfs:comment """Property used to state whether an ececution account was successful or not.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335506667949>
+      a opmo:Account, opmw:ExecutionAccount;
+      opmw:hasStatus \"SUCCESS\"^^xsd.string."""@en ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:range xsd:string .
+
+:hasTemplateDiagram a owl:DatatypeProperty ;
+	rdfs:label "has Template Diagram"@en ;
+	rdfs:comment """Property used to link a workflow template to its graphical representation.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM>
+     a opmw:WorkflowTemplate;
+     opmw:hasTemplateDiagram \"http://wind.isi.edu/marbles/assets/components/workflow_portal/users/1/Water/runs/run_148.png\"xsd:anyURI."""@en ;
+	rdfs:domain :WorkflowTemplate ;
+	rdfs:range xsd:anyURI .
+
+:hasValue a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has Value"@en ;
+	rdfs:comment """Property used to state the value of the artifact (in case of being a parameter).
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DEPTH0.61959237>
+     a opmv:Artifact, opmw:WorkflowExecutionArtifact;
+     opmw:hasValue \"0.61959237\"^^xsd:string."""@en ;
+	rdfs:domain :WorkflowExecutionArtifact ;
+	rdfs:range xsd:string .
+
+:isConcrete a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "is Concrete"@en ;
+	rdfs:comment "Property that specifies whether a component is abstract or not."@en ;
+	rdfs:range xsd:boolean .
+
+:overallEndTime a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "overall End Time"@en ;
+	rdfs:comment """Property which states that none of the activities contained in the account finished executing after the End Time.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335506667949>
+     a opmw:WorkflowExecutionAccount,opmo:Account;
+     opmw:overallEndTime \"2012-04-25T10:28:55-07:00\"^^xsd:dateTime."""@en ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:range xsd:dateTime .
+
+:overallStartTime a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "overall Start Time"@en ;
+	rdfs:comment """Property which states that none of the activities in the current account started executing before the start time.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335506667949>
+     a opmw:WorkflowExecutionAccount,opmo:Account;
+     opmw:overallStartTime \"2012-04-25T10:28:07-07:00\"^^xsd:dateTime."""@en ;
+	rdfs:domain :WorkflowExecutionAccount ;
+	rdfs:range xsd:dateTime .
+
+:versionNumber a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "version Number"@en ;
+	rdfs:comment """Property used to annotate a resource with it version number.
+
+Example:
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM>
+     a opmw:WorkflowTemplate;
+     opmw:versionNumber \"2\"^^xsd:int."""@en ;
+	rdfs:range xsd:int .
+
+opmo:Account a owl:Class .
+
+opmo:OPMGraph a owl:Class .
+
+ns:Artifact a owl:Class .
+
+ns:Process a owl:Class .
+
+:DataVariable a owl:Class ;
+	rdfs:label "Data Variable"@en ;
+	rdfs:subClassOf :WorkflowTemplateArtifact ;
+	rdfs:comment """A Data variable is a workflow template artifact that represents a variable in the workflow specification.
+
+Example:
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/DataVariable/AQUAFLOW_NTM_SUM_CORRDO>
+      a      opmw:WorkflowTemplateArtifact , opmw:DataVariable ;
+      rdfs:label \"Data variable Sum_CorrDO\" ;
+      opmw:hasDimensionality \"0\"^^xsd:int ;
+      opmw:isGeneratedBy              <http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_NTM_CREATEPLOTS> ;
+      opmw:template              <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM> .""" .
+
+:ParameterVariable a owl:Class ;
+	rdfs:label "Parameter Variable"@en ;
+	rdfs:subClassOf :WorkflowTemplateArtifact ;
+	rdfs:comment """An parameter variable represents a description of an input parameter of a process. Parameter variables can only be used by process.
+
+Example:
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+
+<http://www.opmw.org/export/resource/ParameterVariable/AQUAFLOW_NTM_LATITUDE>
+      a      opmw:/WorkflowTemplateArtifact , opmw:ParameterVariable ;
+      rdfs:label \"Parameter variable Latitude\" ;
+      opmw:template              <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM> ."""@en .
+
+:WorkflowExecutionAccount a owl:Class ;
+	rdfs:label "Workflow Execution Account"@en ;
+	rdfs:subClassOf opmo:Account , <http://www.w3.org/ns/prov#Bundle> ;
+	rdfs:comment """A workflow execution account represents the execution from the perspective of the system.
+
+Example:
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335533097598>
+      a       opmo:Account , opmw:WorkflowExecutionAccount> ;
+      rdfs:label \"Execution account created on 1335533097598\" ;
+      opmw:executedInWorkflowSystem
+              <http://www.opmw.org/export/resource/Agent/SHELL> ;
+     opmw:hasEndTime
+              \"2012-04-25T07:17:48-07:00\"^^xsd:dateTime ;
+      opmw:hasExecutionDiagram \"http://wind.isi.edu/marbles/assets/components/workflow_portal/users/1/Water/runs/run_144.png\"^^xsd:anyURI ;
+      opmw:hasStartTime               \"2012-04-25T07:17:05-07:00\"^^xsd:dateTime ;
+      opmw:hasStatus \"SUCCESS\" ;"""@en .
+
+:WorkflowExecutionArtifact a owl:Class ;
+	rdfs:label "Workflow Execution Artifact"@en ;
+	rdfs:subClassOf ns:Artifact , <http://www.w3.org/ns/prov#Entity> ;
+	rdfs:comment """A workflow execution artifact represents a resource used or generated in the execution of a workflow.
+
+Example:
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionArtifact/25F1016C12EBE301EE7AADBC0B085C45>
+      a       opmw:WorkflowExecutionArtifact , opmv:Artifact;
+      rdfs:label \"Execution artifact with id: 25f1016c12ebe301ee7aadbc0b085c45\" ;
+      opmo:account              <http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335533097598> ;
+      opmv:wasGeneratedBy     <http://www.opmw.org/export/resource/WorkflowExecutionProcess/p1> ;
+      opmw:hasLocation     \"http://wings.isi.edu/opmexport/resource/1/144/Formatted_SMN_2010_03_10Z\"^^xsd:anyURI ;
+      opmw:hasSize \"8618\"^^xsd:int ;
+      opmw:hasWorkflowTemplateArtifact              <http://www.opmw.org/export/resource/DataVariable/AQUAFLOW_EDM_FORMATTEDDATA>."""@en .
+
+:WorkflowExecutionProcess a owl:Class ;
+	rdfs:label "Workflow Execution Process"@en ;
+	rdfs:subClassOf ns:Process , <http://www.w3.org/ns/prov#Activity> ;
+	rdfs:comment """A workflow execution process represents the execution of a step in workflow template. The execution process also describes the specific method used to acomplish the task described in the proces template.
+
+Example:
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix opmv: <http://purl.org/net/opmv/ns#> .
+@prefix opmo: <http://openprovenance.org/model/opmo#> .
+
+<http://www.opmw.org/export/resource/WorkflowExecutionProcess/CONVERTTOSTANDARDFORMAT133553>
+      a      opmw:/WorkflowExecutionProcess , opmv:Process ;
+      rdfs:label \"Execution process ConvertToStandardFormat\" ;
+      opmo:account              <http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1335533097598> ;
+      opmv:used              <http://www.opmw.org/export/resource/WorkflowExecutionArtifact/6C7CF277338D9590EE18534D4D78924F> ;
+      opmv:wasControlledBy               <http://www.opmw.org/export/resource/Agent/ADMIN> ;
+      opmw:hasWorkflowTemplateProcess              <http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_EDM_CONVERTTOSTANDARDFORMAT> ."""@en .
+
+:WorkflowTemplate a owl:Class ;
+	rdfs:label "Workflow Template"@en ;
+	rdfs:subClassOf <http://purl.org/net/p-plan#Plan> , owl:Thing , <http://www.w3.org/ns/prov#Plan> ;
+	rdfs:comment """A workflow template represents the design of the workflow. In such design, the different steps and inputs don't have to be bound to a specific tool or dataset. It is a generic view of the workflow, which is instantiated in each execution.
+ 
+Example:
+@prefix dc:  <http://purl.org/dc/terms/> .
+@prefix opmw: <http://www.opmw.org/ontology/> .
+<http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM>
+     a opmw:WorkflowTemplate;
+     rdfs:label \"AquaFlow_NTM\" ;
+     dc.contributor
+              <http://www.opmw.org/export/resource/Agent/WATER> ;
+     dc:modified
+              \"2011-06-08T09:57:12-07:00\"^^xsd:dateTime ;
+     opmw:hasVersion \"2\"^^xsd:int ."""@en .
+
+:WorkflowTemplateArtifact a owl:Class ;
+	rdfs:label "Workflow Template Artifact"@en ;
+	rdfs:subClassOf <http://purl.org/net/p-plan#Variable> , owl:Thing ;
+	rdfs:comment """A workflow template artifact is part of a workflow template. It explains what kind of artifact is used or generated by the process template, along with possible restrictions that it may have.
+
+There are two different types of workflow template artifacts: data variables and parameter variables."""@en .
+
+:WorkflowTemplateProcess a owl:Class ;
+	rdfs:label "Workflow Template Process"@en ;
+	rdfs:subClassOf <http://purl.org/net/p-plan#Step> , owl:Thing ;
+	rdfs:comment """A workflow process template is an abstraction of the workflow execution process step that aims to describe the method followed by the scientist instead of its specific instantiation.
+
+Example:
+@prefix opmw: <http://www.opmw.org/ontology/> .
+@prefix water: <http://www.isi.edu/ac/Water/library.owl#> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/AQUAFLOW_NTM_CALCULATEHOURLYAVERAGES>
+      a opmw:ProcessTemplate, water:CalculateHourlyAverages;
+      opmw:template <http://www.opmw.org/export/resource/WorkflowTemplate/AQUAFLOW_NTM>;
+      opmw:uses <http://www.opmw.org/export/resource/DataVariable/AQUAFLOW_NTM_FILTEREDDATA>."""@en .

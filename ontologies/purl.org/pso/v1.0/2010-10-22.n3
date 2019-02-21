@@ -1,0 +1,188 @@
+@prefix : <http://purl.org/spar/pso/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix tint: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sit: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/Image> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix tisit: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix core: <http://purl.org/vocab/frbr/core#> .
+@prefix part: <http://www.ontologydesignpatterns.org/cp/owl/participation.owl#> .
+
+<http://purl.org/spar/pso> a owl:Ontology ;
+	owl:versionInfo "1.0"^^xsd:string ;
+	dc:date "2010-10-22"^^xsd:date ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:rights "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
+	dc:description "An ontology for the characterization of the status of a document and other bibliographic entities at various stages in the publication process (e.g.  submitted manuscript, rejected manuscript, accepted manuscript, proof, Version of Record, catalogued book). "@en ;
+	dc:title "Publishing Status Ontology"@en ;
+	owl:imports <http://swan.mindinformatics.org/ontologies/1.2/foaf-essential.owl> , <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> , <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> .
+
+dc:creator a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+:holds a owl:ObjectProperty ;
+	rdfs:label "holds"@en ;
+	rdfs:comment "The action of having a status associated."@en ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:isAssignedAfter a owl:ObjectProperty ;
+	rdfs:label "is assigned after"@en ;
+	rdfs:comment "A status assigned to a document as consequence of a particular event."@en ;
+	rdfs:domain :StatusInTime ;
+	rdfs:range part:Event ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+:isHeldBy a owl:ObjectProperty ;
+	rdfs:label "is held by"@en ;
+	rdfs:comment "A status is hold by a document during a particular time."@en ;
+	rdfs:domain :StatusInTime ;
+	owl:inverseOf :holds ;
+	rdfs:subPropertyOf tisit:forEntity ;
+	rdfs:range foaf:Document .
+
+:isStatusIn a owl:ObjectProperty ;
+	rdfs:label "is status for"@en ;
+	rdfs:comment "A status held by a particular document at a certain time."@en ;
+	owl:inverseOf :withStatus ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:resultsInAssigning a owl:ObjectProperty ;
+	rdfs:label "results in assigning"@en ;
+	rdfs:comment "An event that results in assigning a particular status to a document."@en ;
+	owl:inverseOf :isAssignedAfter ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+:withStatus a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "with status"@en ;
+	rdfs:comment "The status that will be considered during a particular time."@en ;
+	rdfs:range :Status ;
+	rdfs:domain :StatusInTime ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+core:isDismissedAfter a owl:ObjectProperty ;
+	rdfs:label "is dismissed after"@en ;
+	rdfs:comment "A status dismissed from a document as consequence of a particular event."@en ;
+	rdfs:domain :StatusInTime ;
+	rdfs:range part:Event ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+core:resultsInDismissing a owl:ObjectProperty ;
+	rdfs:label "results in dismissing"@en ;
+	rdfs:comment "An event that results in dismissing a particular status from a document."@en ;
+	owl:inverseOf core:isDismissedAfter ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+tisit:atTime a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "at time"@en ;
+	rdfs:comment "A time interval during which a status is held by a document."@en .
+
+tisit:forEntity a owl:ObjectProperty .
+
+tisit:hasTimeIndexedSetting a owl:ObjectProperty .
+
+:hasEndingTime a owl:DatatypeProperty ;
+	rdfs:label "has ending time"@en ;
+	rdfs:comment "A precise moment in time that defines the ending point of an time interval."@en ;
+	rdfs:subPropertyOf tint:hasIntervalEndDate ;
+	rdfs:range xsd:dateTime .
+
+:hasStartingTime a owl:DatatypeProperty ;
+	rdfs:label "has starting time"@en ;
+	rdfs:comment "A precise moment in time that defines the starting point of an time interval."@en ;
+	rdfs:subPropertyOf tint:hasIntervalStartDate ;
+	rdfs:range xsd:dateTime .
+
+tint:hasIntervalEndDate a owl:DatatypeProperty .
+
+tint:hasIntervalStartDate a owl:DatatypeProperty .
+
+:Agent a owl:Class ;
+	rdfs:label "agent"@en ;
+	rdfs:subClassOf part:Object , foaf:Agent ;
+	rdfs:comment "An entity, such as a person, a group, an organization, a software agent, involved in one or more events."@en .
+
+:Status a owl:Class ;
+	rdfs:label "status"@en ;
+	rdfs:comment "A state or condition some documents may have."@en .
+
+:StatusInTime a owl:Class ;
+	rdfs:label "status in time"@en ;
+	rdfs:subClassOf tisit:TimeIndexedSituation , _:node171hon3elx1 .
+
+_:node171hon3elx1 a owl:Restriction ;
+	owl:onProperty :withStatus ;
+	owl:onClass :Status ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:StatusInTime rdfs:subClassOf _:node171hon3elx2 .
+
+_:node171hon3elx2 a owl:Restriction ;
+	owl:onProperty :isAssignedAfter ;
+	owl:someValuesFrom part:Event .
+
+:StatusInTime rdfs:subClassOf _:node171hon3elx3 .
+
+_:node171hon3elx3 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:onClass tint:TimeInterval ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:StatusInTime rdfs:comment "A particular situation that describe a state or condition some documents may have at a particular time as consequece of one or more events."@en .
+
+part:Event a owl:Class ;
+	rdfs:label "event"@en ;
+	rdfs:comment "A thing that may happen during a publishing process, such as writing a draft, sending a preprint, publishing a paper, etc."@en .
+
+part:Object a owl:Class .
+
+tisit:TimeIndexedSituation a owl:Class .
+
+tint:TimeInterval a owl:Class ;
+	rdfs:label "time interval"@en ;
+	rdfs:comment "Two (starting and ending) points in time that define a particular period of time."@en .
+
+foaf:Agent a owl:Class .
+
+foaf:Document a owl:Class ;
+	rdfs:label "document"@en ;
+	rdfs:comment "An abstract class defining any kinds of publishing work."@en .
+
+:StatusInTime rdfs:subClassOf _:node171hon3elx4 .
+
+_:node171hon3elx4 a owl:Restriction ;
+	owl:onProperty :withStatus ;
+	owl:onClass :Status ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+:StatusInTime rdfs:subClassOf _:node171hon3elx5 .
+
+_:node171hon3elx5 a owl:Restriction ;
+	owl:onProperty :isAssignedAfter ;
+	owl:someValuesFrom part:Event .
+
+:StatusInTime rdfs:subClassOf _:node171hon3elx6 .
+
+_:node171hon3elx6 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:onClass tint:TimeInterval ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .

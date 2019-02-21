@@ -1,0 +1,362 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://owlrep.eu01.aws.af.cm/fridge#> .
+@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix refrig: <http://purl.org/opdm/refrigerator#> .
+@prefix xsp: <http://www.owl-ontologies.com/2005/08/07/xsp.owl#> .
+@prefix ssn: <http://purl.oclc.org/NET/ssnx/ssn#> .
+@prefix sc: <http://schema.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix dul: <http://www.loa-cnr.it/ontologies/DUL.owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix qu: <http://qudt.org/1.1/vocab/unit#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+
+<http://owlrep.eu01.aws.af.cm/fridge> a owl:Ontology ;
+	dc:subject "fridge plugwise energy measurement"^^xsd:string ;
+	owl:versionInfo "Version: Freezing Snowy Owl"^^xsd:string ;
+	rdfs:comment "Ontology for Open Fridge project"^^xsd:string ;
+	owl:imports <http://schema.org/> ;
+	rdfs:label "Open Fridge vocabulary"^^xsd:string ;
+	owl:imports <http://purl.org/opdm/refrigerator#> ;
+	owl:versionInfo "V 0.6.0, Release 2012-12-30"^^xsd:string ;
+	rdfs:isDefinedBy "http://owlrep.eu01.aws.af.cm/fridge"^^xsd:string ;
+	owl:imports <http://purl.oclc.org/NET/ssnx/ssn> ;
+	dc:creator "Christian Mayr"^^xsd:string .
+
+sc:Person a rdfs:Class .
+
+refrig:Fridge a rdfs:Class ;
+	rdfs:subClassOf ssn:FeatureOfInterest .
+
+ssn:FeatureOfInterest a rdfs:Class .
+
+gr:ActualProductOrServiceInstance a rdfs:Class .
+
+dul:Person a rdfs:Class .
+
+ssn:SensingDevice a rdfs:Class .
+
+ssn:Observation a rdfs:Class .
+
+ssn:MeasurementProperty a rdfs:Class .
+
+gr:Individual a rdfs:Class ;
+	rdfs:subClassOf gr:ActualProductOrServiceInstance .
+
+sc:Residence a rdfs:Class .
+
+:OpenFridgeHousehold a owl:Class ;
+	rdfs:comment "Information about the household of the open fridge user"^^xsd:string ;
+	rdfs:subClassOf sc:Residence , owl:Thing ;
+	rdfs:label "Open Fridge Household"^^xsd:string .
+
+:OpenFridgeUser a owl:Class ;
+	rdfs:subClassOf owl:Thing , _:node18vkg7igjx1 .
+
+_:node18vkg7igjx1 a owl:Class ;
+	owl:unionOf _:node18vkg7igjx2 .
+
+_:node18vkg7igjx2 rdf:first sc:Person ;
+	rdf:rest _:node18vkg7igjx4 .
+
+_:node18vkg7igjx4 rdf:first _:node18vkg7igjx3 .
+
+_:node18vkg7igjx3 a owl:Class ;
+	owl:intersectionOf _:node18vkg7igjx5 .
+
+_:node18vkg7igjx5 rdf:first dul:Person ;
+	rdf:rest _:node18vkg7igjx7 .
+
+_:node18vkg7igjx7 rdf:first _:node18vkg7igjx6 .
+
+_:node18vkg7igjx6 a owl:Restriction ;
+	owl:allValuesFrom :OpenFridgeHousehold ;
+	owl:onProperty :hasHousehold .
+
+:hasHousehold a owl:ObjectProperty .
+
+_:node18vkg7igjx7 rdf:rest rdf:nil .
+
+_:node18vkg7igjx4 rdf:rest rdf:nil .
+
+:OpenFridgeUser rdfs:comment "The main user of the system, which lives in a household with a energy consumption measuring system."^^xsd:string ;
+	rdfs:label "Open Fridge User"^^xsd:string .
+
+:EnergySensingDevice a owl:Class ;
+	rdfs:subClassOf owl:Thing , _:node18vkg7igjx8 .
+
+_:node18vkg7igjx8 a owl:Restriction ;
+	owl:onProperty ssn:ofFeature .
+
+ssn:ofFeature a rdf:Property .
+
+_:node18vkg7igjx8 owl:hasValue :Power .
+
+:Power a owl:Class .
+
+:EnergySensingDevice rdfs:subClassOf _:node18vkg7igjx9 .
+
+_:node18vkg7igjx9 a owl:Class ;
+	owl:intersectionOf _:node18vkg7igjx10 .
+
+_:node18vkg7igjx10 rdf:first ssn:SensingDevice ;
+	rdf:rest _:node18vkg7igjx12 .
+
+_:node18vkg7igjx12 rdf:first _:node18vkg7igjx11 .
+
+_:node18vkg7igjx11 a owl:Restriction ;
+	owl:someValuesFrom :EnergyObservation .
+
+:EnergyObservation a owl:Class .
+
+_:node18vkg7igjx11 owl:onProperty ssn:observedBy .
+
+_:node18vkg7igjx12 rdf:rest rdf:nil .
+
+:EnergySensingDevice rdfs:comment "An energy sensing device is sensing device for sensing energy consumption data"^^xsd:string ;
+	rdfs:label "Energy Sensing Device"^^xsd:string .
+
+:Power rdfs:subClassOf ssn:MeasurementProperty , owl:Thing ;
+	rdfs:comment "Power is the observed measurment property"^^xsd:string ;
+	rdfs:label "Power"^^xsd:string .
+
+:EnergyObservation rdfs:label "Energy Observation"^^xsd:string ;
+	rdfs:comment "An energy observation is the main class of the measurment system. The observation connects to the sensing device, the measurement property, the observed appliance, the measurment result, and the time of measurement."^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18vkg7igjx13 .
+
+_:node18vkg7igjx13 a owl:Class ;
+	owl:intersectionOf _:node18vkg7igjx14 .
+
+_:node18vkg7igjx14 rdf:first ssn:Observation ;
+	rdf:rest _:node18vkg7igjx16 .
+
+_:node18vkg7igjx16 rdf:first _:node18vkg7igjx15 .
+
+_:node18vkg7igjx15 a owl:Restriction ;
+	owl:allValuesFrom :Power ;
+	owl:onProperty ssn:observedProperty .
+
+_:node18vkg7igjx16 rdf:rest _:node18vkg7igjx18 .
+
+_:node18vkg7igjx18 rdf:first _:node18vkg7igjx17 .
+
+_:node18vkg7igjx17 a owl:Restriction ;
+	owl:someValuesFrom :EnergySensingDevice ;
+	owl:onProperty ssn:observedBy .
+
+_:node18vkg7igjx18 rdf:rest _:node18vkg7igjx20 .
+
+_:node18vkg7igjx20 rdf:first _:node18vkg7igjx19 .
+
+_:node18vkg7igjx19 a owl:Restriction ;
+	owl:someValuesFrom ssn:SensorOutput ;
+	owl:onProperty ssn:observationResult .
+
+_:node18vkg7igjx20 rdf:rest _:node18vkg7igjx22 .
+
+_:node18vkg7igjx22 rdf:first _:node18vkg7igjx21 .
+
+_:node18vkg7igjx21 a owl:Restriction ;
+	owl:someValuesFrom dul:SpatioTemporalRegion ;
+	owl:onProperty ssn:endTime .
+
+_:node18vkg7igjx22 rdf:rest _:node18vkg7igjx24 .
+
+_:node18vkg7igjx24 rdf:first _:node18vkg7igjx23 .
+
+_:node18vkg7igjx23 a owl:Restriction ;
+	owl:onProperty ssn:startTime ;
+	owl:someValuesFrom dul:SpatioTemporalRegion .
+
+_:node18vkg7igjx24 rdf:rest _:node18vkg7igjx26 .
+
+_:node18vkg7igjx26 rdf:first _:node18vkg7igjx25 .
+
+_:node18vkg7igjx25 a owl:Restriction ;
+	owl:someValuesFrom refrig:Fridge ;
+	owl:onProperty ssn:featureOfInterest .
+
+_:node18vkg7igjx26 rdf:rest rdf:nil .
+
+:hasHousehold rdfs:comment "Open fridge user has an open fridge household"^^xsd:string ;
+	rdfs:domain :OpenFridgeUser ;
+	rdfs:range :OpenFridgeHousehold .
+
+:ownsFridge a owl:ObjectProperty ;
+	rdfs:domain _:node18vkg7igjx27 .
+
+_:node18vkg7igjx27 a owl:Class ;
+	owl:unionOf _:node18vkg7igjx28 .
+
+_:node18vkg7igjx28 rdf:first dul:Person ;
+	rdf:rest _:node18vkg7igjx29 .
+
+_:node18vkg7igjx29 rdf:first sc:Person ;
+	rdf:rest rdf:nil .
+
+:ownsFridge rdfs:range refrig:Fridge ;
+	rdfs:comment "An open user owns a refrigerator."^^xsd:string .
+
+:observationPropertyNumberOfOpening a owl:DatatypeProperty ;
+	rdfs:range xsd:int ;
+	rdfs:comment "The number of door openings of a fridge in the time period of observation."^^xsd:string ;
+	rdfs:subPropertyOf :observationProperty .
+
+:observationProperty a owl:DatatypeProperty .
+
+:observationPropertyTemperature a owl:DatatypeProperty ;
+	rdfs:subPropertyOf :observationProperty ;
+	rdfs:range xsd:float ;
+	rdfs:comment "The average temperature of a fridge in the time period of observation."^^xsd:string .
+
+:numberOfPeople a owl:DatatypeProperty ;
+	rdfs:domain :OpenFridgeHousehold ;
+	rdfs:range xsd:int ;
+	rdfs:comment "Number of people that live in the household"^^xsd:string .
+
+:energySensingDeviceID a owl:DatatypeProperty ;
+	rdfs:comment "The appliance ID of an energy sensing device"^^xsd:string ;
+	rdfs:range xsd:string ;
+	rdfs:domain :EnergySensingDevice .
+
+:observationProperty rdfs:comment "Property of a fridge in the time period of observation."^^xsd:string ;
+	rdfs:domain ssn:Observation .
+
+:observationPropertyRoomTemperature a owl:DatatypeProperty ;
+	rdfs:range xsd:float ;
+	rdfs:subPropertyOf :observationProperty ;
+	rdfs:comment "The average temperature of the room where the refrigerator stands observed in a time period."^^xsd:string .
+
+:observationPropertyFillingLevel a owl:DatatypeProperty ;
+	rdfs:subPropertyOf :observationProperty ;
+	rdfs:comment "The average filling level of a fridge in the time period of observation."^^xsd:string ;
+	rdfs:range xsd:int .
+
+:standSouth a owl:DatatypeProperty ;
+	rdfs:comment "Is the refrigerator located to the southwards or not."^^xsd:string ;
+	rdfs:domain refrig:Fridge ;
+	rdfs:range xsd:boolean .
+
+:dateBringIntoService a owl:DatatypeProperty ;
+	rdfs:range xsd:date ;
+	rdfs:comment "The date when an product or service was bought or brought into service."^^xsd:string ;
+	rdfs:domain gr:ProductOrService .
+
+:OpenFridgeUser rdfs:subClassOf _:node18vkg7igjx30 .
+
+_:node18vkg7igjx30 a owl:Class ;
+	owl:unionOf _:node18vkg7igjx31 .
+
+_:node18vkg7igjx31 rdf:first sc:Person ;
+	rdf:rest _:node18vkg7igjx33 .
+
+_:node18vkg7igjx33 rdf:first _:node18vkg7igjx32 .
+
+_:node18vkg7igjx32 a owl:Class ;
+	owl:intersectionOf _:node18vkg7igjx34 .
+
+_:node18vkg7igjx34 rdf:first dul:Person ;
+	rdf:rest _:node18vkg7igjx36 .
+
+_:node18vkg7igjx36 rdf:first _:node18vkg7igjx35 .
+
+_:node18vkg7igjx35 a owl:Restriction ;
+	owl:allValuesFrom :OpenFridgeHousehold ;
+	owl:onProperty :hasHousehold .
+
+_:node18vkg7igjx36 rdf:rest rdf:nil .
+
+_:node18vkg7igjx33 rdf:rest rdf:nil .
+
+:EnergySensingDevice rdfs:subClassOf _:node18vkg7igjx37 .
+
+_:node18vkg7igjx37 a owl:Restriction ;
+	owl:onProperty ssn:ofFeature ;
+	owl:hasValue :Power .
+
+:EnergySensingDevice rdfs:subClassOf _:node18vkg7igjx38 .
+
+_:node18vkg7igjx38 a owl:Class ;
+	owl:intersectionOf _:node18vkg7igjx39 .
+
+_:node18vkg7igjx39 rdf:first ssn:SensingDevice ;
+	rdf:rest _:node18vkg7igjx41 .
+
+_:node18vkg7igjx41 rdf:first _:node18vkg7igjx40 .
+
+_:node18vkg7igjx40 a owl:Restriction ;
+	owl:someValuesFrom :EnergyObservation ;
+	owl:onProperty ssn:observedBy .
+
+_:node18vkg7igjx41 rdf:rest rdf:nil .
+
+:EnergyObservation rdfs:subClassOf _:node18vkg7igjx42 .
+
+_:node18vkg7igjx42 a owl:Class ;
+	owl:intersectionOf _:node18vkg7igjx43 .
+
+_:node18vkg7igjx43 rdf:first ssn:Observation ;
+	rdf:rest _:node18vkg7igjx45 .
+
+_:node18vkg7igjx45 rdf:first _:node18vkg7igjx44 .
+
+_:node18vkg7igjx44 a owl:Restriction ;
+	owl:allValuesFrom :Power ;
+	owl:onProperty ssn:observedProperty .
+
+_:node18vkg7igjx45 rdf:rest _:node18vkg7igjx47 .
+
+_:node18vkg7igjx47 rdf:first _:node18vkg7igjx46 .
+
+_:node18vkg7igjx46 a owl:Restriction ;
+	owl:someValuesFrom :EnergySensingDevice ;
+	owl:onProperty ssn:observedBy .
+
+_:node18vkg7igjx47 rdf:rest _:node18vkg7igjx49 .
+
+_:node18vkg7igjx49 rdf:first _:node18vkg7igjx48 .
+
+_:node18vkg7igjx48 a owl:Restriction ;
+	owl:someValuesFrom ssn:SensorOutput ;
+	owl:onProperty ssn:observationResult .
+
+_:node18vkg7igjx49 rdf:rest _:node18vkg7igjx51 .
+
+_:node18vkg7igjx51 rdf:first _:node18vkg7igjx50 .
+
+_:node18vkg7igjx50 a owl:Restriction ;
+	owl:someValuesFrom dul:SpatioTemporalRegion ;
+	owl:onProperty ssn:endTime .
+
+_:node18vkg7igjx51 rdf:rest _:node18vkg7igjx53 .
+
+_:node18vkg7igjx53 rdf:first _:node18vkg7igjx52 .
+
+_:node18vkg7igjx52 a owl:Restriction ;
+	owl:onProperty ssn:startTime ;
+	owl:someValuesFrom dul:SpatioTemporalRegion .
+
+_:node18vkg7igjx53 rdf:rest _:node18vkg7igjx55 .
+
+_:node18vkg7igjx55 rdf:first _:node18vkg7igjx54 .
+
+_:node18vkg7igjx54 a owl:Restriction ;
+	owl:someValuesFrom refrig:Fridge ;
+	owl:onProperty ssn:featureOfInterest .
+
+_:node18vkg7igjx55 rdf:rest rdf:nil .
+
+:ownsFridge rdfs:domain _:node18vkg7igjx56 .
+
+_:node18vkg7igjx56 a owl:Class ;
+	owl:unionOf _:node18vkg7igjx57 .
+
+_:node18vkg7igjx57 rdf:first dul:Person ;
+	rdf:rest _:node18vkg7igjx58 .
+
+_:node18vkg7igjx58 rdf:first sc:Person ;
+	rdf:rest rdf:nil .

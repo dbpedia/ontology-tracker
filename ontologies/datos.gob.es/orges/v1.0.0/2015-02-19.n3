@@ -1,0 +1,220 @@
+@prefix :      <http://datos.gob.es/def/sector-publico/organizacion#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix esadm: <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix org:   <http://www.w3.org/ns/org#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix orges: <http://datos.gob.es/def/sector-publico/organizacion#> .
+
+orges:servicio  a         owl:ObjectProperty ;
+        rdfs:comment      "Servicios que puede prestar una determinada oficina."@es ;
+        rdfs:domain       orges:Oficina ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Servicio"@es ;
+        rdfs:range        [ a               owl:Restriction ;
+                            owl:hasValue    <http://datos.gob.es/kos/sector-publico/ServicioOficina> ;
+                            owl:onProperty  skos:inScheme
+                          ] ;
+        dct:issued        "2015-02-19" .
+
+orges:diasInhabiles  a    owl:DatatypeProperty ;
+        rdfs:comment      "Designa los días inhábiles.\nLos días inhábiles se tratan como una frase en lenguaje natural. Ejemplo: «Domingos y festivos de ámbito nacional, autonómico o local.»."@es ;
+        rdfs:domain       orges:Oficina ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Días Inhábiles"@es ;
+        rdfs:range        rdfs:Literal ;
+        dct:issued        "2015-02-19" .
+
+orges:EntidadDerechoPublico
+        a                owl:Class ;
+        rdfs:comment     "Organismo creado para satisfacer necesidades de interés general, excluidos los de carácter mercantil o industrial; que tenga personalidad jurídica; que su actividad se financie mayoritariamente con fondos públicos o que su gestión esté sometida al control público o bien que más de la mitad de los miembros de su órgano de administración, de dirección o vigilancia, sean nombrados por el sector público.\nMorales, F. J. (2007). La Contratación del Sector Público. Recuperado el 17 de febrero de 2015, de https://books.google.es/books?id=RozAMdGDMDIC&pg=PA1&lpg=PA1&dq=la+contratación+del+sector+publico+f.+javier+escrihuela"@es ;
+        rdfs:label       "Entidad de Derecho Público"@es ;
+        rdfs:subClassOf  org:FormalOrganization , orges:UnidadOrganicaNoRaiz ;
+        dct:issued       "2015-19-02" .
+
+orges:ambitoCompetencias
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "Ámbito territorial de ejercicio de competencias de una organización."@es ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( orges:UnidadOrganicaNoRaiz org:FormalOrganization )
+                          ] ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Ámbito de Competencias"@es ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( esadm:Autonomia esadm:EntidadSingular esadm:Municipio esadm:Pais esadm:Provincia [ a            owl:Class ;
+                                                                                                                              owl:unionOf  ( [ a               owl:Restriction ;
+                                                                                                                                               owl:hasValue    <http://datos.gob.es/kos/sector-publico/AmbitoTerritorialCompetencias> ;
+                                                                                                                                               owl:onProperty  skos:inScheme
+                                                                                                                                             ] [ a               owl:Restriction ;
+                                                                                                                                                 owl:hasValue    <http://datos.gob.es/kos/sector-publico/EntidadGeografica> ;
+                                                                                                                                                 owl:onProperty  skos:inScheme
+                                                                                                                                               ] )
+                                                                                                                            ] )
+                          ] ;
+        dct:issued        "2015-02-19" .
+
+orges:tieneUORaiz  a      owl:ObjectProperty ;
+        rdfs:comment      "Organización, al nivel máximo de jerarquía de que depende otra organización."@es ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( orges:UnidadOrganicaNoRaiz org:FormalOrganization )
+                          ] ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Tiene Unidad Orgánica Raíz"@es ;
+        rdfs:range        org:FormalOrganization ;
+        dct:issued        "2015-02-19" .
+
+orges:Oficina  a         owl:Class ;
+        rdfs:comment     "Oficina de registro, información o tramitación que las distintas Administraciones Públicas ponen a disposición del Ciudadano."@es ;
+        rdfs:label       "Oficina"@es ;
+        rdfs:subClassOf  org:OrganizationalUnit ;
+        dct:issued       "2015-19-02" .
+
+orges:UnidadOrganicaNoRaiz
+        a                owl:Class ;
+        rdfs:comment     "Unidad Orgánica con un nivel jerárquico mayor a 1, que depende de una Unidad Orgánica Raíz."@es ;
+        rdfs:label       "Unidad Orgánica No Raíz"@es ;
+        rdfs:subClassOf  org:OrganizationalUnit ;
+        dct:issued       "2015-19-02" .
+
+orges:nivelJerarquico
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "Secuencial que identifica el nivel jerárquico relativo de la organización dentro de la entidad a la que pertenece.\nPara la raíz de un nivel de administración, este campo deberá ser 0. Para la unidad principal (de máximo nivel) de cualquier Ministerio, Comunidad Autónoma o Entidad Local el campo tomará el valor 1. Más allá de esto, el número se irá incrementando según convenga."@es ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( orges:UnidadOrganicaNoRaiz org:FormalOrganization )
+                          ] ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Nivel Jerárquico"@es ;
+        rdfs:range        xsd:integer ;
+        dct:issued        "2015-02-19" .
+
+orges:observacionBaja
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "Observaciones relacionadas con la baja de la organización."@es ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( orges:UnidadOrganicaNoRaiz org:FormalOrganization )
+                          ] ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Observación de Baja"@es ;
+        rdfs:range        rdfs:Literal ;
+        dct:issued        "2015-02-19" .
+
+orges:estado  a           owl:ObjectProperty ;
+        rdfs:comment      "Estatus o situación jurídico/funcional de una organización."@es ;
+        rdfs:domain       org:Organization ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Estado"@es ;
+        rdfs:range        [ a               owl:Restriction ;
+                            owl:hasValue    <http://datos.gob.es/kos/sector-publico/Estado> ;
+                            owl:onProperty  skos:inScheme
+                          ] ;
+        dct:issued        "2015-02-19" .
+
+orges:  a                              owl:Ontology ;
+        rdfs:comment                   "Extensión de la ontología de Organizaciones para adecuarla al Directorio Común de entidades públicas en España."@es ;
+        dc:contributor                 [ foaf:mbox  "i-argueso@ej-gv.es" ;
+                                         foaf:name  "Imanol Argüeso"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "soyjosem@hotmail.com" ;
+                                         foaf:name  "José M. Subero"
+                                       ] ;
+        dc:contributor                 [ foaf:name
+                          "Toño Velasco" ] ;
+        dc:contributor                 [ foaf:mbox  "ocorcho@fi.upm.es" ;
+                                         foaf:name  "Óscar Corcho"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "dreyjor@admon.upo.es" ;
+                                         foaf:name  "David Rey Jordán"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "asun@fi.upm.es" ;
+                                         foaf:name  "Asuncion Gomez-Perez"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "mjferuiz@zaragoza.es" ;
+                                         foaf:name  "María Jesús Fernández"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "martin@w3.org" ;
+                                         foaf:name  "Martín Álvarez"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "josemanuel.crespo@fundacionctic.org" ;
+                                         foaf:name  "José Manuel Crespo"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "mdolores.hernandez@seap.minhap.es" ;
+                                         foaf:name  "Mª Dolores Hernández"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "IbaPasAn@jcyl.es" ;
+                                         foaf:name  "Antonio Ibáñez"
+                                       ] ;
+        dc:contributor                 [ foaf:mbox  "c.jimenez@estratic.com" ;
+                                         foaf:name  "Carlos Jimenez"
+                                       ] ;
+        dc:creator                     "Red.es" , "Ministerio de Hacienda y Administraciones Públicas" , "Ministerio de Industria, Energía y Turismo" ;
+        dc:rights                      "Creative Commons 3.0 (BY-NC-SA)" ;
+        dc:title                       "Ontología sobre organizaciones públicas en España"@es ;
+        dct:date                       "2015-02-19" ;
+        dct:hasFormat                  <http://datos.gob.es/def/sector-publico/organizacion.rdf> , <http://datos.gob.es/def/sector-publico/organizacion.html> ;
+        dct:issued                     "2015-02-19" ;
+        vann:preferredNamespacePrefix  "orges" ;
+        vann:preferredNamespaceUri     "http://datos.gob.es/def/sector-publico/organizacion#" ;
+        owl:imports                    <http://www.w3.org/2004/02/skos/core> , vann: , <http://vocab.linkeddata.es/datosabiertos/def/sector-publico/territorio> , org: ;
+        owl:versionIRI                 orges:1.0.0 .
+
+orges:UGEP  a            owl:Class ;
+        rdfs:comment     "Las UGEP son las unidades de rango inferior o independiente que queden excluidas del ámbito de una «org:FormalUnit."@es ;
+        rdfs:label       "Unidad con función de Gestión Económica-Presupuestaria"@es ;
+        rdfs:subClassOf  org:OrganizationalUnit ;
+        dct:issued       "2015-02-19" .
+
+orges:disposicionLegal
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "Identificación de la Disposición Legal que regula las competencias de la organización.\nEjemplo: En el caso del BOE se haría referencia al RD de creación del Organismo como Agencia Estatal: «REAL DECRETO 1495/2007 por el que se crea la Agencia Estatal Boletín Oficial del Estado y se aprueba su estatuto»."@es ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( orges:UnidadOrganicaNoRaiz org:FormalOrganization )
+                          ] ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Disposición Legal"@es ;
+        rdfs:range        rdfs:Literal ;
+        dct:issued        "2015-02-19" .
+
+orges:horarioAtencion
+        a                 owl:DatatypeProperty ;
+        rdfs:comment      "Define el horario de atención al ciudadano de la organización.\nEl horario de atención se trata como una frase en lenguaje natural. Ejemplo: «Horario: De lunes a viernes de 8:30 a 14:30h. y de 16:10 a 18:30h. Sábados de 9:10 a 13:30. Horario de verano: … »."@es ;
+        rdfs:domain       orges:Oficina ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Horario de Atención"@es ;
+        rdfs:range        rdfs:Literal ;
+        dct:issued        "2015-02-19" .
+
+orges:identificadorExterno
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "Código externo que designa una organización según la codificación propia de la fuente de provisión."@es ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( orges:UnidadOrganicaNoRaiz org:FormalOrganization )
+                            ] ;
+        rdfs:isDefinedBy    orges: ;
+        rdfs:label          "IdentificadorExterno"@es ;
+        rdfs:range          rdfs:Literal ;
+        rdfs:subPropertyOf  dct:identifier ;
+        dct:issued          "2015-02-19" .
+
+orges:nivelAdministracion
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "Nivel territorial de administración al que pertenece la organización, según el artículo 2.1 de la Ley 30/1992."@es ;
+        rdfs:domain       org:Organization ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Nivel de Administración"@es ;
+        rdfs:range        [ a               owl:Restriction ;
+                            owl:hasValue    <http://datos.gob.es/kos/sector-publico/NivelAdministracion> ;
+                            owl:onProperty  skos:inScheme
+                          ] ;
+        dct:issued        "2015-02-19" .
+
+orges:otroContacto  a     owl:DatatypeProperty ;
+        rdfs:comment      "Cualquier dato de contacto adicional que no se encuentre definido en el DIR3."@es ;
+        rdfs:isDefinedBy  orges: ;
+        rdfs:label        "Otro Contacto"@es ;
+        dct:issued        "2015-02-19" .

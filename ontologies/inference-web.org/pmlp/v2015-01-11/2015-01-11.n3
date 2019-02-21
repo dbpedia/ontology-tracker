@@ -1,0 +1,613 @@
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix pmlp:  <http://inference-web.org/2.0/pml-provenance.owl#> .
+@prefix ds:    <http://inference-web.org/2.0/ds.owl#> .
+
+pmlp:hasUsageQueryContent
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "The query content that leads to the source usage. e.g. the query part of a URL."@en ;
+        rdfs:domain         pmlp:SourceUsage ;
+        rdfs:label          "query-content"@en ;
+        rdfs:subPropertyOf  pmlp:hasContent .
+
+pmlp:Format  a           owl:Class ;
+        rdfs:comment     "A plan for the organization and arrangement of specified information. Examples: binary, text,  pdf, etc."@en ;
+        rdfs:label       "Format"@en ;
+        rdfs:subClassOf  pmlp:IdentifiedThing .
+
+pmlp:hasName  a       owl:DatatypeProperty ;
+        rdfs:comment  "the human readable label of the identified thing."@en ;
+        rdfs:domain   pmlp:IdentifiedThing ;
+        rdfs:label    "name"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:TranslationRule  a  owl:Class ;
+        rdfs:comment     "Translation rules are special kinds of inference rules which are used to translate expressions from one language to the other."@en ;
+        rdfs:label       "Translation Rule"@en ;
+        rdfs:subClassOf  pmlp:MethodRule ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasFromLanguage
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasToLanguage
+                         ] .
+
+pmlp:hasEncoding  a   owl:DatatypeProperty ;
+        rdfs:comment  "The content encoding, e.g. \"base64\". The value of this property helps applications determine the decoder of the raw string.\t"@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "encoding"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasPrettyName  a  owl:DatatypeProperty ;
+        rdfs:domain  pmlp:PrettyNameMapping ;
+        rdfs:label   "pretty name"@en ;
+        rdfs:range   <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:Sensor  a           owl:Class ;
+        rdfs:comment     "any device that receives a signal or stimulus (as heat or pressure or light or motion etc.) and records it. (WordNet)"@en ;
+        rdfs:label       "Sensor"@en ;
+        rdfs:subClassOf  pmlp:Agent .
+
+pmlp:Source  a           owl:Class ;
+        rdfs:comment     "A source refers to the source of information. It is the place where we obtain information."@en ;
+        rdfs:label       "Source"@en ;
+        rdfs:subClassOf  pmlp:IdentifiedThing .
+
+pmlp:Website  a          owl:Class ;
+        rdfs:comment     "Collection of files and related resources accessible through the World Wide Web and organized under a particular domain name. Typical files found at a Web site are HTML documents with their associated graphic image files (GIF, JPEG, etc.), scripted programs (in Perl, CGI, Java, etc.), and similar resources. The site's files are usually accessed through hypertext or hyperlinks embedded in other files. A Web site may consist of a single HTML file, or it may comprise hundreds or thousands of related files. A Web site's usual starting point or opening page, called a home page, usually functions as a table of contents or index, with links to other sections of the site. Web sites are hosted on one or more Web servers, which transfer files to client computers or other servers that request them using the HTTP protocol. Although the term ?ite?implies a single physical location, the files and resources of a Web site may actually be spread among several servers in different geographic locations.(adapted from Britannica Concise Encyclopedia)."@en ;
+        rdfs:label       "Website"@en ;
+        rdfs:subClassOf  pmlp:Document .
+
+pmlp:hasAuthorList  a  owl:ObjectProperty ;
+        rdfs:comment  "A list of agents primarily responsible for making the artifact, for example, a person, an organization, or a software service. The AgentList enables an ordered list of agents; however, domain applications may optionally choose to ignore the order. We should be able to derive that each agent is the dc:creator of the artifact."@en ;
+        rdfs:label    "author(s)"@en ;
+        rdfs:range    pmlp:AgentList .
+
+pmlp:hasToLanguage  a  owl:ObjectProperty ;
+        rdfs:comment  "language used by the target."@en ;
+        rdfs:domain   pmlp:TranslationRule ;
+        rdfs:label    "to-language"@en ;
+        rdfs:range    pmlp:Language .
+
+pmlp:hasURL  a        owl:DatatypeProperty ;
+        rdfs:comment  "The URL of a relevant web page."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "url"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#anyURI> .
+
+pmlp:hasToRow  a      owl:DatatypeProperty ;
+        rdfs:comment  "The to row of the fragment (inclusive, index based on 1)"@en ;
+        rdfs:domain   pmlp:DocumentFragmentByRowCol ;
+        rdfs:label    "to-row"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#int> .
+
+pmlp:hasShortPrettyName
+        a                   owl:DatatypeProperty ;
+        rdfs:label          "short pretty name"@en ;
+        rdfs:subPropertyOf  pmlp:hasPrettyName .
+
+pmlp:hasCreationDateTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "When the artifact has been first created."@en ;
+        rdfs:label    "created"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+pmlp:hasVersion  a    owl:DatatypeProperty ;
+        rdfs:comment  "the version number."@en ;
+        rdfs:label    "version"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasFromLanguage  a  owl:ObjectProperty ;
+        rdfs:comment  "language used by the source."@en ;
+        rdfs:domain   pmlp:TranslationRule ;
+        rdfs:label    "from-language"@en ;
+        rdfs:range    pmlp:Language .
+
+pmlp:hasMimetype  a   owl:DatatypeProperty ;
+        rdfs:comment  "A well-defined string indicating the mime type of information content. Internet Media Types (MIME). see also http://www.iana.org/assignments/media-types/."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "mime-type"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasConfidenceValue
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "this is a common property and can be used to describe an agent's confidence \n        on a piece of information or an action step.It is typically used together with an object property\n        indicating who asserted the confidence. For example, an inference engine may be one example.\n        Although we did not specified its cardinality, it is typically used only once in one individual."@en ;
+        rdfs:label    "confidence"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#double> .
+
+pmlp:PrettyNameMapping
+        a                owl:Class ;
+        rdfs:comment     "specially designed for pretty display purpose."@en ;
+        rdfs:label       "Pretty Name Mapping"@en ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasShortPrettyName
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasReplacee
+                         ] .
+
+pmlp:hasDataCollectionEndDateTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "the time stamp when data collection ended"@en ;
+        rdfs:domain   pmlp:LearnedSourceUsage ;
+        rdfs:label    "data-collection-end-datetime"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+pmlp:hasFromRow  a    owl:DatatypeProperty ;
+        rdfs:comment  "The from row of the fragment (inclusive, index based on 1)"@en ;
+        rdfs:domain   pmlp:DocumentFragmentByRowCol ;
+        rdfs:label    "from-row"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#int> .
+
+pmlp:hasFromOffset  a  owl:DatatypeProperty ;
+        rdfs:comment  "The from offset of the fragment (inclusive, index based on 0)."@en ;
+        rdfs:domain   pmlp:DocumentFragmentByOffset ;
+        rdfs:label    "from-offset"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#int> .
+
+pmlp:Person  a           owl:Class ;
+        rdfs:comment     "A person"@en ;
+        rdfs:label       "Person"@en ;
+        rdfs:subClassOf  pmlp:Agent .
+
+pmlp:hasPrettyString  a  owl:DatatypeProperty ;
+        rdfs:comment  "the human friendly presentation of the information. Its format is text and it is usually written in English."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "pretty-string"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasDocument  a   owl:ObjectProperty ;
+        rdfs:comment  "A document fragment always depend on one source document, which is also the source."@en ;
+        rdfs:domain   pmlp:DocumentFragment ;
+        rdfs:label    "document"@en ;
+        rdfs:range    pmlp:Document .
+
+pmlp:LearnedSourceUsage
+        a                owl:Class ;
+        rdfs:comment     "A special type of source usage. It records the modification of sources - the question that initiates the learning process, the duration of learning, the original source and current source used by learning."@en ;
+        rdfs:label       "Learned Source Usage"@en ;
+        rdfs:subClassOf  pmlp:SourceUsage ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasDataCollectionEndDateTime
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasDataCollectionStartDateTime
+                         ] .
+
+pmlp:hasInferenceEngineRule
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The inference rules used by the inference engine"@en ;
+        rdfs:domain   pmlp:InferenceEngine ;
+        rdfs:label    "uses-inference-rule"@en ;
+        rdfs:range    pmlp:InferenceRule .
+
+pmlp:Ontology  a         owl:Class ;
+        rdfs:comment     "An Ontology is a document that describes a vocabulary of terms and their correlations."@en ;
+        rdfs:label       "Ontology"@en ;
+        rdfs:subClassOf  pmlp:Document .
+
+pmlp:InferenceRule  a    owl:Class ;
+        rdfs:comment     "Inference rules are used to derive conclusions from premises.\nInference Web divides inference rules into three classes: Primitive and Derived and Translation. \nThis is an abstract class without any direct instance. A primitive rule is an atomic rule with respect to an inference engine. An inference engine may support rules that it does not need to further decompose. Since a primitive rule is an inference engine dependent concept, we may find a rule is primitive to one inference engine but not to another engine. For example a `natural deduction reasoner R1 may define Modus Ponens as a primitive rule and another reasoner R2 may register Robinson's resolution rule as a primitive rule. The reasoner R2 may be able to derive a Modus Ponens rule using its primitive resolution rule. "@en ;
+        rdfs:label       "Inference Rule"@en ;
+        rdfs:subClassOf  pmlp:IdentifiedThing ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasContent
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasEnglishDescriptionTemplate
+                         ] .
+
+pmlp:IdentifiedThing  a  owl:Class ;
+        rdfs:comment     "The abstract root of provenance related concepts. It organizes a collection of common metadata about the referenced object, and it does not have any instance. "@en ;
+        rdfs:label       "Identified Thing"@en ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasOwner
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasCreationDateTime
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasAuthorList
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasName
+                         ] .
+
+pmlp:MethodRule  a       owl:Class ;
+        rdfs:comment     "A method inference rule, uses patterns for premises and its conclusions, and additionally contains a method that must be applied.  In addition, \nthe conclusion needs to be a valid output of the method, using the premises.  For example, procedural attachment is a common encoding form for method rules."@en ;
+        rdfs:label       "Method Rule"@en ;
+        rdfs:subClassOf  pmlp:InferenceRule .
+
+pmlp:hasMember  a     owl:ObjectProperty ;
+        rdfs:comment  "An organization may have member agents such as persons and other organizations."@en ;
+        rdfs:domain   pmlp:Organization ;
+        rdfs:label    "member"@en ;
+        rdfs:range    pmlp:Agent .
+
+pmlp:DocumentFragmentByOffset
+        a                owl:Class ;
+        rdfs:comment     "We may treat a document a one dimensional string, so we can mark a fragment with two offsets. We don't use byte because characters in text document may be multi-bytes."@en ;
+        rdfs:label       "Document Fragment by Offset"@en ;
+        rdfs:subClassOf  pmlp:DocumentFragment ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasToOffset
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasFromOffset
+                         ] .
+
+pmlp:hasContent  a    owl:ObjectProperty ;
+        rdfs:comment  " This is a common concept that links to a piece of information. Currently, we focus on content of document, and inference rule."@en ;
+        rdfs:label    "content"@en ;
+        rdfs:range    pmlp:Information .
+
+pmlp:usesInferenceEngine
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The inference engine used by an agent"@en ;
+        rdfs:domain   pmlp:Agent ;
+        rdfs:label    "uses-inference-engine"@en ;
+        rdfs:range    pmlp:InferenceEngine .
+
+pmlp:EmptyInformation
+        a                owl:Class ;
+        rdfs:comment     "An instance of information indicating no conclusion has been derived, i.e. empty set of statements. In this case, the rawstring may contain some english message indicating no answer. "@en ;
+        rdfs:label       "Empty Information"@en ;
+        rdfs:subClassOf  pmlp:Information .
+
+pmlp:DocumentFragmentByRowCol
+        a                owl:Class ;
+        rdfs:label       "Document Fragment by Row/Column"@en ;
+        rdfs:subClassOf  pmlp:DocumentFragment ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasFromRow
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasFromCol
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasToCol
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasToRow
+                         ] .
+
+pmlp:WebService  a       owl:Class ;
+        rdfs:comment     "services implemented by software and available on the Web"@en ;
+        rdfs:label       "Web Service"@en ;
+        rdfs:subClassOf  pmlp:Software .
+
+pmlp:hasUsageDateTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "the time stamp when the source usage occurred."@en ;
+        rdfs:domain   pmlp:SourceUsage ;
+        rdfs:label    "usage-datetime"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+pmlp:hasPublicationDateTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "When the publication is published."@en ;
+        rdfs:domain   pmlp:Publication ;
+        rdfs:label    "published in"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+pmlp:Language  a         owl:Class ;
+        rdfs:comment     "The language used to encode the raw string, e.g. English, Knowledge Interchange Format (KIF) , and N3. Languages are in general registered at the core IWRegistry."@en ;
+        rdfs:label       "Language"@en ;
+        rdfs:subClassOf  pmlp:IdentifiedThing .
+
+pmlp:hasEscapeCharacterSequence
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "The escape character used by a (formal) language (for parse use). It is used more like a comment indicator. This is used by InferenceML to embed metalangauge for proof checking (talk to Priyendra Deshwa)."@en ;
+        rdfs:domain   pmlp:Language ;
+        rdfs:label    "escape character sequence"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasPrettyNameMappingList
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The rendering instruction. UI tools may feed the PrettyNameMapping in sequence to string replace operation to get a pretty rendering of the conclusion of a NodeSet. It only applies to the conclusion of the node set."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "pretty name mapping"@en ;
+        rdfs:range    pmlp:PrettyNameMappingList .
+
+pmlp:hasEnglishDescriptionTemplate
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "it is sub-property of rdfs:comment. It is also a simplified template for adding rule description template in English rather than using hasDescription."@en ;
+        rdfs:domain   pmlp:InferenceRule ;
+        rdfs:label    "english-description-template"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasToCol  a      owl:DatatypeProperty ;
+        rdfs:comment  "The to column of the fragment (inclusive, index based on 1)"@en ;
+        rdfs:domain   pmlp:DocumentFragmentByRowCol ;
+        rdfs:label    "to-column"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#int> .
+
+pmlp:hasISBN  a       owl:DatatypeProperty ;
+        rdfs:comment  "The International Standard Book Number."@en ;
+        rdfs:domain   pmlp:Publication ;
+        rdfs:label    "isbn"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasFormat  a     owl:ObjectProperty ;
+        rdfs:comment  "it specifies the format of information, e.g. \"pdf\", \"ppt\" (Power Point). It is mainly used to determine the appropriate application for process/display purpose."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "format"@en ;
+        rdfs:range    pmlp:Format .
+
+pmlp:DocumentFragment
+        a                owl:Class ;
+        rdfs:comment     "A fragment of document that can be used as source."@en ;
+        rdfs:label       "Document Fragment"@en ;
+        rdfs:subClassOf  pmlp:Source ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasDocument
+                         ] .
+
+pmlp:hasAbstract  a   owl:DatatypeProperty ;
+        rdfs:comment  "The abstract of a document."@en ;
+        rdfs:domain   pmlp:Document ;
+        rdfs:label    "abstract"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:Publication  a      owl:Class ;
+        rdfs:comment     "If we have two versions of the same publication, we need to create two instances of Publication. A publication may have multiple ISBNs."@en ;
+        rdfs:label       "Publication"@en ;
+        rdfs:subClassOf  pmlp:Document ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasPublicationDateTime
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasISBN
+                         ] .
+
+pmlp:hasReferenceSourceUsage
+        a             owl:ObjectProperty ;
+        rdfs:comment  "Explain how this information is obtained from a source: by whom, when, which source and which part of the source."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "reference source usage"@en ;
+        rdfs:range    pmlp:SourceUsage .
+
+pmlp:Software  a         owl:Class ;
+        rdfs:comment     "written programs or procedures or rules and associated documentation pertaining to the operation of a computer system and that are stored in read/write memory.(WordNet)"@en ;
+        rdfs:label       "Software"@en ;
+        rdfs:subClassOf  pmlp:Agent ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasVersion
+                         ] .
+
+pmlp:Dataset  a          owl:Class ;
+        rdfs:comment     "A dataset is a collection of data document whose information is encoded in a defined structure (for example, lists, tables, and databases). see also http://purl.org/dc/dcmitype/Dataset."@en ;
+        rdfs:label       "Dataset"@en ;
+        rdfs:subClassOf  pmlp:Document .
+
+pmlp:hasDataCollectionStartDateTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "the time stamp when data collection started"@en ;
+        rdfs:domain   pmlp:LearnedSourceUsage ;
+        rdfs:label    "data-collection-start-datetime"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+pmlp:hasPublisher  a  owl:ObjectProperty ;
+        rdfs:comment  "An agent responsible for making the document publicly available. see also http://purl.org/dc/elements/1.1/publisher."@en ;
+        rdfs:domain   pmlp:Document ;
+        rdfs:label    "publisher"@en ;
+        rdfs:range    pmlp:Agent .
+
+pmlp:InferenceEngine  a  owl:Class ;
+        rdfs:comment     "An inference engine represents an engine that is able to produce a justification for a conclusion. Note that the phrase \"inference engine\" applies not only to reasoners but also to other systems like search engines which may justify their answers by direct assertion"@en ;
+        rdfs:label       "Inference Engine"@en ;
+        rdfs:subClassOf  pmlp:Software ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasInferenceEngineRule
+                         ] .
+
+pmlp:hasFromCol  a    owl:DatatypeProperty ;
+        rdfs:comment  "The from column of the fragment (inclusive, index based on 1)"@en ;
+        rdfs:domain   pmlp:DocumentFragmentByRowCol ;
+        rdfs:label    "from-column"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#int> .
+
+<http://inference-web.org/2.0/pml-provenance.owl>
+        a                owl:Ontology ;
+        rdfs:comment     "The provenance part of PML2 ontology. It is a fundamental component of PML2 ontology."@en ;
+        rdfs:label       "PML2 provenance ontology"@en ;
+        owl:imports      ds: ;
+        owl:versionInfo  "version 2.0, Authors: Deborah L. McGuinness, Li Ding, Paulo Pinheiro da Silva, Alyssa Glass, and Cynthia Chang"@en .
+
+pmlp:SourceUsage  a      owl:Class ;
+        rdfs:comment     "A usage of the source. It records an access of a source at a certain date time."@en ;
+        rdfs:label       "Source Usage"@en ;
+        rdfs:subClassOf  pmlp:IdentifiedThing ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasUsageQueryContent
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasUsageDateTime
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty   pmlp:hasSource
+                         ] .
+
+pmlp:Document  a          owl:Class ;
+        rdfs:comment      "A physical information container that is not actionable. They function like database."@en ;
+        rdfs:label        "Document"@en ;
+        rdfs:subClassOf   pmlp:Source ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      pmlp:hasAbstract
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      pmlp:hasVersion
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      pmlp:hasContent
+                          ] ;
+        owl:disjointWith  pmlp:Agent .
+
+pmlp:PrettyNameMappingList
+        a                owl:Class ;
+        rdfs:label       " List of PrettyNameMappings"@en ;
+        rdfs:subClassOf  ds:List ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  pmlp:PrettyNameMappingList ;
+                           owl:onProperty     ds:rest
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  pmlp:PrettyNameMapping ;
+                           owl:onProperty     ds:first
+                         ] .
+
+pmlp:hasSource  a     owl:ObjectProperty ;
+        rdfs:comment  "the source of the Source Usage, i.e. where does it come from."@en ;
+        rdfs:domain   pmlp:SourceUsage ;
+        rdfs:label    "source"@en ;
+        rdfs:range    pmlp:Source .
+
+pmlp:isMemberOf  a     owl:ObjectProperty ;
+        rdfs:comment   "An organization may have member agents such as persons and other organizations."@en ;
+        rdfs:domain    pmlp:Agent ;
+        rdfs:label     "member of"@en ;
+        rdfs:range     pmlp:Organization ;
+        owl:inverseOf  pmlp:hasMember .
+
+pmlp:hasModificationDateTime
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "When the artifact has been modified."@en ;
+        rdfs:label    "last modified"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#dateTime> .
+
+pmlp:hasDescription  a  owl:ObjectProperty ;
+        rdfs:comment  "The detailed description of the identified thing, e.g. a web page describing KIF language. An identified thing may have zero to many descriptions that could be written in different languages, format, and etc. "@en ;
+        rdfs:domain   pmlp:IdentifiedThing ;
+        rdfs:label    "description"@en ;
+        rdfs:range    pmlp:Information .
+
+pmlp:Information  a      owl:Class ;
+        rdfs:comment     "A piece of information, e.g. a formula in logic languages, and an utterance/word/phrase/sentence/paragraph/article in natural language. It is used as a range of iw:hasContent. This class and two of its sub-classes enable users to specify four types of semantics  (i) Information Annotation - annotate just the format and language used by the content of information; (ii) Information With Content - additionally provide the content of information that is materialized as string without loading a web page; (iii) Information external - additionally provide the URL for fetching the content; and (iv) Information - with every thing including the content string and URL. The second semantics is especially useful when the content is short or mainly used locally. For example, when learning by instruction, the utterances used for learning can be stored within the PML document without being externally stored. By assigning URI reference to information, we can even use owl:sameAs to capture the equivalence of two pieces of information. "@en ;
+        rdfs:label       "Information"@en ;
+        rdfs:subClassOf  pmlp:IdentifiedThing ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasPrettyString
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasPrettyNameMappingList
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasReferenceSourceUsage
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasFormat
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasRawString
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasURL
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      pmlp:hasLanguage
+                         ] .
+
+pmlp:Agent  a            owl:Class ;
+        rdfs:comment     "actionalble entities."@en ;
+        rdfs:label       "Agent"@en ;
+        rdfs:subClassOf  pmlp:Source .
+
+pmlp:hasLongPrettyName
+        a                   owl:DatatypeProperty ;
+        rdfs:label          "long pretty name"@en ;
+        rdfs:subPropertyOf  pmlp:hasPrettyName .
+
+pmlp:hasOwner  a      owl:ObjectProperty ;
+        rdfs:comment  "the owner of a thing."@en ;
+        rdfs:label    "owner"@en ;
+        rdfs:range    pmlp:Agent .
+
+pmlp:AgentList  a        owl:Class ;
+        rdfs:label       " List of Agents"@en ;
+        rdfs:subClassOf  ds:List ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  pmlp:AgentList ;
+                           owl:onProperty     ds:rest
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  pmlp:Agent ;
+                           owl:onProperty     ds:first
+                         ] .
+
+pmlp:hasToOffset  a   owl:DatatypeProperty ;
+        rdfs:comment  "The to offset of the fragment (exclusive, index based on 0)"@en ;
+        rdfs:domain   pmlp:DocumentFragmentByOffset ;
+        rdfs:label    "to-offset"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#int> .
+
+ds:     a       owl:Ontology .
+
+pmlp:hasRawString  a  owl:DatatypeProperty ;
+        rdfs:comment  "materialized version of the content of information"@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "raw-string"@en ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:DeclarativeRule  a  owl:Class ;
+        rdfs:comment     "A declarative inference rule can be fully specified by patterns for premises and its conclusion.   For example, Modus Ponens, can be specified by the premise patterns ?A,  ?A -&gt; ?B and the conclusion pattern ?B."@en ;
+        rdfs:label       "Declarative Rule"@en ;
+        rdfs:subClassOf  pmlp:InferenceRule .
+
+pmlp:hasLanguage  a   owl:ObjectProperty ;
+        rdfs:comment  "it specifies the language used to encode information, e.g. \"Tony's specialty is shellfish\" is encoded in English. This property may also link to a registered formal language such as KIF."@en ;
+        rdfs:domain   pmlp:Information ;
+        rdfs:label    "language"@en ;
+        rdfs:range    pmlp:Language .
+
+pmlp:Organization  a     owl:Class ;
+        rdfs:comment     "A group of agents organized for a particular purpose, e.g., KSL, stanford."@en ;
+        rdfs:label       "Organization"@en ;
+        rdfs:subClassOf  pmlp:Agent .
+
+pmlp:hasReplacee  a  owl:DatatypeProperty ;
+        rdfs:domain  pmlp:PrettyNameMapping ;
+        rdfs:label   "replacee"@en ;
+        rdfs:range   <http://www.w3.org/2001/XMLSchema#string> .
+
+pmlp:hasRuleExample  a  owl:ObjectProperty ;
+        rdfs:comment  "it is sub-property of rdfs:comment. It is used to provide an example to help users understand the referred entity."@en ;
+        rdfs:domain   pmlp:InferenceRule ;
+        rdfs:label    "rule example"@en ;
+        rdfs:range    pmlp:Information .

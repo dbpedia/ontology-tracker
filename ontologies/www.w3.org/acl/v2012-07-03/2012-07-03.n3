@@ -1,0 +1,92 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dc:title "Basic Access Control ontology" ;
+	:comment """Defines the element of Authorization and its essential properties,
+    and also some classes of access such as read and write.""" .
+
+<http://www.w3.org/ns/auth/acl#Access> a :Class ;
+	:comment "Any kind of access to a resource. Don't use this, use R W and RW" ;
+	<http://www.w3.org/ns/auth/acl#label> "access"@en .
+
+<http://www.w3.org/ns/auth/acl#Append> a :Class ;
+	:comment """Append accesses are specific write access which only add information, and do not remove information.
+    For text files, for example, append access allows bytes to be added onto the end of the file.
+    For RDF graphs, Append access allows adds triples to the graph but does not remove any.
+    Append access is useful for dropbox functionality.
+    Dropbox can be used for link notification, which the information added is a notification
+    that a some link has been made elsewhere relevant to the given resource.""" ;
+	:label "append"@en ;
+	:subClassOf <http://www.w3.org/ns/auth/acl#Access> , <http://www.w3.org/ns/auth/acl#Write> .
+
+<http://www.w3.org/ns/auth/acl#Authorization> a :Class ;
+	:comment """An element of access control,
+    allowing agent to agents access of some kind to resources or classes of resources""" ;
+	:label "authorization" .
+
+<http://www.w3.org/ns/auth/acl#Control> a :Class ;
+	:comment "Allows read/write access to the ACL for the resource(s)" ;
+	:label "control"@en ;
+	:subClassOf <http://www.w3.org/ns/auth/acl#Access> .
+
+<http://www.w3.org/ns/auth/acl#Read> a :Class ;
+	:comment "The class of read operations" ;
+	:label "read"@en ;
+	:subClassOf <http://www.w3.org/ns/auth/acl#Access> .
+
+<http://www.w3.org/ns/auth/acl#Write> a :Class ;
+	:label "write"@en ;
+	:subClassOf <http://www.w3.org/ns/auth/acl#Access> .
+
+<http://www.w3.org/ns/auth/acl#accessControl> a rdf:Property ;
+	:comment """The Access Control file for this information resource.
+        This may of course be a virtual resorce implemented by the access control system.
+        Note also HTTP's header  Link:  foo.meta ;rel=meta can be used for this.""" ;
+	:domain <http://www.w3.org/2006/gen/ont#InformationResource> ;
+	:label "access control" ;
+	:range <http://www.w3.org/2006/gen/ont#InformationResource> ;
+	:subPropertyOf :seeAlso .
+
+<http://www.w3.org/ns/auth/acl#accessTo> a rdf:Property ;
+	:comment "The information resource to which access is being granted." ;
+	:domain <http://www.w3.org/ns/auth/acl#Authorization> ;
+	:label "to" ;
+	:range <http://www.w3.org/2006/gen/ont#InformationResource> .
+
+<http://www.w3.org/ns/auth/acl#accessToClass> a rdf:Property ;
+	:comment "A class of information resources to which access is being granted." ;
+	:domain <http://www.w3.org/ns/auth/acl#Authorization> ;
+	:label "to all in" ;
+	:range :Class .
+
+<http://www.w3.org/ns/auth/acl#agent> a rdf:Property ;
+	:comment "A person or social entity to being given the right" ;
+	:domain <http://www.w3.org/ns/auth/acl#Authorization> ;
+	:label "agent" ;
+	:range <http://xmlns.com/foaf/0.1/Agent> .
+
+<http://www.w3.org/ns/auth/acl#agentClass> a rdf:Property ;
+	:comment "A class of persons or social entities to being given the right" ;
+	:domain <http://www.w3.org/ns/auth/acl#Authorization> ;
+	:label "agent" ;
+	:range :Class .
+
+<http://www.w3.org/ns/auth/acl#defaultForNew> a rdf:Property ;
+	:comment "A directory for which this authorization is used for new files in the directory." ;
+	:domain <http://www.w3.org/ns/auth/acl#Authorization> ;
+	:label "default access for new things in" .
+
+<http://www.w3.org/ns/auth/acl#mode> a rdf:Property ;
+	:comment "A mode of access such as read or write." ;
+	:domain <http://www.w3.org/ns/auth/acl#Authorization> ;
+	:label "access mode" ;
+	:range :Class .
+
+<http://www.w3.org/ns/auth/acl#owner> a rdf:Property ;
+	:comment """The person or other agent which owns this. 
+    For example, the owner of a file in a filesystem.
+    There is a sense of right to control.   Typically defaults to the agent who craeted
+    something but can be changed.""" ;
+	:label "owner"@en ;
+	:range <http://xmlns.com/foaf/0.1/Agent> .

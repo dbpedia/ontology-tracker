@@ -1,0 +1,168 @@
+@prefix : <http://purl.org/hpi/patchr#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix void: <http://rdfs.org/ns/void> .
+@prefix guo: <http://webr3.org/owl/guo#> .
+@prefix prv: <http://purl.org/net/provenance/ns#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+
+#######################################
+### PatchR - Patch Request Ontology ###
+
+<http://purl.org/hpi/patchr#>
+	a owl:Ontology ;
+	dc:creator <http://magnus.13mm.de> ;
+	dc:creator <http://johannes.jhercher.de> ;
+	dc:title "Patch Request Ontology"@en ;
+	dc:description "The Patch Request Ontology provides a schema to describe desired changes in Linked Data. By wrapping the Graph Update Ontology (guo) patch requests can be formulated to add, modify or delete certain triples within a data set."@en ;
+    owl:versionInfo "Revision: 0.4" .
+
+:Patch a owl:Class;
+	rdfs:comment "A patch is a request to add, change or delete certain triples within a dataset. A patch refers to an guo:UpdateInstruction. For convenient retrieval a patch should be described with provenance data, a patch type and a data set it applies to."@en ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "Patch"@en .
+
+:PatchGroup a owl:Class;
+    rdfs:comment "A patch group is a collection of patches that may apply for a common problem, represents patches of certain users or are classified by arbitrary criteria."@en ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "PatchGroup"@en .
+
+### ObjectProperties ###
+
+## deprecated, use prov:wasGeneratedBy instead
+:provenance a owl:ObjectProperty;
+	rdfs:comment "Refers to the provenance-context where this patch was created. Deprecated, use prov:wasGeneratedBy instead."@en;
+	rdfs:domain [  a owl:Class ;
+                   owl:unionOf ( :Patch
+                                 :PatchGroup )
+                ] ;
+	rdfs:range prv:DataCreation ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "hasProvenance"@en .
+	
+:update a owl:FunctionalProperty, owl:ObjectProperty;
+	rdfs:comment "Refers to a guo:UpdateInstruction. There can be only one UpdateInstruction per Patch."@en ;
+	rdfs:domain :Patch ;
+	rdfs:range guo:UpdateInstruction ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "hasUpdate"@en .
+
+:memberOf a owl:ObjectProperty;
+	rdfs:comment "Relates a Patch to a PatchGroup. A Patch may be part of multiple PatchGroups."@en;
+	rdfs:domain :Patch ;
+	rdfs:range :PatchGroup ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "memberOf"@en .
+	
+:appliesTo a owl:ObjectProperty;
+	rdfs:comment "Refers to a void:Dataset, to allow convenient selection of patches per data set."@en ;
+	rdfs:domain :Patch ;
+	rdfs:range void:Dataset ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "appliesTo"@en .
+
+:advocate a owl:ObjectProperty;
+	rdfs:comment "Links agents who support, i.e. like, a Patch. Each time a user creates an patch request, appropriate provenance information is generated."@en ;
+	rdfs:domain :Patch ;
+	rdfs:range foaf:Agent ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "hasAdvocate"@en .
+	
+:criticiser a owl:ObjectProperty ;
+	rdfs:comment "Links agents who disagree with the purpose of this patch."@en ;
+	rdfs:domain :Patch ;
+	rdfs:range foaf:Agent ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "hasCriticiser"@en .
+
+:patchType a owl:ObjectProperty ;
+	rdfs:comment "Refers to a classification of the patch. There might be patch taxonomies from different applications that define the reason for a Patch on their own. A Patch may have multiple types."@en ;
+	rdfs:domain :Patch ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "patchType"@en .
+
+:patchrService a owl:ObjectProperty ;
+	rdfs:comment "Links a resource to the PatchR instance responsible for collecting patch requests."@en ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "PatchRService"@en .
+
+
+### DatatypeProperties ###
+
+:comment a owl:DatatypeProperty ;
+	rdfs:subPropertyOf rdfs:comment ;
+	rdfs:comment "A comment on the patch. This is likely just an informal message a user wants to share when submitting a Patch."@en ;
+	rdfs:domain :Patch ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "comment"@en .
+
+:status a owl:DatatypeProperty ;
+	rdfs:domain :Patch ;
+	rdfs:comment "The status of the patch, might be \"resolved\" or \"open\"."@en ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "status"@en .
+
+:confidence a owl:DatatypeProperty ;
+	rdfs:domain :Patch ;
+	rdfs:comment "A confidence assigned by the creator of the patch, e.g. in case heuristic methods identified an inconsistency. Should be in range [0,1]."@en ;
+	rdfs:range xsd:Double ;
+	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+    rdfs:label "confidence"@en .
+
+###################################
+### GUO - Graph Update Ontology ###
+# 
+# <http://webr3.org/owl/guo#>
+#     dc:description "A lightweight RDF Graph update ontology suitable for per triple insertion and deletion in addition to graph merging and synchronisation instructions."@en ;
+#     dc:title "RDF Graph Update Ontology"@en ;
+#     a owl:Ontology, owl:Thing ;
+#     owl:versionInfo "Revision: 0.02" .
+# 
+# <http://webr3.org/owl/guo#UpdateInstruction>
+#     a owl:Class ;
+#     rdfs:comment "The class of an RDF Update Instruction, an UpdateInstruction defines a instructions to be carried out by a GUO processor."@en ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "UpdateInstruction"@en .
+# 
+# <http://webr3.org/owl/guo#delete>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "The delete property defines blank node or resource whose predicate and object values will be used to remove triples { target_subject predicate object } from target_graph(s) if specified"@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "delete"@en .
+# 
+# <http://webr3.org/owl/guo#insert>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "The insert property defines a blank node or resource whose predicate and object values will be used to create new triples inside target_graph(s) if specified with target_subject"@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "insert"@en .
+# 
+# <http://webr3.org/owl/guo#merge>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "The merge property defines a graph from which all triples should be merged in to the target_graph(s), unlike insert which works on a resource level rewriting subjects, merge works on a graph level where all triples are added \"as is\"."@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "merge"@en .
+# 
+# <http://webr3.org/owl/guo#target_graph>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "Optional property of an UpdateInstruction which allows updates to apply only to the specified Named Graph(s)"@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "target graph"@en .
+# 
+# <http://webr3.org/owl/guo#target_subject>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "the target_subject is a required property of all UpdateInstructions which specify an insert/delete statement, target_subject is combined with the predicate and object values from insert/delete nodes to form triples which are to be either inserted or deleted (optionally constrained to one or more target_graphs)"@en ;
+#     rdfs:domain :UpdateInstruction ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "target subject"@en ;
+#     rdfs:range owl:Thing .
+# 
+###################################

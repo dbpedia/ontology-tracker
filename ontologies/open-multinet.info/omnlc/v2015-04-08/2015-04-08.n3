@@ -1,0 +1,263 @@
+@prefix :      <http://open-multinet.info/ontology/omn-lifecycle#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+:Ready  a                :State , owl:Class , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service is ready"@en ;
+        rdfs:label       "Ready"@en ;
+        rdfs:seeAlso     "GENI geni_ready operational state"@en ;
+        rdfs:subClassOf  :State .
+
+:hasAuthenticationInformation
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A specific authentification information for the management system"@en ;
+        rdfs:domain   <http://open-multinet.info/ontology/omn#Service> , <http://open-multinet.info/ontology/omn#Resource> ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:seeAlso  "GENI Slice X.509 certificates"@en .
+
+:Pending  a              :State , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The related resource/service is not yet provisioned"@en ;
+        rdfs:label       "Pending"@en ;
+        rdfs:seeAlso     "GENI geni_pending_allocation operational state"@en ;
+        rdfs:subClassOf  :State .
+
+:parentOf  a         owl:ObjectProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                     ] ;
+        rdfs:range   [ a            owl:Class ;
+                       owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                     ] .
+
+:usesService  a      owl:ObjectProperty , owl:IrreflexiveProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                     ] ;
+        rdfs:range   <http://open-multinet.info/ontology/omn#Service> .
+
+<http://open-multinet.info/ontology/omn#Resource>
+        a       owl:Class .
+
+:NotYetInitialized  a    owl:Class , :State , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service are not yet active/ready"@en ;
+        rdfs:label       "NotYetInitialized"@en ;
+        rdfs:seeAlso     "GENI geni_instantiating operational state"@en ;
+        rdfs:subClassOf  :State .
+
+<http://alex.willner.ws/about#me>
+        a       foaf:Person .
+
+:implementedBy  a    owl:ObjectProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                     ] ;
+        rdfs:range   [ a            owl:Class ;
+                       owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                     ] .
+
+:Error  a                owl:Class , :State , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service is in an error state"@en ;
+        rdfs:label       "Error"@en ;
+        rdfs:seeAlso     "GENI geni_failed operational state"@en ;
+        rdfs:subClassOf  :State .
+
+:isReservationStateOf
+        a                   owl:ObjectProperty ;
+        rdfs:domain         :ReservationState ;
+        rdfs:range          <http://open-multinet.info/ontology/omn#Reservation> ;
+        rdfs:subPropertyOf  :isStateOf .
+
+:Removing  a             :State , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The related resource/service gets removed"@en ;
+        rdfs:label       "Removing"@en ;
+        rdfs:subClassOf  :State .
+
+:parentTo  a           owl:ObjectProperty ;
+        rdfs:domain    [ a            owl:Class ;
+                         owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                       ] ;
+        rdfs:range     [ a            owl:Class ;
+                         owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                       ] ;
+        owl:inverseOf  :parentOf .
+
+owl:NamedIndividual  a  owl:Class .
+
+:Started  a              owl:NamedIndividual , owl:Class , :State ;
+        rdfs:comment     "The related resource/service has been started"@en ;
+        rdfs:label       "Started"@en ;
+        rdfs:subClassOf  :State .
+
+:implements  a         owl:ObjectProperty ;
+        rdfs:domain    [ a            owl:Class ;
+                         owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                       ] ;
+        rdfs:range     [ a            owl:Class ;
+                         owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                       ] ;
+        owl:inverseOf  :implementedBy .
+
+:hasID  a             owl:DatatypeProperty ;
+        rdfs:comment  "A unique identifier set by the management system"@en ;
+        rdfs:domain   <http://open-multinet.info/ontology/omn#Service> , <http://open-multinet.info/ontology/omn#Resource> ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:seeAlso  "GENI Manifest RSpec v3: component_id"@en .
+
+owl:IrreflexiveProperty
+        a       owl:Class .
+
+:Updating  a             :State , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The related resource/service is getting updated"@en ;
+        rdfs:label       "Updating"@en ;
+        rdfs:subClassOf  :State .
+
+:Active  a               :State , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The related resource/service is actively performing an action"@en ;
+        rdfs:label       "Active"@en ;
+        rdfs:seeAlso     "GENI geni_ready_busy operational state"@en ;
+        rdfs:subClassOf  :State .
+
+:Provisioned  a          :ReservationState , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The related resources/services are provisioned"@en ;
+        rdfs:label       "Provisioned"@en ;
+        rdfs:seeAlso     "GENI geni_provisioned allocation state"@en ;
+        rdfs:subClassOf  :ReservationState .
+
+:Preinit  a              owl:Class , :State , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service is currently configuring"@en ;
+        rdfs:label       "Preinit"@en ;
+        rdfs:seeAlso     "GENI geni_configuring operational state"@en ;
+        rdfs:subClassOf  :State .
+
+:Stopped  a              owl:Class , :State , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service is stopped"@en ;
+        rdfs:label       "Stopped"@en ;
+        rdfs:subClassOf  :State .
+
+:Cleaned  a              :State , owl:NamedIndividual , owl:Class ;
+        rdfs:comment     "The related resource/service has been cleaned"@en ;
+        rdfs:label       "Cleaned"@en ;
+        rdfs:subClassOf  :State .
+
+owl:AllDisjointClasses
+        a       owl:Class .
+
+:Installed  a            :State , owl:Class , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service has been installed"@en ;
+        rdfs:label       "Installed"@en ;
+        rdfs:subClassOf  :State .
+
+:Unallocated  a          owl:Class , :ReservationState , owl:NamedIndividual ;
+        rdfs:comment     "The related resources/services are not reserved"@en ;
+        rdfs:label       "Unallocated"@en ;
+        rdfs:seeAlso     "GENI geni_unallocated allocation state"@en ;
+        rdfs:subClassOf  :ReservationState .
+
+<http://open-multinet.info/ontology/omn#Component>
+        a       owl:Class .
+
+:isStateOf  a          owl:ObjectProperty ;
+        rdfs:domain    :State ;
+        rdfs:range     [ a            owl:Class ;
+                         owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                       ] ;
+        owl:inverseOf  :hasState .
+
+:ReservationState  a     owl:Class ;
+        rdfs:comment     "The current state of a reservation"@en ;
+        rdfs:label       "Reservation State"@en ;
+        rdfs:subClassOf  <http://open-multinet.info/ontology/omn#Attribute> .
+
+<http://open-multinet.info/ontology/omn#Service>
+        a       owl:Class .
+
+<http://open-multinet.info/ontology/omn#Topology>
+        a       owl:Class .
+
+<http://open-multinet.info/ontology/omn#Attribute>
+        a       owl:Class .
+
+:Request  a              owl:Class ;
+        rdfs:comment     "A collection (group) of resources/services/groups requested by the user"@en ;
+        rdfs:subClassOf  <http://open-multinet.info/ontology/omn#Topology> .
+
+:Initialized  a          owl:Class , :State , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service has been initialized"@en ;
+        rdfs:label       "Initialized"@en ;
+        rdfs:subClassOf  :State .
+
+<http://open-multinet.info/ontology/omn#Reservation>
+        a       owl:Class .
+
+:State  a                owl:Class ;
+        rdfs:comment     "The current state of the resource, service or group"@en ;
+        rdfs:label       "State"@en ;
+        rdfs:subClassOf  <http://open-multinet.info/ontology/omn#Attribute> .
+
+:hasReservationState  a     owl:ObjectProperty , owl:IrreflexiveProperty , owl:FunctionalProperty ;
+        rdfs:domain         <http://open-multinet.info/ontology/omn#Reservation> ;
+        rdfs:range          :ReservationState ;
+        rdfs:subPropertyOf  :hasState .
+
+:Allocated  a            owl:NamedIndividual , :ReservationState , owl:Class ;
+        rdfs:comment     "The related resources/services are reserved"@en ;
+        rdfs:label       "Allocated"@en ;
+        rdfs:seeAlso     "GENI geni_allocated allocation state"@en ;
+        rdfs:subClassOf  :ReservationState .
+
+:Stopping  a             :State , owl:Class , owl:NamedIndividual ;
+        rdfs:comment     "The related resource/service is stopping"@en ;
+        rdfs:label       "Stopping"@en ;
+        rdfs:seeAlso     "GENI geni_stopping operational state"@en ;
+        rdfs:subClassOf  :State .
+
+:Confirmation  a         owl:Class ;
+        rdfs:comment     "A collection (group) of resources/services/groups confirmed to be allocated for the user."@en ;
+        rdfs:subClassOf  <http://open-multinet.info/ontology/omn#Topology> .
+
+:hasState  a         owl:IrreflexiveProperty , owl:ObjectProperty , owl:FunctionalProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( <http://open-multinet.info/ontology/omn#Component> <http://open-multinet.info/ontology/omn#Group> <http://open-multinet.info/ontology/omn#Resource> <http://open-multinet.info/ontology/omn#Service> )
+                     ] ;
+        rdfs:range   :State .
+
+:Manifest  a             owl:Class ;
+        rdfs:comment     "A collection (group) of resources/services/groups allocated for the user."@en ;
+        rdfs:subClassOf  <http://open-multinet.info/ontology/omn#Topology> .
+
+:Offering  a             owl:Class ;
+        rdfs:comment     "A collection (group) of services and resources provided by an Infrastructure. The collection is the result of the application of Policies."@en ;
+        rdfs:subClassOf  <http://open-multinet.info/ontology/omn#Topology> .
+
+<http://open-multinet.info/ontology/omn#Group>
+        a       owl:Class .
+
+:Uncompleted  a          owl:Class , owl:NamedIndividual , :State ;
+        rdfs:comment     "The related resource/service is not complete"@en ;
+        rdfs:label       "Uncompleted"@en ;
+        rdfs:subClassOf  :State .
+
+<http://open-multinet.info/ontology/omn-lifecycle>
+        a                              voaf:Vocabulary , owl:Ontology ;
+        rdfs:label                     "omn-lifecycle"@en ;
+        cc:license                     <http://creativecommons.org/licenses/by/4.0/> ;
+        dc:contributor                 <mailto:yahya.al-hazmi@tu-berlin.de> , <https://staff.fnwi.uva.nl/p.grosso> , <http://www.commit-nl.nl/people/morsey> , <mailto:loughnane@campus.tu-berlin.de> , <mailto:thijs.walcarius@intec.ugent.be> , <mailto:jorge.lopez_vergara@uam.es> , <mailto:ibaldin@renci.org> , <mailto:brecht.vermeulen@iminds.be> , <mailto:chrisap@noc.ntua.gr> , <mailto:yxin@renci.org> ;
+        dc:creator                     <http://alex.willner.ws/about#me> ;
+        dc:description                 "This ontology defines generic concepts related to the life cycle of resource or service."@en ;
+        dc:description                 <https://raw.githubusercontent.com/open-multinet/playground-rspecs-ontology/master/ontologies/pics/omn-lifecycle.png> ;
+        dc:publisher                   <http://open-multinet.org/> ;
+        dc:rights                      "This ontology is distributed under a Creative Commons Attribute License - http://creativecommons.org/licenses/by/4.0/"@en ;
+        dc:title                       "Open-Multinet Upper Lifecycle Ontology"@en ;
+        dcterms:created                "2014-11-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+        dcterms:license                <http://creativecommons.org/licenses/by/4.0/> ;
+        dcterms:modified               "2015-04-08"^^<http://www.w3.org/2001/XMLSchema#date> ;
+        vann:preferredNamespacePrefix  "omn-lifecycle"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        vann:preferredNamespaceUri     : ;
+        owl:versionInfo                "2015-04-08"^^<http://www.w3.org/2001/XMLSchema#string> .

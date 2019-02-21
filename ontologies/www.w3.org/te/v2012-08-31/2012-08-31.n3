@@ -1,0 +1,631 @@
+@prefix time-entry: <http://www.w3.org/2006/time-entry#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tzont: <http://www.w3.org/2006/timezone#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.w3.org/2006/time-entry> a owl:Ontology ;
+	rdfs:comment "An entry sub-ontology of time (OWL-Time)." ;
+	rdfs:seeAlso <http://www.w3.org/TR/owl-time> .
+
+time-entry:Instant a owl:Class ;
+	rdfs:subClassOf time-entry:TemporalEntity , time-entry:InstantThing .
+
+time-entry:Interval a owl:Class ;
+	rdfs:subClassOf time-entry:TemporalEntity , time-entry:IntervalThing .
+
+time-entry:InstantEvent a owl:Class ;
+	rdfs:subClassOf time-entry:InstantThing , time-entry:Event .
+
+time-entry:IntervalEvent a owl:Class ;
+	rdfs:subClassOf time-entry:IntervalThing , time-entry:Event .
+
+time-entry:TemporalEntity a owl:Class ;
+	owl:unionOf _:node175ts8ek4x1 .
+
+_:node175ts8ek4x1 rdf:first time-entry:Instant ;
+	rdf:rest _:node175ts8ek4x2 .
+
+_:node175ts8ek4x2 rdf:first time-entry:Interval ;
+	rdf:rest rdf:nil .
+
+time-entry:TemporalEntity rdfs:subClassOf time-entry:TemporalThing .
+
+time-entry:Event a owl:Class ;
+	owl:unionOf _:node175ts8ek4x3 .
+
+_:node175ts8ek4x3 rdf:first time-entry:InstantEvent ;
+	rdf:rest _:node175ts8ek4x4 .
+
+_:node175ts8ek4x4 rdf:first time-entry:IntervalEvent ;
+	rdf:rest rdf:nil .
+
+time-entry:Event rdfs:subClassOf time-entry:TemporalThing .
+
+time-entry:InstantThing a owl:Class ;
+	owl:unionOf _:node175ts8ek4x5 .
+
+_:node175ts8ek4x5 rdf:first time-entry:Instant ;
+	rdf:rest _:node175ts8ek4x6 .
+
+_:node175ts8ek4x6 rdf:first time-entry:InstantEvent ;
+	rdf:rest rdf:nil .
+
+time-entry:InstantThing rdfs:subClassOf time-entry:TemporalThing .
+
+time-entry:IntervalThing a owl:Class ;
+	owl:unionOf _:node175ts8ek4x7 .
+
+_:node175ts8ek4x7 rdf:first time-entry:Interval ;
+	rdf:rest _:node175ts8ek4x8 .
+
+_:node175ts8ek4x8 rdf:first time-entry:IntervalEvent ;
+	rdf:rest rdf:nil .
+
+time-entry:IntervalThing rdfs:subClassOf time-entry:TemporalThing .
+
+time-entry:TemporalThing a owl:Class ;
+	owl:unionOf _:node175ts8ek4x9 .
+
+_:node175ts8ek4x9 rdf:first time-entry:InstantThing ;
+	rdf:rest _:node175ts8ek4x10 .
+
+_:node175ts8ek4x10 rdf:first time-entry:IntervalThing ;
+	rdf:rest rdf:nil .
+
+time-entry:ProperInterval a owl:Class ;
+	rdfs:subClassOf time-entry:Interval ;
+	owl:disjointWith time-entry:Instant ;
+	rdfs:subClassOf time-entry:ProperIntervalThing .
+
+time-entry:ProperIntervalThing a owl:Class ;
+	rdfs:subClassOf time-entry:IntervalThing ;
+	owl:disjointWith time-entry:InstantThing .
+
+time-entry:before a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:domain time-entry:TemporalThing ;
+	rdfs:range time-entry:TemporalThing .
+
+time-entry:after a owl:ObjectProperty ;
+	owl:inverseOf time-entry:before .
+
+time-entry:begins a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:domain time-entry:TemporalThing ;
+	rdfs:range time-entry:InstantThing .
+
+time-entry:ends a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:domain time-entry:TemporalThing ;
+	rdfs:range time-entry:InstantThing .
+
+time-entry:inside a owl:ObjectProperty ;
+	rdfs:domain time-entry:IntervalThing ;
+	rdfs:range time-entry:InstantThing .
+
+time-entry:intEquals a owl:ObjectProperty ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intBefore a owl:ObjectProperty ;
+	rdfs:subPropertyOf time-entry:before , time-entry:nonoverlap ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intMeets a owl:ObjectProperty ;
+	rdfs:subPropertyOf time-entry:nonoverlap ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intOverlaps a owl:ObjectProperty ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intStarts a owl:ObjectProperty ;
+	rdfs:subPropertyOf time-entry:startsOrDuring ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intDuring a owl:ObjectProperty ;
+	rdfs:subPropertyOf time-entry:startsOrDuring ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intFinishes a owl:ObjectProperty ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:intAfter a owl:ObjectProperty ;
+	owl:inverseOf time-entry:intBefore ;
+	rdfs:subPropertyOf time-entry:nonoverlap .
+
+time-entry:intMetBy a owl:ObjectProperty ;
+	owl:inverseOf time-entry:intMeets ;
+	rdfs:subPropertyOf time-entry:nonoverlap .
+
+time-entry:intOverlappedBy a owl:ObjectProperty ;
+	owl:inverseOf time-entry:intOverlaps .
+
+time-entry:intStartedBy a owl:ObjectProperty ;
+	owl:inverseOf time-entry:intStarts .
+
+time-entry:intContains a owl:ObjectProperty ;
+	owl:inverseOf time-entry:intDuring .
+
+time-entry:intFinishedBy a owl:ObjectProperty ;
+	owl:inverseOf time-entry:intFinishes .
+
+time-entry:startsOrDuring a owl:ObjectProperty ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:nonoverlap a owl:ObjectProperty ;
+	rdfs:domain time-entry:ProperIntervalThing ;
+	rdfs:range time-entry:ProperIntervalThing .
+
+time-entry:DurationDescription a owl:Class ;
+	rdfs:subClassOf _:node175ts8ek4x11 .
+
+_:node175ts8ek4x11 a owl:Restriction ;
+	owl:onProperty time-entry:years ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x12 .
+
+_:node175ts8ek4x12 a owl:Restriction ;
+	owl:onProperty time-entry:months ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x13 .
+
+_:node175ts8ek4x13 a owl:Restriction ;
+	owl:onProperty time-entry:weeks ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x14 .
+
+_:node175ts8ek4x14 a owl:Restriction ;
+	owl:onProperty time-entry:days ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x15 .
+
+_:node175ts8ek4x15 a owl:Restriction ;
+	owl:onProperty time-entry:hours ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x16 .
+
+_:node175ts8ek4x16 a owl:Restriction ;
+	owl:onProperty time-entry:minutes ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x17 .
+
+_:node175ts8ek4x17 a owl:Restriction ;
+	owl:onProperty time-entry:seconds ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:years a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:months a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:weeks a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:days a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:hours a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:minutes a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:seconds a owl:DatatypeProperty ;
+	rdfs:domain time-entry:DurationDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:durationDescriptionOf a owl:ObjectProperty ;
+	rdfs:domain time-entry:TemporalThing ;
+	rdfs:range time-entry:DurationDescription .
+
+time-entry:durationDescriptionDataType a owl:DatatypeProperty ;
+	rdfs:domain time-entry:TemporalThing ;
+	rdfs:range xsd:duration .
+
+time-entry:InstantThingPair a owl:Class ;
+	rdfs:subClassOf _:node175ts8ek4x18 .
+
+_:node175ts8ek4x18 a owl:Restriction ;
+	owl:onProperty time-entry:firstInstantThing ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:InstantThingPair rdfs:subClassOf _:node175ts8ek4x19 .
+
+_:node175ts8ek4x19 a owl:Restriction ;
+	owl:onProperty time-entry:secondInstantThing ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:firstInstantThing a owl:ObjectProperty ;
+	rdfs:domain time-entry:InstantThingPair ;
+	rdfs:range time-entry:InstantThing .
+
+time-entry:secondInstantThing a owl:ObjectProperty ;
+	rdfs:domain time-entry:InstantThingPair ;
+	rdfs:range time-entry:InstantThing .
+
+time-entry:instantPairDurationDescriptionOf a owl:ObjectProperty ;
+	rdfs:domain time-entry:InstantThingPair ;
+	rdfs:range time-entry:DurationDescription .
+
+time-entry:instantPairDurationDescriptionDataType a owl:DatatypeProperty ;
+	rdfs:domain time-entry:InstantThingPair ;
+	rdfs:range xsd:duration .
+
+time-entry:CalendarClockInterval a owl:Class ;
+	rdfs:subClassOf time-entry:ProperInterval .
+
+time-entry:TemporalUnit a owl:Class ;
+	owl:oneOf _:node175ts8ek4x20 .
+
+_:node175ts8ek4x20 rdf:first time-entry:unitSecond .
+
+time-entry:unitSecond a time-entry:TemporalUnit .
+
+_:node175ts8ek4x20 rdf:rest _:node175ts8ek4x21 .
+
+_:node175ts8ek4x21 rdf:first time-entry:unitMinute .
+
+time-entry:unitMinute a time-entry:TemporalUnit .
+
+_:node175ts8ek4x21 rdf:rest _:node175ts8ek4x22 .
+
+_:node175ts8ek4x22 rdf:first time-entry:unitHour .
+
+time-entry:unitHour a time-entry:TemporalUnit .
+
+_:node175ts8ek4x22 rdf:rest _:node175ts8ek4x23 .
+
+_:node175ts8ek4x23 rdf:first time-entry:unitDay .
+
+time-entry:unitDay a time-entry:TemporalUnit .
+
+_:node175ts8ek4x23 rdf:rest _:node175ts8ek4x24 .
+
+_:node175ts8ek4x24 rdf:first time-entry:unitWeek .
+
+time-entry:unitWeek a time-entry:TemporalUnit .
+
+_:node175ts8ek4x24 rdf:rest _:node175ts8ek4x25 .
+
+_:node175ts8ek4x25 rdf:first time-entry:unitMonth .
+
+time-entry:unitMonth a time-entry:TemporalUnit .
+
+_:node175ts8ek4x25 rdf:rest _:node175ts8ek4x26 .
+
+_:node175ts8ek4x26 rdf:first time-entry:unitYear .
+
+time-entry:unitYear a time-entry:TemporalUnit .
+
+_:node175ts8ek4x26 rdf:rest rdf:nil .
+
+time-entry:CalendarClockDescription a owl:Class ;
+	rdfs:subClassOf _:node175ts8ek4x27 .
+
+_:node175ts8ek4x27 a owl:Restriction ;
+	owl:onProperty time-entry:unitType ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x28 .
+
+_:node175ts8ek4x28 a owl:Restriction ;
+	owl:onProperty time-entry:year ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x29 .
+
+_:node175ts8ek4x29 a owl:Restriction ;
+	owl:onProperty time-entry:month ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x30 .
+
+_:node175ts8ek4x30 a owl:Restriction ;
+	owl:onProperty time-entry:week ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x31 .
+
+_:node175ts8ek4x31 a owl:Restriction ;
+	owl:onProperty time-entry:day ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x32 .
+
+_:node175ts8ek4x32 a owl:Restriction ;
+	owl:onProperty time-entry:dayOfWeekField ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x33 .
+
+_:node175ts8ek4x33 a owl:Restriction ;
+	owl:onProperty time-entry:dayOfYearField ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x34 .
+
+_:node175ts8ek4x34 a owl:Restriction ;
+	owl:onProperty time-entry:hour ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x35 .
+
+_:node175ts8ek4x35 a owl:Restriction ;
+	owl:onProperty time-entry:minute ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x36 .
+
+_:node175ts8ek4x36 a owl:Restriction ;
+	owl:onProperty time-entry:second ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x37 .
+
+_:node175ts8ek4x37 a owl:Restriction ;
+	owl:onProperty time-entry:timeZone ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:unitType a owl:ObjectProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range time-entry:TemporalUnit .
+
+time-entry:year a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:gYear .
+
+time-entry:month a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:gMonth .
+
+time-entry:week a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:nonNegativeInteger .
+
+time-entry:day a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:gDay .
+
+time-entry:dayOfWeekField a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:nonNegativeInteger .
+
+time-entry:dayOfYearField a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:nonNegativeInteger .
+
+time-entry:hour a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:nonNegativeInteger .
+
+time-entry:minute a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:nonNegativeInteger .
+
+time-entry:second a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range xsd:decimal .
+
+time-entry:timeZone a owl:ObjectProperty ;
+	rdfs:domain time-entry:CalendarClockDescription ;
+	rdfs:range tzont:TimeZone .
+
+tzont:TimeZone a owl:Class .
+
+time-entry:inCalendarClock a owl:ObjectProperty ;
+	rdfs:domain time-entry:InstantThing ;
+	rdfs:range time-entry:CalendarClockDescription .
+
+time-entry:inCalendarClockDataType a owl:DatatypeProperty ;
+	rdfs:domain time-entry:InstantThing ;
+	rdfs:range xsd:dateTime .
+
+time-entry:calendarClockDescriptionOf a owl:ObjectProperty ;
+	rdfs:domain time-entry:CalendarClockInterval ;
+	rdfs:range time-entry:CalendarClockDescription .
+
+time-entry:calendarClockDescriptionDataType a owl:DatatypeProperty ;
+	rdfs:domain time-entry:CalendarClockInterval ;
+	rdfs:range xsd:dateTime .
+
+time-entry:TemporalEntity owl:unionOf _:node175ts8ek4x38 .
+
+_:node175ts8ek4x38 rdf:first time-entry:Instant ;
+	rdf:rest _:node175ts8ek4x39 .
+
+_:node175ts8ek4x39 rdf:first time-entry:Interval ;
+	rdf:rest rdf:nil .
+
+time-entry:Event owl:unionOf _:node175ts8ek4x40 .
+
+_:node175ts8ek4x40 rdf:first time-entry:InstantEvent ;
+	rdf:rest _:node175ts8ek4x41 .
+
+_:node175ts8ek4x41 rdf:first time-entry:IntervalEvent ;
+	rdf:rest rdf:nil .
+
+time-entry:InstantThing owl:unionOf _:node175ts8ek4x42 .
+
+_:node175ts8ek4x42 rdf:first time-entry:Instant ;
+	rdf:rest _:node175ts8ek4x43 .
+
+_:node175ts8ek4x43 rdf:first time-entry:InstantEvent ;
+	rdf:rest rdf:nil .
+
+time-entry:IntervalThing owl:unionOf _:node175ts8ek4x44 .
+
+_:node175ts8ek4x44 rdf:first time-entry:Interval ;
+	rdf:rest _:node175ts8ek4x45 .
+
+_:node175ts8ek4x45 rdf:first time-entry:IntervalEvent ;
+	rdf:rest rdf:nil .
+
+time-entry:TemporalThing owl:unionOf _:node175ts8ek4x46 .
+
+_:node175ts8ek4x46 rdf:first time-entry:InstantThing ;
+	rdf:rest _:node175ts8ek4x47 .
+
+_:node175ts8ek4x47 rdf:first time-entry:IntervalThing ;
+	rdf:rest rdf:nil .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x48 .
+
+_:node175ts8ek4x48 a owl:Restriction ;
+	owl:onProperty time-entry:years ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x49 .
+
+_:node175ts8ek4x49 a owl:Restriction ;
+	owl:onProperty time-entry:months ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x50 .
+
+_:node175ts8ek4x50 a owl:Restriction ;
+	owl:onProperty time-entry:weeks ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x51 .
+
+_:node175ts8ek4x51 a owl:Restriction ;
+	owl:onProperty time-entry:days ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x52 .
+
+_:node175ts8ek4x52 a owl:Restriction ;
+	owl:onProperty time-entry:hours ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x53 .
+
+_:node175ts8ek4x53 a owl:Restriction ;
+	owl:onProperty time-entry:minutes ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:DurationDescription rdfs:subClassOf _:node175ts8ek4x54 .
+
+_:node175ts8ek4x54 a owl:Restriction ;
+	owl:onProperty time-entry:seconds ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:InstantThingPair rdfs:subClassOf _:node175ts8ek4x55 .
+
+_:node175ts8ek4x55 a owl:Restriction ;
+	owl:onProperty time-entry:firstInstantThing ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:InstantThingPair rdfs:subClassOf _:node175ts8ek4x56 .
+
+_:node175ts8ek4x56 a owl:Restriction ;
+	owl:onProperty time-entry:secondInstantThing ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:TemporalUnit owl:oneOf _:node175ts8ek4x57 .
+
+_:node175ts8ek4x57 rdf:first time-entry:unitSecond ;
+	rdf:rest _:node175ts8ek4x58 .
+
+_:node175ts8ek4x58 rdf:first time-entry:unitMinute ;
+	rdf:rest _:node175ts8ek4x59 .
+
+_:node175ts8ek4x59 rdf:first time-entry:unitHour ;
+	rdf:rest _:node175ts8ek4x60 .
+
+_:node175ts8ek4x60 rdf:first time-entry:unitDay ;
+	rdf:rest _:node175ts8ek4x61 .
+
+_:node175ts8ek4x61 rdf:first time-entry:unitWeek ;
+	rdf:rest _:node175ts8ek4x62 .
+
+_:node175ts8ek4x62 rdf:first time-entry:unitMonth ;
+	rdf:rest _:node175ts8ek4x63 .
+
+_:node175ts8ek4x63 rdf:first time-entry:unitYear ;
+	rdf:rest rdf:nil .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x64 .
+
+_:node175ts8ek4x64 a owl:Restriction ;
+	owl:onProperty time-entry:unitType ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x65 .
+
+_:node175ts8ek4x65 a owl:Restriction ;
+	owl:onProperty time-entry:year ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x66 .
+
+_:node175ts8ek4x66 a owl:Restriction ;
+	owl:onProperty time-entry:month ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x67 .
+
+_:node175ts8ek4x67 a owl:Restriction ;
+	owl:onProperty time-entry:week ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x68 .
+
+_:node175ts8ek4x68 a owl:Restriction ;
+	owl:onProperty time-entry:day ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x69 .
+
+_:node175ts8ek4x69 a owl:Restriction ;
+	owl:onProperty time-entry:dayOfWeekField ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x70 .
+
+_:node175ts8ek4x70 a owl:Restriction ;
+	owl:onProperty time-entry:dayOfYearField ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x71 .
+
+_:node175ts8ek4x71 a owl:Restriction ;
+	owl:onProperty time-entry:hour ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x72 .
+
+_:node175ts8ek4x72 a owl:Restriction ;
+	owl:onProperty time-entry:minute ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x73 .
+
+_:node175ts8ek4x73 a owl:Restriction ;
+	owl:onProperty time-entry:second ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+time-entry:CalendarClockDescription rdfs:subClassOf _:node175ts8ek4x74 .
+
+_:node175ts8ek4x74 a owl:Restriction ;
+	owl:onProperty time-entry:timeZone ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .

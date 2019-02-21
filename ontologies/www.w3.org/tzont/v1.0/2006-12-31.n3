@@ -1,0 +1,154 @@
+@prefix :      <http://www.w3.org/2006/timezone#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tzont: <http://www.w3.org/2006/timezone#> .
+@prefix iso:   <http://www.daml.org/2001/09/countries/iso#> .
+@prefix us-states: <http://www.daml.ri.cmu.edu/ont/USRegionState.daml#> .
+@prefix iso-3166-ont: <http://www.daml.org/2001/09/countries/iso-3166-ont#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+tzont:DLSendDate  a  owl:DatatypeProperty ;
+        rdfs:range  xsd:date .
+
+tzont:stateOf  a            owl:ObjectProperty ;
+        rdfs:range          tzont:State ;
+        rdfs:subPropertyOf  tzont:hasParentRegion .
+
+tzont:hasParentRegion
+        a                   owl:ObjectProperty ;
+        rdfs:subPropertyOf  tzont:hasAncestorRegion .
+
+tzont:County  a          owl:Class ;
+        rdfs:subClassOf  tzont:PoliticalRegion ;
+        owl:subClassOf   [ a                  owl:Restriction ;
+                           owl:allValuesFrom  tzont:State ;
+                           owl:onProperty     tzont:hasParentRegion
+                         ] .
+
+tzont:DaylightSavingsPolicy
+        a       owl:Class .
+
+tzont:PoliticalRegion
+        a                owl:Class ;
+        rdfs:subClassOf  tzont:Region ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "0"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:timeZonePart
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "0"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:exceptionalRegion
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:hasDaylightSavingsPolicy
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:observesDaylightSavingsTime
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "3"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:hasTimeZone
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:hasParentRegion
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:name
+                         ] .
+
+tzont:observesDaylightSavingsTime
+        a            owl:DatatypeProperty ;
+        rdfs:domain  tzont:Region ;
+        rdfs:range   xsd:boolean .
+
+tzont:State  a           owl:Class ;
+        rdfs:subClassOf  tzont:PoliticalRegion ;
+        owl:subClassOf   [ a                  owl:Restriction ;
+                           owl:allValuesFrom  tzont:Country ;
+                           owl:onProperty     tzont:hasParentRegion
+                         ] .
+
+tzont:exceptionalRegion
+        a            owl:ObjectProperty ;
+        rdfs:domain  tzont:Region ;
+        rdfs:range   tzont:Region .
+
+tzont:hasAncestorRegion
+        a            owl:TransitiveProperty , owl:ObjectProperty ;
+        rdfs:domain  tzont:Region ;
+        rdfs:range   tzont:Region .
+
+tzont:Reservation  a     owl:Class ;
+        rdfs:subClassOf  tzont:PoliticalRegion ;
+        owl:subClassOf   [ a                  owl:Restriction ;
+                           owl:allValuesFrom  tzont:Country ;
+                           owl:onProperty     tzont:hasParentRegion
+                         ] .
+
+tzont:hasDaylightSavingsPolicy
+        a            owl:ObjectProperty ;
+        rdfs:domain  tzont:Region ;
+        rdfs:range   tzont:DaylightSavingsPolicy .
+
+tzont:Country  a         owl:Class ;
+        rdfs:subClassOf  tzont:PoliticalRegion .
+
+tzont:name  a                   owl:DatatypeProperty ;
+        owl:equivalentProperty  iso-3166-ont:name .
+
+tzont:Region  a  owl:Class .
+
+tzont:DLSstartDate  a  owl:DatatypeProperty ;
+        rdfs:range  xsd:date .
+
+tzont:TimeZone  a        owl:Class ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:GMToffset
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:name
+                         ] .
+
+tzont:timeZonePart  a  owl:ObjectProperty ;
+        rdfs:domain  tzont:Region ;
+        rdfs:range   tzont:Region .
+
+tzont:hasTimeZone  a  owl:ObjectProperty ;
+        rdfs:domain  tzont:Region ;
+        rdfs:range   tzont:TimeZone .
+
+tzont:EnumeratedDaylightSavingsPolicy
+        a                owl:Class ;
+        rdfs:subClassOf  tzont:DaylightSavingsPolicy ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:DLSendDate
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:maxCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      tzont:DLSstartDate
+                         ] .
+
+tzont:City  a            owl:Class ;
+        rdfs:subClassOf  tzont:PoliticalRegion .
+
+tzont:countryOf  a          owl:ObjectProperty ;
+        rdfs:range          tzont:Country ;
+        rdfs:subPropertyOf  tzont:hasParentRegion .
+
+tzont:GMToffset  a   owl:DatatypeProperty ;
+        rdfs:domain  tzont:TimeZone ;
+        rdfs:range   xsd:duration .
+
+<http://www.w3.org/2006/timezone>
+        a             owl:Ontology ;
+        rdfs:comment  "\n      A time zone ontology.\n    " ;
+        rdfs:seeAlso  <http://www.w3.org/TR/owl-time> ;
+        owl:imports   <http://www.daml.ri.cmu.edu/ont/USRegionState.daml> , <http://www.daml.org/2001/09/countries/iso-3166-ont> .

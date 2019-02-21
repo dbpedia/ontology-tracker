@@ -1,0 +1,440 @@
+@prefix : <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L2.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix IOLite: <http://www.ontologydesignpatterns.org/ont/dul/IOLite.owl#> .
+@prefix DUL: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix LMM_L1: <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.ontologydesignpatterns.org/ont/lmm/LMM_L2.owl> a owl:Ontology ;
+	rdfs:label "Lexical MetaModel Level 2"^^xsd:string ;
+	rdfs:comment """An ontology for aligning existing linguistic ontologies, and for describing the research objects of NLP.
+It uses the ontology IOLite.owl, a plugin of DOLCE-Ultralite for information objects; it imports LMM_L1.owl, a design pattern for the basic semiotic categories.
+The ontology also includes a proposal to match term types to referenced entity types, as an example of the usage of this ontology in NER and sense tagging applications."""^^xsd:string ;
+	owl:versionInfo """1.2
+1.1
+- Edited annotations
+- Added class: Gloss
+- Added property: hasCoInterpretant
+1.2
+- Simplified several restrictions (in non-lossy way) in order to reduce complexity of reasoning""" ;
+	owl:imports <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl> .
+
+DUL:classifies a owl:ObjectProperty .
+
+DUL:hasMember a owl:ObjectProperty .
+
+DUL:hasPart a owl:ObjectProperty .
+
+DUL:hasRole a owl:ObjectProperty .
+
+DUL:hasSetting a owl:ObjectProperty .
+
+DUL:isClassifiedBy a owl:ObjectProperty .
+
+DUL:isConceptUsedIn a owl:ObjectProperty .
+
+DUL:isMemberOf a owl:ObjectProperty .
+
+DUL:isRoleOf a owl:ObjectProperty .
+
+DUL:isUnifiedBy a owl:ObjectProperty .
+
+DUL:specializes a owl:ObjectProperty .
+
+IOLite:isLexicalizedBy a owl:ObjectProperty .
+
+IOLite:lexicalizes a owl:ObjectProperty .
+
+LMM_L1:denotes a owl:ObjectProperty .
+
+LMM_L1:isDenotedBy a owl:ObjectProperty .
+
+LMM_L1:isInterpretantFor a owl:ObjectProperty .
+
+LMM_L1:relatedMeaning a owl:ObjectProperty .
+
+:OEisLexicalizedBy a owl:ObjectProperty ;
+	rdfs:label "OEis lexicalized by"@en ;
+	rdfs:domain IOLite:FormalExpression ;
+	rdfs:range IOLite:LinguisticObject ;
+	rdfs:subPropertyOf IOLite:isLexicalizedBy ;
+	owl:inverseOf :lexicalizesOE .
+
+:hasCoInterpretant a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "has co-interpretant" ;
+	rdfs:comment "A relation between two meanings that are both interpretant for a same information object." ;
+	rdfs:domain LMM_L1:Meaning ;
+	rdfs:range LMM_L1:Meaning ;
+	rdfs:subPropertyOf LMM_L1:relatedMeaning .
+
+:hasInstance a owl:ObjectProperty ;
+	rdfs:label "has instance"@en ;
+	rdfs:domain DUL:Concept ;
+	rdfs:subPropertyOf DUL:classifies ;
+	rdfs:range LMM_L1:Reference .
+
+:hasSyntacticFunction a owl:ObjectProperty ;
+	rdfs:label "has syntactic function"@en ;
+	rdfs:subPropertyOf DUL:hasRole ;
+	rdfs:range IOLite:LinguisticFunction ;
+	rdfs:domain IOLite:LinguisticObject ;
+	owl:inverseOf :isSyntacticFunctionOf .
+
+:isInstanceOf a owl:ObjectProperty ;
+	rdfs:label "is instance of"@en ;
+	rdfs:range DUL:Concept ;
+	rdfs:subPropertyOf DUL:isClassifiedBy ;
+	rdfs:domain LMM_L1:Reference ;
+	owl:inverseOf :hasInstance .
+
+:isSyntacticFunctionOf a owl:ObjectProperty ;
+	rdfs:label "is syntactic function of"@en ;
+	rdfs:subPropertyOf DUL:isRoleOf ;
+	rdfs:domain IOLite:LinguisticFunction ;
+	rdfs:range IOLite:LinguisticObject .
+
+:lexicalizesOE a owl:ObjectProperty ;
+	rdfs:label "lexicalizes oE"@en ;
+	rdfs:comment "Lexicalization for ontology elements."^^xsd:string ;
+	rdfs:range IOLite:FormalExpression ;
+	rdfs:domain IOLite:LinguisticObject ;
+	rdfs:subPropertyOf IOLite:lexicalizes .
+
+DUL:Collection a owl:Class .
+
+DUL:Concept a owl:Class ;
+	rdfs:subClassOf LMM_L1:Meaning .
+
+DUL:Description a owl:Class ;
+	rdfs:subClassOf LMM_L1:Meaning .
+
+DUL:InformationObject a owl:Class .
+
+DUL:PhysicalArtifact a owl:Class ;
+	rdfs:subClassOf LMM_L1:Reference .
+
+DUL:Plan a owl:Class .
+
+DUL:Role a owl:Class .
+
+DUL:Situation a owl:Class ;
+	rdfs:subClassOf LMM_L1:Reference .
+
+DUL:TypeCollection a owl:Class .
+
+IOLite:FormalExpression a owl:Class .
+
+IOLite:LinguisticFunction a owl:Class ;
+	rdfs:subClassOf DUL:Role , _:node17168lt87x39 .
+
+_:node17168lt87x39 a owl:Restriction ;
+	owl:onProperty :isSyntacticFunctionOf ;
+	owl:allValuesFrom IOLite:LinguisticObject .
+
+IOLite:LinguisticObject a owl:Class ;
+	rdfs:subClassOf _:node17168lt87x40 .
+
+_:node17168lt87x40 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:allValuesFrom IOLite:LinguisticFunction .
+
+IOLite:Term a owl:Class .
+
+IOLite:Text a owl:Class .
+
+LMM_L1:CoText a owl:Class .
+
+LMM_L1:ConstructionRule a owl:Class .
+
+LMM_L1:Expression a owl:Class ;
+	rdfs:label "Expression"@en .
+
+LMM_L1:Meaning a owl:Class ;
+	rdfs:label "Meaning"@en ;
+	rdfs:subClassOf _:node17168lt87x41 .
+
+_:node17168lt87x41 a owl:Restriction ;
+	owl:onProperty DUL:specializes ;
+	owl:allValuesFrom LMM_L1:Meaning .
+
+LMM_L1:Reference a owl:Class ;
+	rdfs:label "Reference"@en .
+
+:AnalyticFeature a owl:Class ;
+	rdfs:label "Analytic feature"@en ;
+	rdfs:subClassOf DUL:Role , _:node17168lt87x42 .
+
+_:node17168lt87x42 a owl:Restriction ;
+	owl:onProperty DUL:isConceptUsedIn ;
+	owl:someValuesFrom :ExperimentalSetting .
+
+:AnalyticFeature rdfs:comment """Any 'feature' used in automatic classification, learning, and in general in all feature-based analyses.
+In NLP, this role can be applied to a LinguisticFunction, a PartOfSpeech, a graphical feature, etc.
+A feature role holds in the context of an ExperimentalSetting, where also parameters and operations on the featured enities can be defined."""^^xsd:string .
+
+:AssociativeContext a owl:Class ;
+	rdfs:label "Associative context"@en ;
+	rdfs:subClassOf LMM_L1:CoText , _:node17168lt87x43 .
+
+_:node17168lt87x43 a owl:Restriction ;
+	owl:onProperty DUL:isUnifiedBy ;
+	owl:someValuesFrom :AssociativeRule .
+
+:AssociativeContext rdfs:comment "An associative rule is a lmm1:CoText where a neighborhood of a chunk of text is built out of the terms related to the chunk across the texts of a corpus, e.g. given a certain statistical threshold."^^xsd:string .
+
+:AssociativeRule a owl:Class ;
+	rdfs:label "Associative rule"@en ;
+	rdfs:subClassOf LMM_L1:ConstructionRule .
+
+:ConceptExpression a owl:Class ;
+	rdfs:label "Concept expression"@en ;
+	rdfs:subClassOf IOLite:Term , LMM_L1:Expression , _:node17168lt87x44 .
+
+_:node17168lt87x44 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ConceptExpression rdfs:subClassOf _:node17168lt87x45 .
+
+_:node17168lt87x45 a owl:Restriction ;
+	owl:onProperty LMM_L1:denotes ;
+	owl:someValuesFrom :MultipleReference .
+
+:ConceptExpression owl:disjointWith :ContextualExpression , :Name ;
+	rdfs:comment "A Term that expresses a Meaning, and denotes a MultipleReference, e.g. 'Dog', 'Black box'"^^xsd:string .
+
+:ConceptReference a owl:Class ;
+	rdfs:label "Concept reference"@en ;
+	rdfs:subClassOf DUL:TypeCollection , :MultipleReference , _:node17168lt87x46 .
+
+_:node17168lt87x46 a owl:Restriction ;
+	owl:onProperty LMM_L1:isDenotedBy ;
+	owl:someValuesFrom :ConceptExpression .
+
+:ConceptReference rdfs:comment """A MultipleReference that is also a TypeCollection, i.e. a Collection whose members constitute the maximal set of individuals that share the same (named) type, i.e. a Concept . 
+E.g. 'the Italians', 'the nurses', 'the automotive workers'. 
+
+The Expressions that denote such references are typically composed by a determiner ('the' in English), and a noun phrase in plural form.
+
+Concept references can be empty collections, e.g. 'the square circles'."""^^xsd:string .
+
+:ContextualExpression a owl:Class ;
+	rdfs:label "Contextual expression"@en ;
+	rdfs:subClassOf IOLite:Term , LMM_L1:Expression , _:node17168lt87x47 .
+
+_:node17168lt87x47 a owl:Restriction ;
+	owl:onProperty LMM_L1:denotes ;
+	owl:someValuesFrom _:node17168lt87x48 .
+
+_:node17168lt87x48 a owl:Class ;
+	owl:unionOf _:node17168lt87x49 .
+
+_:node17168lt87x49 rdf:first :ContextualReference ;
+	rdf:rest _:node17168lt87x50 .
+
+_:node17168lt87x50 rdf:first :ExtensionalReference ;
+	rdf:rest rdf:nil .
+
+:ContextualExpression rdfs:subClassOf _:node17168lt87x51 .
+
+_:node17168lt87x51 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ContextualExpression owl:disjointWith :Name ;
+	rdfs:comment "A Term that denotes a Reference via anaphora or deixis, e.g. 'the dog over there', 'all my family', 'the current ACME employees', 'the lion described above'."^^xsd:string .
+
+:ContextualReference a owl:Class ;
+	rdfs:label "Contextual reference"@en ;
+	rdfs:subClassOf :IndividualReference , _:node17168lt87x52 .
+
+_:node17168lt87x52 a owl:Restriction ;
+	owl:onProperty LMM_L1:isDenotedBy ;
+	owl:someValuesFrom :ContextualExpression .
+
+:ContextualReference rdfs:comment """An IndividualReference that is denoted by a ContextualExpression (anaphoric or deictic), e.g. 'the book in my bag', 'the book mentioned at the beginning of the story'.
+The extensional interpretation of Named and Contextual references in a de-reified model can be equivalent, reflecting the paraphrastic property of natural languages, e.g. the extensional interpretations of 'Linosa' and 'the Italian most southern island' are equivalent. This corresponds to saying that names and contextual expressions can denote the same entities."""^^xsd:string .
+
+:EnumeratedExpression a owl:Class ;
+	rdfs:label "Enumerated expression"@en ;
+	rdfs:subClassOf :ContextualExpression , _:node17168lt87x53 .
+
+_:node17168lt87x53 a owl:Restriction ;
+	owl:onProperty LMM_L1:denotes ;
+	owl:someValuesFrom :ExtensionalReference .
+
+:EnumeratedExpression rdfs:subClassOf _:node17168lt87x54 .
+
+_:node17168lt87x54 a owl:Restriction ;
+	owl:onProperty DUL:hasPart ;
+	owl:someValuesFrom _:node17168lt87x55 .
+
+_:node17168lt87x55 a owl:Class ;
+	owl:unionOf _:node17168lt87x56 .
+
+_:node17168lt87x56 rdf:first :ContextualExpression ;
+	rdf:rest _:node17168lt87x57 .
+
+_:node17168lt87x57 rdf:first :Name ;
+	rdf:rest rdf:nil .
+
+:EnumeratedExpression rdfs:comment "An AnaphoricExpression that denotes an enumerated PluralReference, e.g. 'John, Mary, and me'. Enumerated expressions typically have names and anaphoric expressions (e.g. pronouns) as parts."^^xsd:string .
+
+:ExperimentalSetting a owl:Class ;
+	rdfs:label "Experimental setting" ;
+	rdfs:subClassOf DUL:Plan ;
+	rdfs:comment "A plan modeled in order to carry out experiments. Roles ('features') can be defined for featured entities that provide evidence for classifying an entity, describing a behavior, etc." .
+
+:ExtensionalReference a owl:Class ;
+	rdfs:label "Extensional reference"@en ;
+	rdfs:subClassOf :MultipleReference , _:node17168lt87x58 .
+
+_:node17168lt87x58 a owl:Restriction ;
+	owl:onProperty DUL:hasMember ;
+	owl:someValuesFrom _:node17168lt87x59 .
+
+_:node17168lt87x59 a owl:Class ;
+	owl:intersectionOf _:node17168lt87x60 .
+
+_:node17168lt87x60 rdf:first :IndividualReference ;
+	rdf:rest _:node17168lt87x61 .
+
+_:node17168lt87x61 rdf:first _:node17168lt87x62 .
+
+_:node17168lt87x62 a owl:Restriction ;
+	owl:onProperty DUL:hasSetting ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node17168lt87x61 rdf:rest rdf:nil .
+
+:ExtensionalReference rdfs:subClassOf _:node17168lt87x63 .
+
+_:node17168lt87x63 a owl:Restriction ;
+	owl:onProperty LMM_L1:isDenotedBy ;
+	owl:someValuesFrom :ContextualExpression .
+
+:ExtensionalReference rdfs:comment """Extensional references are collections that require an extensional enumeration (e.g. 'John and Mary'), or an anaphora that allows to extract an implicit enumeration (e.g. 'the books on my table'). Hence, extensional references have individual references as members.
+
+Individual references in the extensional reference must be in the setting of some Situation, which means that extensional references only exist if some fact is described by an observer/interpreter.
+
+The terms expressing extensional references can be names or contextual expressions.
+
+The extensional interpretation of Concept and Extensional references in a de-reified (abstract) model can be equivalent, reflecting the paraphrastic property of natural languages, e.g. the extensional interpretations of 'IberianCountry' and {Spain, Portugal, Andorra, Gibraltar} are equivalent. This corresponds to saying that concept expressions and contextual expressions can denote the same entities, while having different intensional interpretations (meanings)."""^^xsd:string .
+
+:Gloss a owl:Class ;
+	rdfs:label "Gloss" ;
+	rdfs:subClassOf IOLite:Text , _:node17168lt87x64 .
+
+_:node17168lt87x64 a owl:Restriction ;
+	owl:onProperty LMM_L1:isInterpretantFor ;
+	owl:someValuesFrom DUL:InformationObject .
+
+:Gloss rdfs:comment "A text used as an informal definition or comment to a term, lexeme, etc." .
+
+:IndividualReference a owl:Class ;
+	rdfs:label "Individual reference"@en ;
+	rdfs:subClassOf LMM_L1:Reference , _:node17168lt87x65 .
+
+_:node17168lt87x65 a owl:Restriction ;
+	owl:onProperty :isInstanceOf ;
+	owl:someValuesFrom DUL:Concept .
+
+:IndividualReference rdfs:subClassOf _:node17168lt87x66 .
+
+_:node17168lt87x66 a owl:Restriction ;
+	owl:onProperty DUL:isMemberOf ;
+	owl:someValuesFrom :MultipleReference .
+
+:IndividualReference rdfs:comment "Any LMM1:Reference that isInstanceOf a dul:Concept"^^xsd:string .
+
+:LSARule a owl:Class ;
+	rdfs:label "LSA rule"@en ;
+	rdfs:subClassOf :AssociativeRule .
+
+:LatentContext a owl:Class ;
+	rdfs:label "Latent context"@en ;
+	rdfs:subClassOf :AssociativeContext , _:node17168lt87x67 .
+
+_:node17168lt87x67 a owl:Restriction ;
+	owl:onProperty DUL:isUnifiedBy ;
+	owl:someValuesFrom :LSARule .
+
+:MultipleReference a owl:Class ;
+	rdfs:label "Multiple reference"@en ;
+	rdfs:subClassOf DUL:Collection , LMM_L1:Reference ;
+	rdfs:comment """Any LMM1:Reference that is also a dul:Collection, and can have members that are individual references.
+As a collection, a multiple reference can be covered by a dul:Concept, whose instances are the members of the MultipleReference . For example, JohnDoe (an IndividualReference) isMemberOf ACMEEmployees (a MultipleReference), that dul:isCoveredBy the Employee concept. It also holds that JohnDoe isInstanceOf Employee"""^^xsd:string .
+
+:Name a owl:Class ;
+	rdfs:label "Name"@en ;
+	rdfs:subClassOf IOLite:Term , LMM_L1:Expression , _:node17168lt87x68 .
+
+_:node17168lt87x68 a owl:Restriction ;
+	owl:onProperty LMM_L1:denotes ;
+	owl:someValuesFrom _:node17168lt87x69 .
+
+_:node17168lt87x69 a owl:Class ;
+	owl:unionOf _:node17168lt87x70 .
+
+_:node17168lt87x70 rdf:first :ExtensionalReference ;
+	rdf:rest _:node17168lt87x71 .
+
+_:node17168lt87x71 rdf:first :NamedEntity ;
+	rdf:rest rdf:nil .
+
+:Name rdfs:subClassOf _:node17168lt87x72 .
+
+_:node17168lt87x72 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Name rdfs:comment "A proper noun that denotes an IndividualReference, e.g. 'John Zorn', 'Daimler Benz'."^^xsd:string .
+
+:NamedEntity a owl:Class ;
+	rdfs:label "Named entity"@en ;
+	rdfs:subClassOf :IndividualReference , _:node17168lt87x73 .
+
+_:node17168lt87x73 a owl:Restriction ;
+	owl:onProperty LMM_L1:isDenotedBy ;
+	owl:someValuesFrom :Name .
+
+:NamedEntity rdfs:comment "An IndividualReference that is denoted by a Name, e.g. 'John_Zorn' (as an Entity)."^^xsd:string .
+
+:PolyrhematicConceptExpression a owl:Class ;
+	rdfs:label "Polyrhematic concept expression"@en ;
+	rdfs:subClassOf :ConceptExpression , _:node17168lt87x74 .
+
+_:node17168lt87x74 a owl:Restriction ;
+	owl:onProperty LMM_L1:denotes ;
+	owl:someValuesFrom :MultipleReference .
+
+:PolyrhematicConceptExpression rdfs:comment """A complex ConceptExpression that denotes a MultipleReference, e.g. 'the antique books'.
+A polyrhematic expression usually has an associated 'head word'."""^^xsd:string .
+
+:SimpleConceptExpression a owl:Class ;
+	rdfs:label "Simple concept expression"@en ;
+	rdfs:subClassOf :ConceptExpression , _:node17168lt87x75 .
+
+_:node17168lt87x75 a owl:Restriction ;
+	owl:onProperty LMM_L1:denotes ;
+	owl:someValuesFrom :ConceptReference .
+
+:SimpleConceptExpression rdfs:comment "A simple ConceptExpression that denotes a ClassReference, e.g. 'the nurses'."^^xsd:string .
+
+:SyntacticContext a owl:Class ;
+	rdfs:label "Syntactic context"@en ;
+	rdfs:subClassOf LMM_L1:CoText , _:node17168lt87x76 .
+
+_:node17168lt87x76 a owl:Restriction ;
+	owl:onProperty DUL:isUnifiedBy ;
+	owl:someValuesFrom :SyntacticRule .
+
+:SyntacticContext rdfs:comment "A lmm1:CoText that is equivalent to a neighborhood of a certain chunk of text, which can be built based on a syntagmatic rule, e.g. all words from the sentence where the chunk occurs."^^xsd:string .
+
+:SyntacticRule a owl:Class ;
+	rdfs:subClassOf LMM_L1:ConstructionRule .
+
+owl:Thing a owl:Class .

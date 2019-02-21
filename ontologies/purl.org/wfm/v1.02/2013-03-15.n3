@@ -1,0 +1,191 @@
+@prefix :      <http://purl.org/net/wf-motifs#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+:Group  a                owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to the step or set of steps that reorganize the input into different groups. For example, grouping a table by a certain category."@en ;
+        rdfs:label       "Group"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+:CompositeWorkflow  a    owl:Class ;
+        rdfs:comment     "Inter-workflow motif referring to all those workflows that have one or more sub-workflows included in them (when these sub-workflows overlap they offer different views of the global workflow). "@en ;
+        rdfs:label       "Composite workflow"@en ;
+        rdfs:subClassOf  :InterWorkflowMotif .
+
+dcterms:description  a  owl:AnnotationProperty .
+
+dcterms:creator  a  owl:AnnotationProperty .
+
+:WorkflowMotif  a        owl:Class ;
+        rdfs:comment     "Motif that describes how a data operation motif is realized (i.e., implemented) within a workflow. For example, a visualization step (data operation motif) can be realized in different ways: via a stateful multi-step invocation, through a single stateless invocation (depending on the environmental constraints and nature of the services), or via a sub-workflow."@en ;
+        rdfs:label       "Workflow motif"@en ;
+        rdfs:subClassOf  :Motif .
+
+:Filter  a               owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to a filtering step or set of steps. For example, A file filtered by a set of set of keywords, a table filtered by a threshold, etc."@en ;
+        rdfs:label       "Filter\n"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+:Motif  a             owl:Class ;
+        rdfs:comment  "A motif is a domain independent conceptual abstraction of one or more steps of a given workflow."@en ;
+        rdfs:label    "Motif"@en .
+
+dcterms:contributor  a  owl:AnnotationProperty .
+
+:OutputExtraction  a     owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to the step or set of steps in the workflow retrieving only the relevant portion from the the output of a previous step. For example, retrieving the tag value of an XML fragment."@en ;
+        rdfs:label       "Output extraction"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+:DataMovement  a         owl:Class ;
+        rdfs:comment     "Certain analysis activities that are performed via external tools or services require the submission of data to a location accessible by the service/tool (i.e., a web or a local directory respectively). In such cases the workflow contains dedicated step(s) for the upload/transfer of data to these locations. The same applies to the outputs, in which case a data download/retrieval step is used to chain the data to the next steps of the workflow."@en ;
+        rdfs:label       "Data movement"@en ;
+        rdfs:subClassOf  :DataOperationMotif .
+
+:StatefulInvocation  a   owl:Class ;
+        rdfs:comment     "Certain activities such as analysis or visualizations could be performed through interaction with stateful (web) services that allow for creation of jobs over remote grid environments. These are typically performed via invocation of multiple operations at a service endpoint. An example would be a BLAST job submission where the service invoker is responsible to first create a job, then submit the data, check the status and retrieve the results once it has finished."@en ;
+        rdfs:label       "Stateful (asynchronous) invocation"@en ;
+        rdfs:subClassOf  :IntraWorkflowMotif .
+
+:HumanInteractionStep
+        a                owl:Class ;
+        rdfs:comment     "Intra-workflow motif used to characterize the activities that require human inputs during their execution. For example, manual data curation of a table for a future step in the workflow, cleaning and filtering steps (such as selecting a specific dataset to continue the experiment), etc. "@en ;
+        rdfs:label       "Human interaction step"@en ;
+        rdfs:subClassOf  :IntraWorkflowMotif .
+
+:DataOperationMotif  a   owl:Class ;
+        rdfs:comment     "A data operation motif describes the data manipulation and/or transformation carried out by a step in the workflow, a collection of steps in the workflow or a sub-workflow."@en ;
+        rdfs:label       "Data operation motif"@en ;
+        rdfs:subClassOf  :Motif .
+
+:hasMotif  a          owl:ObjectProperty ;
+        rdfs:comment  "Object property that annotates a step in the workflow, a group of steps, a subworkflow, or a workflow with a motif."@en ;
+        rdfs:label    "has motif"@en ;
+        rdfs:range    :Motif .
+
+dcterms:created  a  owl:AnnotationProperty .
+
+:FormatTransformation
+        a                owl:Class ;
+        rdfs:comment     "Workflows that bring together multiple access or analysis activities usually contain steps for format transformations. These steps preserve the content of the inputs while converting its representation format. An example would be a converter from CSV to VOTable format in the astronomy domain, a converter from FASTA to Swiss-Prott sequence in biology, or an Arff formating component for Weka in the text analysis domain."@en ;
+        rdfs:label       "Format transformation"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+vann:preferredNamespaceURI
+        a       owl:AnnotationProperty .
+
+<http://purl.org/net/wf-motifs>
+        a                              owl:Ontology ;
+        rdfs:comment                   "This ontology is based on the paper: Common Motifs in Scientific Workflows:An Empirical Analysis, by Daniel Garijo, Pinar Alper, Khalid Belhajjame, Oscar Corcho, Yolanda Gil and Carole Goble" , "Workflow Motif Ontology, created by Daniel Garijo, Pinar Alper and Khalid Belhajjame"@en ;
+        rdfs:label                     "Workflow Motif Ontology"@en ;
+        dcterms:contributor            "http://www.isi.edu/~gil/"^^xsd:anyURI , "http://www.cs.man.ac.uk/~carole/"^^xsd:anyURI , "http://www.oeg-upm.net/index.php/teachers/11-ocorcho"^^xsd:anyURI ;
+        dcterms:created                "2013-03-15"^^xsd:date ;
+        dcterms:creator                "http://semanticweb.org/wiki/Khalid_Belhajjame"^^xsd:anyURI , "http://semanticweb.org/wiki/Pinar_Alper"^^xsd:anyURI , "http://delicias.dia.fi.upm.es/members/DGarijo/#me"^^xsd:anyURI ;
+        dcterms:description            " Ontology for describing Workflow Motifs. Workflow Motifs outline the kinds of data-intensive activities that are observed in workflows (data-operation motifs) and the different manners in which activities are implemented within workflows (workflow-oriented motifs)."@en ;
+        dcterms:license                "http://creativecommons.org/licenses/by-nc-sa/2.0/" ;
+        dcterms:title                  "The Workflow Motif Ontology"@en ;
+        vann:preferredNamespacePrefix  "wfm" ;
+        vann:preferredNamespaceUri     "http://purl.org/net/wf-motifs#"^^xsd:anyURI ;
+        owl:versionInfo                "1.02" .
+
+:WorkflowOverload  a     owl:Class ;
+        rdfs:comment     "Inter-workflow motif used to characterize workflows that are used to operate over different input parameter types. An example is performing an analysis over a String input parameter, or performing it over the contents of a specified File. Overloading is a direct response to the heterogeneity of environments in which workflows are used."@en ;
+        rdfs:label       "Workflow overload"@en ;
+        rdfs:subClassOf  :InterWorkflowMotif .
+
+:StatelessInvocaton  a   owl:Class ;
+        rdfs:comment     "Intra-workflow motif that requires a step in the workflow for performing a service call or tool invocation. All the steps of a workflow are by default stateless (synchronous) invocations unless they are explicitly declared to be stateful. "@en ;
+        rdfs:label       "Stateless (synchronous) invocation"@en ;
+        rdfs:subClassOf  :IntraWorkflowMotif .
+
+:ComputationalStep  a    owl:Class ;
+        rdfs:comment     "Intra-workflow motif used to refer to activities performed by a computer. This motif applies to most of the steps of the workflow, except for those being human interaction steps."@en ;
+        rdfs:label       "Computational step"@en ;
+        rdfs:subClassOf  :IntraWorkflowMotif .
+
+:Sort   a                owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to the step or set of steps ordering the input by certain parameter. For example, a quicksort algorithm that takes an unordered vector and produces a sorted output."@en ;
+        rdfs:label       "Sort"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+:IntraWorkflowMotif  a   owl:Class ;
+        rdfs:comment     "Workflow motif that describes a step or a series of steps within a single workflow."@en ;
+        rdfs:label       "Intra-workflow motif"@en ;
+        rdfs:subClassOf  :WorkflowMotif .
+
+:DataCleaning  a         owl:Class ;
+        rdfs:comment     "Data operation motif that refers to the step or series of steps for cleaning and curating data in a workflow. Typically these steps are undertaken by sophisticated tooling/services, or by human interactions. A data cleaning step preserves and enriches the content of data (e.g., by a user’s annotation of a result with additional information, detecting and removing inconsistencies on the data, etc.)." ;
+        rdfs:label       "Data cleaning"@en ;
+        rdfs:subClassOf  :DataOperationMotif .
+
+:AtomicWorkflow  a       owl:Class ;
+        rdfs:comment     " Inter-workflow motif used to characterize the workflows that perform an atomic unit of functionality, which effectively requires no sub-workflow usage. Typically these workflows are designed to be included in other workflows. Atomic workflows are the main mechanism of modularizing functionality within scientific workflows." ;
+        rdfs:label       "Atomic workflow"@en ;
+        rdfs:subClassOf  :InterWorkflowMotif .
+
+:InternalMacro  a        owl:Class ;
+        rdfs:comment     "Intra-workflow motif that refers to those groups of steps in the workflow that correspond to repetitive patterns of combining tasks. For example, if a workflow has several branches with the same sequence of repeated steps, the sequence becomes an internal macro."@en ;
+        rdfs:label       "Internal macro"@en ;
+        rdfs:subClassOf  :IntraWorkflowMotif .
+
+:Split  a                owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to the step or steps in the workflow separating an input into different outputs. For example, splitting a dataset in three different subsets to be processed in parallel in a workflow."@en ;
+        rdfs:label       "Split"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+dcterms:title  a  owl:AnnotationProperty .
+
+:hasWorkflowMotif  a        owl:ObjectProperty ;
+        rdfs:comment        "Object property that relates a workflow to its correspondent workflow motif."@en ;
+        rdfs:label          "has workflow motif"@en ;
+        rdfs:range          :WorkflowMotif ;
+        rdfs:subPropertyOf  :hasMotif .
+
+:DataAnalysis  a         owl:Class ;
+        rdfs:comment     "Data operation motif that refers to a broad category of tasks in diverse domains. An important number of workflows are designed with the purpose of analyzing different features of input data, ranging from simple comparisons between the datasets to complex protein analysis to see whether two molecules can be docked successfully or not. "@en ;
+        rdfs:label       "Data analysis"@en ;
+        rdfs:subClassOf  :DataOperationMotif .
+
+:Combine  a              owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to the step or group of steps in the workflow aggregating information from different sources. For example, the joining of two tables in a new one or the merging of three different files in a bigger one."@en ;
+        rdfs:label       "Combine"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+:hasDataOperationMotif
+        a                   owl:ObjectProperty ;
+        rdfs:comment        "Object property that binds a workflow step with its correspondent data operation motif."@en ;
+        rdfs:label          "has data operation motif"@en ;
+        rdfs:range          :DataOperationMotif ;
+        rdfs:subPropertyOf  :hasMotif .
+
+:InterWorkflowMotif  a   owl:Class ;
+        rdfs:comment     "Workflow motif that relates workflows with each other by determining whether different workflows are a composition of each other (composite workflow) or not (atomic workflow), or they have a very similar composition but work for different inputs (workflow overloading)."@en ;
+        rdfs:label       "Inter-workflow motif"@en ;
+        rdfs:subClassOf  :WorkflowMotif .
+
+:InputAugmentation  a    owl:Class ;
+        rdfs:comment     "Data preparation motif that refers to the step or set of steps dedicated to generate an aggregation of multiple parameters and scripts for tools and external services. For example, the generation of queries for input retrieval through an aggregation of multiple parameters, the generation of scripts to be executed in further steps, etc."@en ;
+        rdfs:label       "Input augmentation"@en ;
+        rdfs:subClassOf  :DataPreparation .
+
+:DataVisualization  a    owl:Class ;
+        rdfs:comment     "Being able to show the results is as important as producing them in some workflows. Scientists use visualizations to show the conclusions of their experiments and to take important decisions in the pipeline itself. Therefore certain steps in workflows are dedicated to generation of plots and graph outputs from input data. The data visualization motif also includes the generation of tables and files for browsing and reading the results of the workflow."@en ;
+        rdfs:label       "Data visualization"@en ;
+        rdfs:subClassOf  :DataOperationMotif .
+
+:DataRetrieval  a        owl:Class ;
+        rdfs:comment     "Workflows exploit heterogeneous data sources, remote databases, repositories and other web resources mostly exposed via SOAP or REST services. Scientific data deposited in these repositories are retrieved through query and retrieval steps inside workflows. The data retrieval motif identifies those tasks within the workflow which are responsible for retrieving data from external sources into the workflow environment." ;
+        rdfs:label       "Data retrieval"@en ;
+        rdfs:subClassOf  :DataOperationMotif .
+
+:DataPreparation  a      owl:Class ;
+        rdfs:comment     "Data, as it is originally retrieved, may need several transformations before being able to be used in a workflow step. These steps, typically known as ”Shims” [Duncan Hull et al. Treating shimantic web syndrome with ontologies. In AKT Workshop on Semantic Web Services, 2004.], can be annotated using the Data Preparation motif."@en ;
+        rdfs:label       "Data preparation"@en ;
+        rdfs:subClassOf  :DataOperationMotif .
+
+vann:preferredNamespacePrefix
+        a       owl:AnnotationProperty .

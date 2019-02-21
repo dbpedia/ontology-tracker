@@ -1,0 +1,1054 @@
+@prefix : <http://example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://www.w3.org/ns/prov#> a owl:Ontology ;
+	rdfs:label "PROV Ontology"@en ;
+	rdfs:comment "0.2"^^xsd:string , """This document is published by the Provenance Working Group (http://www.w3.org/2011/prov/wiki/Main_Page). 
+
+If you wish to make comments regarding this document, please send them to public-prov-wg@w3.org (subscribe, archives). All feedback is welcome."""@en ;
+	rdfs:seeAlso <http://www.w3.org/2011/prov/wiki/ProvRDF> , <http://www.w3.org/TR/prov#> .
+
+prov:unqualifiedForm a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:prov-n a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:prov-dm a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:definition a owl:AnnotationProperty .
+
+prov:editorialNote a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+prov:inverse a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+rdfs:seeAlso a owl:AnnotationProperty .
+
+prov:category a owl:AnnotationProperty .
+
+prov:prov-dm-constraints a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:component a owl:AnnotationProperty .
+
+prov:qualifiedForm a owl:AnnotationProperty ;
+	rdfs:comment """This annotation property links a prov:involved subproperty with a prov:Involved subclass. This indicates that the property can be qualified by using prov:qualified. 
+
+Example:
+    prov:wasGeneratedBy prov:qualifiedForm prov:Generation .
+
+Then this unqualified assertion:
+    :entity1 prov:wasGeneratedBy :activity1 .
+
+can be qualified by adding:
+   :entity1 prov:qualified :entity1Gen .
+   :entity1Gen a prov:Generation;
+       prov:activity :activity1 ;
+       :customValue 1337 .
+
+Note how the range of the unqualified property is mirrored by the prov:activity or prov:entity on the involvement class."""@en ;
+	rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:todo a owl:AnnotationProperty .
+
+owl:topObjectProperty a owl:ObjectProperty .
+
+prov:actedOnBehalfOf a owl:ObjectProperty ;
+	rdfs:comment "An object property to express the accountability of an agent towards another agent. The subordinate agent acted on behalf of the responsible agent in an actual activity."@en ;
+	prov:category "starting-point" ;
+	prov:component "agents-responsibility" ;
+	rdfs:domain prov:Agent ;
+	rdfs:range prov:Agent ;
+	prov:qualifiedForm prov:Responsibility ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedResponsibility .
+
+prov:activity a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "The property used by an prov:ActivityInvolvement to cite the prov:Activity that was involved with either an Activity or Entity. It can be used to refer to the activity involved in generating an entity, informing another activity, or starting another activity."@en ;
+	prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:involved triple."@en ;
+	prov:category "qualified" ;
+	rdfs:range prov:Activity ;
+	rdfs:domain prov:ActivityInvolvement ;
+	rdfs:subPropertyOf prov:involvee .
+
+prov:agent a owl:ObjectProperty , owl:FunctionalProperty ;
+	prov:component "alternate" ;
+	prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:involved triple." ;
+	rdfs:comment "The property used by a prov:AgentInvolvement to cite the Agent that was prov:involved with either an Activity or Entity. It can be used to express the agent involved in being responsible for an activity, being attributed to an entity, starting or ending an activity, or being responsible for another subordinate agent in an activity."@en ;
+	prov:category "qualified" ;
+	rdfs:range prov:Agent ;
+	rdfs:domain prov:AgentInvolvement ;
+	rdfs:subPropertyOf prov:involvee .
+
+prov:alternateOf a owl:ObjectProperty ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Alternate" ;
+	prov:category "expanded" ;
+	prov:component "alternate" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-alternate" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-alternate" ;
+	prov:definition "An entity is alternate of another if they are both a specialization of some common entity. The common entity does not need to be identified."@en ;
+	rdfs:comment "An entity is alternate of another if they are both a specialization of some common entity. The common entity does not need to be identified."@en ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Entity ;
+	rdfs:seeAlso prov:specializationOf .
+
+prov:atLocation a owl:ObjectProperty , owl:AsymmetricProperty , owl:IrreflexiveProperty ;
+	prov:editorialNote "This property is not functional because the many values could be at a variety of granularies (In this building, in this room, in that chair)." ;
+	rdfs:comment "Location is an optional attribute of Entity and Activity."@en ;
+	prov:category "expanded" ;
+	prov:editorialNote "The naming of prov:atLocation parallels prov:atTime, and is not named prov:hadLocation to avoid conflicting with the convention that prov:had* properties are used on prov:Involvement classes." ;
+	rdfs:range prov:Location .
+
+prov:derivedByInsertionFrom a owl:ObjectProperty ;
+	rdfs:comment "The dictionary was derived from the other by insertion. prov:qualifiedInsertion shows details of the insertion, in particular the inserted key-value pairs."@en ;
+	prov:component "collections" ;
+	prov:category "collections" ;
+	rdfs:range prov:Dictionary ;
+	rdfs:domain prov:Dictionary ;
+	prov:qualifiedForm prov:Insertion , prov:qualifiedInsertion ;
+	rdfs:subPropertyOf prov:wasDerivedFrom .
+
+prov:derivedByRemovalFrom a owl:ObjectProperty ;
+	rdfs:comment "The dictionary was derived from the other by removal. prov:qualifiedRemoval shows details of the removal, in particular the removed key-value pairs."@en ;
+	prov:component "collections" ;
+	prov:category "collections" ;
+	rdfs:range prov:Dictionary ;
+	rdfs:domain prov:Dictionary ;
+	prov:qualifiedForm prov:Removal , prov:qualifiedRemoval ;
+	rdfs:subPropertyOf prov:wasDerivedFrom .
+
+prov:dictionary a owl:ObjectProperty ;
+	rdfs:comment "The property used by a prov:DictionaryInvolvement to cite the prov:Dictionary that was prov:involved in insertion or removal of elements of a collection."@en ;
+	prov:component "collections" ;
+	prov:category "collections" ;
+	prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:involved triple." ;
+	rdfs:range prov:Dictionary ;
+	rdfs:domain prov:DictionaryInvolvement ;
+	rdfs:subPropertyOf prov:involvee .
+
+prov:entity a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "The property used by an prov:EntityInvolvement to cite the Entity that was prov:involved with either an Activity or Entity. It can be used to refer to the entity involved in deriving another entity, being quoted or revised from, being the source of another entity, or being used in an activity."@en ;
+	prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:involved triple."@en ;
+	prov:category "qualified" ;
+	rdfs:range prov:Entity ;
+	rdfs:domain prov:EntityInvolvement ;
+	rdfs:subPropertyOf prov:involvee .
+
+prov:generated a owl:ObjectProperty ;
+	prov:component "entities-activities" ;
+	prov:category "expanded" ;
+	rdfs:comment "This inverse of prov:wasGeneratedBy is defined so that Activities being described can reference their generated outputs directly without needing to 'stop' and start describing the Entity. This helps 'Activity-centric' modeling as opposed to 'Entity-centric' modeling." ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Entity ;
+	rdfs:subPropertyOf prov:involved ;
+	owl:inverseOf prov:wasGeneratedBy .
+
+prov:hadActivity a owl:ObjectProperty , owl:FunctionalProperty ;
+	prov:component "derivations" ;
+	prov:category "qualified" ;
+	prov:todo "Relax domain so that Derivations and Responsibilities can reference an activity. http://www.w3.org/2011/prov/track/issues/226" ;
+	rdfs:comment "The activity generating the derived entity and using the derived-from entity."@en ;
+	rdfs:range prov:Activity ;
+	rdfs:domain prov:Involvement , _:node1745pk35lx1 .
+
+_:node1745pk35lx1 a owl:Class ;
+	owl:unionOf _:node1745pk35lx2 .
+
+_:node1745pk35lx2 rdf:first prov:Derivation ;
+	rdf:rest _:node1745pk35lx3 .
+
+_:node1745pk35lx3 rdf:first prov:Responsibility ;
+	rdf:rest rdf:nil .
+
+prov:hadGeneration a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "The generation involving the generated entity and activity."@en ;
+	prov:category "qualified" ;
+	prov:component "derivations" ;
+	rdfs:domain prov:Derivation ;
+	rdfs:range prov:Generation .
+
+prov:hadOriginalSource a owl:ObjectProperty ;
+	prov:component "derivations" ;
+	prov:category "expanded" ;
+	rdfs:range prov:Entity ;
+	rdfs:domain prov:Entity ;
+	prov:qualifiedForm prov:Source , prov:qualifiedSource ;
+	rdfs:subPropertyOf prov:wasDerivedFrom .
+
+prov:hadPlan a owl:ObjectProperty , owl:AsymmetricProperty , owl:FunctionalProperty , owl:IrreflexiveProperty ;
+	rdfs:comment "The Activity performed was described by the given plan resource. Activity specifications, as referred to by plan links, are out of scope of this specification"@en ;
+	prov:category "qualified" ;
+	prov:component "agents-responsibility" ;
+	rdfs:domain prov:Association ;
+	rdfs:range prov:Plan .
+
+prov:hadQuoted a owl:ObjectProperty ;
+	prov:category "qualified" ;
+	rdfs:comment "The agent who attributed to the original entity."@en ;
+	prov:component "derivations" ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:range prov:Agent ;
+	rdfs:domain prov:Quotation .
+
+prov:hadQuoter a owl:ObjectProperty ;
+	prov:category "qualified" ;
+	prov:component "derivations" ;
+	rdfs:comment "The agent who is doing the quoting."@en ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:range prov:Agent ;
+	rdfs:domain prov:Quotation .
+
+prov:hadRole a owl:ObjectProperty , owl:IrreflexiveProperty ;
+	prov:component "agents-responsibility" ;
+	rdfs:comment "When an instance of prov:Involvement uses the prov:hadRole property to cite a prov:Role, it is providing a role for the instance referenced by the prov:entity or the prov:activity properties. For example, :baking prov:used :spoon; prov:qualified [ a prov:Usage; prov:entity :spoon; prov:hadRole roles:mixing_implement ]."@en ;
+	prov:definition "prov:hadRole references the Role (i.e. the function of an entity with respect to an activity), in the context of a usage, generation, association, start, and end." ;
+	prov:category "qualified" ;
+	rdfs:domain prov:Involvement ;
+	rdfs:range prov:Role ;
+	rdfs:domain _:node1745pk35lx4 .
+
+_:node1745pk35lx4 a owl:Class ;
+	owl:unionOf _:node1745pk35lx5 .
+
+_:node1745pk35lx5 rdf:first prov:Association ;
+	rdf:rest _:node1745pk35lx6 .
+
+_:node1745pk35lx6 rdf:first prov:End ;
+	rdf:rest _:node1745pk35lx7 .
+
+_:node1745pk35lx7 rdf:first prov:Generation ;
+	rdf:rest _:node1745pk35lx8 .
+
+_:node1745pk35lx8 rdf:first prov:Start ;
+	rdf:rest _:node1745pk35lx9 .
+
+_:node1745pk35lx9 rdf:first prov:Usage ;
+	rdf:rest rdf:nil .
+
+prov:hadUsage a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "The usage involving the used entity and activity."@en ;
+	prov:category "qualified" ;
+	prov:component "derivations" ;
+	rdfs:domain prov:Derivation ;
+	rdfs:range prov:Usage .
+
+prov:hasAnnotation a owl:ObjectProperty ;
+	prov:category "expanded" ;
+	prov:component "annotations" ;
+	rdfs:range prov:Note .
+
+prov:inserted a owl:ObjectProperty ;
+	rdfs:comment "An object property to refer to the prov:KeyValuePair inserted into a prov:Collection."@en ;
+	prov:component "collections" ;
+	prov:category "collections" ;
+	rdfs:domain prov:Insertion ;
+	rdfs:range prov:KeyValuePair .
+
+prov:involved a owl:ObjectProperty ;
+	prov:category "qualified" ;
+	rdfs:comment """Subproperties of prov:involved may be be qualified by creating instances of a corresponding prov:Involvement class. For example, the binary relation :baking prov:used :spoon can be qualified by asserting :baking prov:qualified [ a prov:Usage; prov:entity :baking; :foo :bar ]
+
+prov:involved should not be used without also using one of its subproperties.
+
+Subproperties of prov:involved may also be asserted directly without being qualified."""@en .
+
+prov:involvee a owl:ObjectProperty ;
+	rdfs:comment "Subproperties of prov:involvee are used to cite the object of an unqualified PROV-O triple whose predicate is a subproperty of prov:involved (e.g. prov:used, prov:wasGeneratedBy). prov:involvee is used much like rdf:object is used." ;
+	rdfs:domain prov:Involvement .
+
+prov:member a owl:ObjectProperty ;
+	prov:component "collections" ;
+	rdfs:comment "The key-value pair was part of the membership. A membership can have multiple members."@en ;
+	prov:category "collections" ;
+	rdfs:range prov:KeyValuePair ;
+	rdfs:domain prov:Membership .
+
+prov:membership a owl:ObjectProperty ;
+	prov:category "collections" ;
+	rdfs:comment "The collection included the specified membership of keys-values."@en ;
+	prov:component "collections" ;
+	rdfs:domain prov:Dictionary ;
+	rdfs:range prov:Membership .
+
+prov:qualifiedAssociation a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:comment "If this Activity prov:wasAssociatedWith Agent :ag, then it can qualify the Association using prov:qualifiedAssociation [ a prov:Association;  prov:agent :ag; :foo :bar ]."@en ;
+	prov:component "agents-responsibility" ;
+	prov:category "qualified" ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Association ;
+	prov:unqualifiedForm prov:wasAssociatedWith .
+
+prov:qualifiedAttribution a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	prov:component "agents-responsibility" ;
+	rdfs:comment "If this Entity prov:wasAttributedTo Agent :ag, then it can qualify how it was  using prov:qualifiedAttribution [ a prov:Attribution;  prov:agent :ag; :foo :bar ]."@en ;
+	rdfs:range prov:Attribution ;
+	rdfs:domain prov:Entity ;
+	prov:unqualifiedForm prov:wasAttributedTo .
+
+prov:qualifiedCommunication a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:component "entities-activities" ;
+	rdfs:comment "If this Activity prov:wasInformedBy Activity :a, then it can qualify how it was Inform[ed] using prov:qualifiedInform [ a prov:Inform;  prov:activity :a; :foo :bar ]."@en ;
+	prov:category "qualified" ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Communication ;
+	prov:qualifiedForm prov:Communication .
+
+prov:qualifiedDerivation a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:comment "If this Entity prov:wasDerivedFrom Entity :e, then it can qualify how it was derived using prov:qualifiedDerivation [ a prov:Derivation;  prov:entity :e; :foo :bar ]."@en ;
+	prov:component "derivations" ;
+	prov:category "qualified" ;
+	rdfs:range prov:Derivation ;
+	rdfs:domain prov:Entity ;
+	prov:unqualifiedForm prov:wasDerivedFrom .
+
+prov:qualifiedEnd a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "If this Activity prov:wasEndedBy Entity :e1, then it can qualify how it was ended using prov:qualifiedEnd [ a prov:End;  prov:entity :e1; :foo :bar ]."@en ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:End ;
+	prov:unqualifiedForm prov:wasEndedBy .
+
+prov:qualifiedGeneration a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:comment "If this Activity prov:generated Entity :e, then it can qualify how it did performed the Generation using prov:qualifiedGeneration [ a prov:Generation;  prov:entity :e; :foo :bar ]."@en ;
+	prov:component "entities-activities" ;
+	prov:category "qualified" ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Generation ;
+	prov:unqualifiedForm prov:wasGeneratedBy .
+
+prov:qualifiedInsertion a owl:ObjectProperty ;
+	prov:component "collections" ;
+	prov:category "collections" ;
+	rdfs:comment "If this Dictionary prov:derivedByInsertionFrom another Dictionary :e, then it can qualify how it did perform the Insertion using prov:qualifiedInsertion [ a prov:Insertion;  prov:dictionary :e; prov:inserted [a prov:KeyValuePair; prov:key \"k1\"^^xsd:string; prov:value :foo] ]."@en ;
+	rdfs:domain prov:Dictionary ;
+	rdfs:range prov:Insertion ;
+	prov:unqualifiedForm prov:derivedByInsertionFrom .
+
+prov:qualifiedQuotation a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	rdfs:comment "If this Entity prov:wasQuotedFrom Entity :e, then it can qualify how using prov:qualifiedQuotation [ a prov:Quotation;  prov:entity :e; :foo :bar ]."@en ;
+	prov:component "derivations" ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Quotation ;
+	prov:unqualifiedForm prov:wasQuotedFrom .
+
+prov:qualifiedRemoval a owl:ObjectProperty ;
+	prov:category "collections" ;
+	prov:component "collections" ;
+	rdfs:comment "If this Dictionary prov:derivedByRemovalFrom another Dictionary :e, then it can qualify how it did perform the Removal using prov:qualifiedRemoval [ a prov:Removal;  prov:dictionary :c; prov:removed \"k1\"^^xsd:string ]."@en ;
+	rdfs:domain prov:Dictionary ;
+	rdfs:range prov:Removal ;
+	prov:unqualifiedForm prov:derivedByRemovalFrom .
+
+prov:qualifiedResponsibility a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	prov:component "agents-responsibility" ;
+	rdfs:comment "If this Agent prov:actedOnBehalfOf Agent :ag, then it can qualify how with prov:qualifiedResponsibility [ a prov:Responsibility;  prov:agent :ag; :foo :bar ]."@en ;
+	rdfs:domain prov:Agent ;
+	rdfs:range prov:Responsibility ;
+	prov:unqualifiedForm prov:actedOnBehalfOf .
+
+prov:qualifiedRevision a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:comment "If this Entity prov:wasRevisionOf Entity :e, then it can qualify how it was  revised using prov:qualifiedRevision [ a prov:Revision;  prov:entity :e; :foo :bar ]."@en ;
+	prov:category "qualified" ;
+	prov:component "derivations" ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Revision ;
+	prov:unqualifiedForm prov:wasRevisionOf .
+
+prov:qualifiedSource a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:component "derivations" ;
+	prov:category "qualified" ;
+	rdfs:comment "If this Entity prov:hadOriginalSource Entity :e, then it can qualify how using prov:qualifiedSource [ a prov:Source; prov:entity :e; :foo :bar ]."@en ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Source ;
+	prov:unqualifiedForm prov:hadOriginalSource .
+
+prov:qualifiedStart a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "If this Activity prov:wasStartedBy Entity :e1, then it can qualify how it was started using prov:qualifiedStart [ a prov:Start;  prov:entity :e1; :foo :bar ]."@en ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Start ;
+	prov:unqualifiedForm prov:wasStartedBy .
+
+prov:qualifiedStartByActivity a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	rdfs:comment "If this Activity prov:wasStartedByActivity :a, then it can qualify how it was started using prov:qualifiedStart [ a prov:Start;  prov:activity :a; :foo :bar ]."@en ;
+	prov:component "entities-activities" ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:StartByActivity ;
+	prov:unqualifiedForm prov:wasStartedByActivity .
+
+prov:qualifiedTrace a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	rdfs:comment "If this prov:wasAttributedTo Entity :e, then it can qualify how using prov:qualifiedTrace [ a prov:Trace;  prov:entity :e; :foo :bar ]. If this prov:wasAttributedTo Activity :a, then it can qualify how using prov:qualifiedTrace [ a prov:Trace;  prov:activity :a; :foo :bar ]."@en ;
+	prov:component "derivations" ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Trace ;
+	prov:unqualifiedForm prov:tracedTo .
+
+prov:qualifiedUsage a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	prov:category "qualified" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "If this Activity prov:used Entity :e, then it can qualify how it used it using prov:qualifiedUsage [ a prov:Usage; prov:entity :e; :foo :bar ]."@en ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Usage ;
+	prov:unqualifiedForm prov:used .
+
+prov:specializationOf a owl:ObjectProperty ;
+	prov:component "alternate" ;
+	prov:category "expanded" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-specialization" ;
+	prov:definition "An entity is a specialization of another if they both refer to some common thing but the former is a more constrained entity than the former. The common entity does not need to be identified." ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-specialization" ;
+	rdfs:comment "An entity is a specialization of another if they both refer to some common thing but the former is a more constrained entity than the former. The common entity does not need to be identified."@en ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Specialization" ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Entity ;
+	rdfs:seeAlso prov:alternateOf .
+
+prov:tracedTo a owl:ObjectProperty , owl:TransitiveProperty ;
+	rdfs:comment "An object property to link back an entity to another by means of derivation or responsibility relations, possibly repeatedly traversed."@en ;
+	prov:component "derivations" ;
+	prov:category "expanded" ;
+	rdfs:range prov:Entity ;
+	rdfs:domain prov:Entity ;
+	prov:qualifiedForm prov:Trace ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedTrace .
+
+prov:used a owl:ObjectProperty , owl:AsymmetricProperty , owl:IrreflexiveProperty ;
+	prov:inverse "wasUsedBy" ;
+	rdfs:comment "A prov:Entity that was used by this prov:Activity. For example, :baking prov:used :spoon, :egg, :oven ."@en ;
+	prov:category "starting-point" ;
+	prov:component "entities-activities" ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Entity ;
+	prov:qualifiedForm prov:Usage ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedUsage .
+
+prov:value a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:comment "The value of a KeyValuePair."@en ;
+	prov:category "collections" ;
+	prov:component "collections" ;
+	rdfs:range prov:Entity ;
+	rdfs:domain prov:KeyValuePair .
+
+prov:wasAssociatedWith a owl:ObjectProperty ;
+	prov:component "agents-responsibility" ;
+	rdfs:comment "An prov:Agent that had some (unspecified) responsibility for the occurrence of this prov:Activity."@en ;
+	prov:category "starting-point" ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Agent ;
+	prov:qualifiedForm prov:Association ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedAssociation .
+
+prov:wasAttributedTo a owl:ObjectProperty ;
+	prov:definition "Attribution is the ascribing of an entity to an agent." ;
+	prov:category "starting-point" ;
+	rdfs:comment "Attribution is the ascribing of an entity to an agent."@en ;
+	prov:component "agents-responsibility" ;
+	rdfs:range prov:Agent ;
+	prov:qualifiedForm prov:Attribution ;
+	rdfs:domain prov:Entity ;
+	prov:qualifiedForm prov:qualifiedAttribution ;
+	rdfs:subPropertyOf prov:tracedTo .
+
+_:node1745pk35lx10 a owl:Axiom ;
+	rdfs:comment "TODO: Paolo questions this subproperty axiom." ;
+	owl:annotatedProperty rdfs:subPropertyOf ;
+	owl:annotatedTarget prov:tracedTo ;
+	owl:annotatedSource prov:wasAttributedTo .
+
+prov:wasDerivedFrom a owl:ObjectProperty , owl:AsymmetricProperty , owl:IrreflexiveProperty ;
+	prov:inverse "hadDerivation" ;
+	prov:definition "A derivation is a transformation of an entity into another, a construction of an entity into another, or an update of an entity, resulting in a new one."@en ;
+	rdfs:comment "A derivation is a transformation of an entity into another, a construction of an entity into another, or an update of an entity, resulting in a new one."@en ;
+	prov:category "starting-point" ;
+	prov:component "derivations" ;
+	prov:qualifiedForm prov:Derivation ;
+	rdfs:range prov:Entity ;
+	rdfs:domain prov:Entity ;
+	prov:qualifiedForm prov:qualifiedDerivation ;
+	rdfs:subPropertyOf prov:tracedTo .
+
+prov:wasEndedBy a owl:ObjectProperty ;
+	prov:category "expanded" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "End is when an activity is deemed to have ended. An end may refer to an entity, known as trigger, that terminated the activity."@en ;
+	rdfs:domain prov:Activity ;
+	prov:qualifiedForm prov:End ;
+	rdfs:range prov:Entity ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedEnd .
+
+prov:wasGeneratedBy a owl:ObjectProperty , owl:AsymmetricProperty , owl:FunctionalProperty , owl:IrreflexiveProperty ;
+	prov:category "starting-point" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "wasGeneratedBy links Entitites with Activity representing that entity was generated as a result of Activity"@en ;
+	rdfs:range prov:Activity ;
+	rdfs:domain prov:Entity ;
+	prov:qualifiedForm prov:Generation ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedGeneration .
+
+prov:wasInformedBy a owl:ObjectProperty ;
+	rdfs:comment "An activity a2 is dependent on or informed by another activity a1, by way of some unspecified entity that is generated by a1 and used by a2."@en ;
+	prov:category "starting-point" ;
+	prov:component "entities-activities" ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Activity ;
+	prov:qualifiedForm prov:Communication ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedCommunication .
+
+prov:wasInvalidatedBy a owl:ObjectProperty ;
+	rdfs:range prov:Activity ;
+	rdfs:domain prov:Entity ;
+	rdfs:subPropertyOf prov:involved .
+
+prov:wasQuotedFrom a owl:ObjectProperty ;
+	prov:category "expanded" ;
+	prov:component "derivations" ;
+	rdfs:comment "An entity is derived from an original entity by copying, or \"quoting\", some or all of it."@en ;
+	rdfs:domain prov:Entity ;
+	rdfs:range prov:Entity ;
+	prov:qualifiedForm prov:Quotation , prov:qualifiedQuotation ;
+	rdfs:subPropertyOf prov:wasDerivedFrom .
+
+prov:wasRevisionOf a owl:ObjectProperty ;
+	prov:component "derivations" ;
+	rdfs:comment "A revision is a derivation that revises an entity into a revised version."@en ;
+	prov:category "expanded" ;
+	rdfs:range prov:Entity ;
+	rdfs:domain prov:Entity ;
+	prov:qualifiedForm prov:Revision , prov:qualifiedRevision ;
+	rdfs:subPropertyOf prov:wasDerivedFrom .
+
+prov:wasStartedBy a owl:ObjectProperty ;
+	prov:component "entities-activities" ;
+	prov:category "expanded" ;
+	rdfs:comment "Start is when an activity is deemed to have started. A start may refer to an entity, known as trigger, that initiated the activity."@en ;
+	rdfs:domain prov:Activity ;
+	rdfs:range prov:Entity ;
+	prov:qualifiedForm prov:Start ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedStart .
+
+prov:wasStartedByActivity a owl:ObjectProperty ;
+	prov:category "starting-point" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "The start of an activity with an implicit trigger generated by another activity."@en ;
+	rdfs:range prov:Activity ;
+	rdfs:domain prov:Activity ;
+	prov:qualifiedForm prov:StartByActivity ;
+	rdfs:subPropertyOf prov:involved ;
+	prov:qualifiedForm prov:qualifiedStartByActivity .
+
+prov:atTime a owl:DatatypeProperty , owl:FunctionalProperty ;
+	prov:component "entities-activities" ;
+	prov:category "qualified" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain prov:InstantaneousEvent .
+
+prov:endedAtTime a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:comment "The time when an activity ended."@en ;
+	prov:component "entities-activities" ;
+	prov:category "starting-point" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain prov:Activity .
+
+prov:key a owl:DatatypeProperty , owl:FunctionalProperty ;
+	prov:category "collections" ;
+	rdfs:comment "The key of a KeyValuePair, which is an element of a prov:Collection."@en ;
+	prov:component "collections" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:domain prov:KeyValuePair .
+
+prov:removedKey a owl:DatatypeProperty ;
+	prov:category "collections" ;
+	rdfs:comment "The key removed in a Removal."@en ;
+	prov:component "collections" ;
+	rdfs:range rdfs:Literal ;
+	rdfs:domain prov:Removal .
+
+prov:startedAtTime a owl:DatatypeProperty , owl:FunctionalProperty ;
+	prov:category "starting-point" ;
+	rdfs:comment "The time when an activity started."@en ;
+	prov:component "entities-activities" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain prov:Activity .
+
+owl:Thing a owl:Class .
+
+prov:Account a owl:Class ;
+	rdfs:label "Account" ;
+	rdfs:subClassOf prov:Entity ;
+	prov:definition "An account is any mechanism by which a set of provenance descriptions can be bundled up and named."^^xsd:anyURI ;
+	rdfs:comment "Note that there are kinds of accounts (e.g. handwritten letters, audio recordings, etc.) that are not expressed in PROV-O, but can be still be described by PROV-O."@en ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#account-constraints" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#account" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#FurtherConsiderations" ;
+	prov:category "expanded" ;
+	prov:editorialNote """Accounts expressed in PROV-O (i.e. RDF) may be modeled using:
+
+:account1
+   a prov:Account, sd:NamedGraph; 
+   sd:name <>; 
+   sd:graph [ a void:Dataset; void:dataDump <>; void:triples x ] .
+
+Abstract accounts that are independent of location may be modeled using:
+
+:account2
+   a prov:Account, void:Dataset; 
+   void:dataDump <>; 
+    void:triples        x .
+
+
+(sd : http://www.w3.org/ns/sparql-service-description#)
+(void : http://rdfs.org/ns/void#)"""@en .
+
+prov:Activity a owl:Class ;
+	rdfs:label "Activity" ;
+	owl:disjointWith prov:Entity ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#section-entity-activity"^^xsd:anyURI ;
+	prov:component "entities-activities" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Activity" ;
+	rdfs:comment "An activity is something that occurs over a period of time and acts upon or with entities. This action can take multiple forms: consuming, processing, transforming, modifying, relocating, using, generating, or being associated with entities. Activities that operate on digital entities may for example move, copy, or duplicate them."@en ;
+	prov:category "starting-point" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Activity" ;
+	prov:definition "An activity is something that occurs over a period of time and acts upon or with entities. This action can take multiple forms: consuming, processing, transforming, modifying, relocating, using, generating, or being associated with entities. Activities that operate on digital entities may for example move, copy, or duplicate them." .
+
+prov:ActivityInvolvement a owl:Class ;
+	rdfs:label "ActivityInvolvement" ;
+	rdfs:subClassOf prov:Involvement ;
+	owl:disjointWith prov:EntityInvolvement ;
+	prov:category "qualified" ;
+	rdfs:comment "prov:ActivityInvolvement provides descriptions of any binary involvement between any instance and an prov:Activity."@en ;
+	rdfs:seeAlso prov:activity .
+
+prov:Agent a owl:Class ;
+	rdfs:label "Agent" ;
+	prov:definition "An agent is a type of entity that bears some form of responsibility for an activity taking place." ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Agent" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Agent" ;
+	prov:category "starting-point" ;
+	rdfs:comment "An agent is a type of entity that bears some form of responsibility for an activity taking place."@en ;
+	prov:component "agents-responsibility" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Agent" .
+
+prov:AgentInvolvement a owl:Class ;
+	rdfs:label "AgentInvolvement" ;
+	rdfs:subClassOf prov:Involvement ;
+	rdfs:comment "prov:AgentInvolvement provides descriptions of any binary involvement between any instance and an prov:Agent."@en ;
+	prov:category "qualified" ;
+	rdfs:seeAlso prov:agent .
+
+prov:Association a owl:Class ;
+	rdfs:label "Association" ;
+	rdfs:subClassOf prov:AgentInvolvement ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Association" ;
+	prov:component "agents-responsibility" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-ActivityAssociation" ;
+	prov:category "qualified" ;
+	prov:definition "An activity association is an assignment of responsibility to an agent for an activity, indicating that the agent had a role in the activity. It further allows for a plan to be specified, which is the plan intended by the agent to achieve some goals in the context of this activity." ;
+	rdfs:comment "An instance of prov:Association provides additional descriptions about the binary prov:wasAssociatedWith relation from an prov:Activity to some prov:Agent that is responsible for it. For example, :baking prov:wasAssociatedWith :baker; prov:qualified [ a prov:Association; prov:entity :baker; :foo :bar ]."@en ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Association" ;
+	prov:unqualifiedForm prov:wasAssociatedWith .
+
+prov:Attribution a owl:Class ;
+	rdfs:label "Attribution" ;
+	rdfs:subClassOf prov:AgentInvolvement ;
+	prov:definition "Attribution is the ascribing of an entity to an agent." ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-attribution" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-attribution" ;
+	prov:category "qualified" ;
+	rdfs:comment "An instance of prov:Attribution provides additional descriptions about the binary prov:wasAttributedTo relation from an prov:Entity to some prov:Agent that is responsible for it. For example, :cake prov:wasAttributedTo :baker; prov:qualified [ a prov:Attribution; prov:entity :baker; :foo :bar ]."@en ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#recod-attribution" ;
+	prov:component "agents-responsibility" ;
+	prov:unqualifiedForm prov:wasAttributedTo .
+
+prov:Communication a owl:Class ;
+	rdfs:label "Communication" ;
+	rdfs:subClassOf prov:ActivityInvolvement ;
+	prov:category "qualified" ;
+	rdfs:comment "An instance of prov:Communication provides additional descriptions about the binary prov:wasInformedBy relation from an informed prov:Activity to the prov:Activity that informed it. For example, :you_jumping_off_bridge prov:wasInformedBy :everyone_else_jumping_off_bridge; prov:qualifiedCommunication [ a prov:Communication; prov:entity :everyone_else_jumping_off_bridge; :foo :bar ]."@en ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Communication" ;
+	prov:component "entities-activities" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-wasInformedBy" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-wasInformedBy" ;
+	prov:definition "Communication is the exchange of an entity by two activities, one activity using the entity generated by the other." ;
+	prov:unqualifiedForm prov:wasInformedBy .
+
+prov:Derivation a owl:Class ;
+	rdfs:label "Derivation" ;
+	rdfs:subClassOf prov:EntityInvolvement ;
+	prov:component "derivations" ;
+	rdfs:comment "An instance of prov:Derivation provides additional descriptions about the binary prov:wasDerivedFrom relation from some prov:Entity to another prov:Entity. For example, :chewed_bubble_gum prov:wasDerivedFrom :unwrapped_bubble_gum; prov:qualified [ a prov:Derivation; prov:entity :unwrapped_bubble_gum; :foo :bar ]."@en ;
+	prov:category "qualified" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#Derivation-Relation" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#Derivation-Relation" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#Derivation-Relation" ;
+	prov:definition "A derivation is a transformation of an entity into another, a construction of an entity into another, or an update of an entity, resulting in a new one." ;
+	prov:unqualifiedForm prov:wasDerivedFrom .
+
+prov:Dictionary a owl:Class ;
+	rdfs:label "Dictionary"@en ;
+	rdfs:subClassOf prov:Entity ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#section-types-entities-agents" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#component5" ;
+	rdfs:comment "This concept allows for the provenance of the dictionary, but also of its constituents to be expressed. Such a notion of dictionary corresponds to a wide variety of concrete data structures, such as a maps or associative arrays."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#concept-collection" , "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-collection" ;
+	prov:definition "A dictionary is an entity that provides a structure to some constituents, which are themselves entities. These constituents are said to be member of the dictionary." ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Collection" ;
+	rdfs:comment "A given dictionary forms a given structure for its members. A different structure (obtained either by insertion or removal of members) constitutes a different dictionary."@en ;
+	prov:component "collections" ;
+	prov:category "collections" .
+
+prov:DictionaryInvolvement a owl:Class ;
+	rdfs:subClassOf prov:Involvement ;
+	prov:category "collections" ;
+	prov:component "collections" ;
+	rdfs:comment "prov:DictionaryInvolvement provides descriptions of any binary involvement between any instance and a prov:Dictionary."@en .
+
+prov:EmptyDictionary a owl:Class ;
+	rdfs:subClassOf prov:Dictionary ;
+	prov:component "collections" ;
+	prov:category "collections" ;
+	rdfs:comment "An empty dictionary."@en .
+
+prov:End a owl:Class ;
+	rdfs:label "End" ;
+	rdfs:subClassOf prov:EntityInvolvement , prov:InstantaneousEvent ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#types-of-events" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-End" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-End" ;
+	prov:category "qualified" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-End" ;
+	prov:definition "An activity end event is the instantaneous event that marks the instant an activity ends." ;
+	rdfs:comment "An instance of prov:End provides additional descriptions about the binary prov:wasEndedBy relation from some ended prov:Activity to an prov:Entity that ended it. For example, :ball_game prov:wasEndedBy :buzzer; prov:qualified [ a prov:Usage; prov:entity :buzzer; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ]."@en ;
+	prov:component "entities-activities" ;
+	prov:unqualifiedForm prov:wasEndedBy .
+
+prov:Entity a owl:Class ;
+	rdfs:label "Entity" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#section-entity-activity"^^xsd:anyURI ;
+	prov:component "entities-activities" ;
+	prov:definition "An entity is a thing one wants to provide provenance for. For the purpose of this specification, things can be physical, digital, conceptual, or otherwise; things may be real or imaginary."@en ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Entity" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Entity" ;
+	prov:category "starting-point" ;
+	rdfs:comment "An entity is a thing one wants to provide provenance for. For the purpose of this specification, things can be physical, digital, conceptual, or otherwise; things may be real or imaginary."@en .
+
+prov:EntityInvolvement a owl:Class ;
+	rdfs:label "EntityInvolvement" ;
+	rdfs:subClassOf prov:Involvement ;
+	rdfs:comment "prov:EntityInvolvement provides descriptions of any binary involvement between any instance and an prov:Entity."@en ;
+	prov:category "qualified" ;
+	rdfs:seeAlso prov:entity .
+
+prov:Generation a owl:Class ;
+	rdfs:label "Generation" ;
+	rdfs:subClassOf prov:ActivityInvolvement , prov:InstantaneousEvent ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Generation" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Generation" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#types-of-events" ;
+	prov:category "qualified" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Generation" ;
+	prov:definition "An entity generation event is the instantaneous event that marks the final instant of an entity's creation timespan, after which it is no longer available for use." ;
+	prov:component "entities-activities" ;
+	rdfs:comment "An instance of prov:Generation provides additional descriptions about the binary prov:wasGeneratedBy relation from a generated prov:Entity to the prov:Activity that generated it. For example, :cake prov:wasGeneratedBy :baking; prov:qualifiedGeneration [ a prov:Generation; prov:entity :baking; :foo :bar ]."@en ;
+	prov:unqualifiedForm prov:wasGeneratedBy .
+
+prov:Insertion a owl:Class ;
+	rdfs:label "Insertion" ;
+	rdfs:subClassOf prov:DictionaryInvolvement ;
+	prov:definition "Insertion is a derivation that transforms a dictionary into another, by insertion of one or more key-value pairs." ;
+	rdfs:comment "Insertion is a derivation that transforms a dictionary into another, by insertion of one or more key-value pairs."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-collection-insertion" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-collection-insertion" ;
+	prov:component "collections" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Collection" ;
+	prov:category "collections" ;
+	prov:unqualifiedForm prov:derivedByInsertionFrom .
+
+prov:InstantaneousEvent a owl:Class ;
+	rdfs:label "InstantaneousEvent" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#section-time-event" ;
+	prov:prov-n "" ;
+	prov:component "entities-activities" ;
+	prov:prov-dm "" ;
+	prov:definition "An instantaneous event, or event for short, happens in the world and marks a change in the world, in its activities and in its entities. The term 'event' is commonly used in process algebra with a similar meaning. Events represent communications or interactions; they are assumed to be atomic and instantaneous." ;
+	rdfs:comment "An instantaneous event, or event for short, happens in the world and marks a change in the world, in its activities and in its entities. The term 'event' is commonly used in process algebra with a similar meaning. Events represent communications or interactions; they are assumed to be atomic and instantaneous."@en ;
+	prov:category "qualified" .
+
+prov:Invalidation a owl:Class ;
+	rdfs:subClassOf prov:ActivityInvolvement , prov:InstantaneousEvent ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Invalidation" ;
+	prov:component "entities-activities" ;
+	prov:category "qualified" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Invalidation" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#dfn-invalidation-event" ;
+	prov:definition "Invalidation is the start of the destruction, cessation, or expiry of an existing entity by an activity. The entity is no longer available for use after invalidation. Any generation or usage of an entity precedes its invalidation." .
+
+prov:Involvement a owl:Class ;
+	rdfs:label "Involvement" ;
+	rdfs:comment "Any resource that involved an prov:Activity, prov:Entity, or prov:Agent can qualify its involvement by also referencing an instance of prov:Involvement. Instances of prov:Involvement reference the involved Activity, Entity, or Agent (using prov:activity, prov:entity, or prov:agent, respectively) and may be described with any kind of attributes, including user-defined attributes and those provided by PROV (prov:hadRole, prov:hadPlan, prov:atTime, prov:hadLocation). A description (via prov:Involvement) of the binary involvement implies the assertion of the binary involvement."@en ;
+	prov:editorialNote "For simplicity, the hierarchy 'stops' at the primary resources (Activity, Entity, Agent). Distinctions beyond the type of object involved are not necessary in PROV-O, but may be established by others." ;
+	prov:category "qualified" ;
+	prov:unqualifiedForm prov:involved .
+
+prov:KeyValuePair a owl:Class ;
+	rdfs:comment "A key-value pair. Part of a prov:Collection through prov:Membership. The key is any RDF Literal, the value is a prov:Entity."@en ;
+	prov:category "collections" .
+
+prov:Location a owl:Class ;
+	rdfs:label "Location" ;
+	prov:definition "A location can be an identifiable geographic place (ISO 19112), but it can also be a non-geographic place such as a directory, row, or column. As such, there are numerous ways in which location can be expressed, such as by a coordinate, address, landmark, and so forth." ;
+	prov:prov-n "" ;
+	prov:category "expanded" ;
+	prov:prov-dm-constraints "" ;
+	rdfs:comment "A location can be an identifiable geographic place (ISO 19112), but it can also be a non-geographic place such as a directory, row, or column. As such, there are numerous ways in which location can be expressed, such as by a coordinate, address, landmark, and so forth."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-attribute-location" ;
+	rdfs:seeAlso prov:hadLocation .
+
+prov:Membership a owl:Class ;
+	rdfs:comment "Described members of a collection, in the form of key-value pairs. The Membership resource can also be annotated with attributes."@en ;
+	prov:category "collections" ;
+	prov:component "collections" ;
+	prov:unqualifiedForm prov:membership .
+
+prov:Note a owl:Class ;
+	rdfs:label "Note" ;
+	prov:category "expanded" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-note" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-note" ;
+	prov:definition "Attribute-value pairs occurring in notes are application specific." ;
+	rdfs:comment "Attribute-value pairs occurring in notes are application specific."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-note" ;
+	prov:editorialNote "When using RDF, 'application-specific properties' directly describe the subject resource and do not require a prov:Note to distinguish them. When choosing how to model your application, note that prov:Note provides a level of indirection that is relatively unnatural in RDF when reflecting the purposes stated in PROV-DM. However, prov:Note may be effectively used in RDF for other purposes. Please also note that accounts are more appropriate mechanims for distinguishing 'who said what'; the indirection imposed by prov:Note is a poorer mechanism to model provenance of provenance." ;
+	prov:component "annotations" ;
+	rdfs:seeAlso prov:hasAnnotation .
+
+prov:Organization a owl:Class ;
+	rdfs:label "Organization" ;
+	rdfs:subClassOf prov:Agent ;
+	prov:definition "Agents of type Organization are social institutions such as companies, societies etc." ;
+	prov:prov-dm-constraints "" ;
+	rdfs:comment "Agents of type Organization are social institutions such as companies, societies etc."@en ;
+	prov:category "expanded" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-types" ;
+	prov:component "agents-responsibility" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Agent" .
+
+prov:Person a owl:Class ;
+	rdfs:label "Person" ;
+	rdfs:subClassOf prov:Agent ;
+	prov:category "expanded" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-types" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Agent" ;
+	prov:component "agents-responsibility" ;
+	prov:definition "Agents of type Person are people." ;
+	prov:prov-dm-constraints "" ;
+	rdfs:comment "Agents of type Person are people."@en .
+
+prov:Plan a owl:Class ;
+	rdfs:label "Plan" ;
+	rdfs:subClassOf prov:Entity ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Association" ;
+	prov:definition "A plan is an entity that represents a set of actions or steps intended by one or more agents to achieve some goals." ;
+	rdfs:comment "There exist no prescriptive requirement on the nature of plans, their representation, the actions or steps they consist of, or their intended goals. Since plans may evolve over time, it may become necessary to track their provenance, so plans themselves are entities. Representing the plan explicitly in the provenance can be useful for various tasks: for example, to validate the execution as represented in the provenance record, to manage expectation failures, or to provide explanations."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#section-types-entities-agents" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Association" ;
+	prov:category "qualified" ;
+	prov:component "agents-responsibility" .
+
+prov:Quotation a owl:Class ;
+	rdfs:label "Quotation" ;
+	rdfs:subClassOf prov:EntityInvolvement ;
+	prov:definition "A quotation is the repeat of (some or all of) an entity, such as text or image, by someone other than its original author." ;
+	prov:component "derivations" ;
+	prov:category "qualified" ;
+	rdfs:comment "An instance of prov:Quotation provides additional descriptions about the binary prov:wasQuotedFrom relation from some prov:Entity to another prov:Entity. For example, :here_is_looking_at_you_kid prov:wasQuotedFrom :casablanca_script; prov:qualified [ a prov:Quotation; prov:entity :casablanca_script; :foo :bar ]."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-quotation" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-quotation" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-quotation" ;
+	prov:unqualifiedForm prov:wasQuotedFrom .
+
+prov:Removal a owl:Class ;
+	rdfs:label "Removal" ;
+	rdfs:subClassOf prov:DictionaryInvolvement ;
+	prov:category "collections" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Collection" ;
+	prov:definition "Removal is a derivation that transforms a dictionary into another, by removing one or more key-value pairs." ;
+	rdfs:comment "Removal is a derivation that transforms a dictionary into another, by removing one or more key-value pairs."@en ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-collection-removal" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-collection-removal" ;
+	prov:component "collections" ;
+	prov:unqualifiedForm prov:derivedByRemovalFrom .
+
+prov:Responsibility a owl:Class ;
+	rdfs:label "Responsibility" ;
+	rdfs:subClassOf prov:AgentInvolvement ;
+	prov:component "agents-responsibility" ;
+	rdfs:comment "An instance of prov:Responsibility provides additional descriptions about the binary prov:actedOnBehalfOf relation from a performing prov:Agent to some prov:Agent for whom it was performed. For example, :mixing prov:wasAssociatedWith :toddler . :toddler prov:actedOnBehalfOf :mother; prov:qualified [ a prov:Responsiblity; prov:entity :mother; :foo :bar ]."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-responsibility" ;
+	prov:definition "Responsibility is the fact that an agent is accountable for the actions of a 'subordinate' agent, in the context of an activity." ;
+	prov:category "qualified" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Responsibility" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-responsibility" ;
+	prov:unqualifiedForm prov:actedOnBehalfOf .
+
+prov:Revision a owl:Class ;
+	rdfs:label "Revision" ;
+	rdfs:subClassOf prov:EntityInvolvement ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Revision" ;
+	prov:component "derivations" ;
+	prov:category "qualified" ;
+	prov:definition "A revision is a derivation that revises an entity into a revised version." ;
+	rdfs:comment "An instance of prov:Revision provides additional descriptions about the binary prov:wasRevisionOf relation from some prov:Entity to another prov:Entity. For example, :draft_2 prov:wasRevisionOf :draft_1; prov:qualified [ a prov:Source; prov:entity :draft_1; :foo :bar ]."@en ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Revision" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Revision" ;
+	prov:unqualifiedForm prov:wasRevisionOf .
+
+prov:Role a owl:Class ;
+	rdfs:label "Role" ;
+	prov:category "qualified" ;
+	prov:prov-n "" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-attribute-role" ;
+	prov:prov-dm-constraints "" ;
+	prov:definition "A Role is the function of an entity with respect to an activity, in the context of a usage, generation, association, start, and end." ;
+	rdfs:comment "A Role is the function of an entity with respect to an activity, in the context of a usage, generation, association, start, and end."@en ;
+	prov:component "agents-responsibility" ;
+	rdfs:seeAlso prov:hadRole .
+
+prov:SoftwareAgent a owl:Class ;
+	rdfs:label "SoftwareAgent" ;
+	rdfs:subClassOf prov:Agent ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-types" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Agent" ;
+	prov:prov-dm-constraints "" ;
+	rdfs:comment "A software agent is running software."@en ;
+	prov:component "agents-responsibility" ;
+	prov:category "expanded" ;
+	prov:definition "A software agent is running software." .
+
+prov:Source a owl:Class ;
+	rdfs:label "Source" ;
+	rdfs:subClassOf prov:EntityInvolvement ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-original-source" ;
+	prov:definition "An original source refers to the source material that is closest to the person, information, period, or idea being studied." ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-orignal-source" ;
+	rdfs:comment "An instance of prov:Source provides additional descriptions about the binary prov:hadOriginalSource relation from some prov:Entity to another prov:Entity. For example, :blog prov:hadOriginalSource :newsArticle; prov:qualified [ a prov:Source; prov:entity :newsArticle; :foo :bar ]."@en ;
+	prov:category "qualified" ;
+	prov:component "derivations" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-original-source" ;
+	prov:unqualifiedForm prov:hadOriginalSource .
+
+prov:Start a owl:Class ;
+	rdfs:label "Start" ;
+	rdfs:subClassOf prov:EntityInvolvement , prov:InstantaneousEvent ;
+	prov:definition "An activity start event is the instantaneous event that marks the instant an activity starts." ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#types-of-events" ;
+	prov:component "entities-activities" ;
+	rdfs:comment "An instance of prov:Start provides additional descriptions about the binary prov:wasStartedBy relation from some started prov:Activity to an prov:Entity that started it. For example, :foot_race prov:wasStartedBy :bang; prov:qualified [ a prov:Usage; prov:entity :bang; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ]."@en ;
+	prov:category "qualified" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Start" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Start" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Start" ;
+	prov:unqualifiedForm prov:wasStartedBy .
+
+prov:StartByActivity a owl:Class ;
+	rdfs:label "StartByActivity" ;
+	rdfs:subClassOf prov:ActivityInvolvement ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-wasStartedByActivity" ;
+	prov:definition "Start by Activity is the start of an activity with an implicit trigger generated by another activity." ;
+	rdfs:comment "An instance of prov:StartedByActivity provides additional descriptions about the binary prov:wasStartedByActivity relation from some started prov:Activity to another prov:Activity started it. For example, :second_leg_of_relay prov:wasStartedByActivity :handed_baton; prov:qualified [ a prov:Usage; prov:entity :handed_baton; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ]."@en ;
+	prov:category "qualified" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#types-of-events" ;
+	prov:component "entities-activities" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-StartByActivity" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-startByActivity" ;
+	prov:unqualifiedForm prov:wasStartedByActivity .
+
+prov:Trace a owl:Class ;
+	rdfs:label "Trace" ;
+	rdfs:subClassOf prov:EntityInvolvement ;
+	prov:definition "Traceability is the ability to link back an entity to another by means of derivation or responsibility relations, possibly repeatedly traversed." ;
+	rdfs:comment "An instance of prov:Trace provides additional descriptions about the binary prov:tracedTo relation from some prov:Entity to some other prov:Element. For example, :stomach_ache prov:tracedTo :spoon; prov:qualified [ a prov:Trace; prov:entity :spoon; :foo :bar ]."@en ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-traceability" ;
+	prov:category "qualified" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-traceability" ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-traceability" ;
+	prov:component "derivations" ;
+	prov:unqualifiedForm prov:tracedTo .
+
+prov:Usage a owl:Class ;
+	rdfs:label "Usage" ;
+	rdfs:subClassOf prov:EntityInvolvement , prov:InstantaneousEvent ;
+	prov:prov-n "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-n.html#expression-Usage" ;
+	prov:definition "A usage is an instantaneous world event: an activity beginning to consume an entity. Before this event, the activity had not begun to consume or use to this entity." ;
+	prov:category "qualified" ;
+	prov:component "entities-activities" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#types-of-events" ;
+	prov:prov-dm "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm.html#term-Usage" ;
+	prov:prov-dm-constraints "http://dvcs.w3.org/hg/prov/raw-file/default/model/prov-dm-constraints.html#term-Usage" ;
+	rdfs:comment "An instance of prov:Usage provides additional descriptions about the binary prov:used relation from some prov:Activity to an prov:Entity that it used. For example, :keynote prov:used :podium; prov:qualified [ a prov:Usage; prov:entity :podium; :foo :bar ]."@en ;
+	prov:unqualifiedForm prov:used .
+
+prov:Plan a owl:NamedIndividual .
+
+prov:hadActivity rdfs:domain _:node1745pk35lx11 .
+
+_:node1745pk35lx11 a owl:Class ;
+	owl:unionOf _:node1745pk35lx12 .
+
+_:node1745pk35lx12 rdf:first prov:Derivation ;
+	rdf:rest _:node1745pk35lx13 .
+
+_:node1745pk35lx13 rdf:first prov:Responsibility ;
+	rdf:rest rdf:nil .
+
+prov:hadRole rdfs:domain _:node1745pk35lx14 .
+
+_:node1745pk35lx14 a owl:Class ;
+	owl:unionOf _:node1745pk35lx15 .
+
+_:node1745pk35lx15 rdf:first prov:Association ;
+	rdf:rest _:node1745pk35lx16 .
+
+_:node1745pk35lx16 rdf:first prov:End ;
+	rdf:rest _:node1745pk35lx17 .
+
+_:node1745pk35lx17 rdf:first prov:Generation ;
+	rdf:rest _:node1745pk35lx18 .
+
+_:node1745pk35lx18 rdf:first prov:Start ;
+	rdf:rest _:node1745pk35lx19 .
+
+_:node1745pk35lx19 rdf:first prov:Usage ;
+	rdf:rest rdf:nil .
+
+_:node1745pk35lx20 a owl:Axiom ;
+	rdfs:comment "TODO: Paolo questions this subproperty axiom." ;
+	owl:annotatedProperty rdfs:subPropertyOf ;
+	owl:annotatedTarget prov:tracedTo ;
+	owl:annotatedSource prov:wasAttributedTo .

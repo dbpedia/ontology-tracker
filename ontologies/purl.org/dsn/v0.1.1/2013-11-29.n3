@@ -1,0 +1,118 @@
+@prefix : <http://purl.org/dsnotify/vocab/eventset/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix lode: <http://linkedevents.org/ontology/> .
+@prefix scv: <http://purl.org/NET/scovo#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix voaf: <http://purl.org/vocommons/voaf#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+
+:CreateEvent rdfs:comment "An event class describing that a particular resource was 'created' in a dataset. This means that one or more triples having the associated resource as subject or object were created in the corresponding RDF model."@en-us ;
+	rdfs:label "create event"@en-us ;
+	rdfs:subClassOf :ResourceChangeEvent ;
+	a owl:Class .
+
+:sourceDataset rdfs:range void:Dataset ;
+	rdfs:domain :Eventset ;
+	rdfs:comment """A void:Dataset that is considered as 'source' dataset of the associated eventset. When the eventset is 'complete' and all events in this  eventset are applied in their timely order to this and all other source datasets, it will become equal to the corresponding target dataset(s).
+Example: a static snapshot of a dataset at time t0, e.g., the DBpedia snapshot 3.2"""@en-us ;
+	rdfs:label "source dataset"@en-us ;
+	a owl:ObjectProperty .
+
+:hasEvent rdfs:range lode:Event ;
+	rdfs:domain :Eventset ;
+	rdfs:comment "An event that is part of an eventset."@en-us ;
+	rdfs:label "has event"@en-us ;
+	a owl:ObjectProperty .
+
+:sourceResource rdfs:range xsd:anyURI ;
+	rdfs:domain :MoveEvent ;
+	rdfs:comment "The identifier (URI) of a resource that was published under a new URI (i.e., when a MoveEvent occurred)."@en-us ;
+	rdfs:label "source resource"@en-us ;
+	a owl:DatatypeProperty .
+
+:ResourceChangeEvent rdfs:comment "An event that changes the representations of a resource in an RDF dataset. ResourceChangeEvents are lode:Events and the lode:atTime or the lode:circa properties should be used to describe the time when the event took place."@en-us ;
+	rdfs:label "Resource change event"@en-us ;
+	rdfs:subClassOf scv:Dimension , lode:Event ;
+	a owl:Class .
+
+:hasConfidence rdfs:range xsd:float ;
+	rdfs:domain :ResourceChangeEvent ;
+	rdfs:comment "Optional property for capturing the confidence (a float value between 0 and 1) the event detecting actor has that the corresponding event really took place. If omited, applications should assume a confidence of 1.0."@en-us ;
+	rdfs:label "has confidence"@en-us ;
+	a owl:DatatypeProperty .
+
+lode:Event a owl:Class .
+
+void:Dataset a owl:Class .
+
+:RemoveEvent rdfs:comment "An event class describing that a particular resource was 'removed' from a dataset. This means that all triples having the associated resource as subject or object were removed from the corresponding RDF model."@en-us ;
+	rdfs:label "Remove event"@en-us ;
+	rdfs:subClassOf :ResourceChangeEvent ;
+	a owl:Class .
+
+<http://purl.org/dsnotify/vocab/eventset/> cc:license <http://creativecommons.org/licenses/by-sa/3.0/> ;
+	vann:preferredNamespacePrefix "dsn" ;
+	a owl:Ontology ;
+	owl:versionInfo "0.1.1"^^xsd:decimal ;
+	dc:issued "2010-05-26"^^xsd:date ;
+	rdfs:comment "DSNotify Eventsets is a vocabulary for events that change resources in linked data sources."@en-us ;
+	dc:description "DSNotify Eventsets is a vocabulary for events that change resources in linked data sources."@en-us ;
+	vann:preferredNamespaceUri <http://purl.org/dsnotify/vocab/eventset/> ;
+	rdfs:label "DSNotify Eventsets: A vocabulary for change events in linked data sources"@en-us ;
+	dc:contributor "Elaheh Momeni Roochi"^^xsd:string ;
+	dc:creator <http://metadaten-twr.org/author/bernhardhaslhofer/> ;
+	dc:modified "2013-11-29"^^xsd:date ;
+	dc:creator <http://www.cibiv.at/~niko/foaf.rdf> ;
+	dc:title "DSNotify Eventsets: A vocabulary for change events in linked data sources"@en-us ;
+	a voaf:Vocabulary .
+
+:hasReason rdfs:domain :ResourceChangeEvent ;
+	rdfs:comment "A link to a resource that further specifies the reason for the respective ResourceChangeEvent. For example one could attach a textual description or link to another event here. This property is under-specified in this version on purpose."@en-us ;
+	rdfs:label "has reason"@en-us ;
+	a owl:ObjectProperty .
+
+:targetResource rdfs:range xsd:anyURI ;
+	rdfs:domain :ResourceChangeEvent ;
+	rdfs:comment "The identifier (URI) of a resource that was affected by the corresponding event."@en-us ;
+	rdfs:label "target resource"@en-us ;
+	a owl:DatatypeProperty .
+
+:MoveEvent rdfs:comment "An event class describing that a particular resource was 'moved' in a dataset or between datasets. This means that all triples having the associated older resource as subject/object were replaced by triples having the target resource as subject/object in the corresponding RDF models."@en-us ;
+	rdfs:label "Move event"@en-us ;
+	rdfs:subClassOf :ResourceChangeEvent ;
+	a owl:Class .
+
+:targetDataset rdfs:range void:Dataset ;
+	rdfs:domain :Eventset ;
+	rdfs:comment """A void:Dataset that is considered as 'target' dataset of the associated eventset. When the eventset is 'complete' and all events are applied in their timely order to the corresponding source dataset(s), this dataset (and all other target datasets) should be the result.
+Example: a static snapshot of a dataset at time t0+delta, e.g., the DBpedia snapshot 3.3"""@en-us ;
+	rdfs:label "target dataset"@en-us ;
+	a owl:ObjectProperty .
+
+:Eventset rdfs:comment "An eventset is a container of events that occur in a dataset."@en-us ;
+	rdfs:label "Eventset"@en-us ;
+	rdfs:subClassOf void:Dataset ;
+	a owl:Class .
+
+:UpdateEvent rdfs:comment "An event class describing that a particular resource was 'updated' in a dataset. This means that some triples having the associated resource as subject or object were modified/created/removed in the corresponding RDF model."@en-us ;
+	rdfs:label "Update event"@en-us ;
+	rdfs:subClassOf :ResourceChangeEvent ;
+	a owl:Class .
+
+scv:Dimension a owl:Class .
+
+:hasAffectedTriples rdfs:domain :ResourceChangeEvent ;
+	rdfs:comment "A link to a resource that further specifies the actual triples that were added/removed in consequence of the respective ResourceChangeEvent. For example one could attach a Talis changeset here. This property is under-specified in this version on purpose."@en-us ;
+	rdfs:label "has affected triples"@en-us ;
+	a owl:ObjectProperty .
+
+:UnknownEvent rdfs:comment "An event class describing that a not further specified event occurred to a resource in a dataset."@en-us ;
+	rdfs:label "Unknown event"@en-us ;
+	rdfs:subClassOf :ResourceChangeEvent ;
+	a owl:Class .

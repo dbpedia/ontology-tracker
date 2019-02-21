@@ -1,0 +1,585 @@
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://online-presence.net/opo/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix event: <http://purl.org/NET/c4dm/event.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix swc: <http://data.semanticweb.org/ns/swc/ontology#> .
+
+<http://online-presence.net/opo/ns#> a owl:Ontology ;
+	dc:date "2010-07-01"^^xsd:date ;
+	dc:creator "Milan Stankovic"^^xsd:string ;
+	owl:versionInfo "Revision 0.5.2" ;
+	dc:contributor "Jelena Jovanovic" , "Alexandre Passant" ;
+	dc:title "OnlinePresence Ontology"@en ;
+	dc:description "Ontology for representing OnlinePresence."@en ;
+	rdfs:seeAlso <http://online-presence.net/opo/spec/> .
+
+sioc:Item a owl:Class .
+
+foaf:Agent a owl:Class .
+
+sioc:UserAccount a owl:Class .
+
+wgs84:SpatialThing a owl:Class .
+
+foaf:Image a owl:Class .
+
+sioc:has_creator a owl:ObjectProperty .
+
+<http://online-presence.net/opo/ns#> a owl:Thing .
+
+event:Event a owl:Class .
+
+foaf:Group a owl:Class .
+
+swc:OrganisedEvent a owl:Class .
+
+foaf:Person a owl:Class .
+
+:DoNotDistrub a owl:Thing .
+
+foaf:Document a owl:Class .
+
+dc:date a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+:isPresenceComponentOf a owl:ObjectProperty ;
+	rdfs:label "isPresenceComponentOf"@en ;
+	rdfs:comment "The OnlinePresence that has this OnlinePresenceComponent"@en ;
+	rdfs:range :OnlinePresence ;
+	rdfs:domain :OnlinePresenceComponent ;
+	owl:inverseOf :hasPresenceComponent ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> .
+
+:avatar a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "avatar"@en ;
+	rdfs:comment """The graphical representation of the Agent used to depict him
+			in online systems."""@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range foaf:Image ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> .
+
+:currentLocation a owl:ObjectProperty ;
+	rdfs:label "currentLocation"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "Current location of the Agent"@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range wgs84:SpatialThing .
+
+:currentAction a owl:ObjectProperty ;
+	rdfs:label "currentAction"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "Current action performed by the Agent"@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range :Action .
+
+:declaredBy a owl:ObjectProperty ;
+	rdfs:label "declaredBy"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Agent that declared the OnlinePresence"@en ;
+	owl:inverseOf :declaresOnlinePresence ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range foaf:Agent .
+
+:declaredOn a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "declaredOn"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The sioc:UserAccount account where the OnlinePresence was declared."@en ;
+	rdfs:subPropertyOf sioc:has_creator ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range sioc:UserAccount .
+
+:publishedFrom a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "publishedFrom"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The source from which the OnlinePresence is declared (e.g., a mobile device)"@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range :SourceOfPublishing .
+
+:declaresOnlinePresence a owl:ObjectProperty ;
+	rdfs:label "declaresOnlinePresence"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The OnlinePresence declared by the Agent"@en ;
+	rdfs:range :OnlinePresence ;
+	owl:inverseOf :declaredBy ;
+	rdfs:domain foaf:Agent .
+
+:hasPresenceComponent a owl:ObjectProperty ;
+	rdfs:label "hasOnlinePresence"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "OnlinePresenceComponent included in this OnlinePresence"@en ;
+	owl:inverseOf :isPresenceComponentOf ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range :OnlinePresenceComponent .
+
+:hasStatusComponent a owl:ObjectProperty ;
+	rdfs:label "hasStatusComponent"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "OnlineStatusComponent included in this OnlineStatus"@en ;
+	rdfs:domain :OnlineStatus ;
+	rdfs:range :OnlineStatusComponent ;
+	owl:inverseOf :isStatusComponentOf .
+
+:isStatusComponentOf a owl:ObjectProperty ;
+	rdfs:label "isStatusComponentOf"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The OnlineStatus that includes this OnlineStatusComponent."@en ;
+	rdfs:range :OnlineStatus ;
+	rdfs:domain :OnlineStatusComponent ;
+	owl:inverseOf :hasStatusComponent .
+
+:sourceDescription a owl:ObjectProperty ;
+	rdfs:label "sourceDescription"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "the description of the SourceOfPublishing."@en ;
+	rdfs:domain :SourceOfPublishing .
+
+:customMessage a owl:ObjectProperty ;
+	rdfs:label "customMessage"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """A message associated with the OnlinePresence, often used in
+			chat programs and social networks as custom title as well as in microblogging as status message."""@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range sioc:Item .
+
+:intendedFor a owl:ObjectProperty ;
+	rdfs:label "intendedFor"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "A group of people belonging to a space for sharing online psresence data - the intended audience of presence information."@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range :SharingSpace .
+
+:commonInterest a owl:ObjectProperty ;
+	rdfs:label "Common Interest"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "An interst shared by people in the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range foaf:Document .
+
+:currentlyIn a owl:ObjectProperty ;
+	rdfs:label "Currently In"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The current location of people in the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range wgs84:SpatialThing .
+
+:basedNear a owl:ObjectProperty ;
+	rdfs:label "Based Near"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The location where members of the Sharing Space are based."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range wgs84:SpatialThing .
+
+:schoolHomepage a owl:ObjectProperty ;
+	rdfs:label "School Homepage"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The homepage of school attended by people in the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range foaf:Document .
+
+:workplaceHomepage a owl:ObjectProperty ;
+	rdfs:label "Workplace Homepage"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The homepage of workplace of people in the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range foaf:Document .
+
+:attendedOrganisedEvent a owl:ObjectProperty ;
+	rdfs:label "Attended Organised Event"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The organised event attended by people in the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range swc:OrganisedEvent .
+
+:closestFriendsOf a owl:ObjectProperty ;
+	rdfs:label "Closest Friends Of"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Person who's closest friends belog to the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range foaf:Person .
+
+:familyOf a owl:ObjectProperty ;
+	rdfs:label "Family Of"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Person who's family members belog to the Sharing Space."@en ;
+	rdfs:domain :SharingSpace ;
+	rdfs:range foaf:Person .
+
+:duration a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "duration"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The estimated duration of the OnlinePresence after the
+			startTime"""@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range xsd:duration .
+
+:inactivityPeriod a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "inactivityPeriod"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "Period of inactivity on a certain service"@en ;
+	rdfs:domain :Activity ;
+	rdfs:range xsd:duration .
+
+:onlineStatusName a owl:DatatypeProperty ;
+	rdfs:label "OnlineStatusName"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """A name used by chat systems to distinguish their various
+			statuses."""@en ;
+	rdfs:domain :OnlineStatus ;
+	rdfs:range xsd:string .
+
+:startTime a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "startTime"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The time when the OnlinePresence started"@en ;
+	rdfs:domain :OnlinePresence ;
+	rdfs:range xsd:dateTime .
+
+:sourceName a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "sourceName"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The name of the SourceOfPublishing."@en ;
+	rdfs:domain :SourceOfPublishing ;
+	rdfs:range xsd:string .
+
+:Action a owl:Class ;
+	rdfs:label "Action"@en ;
+	rdfs:subClassOf event:Event ;
+	owl:disjointWith :OnlinePresence , :SourceOfPublishing ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "An action currently performed by the Agent (e.g., listening to music, reading a book)."@en .
+
+:Activity a owl:Class ;
+	rdfs:label "Activity"@en ;
+	rdfs:subClassOf :OnlineStatusComponent ;
+	owl:disjointWith :Contactability , :Disturbability , :Visibility ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """OnlineStatusComponent used to represent the state of
+			Activity of the Agent (e.g., Active, Inactive,
+			ProlongedInactive)."""@en .
+
+:Contactability a owl:Class ;
+	rdfs:label "Contactability"@en ;
+	rdfs:subClassOf :OnlineStatusComponent ;
+	owl:disjointWith :Disturbability , :Visibility , :Activity ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """OnlineStatusComponent used to represent the state of
+			contactability of an Agent. Contatctability relates to the
+			possiblity of other Agents to conatct the Agent freely or
+			only with regard to some conditions."""@en .
+
+:Disturbability a owl:Class ;
+	rdfs:label "Disturbability"@en ;
+	rdfs:subClassOf :OnlineStatusComponent ;
+	owl:disjointWith :Visibility , :Activity , :Contactability ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """OnlineStatusComponent used to represent the wish of an Agent
+			to be or not to be disturbed."""@en .
+
+:Findability a owl:Class ;
+	rdfs:label "Findability"@en ;
+	rdfs:subClassOf :OnlinePresenceComponent ;
+	owl:disjointWith :Notifiability , :OnlineStatus ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The OnlinePresenceComponent used to represent the
+			possibility to find contact details of an Agent in a public
+			listing"""@en .
+
+:Notifiability a owl:Class ;
+	rdfs:label "Notifiability"@en ;
+	rdfs:subClassOf :OnlinePresenceComponent ;
+	owl:disjointWith :OnlineStatus , :Findability ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The OnlinePresenceComponent used to represent the attitude
+			of an Agent towards interaction with applications i.e., the
+			possibility of applications to show notifications."""@en .
+
+:OnlinePresence a owl:Class ;
+	rdfs:label "OnlinePresence"@en ;
+	rdfs:subClassOf owl:Thing , _:node17168luf7x38 .
+
+_:node17168luf7x38 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :Findability ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlinePresence rdfs:subClassOf _:node17168luf7x39 .
+
+_:node17168luf7x39 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :Notifiability ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlinePresence rdfs:subClassOf _:node17168luf7x40 .
+
+_:node17168luf7x40 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :OnlineStatus ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlinePresence owl:disjointWith :OnlinePresenceComponent , :Action , :SourceOfPublishing ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """OnlinePresence, described in termes of various
+			OnlinePresenceComponents to represent the attitude of an
+			Agent towards interaction with other Agents and
+			Applications."""@en .
+
+:OnlinePresenceComponent a owl:Class ;
+	rdfs:label "OnlinePresenceComponent"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	owl:disjointWith :OnlinePresence ;
+	rdfs:comment """A component of OnlinePresence used to represent one of its
+			dimensions."""@en .
+
+:OnlineStatus a owl:Class ;
+	rdfs:label "OnlineStatus"@en ;
+	rdfs:subClassOf :OnlinePresenceComponent , _:node17168luf7x41 .
+
+_:node17168luf7x41 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :Notifiability ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlineStatus rdfs:subClassOf _:node17168luf7x42 .
+
+_:node17168luf7x42 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :Visibility ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlineStatus rdfs:subClassOf _:node17168luf7x43 .
+
+_:node17168luf7x43 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :Activity ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlineStatus rdfs:subClassOf _:node17168luf7x44 .
+
+_:node17168luf7x44 a owl:Restriction ;
+	owl:onProperty :hasStatusComponent ;
+	owl:onClass :Disturbability ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:OnlineStatus owl:disjointWith :OnlineStatusComponent , :Findability , :Notifiability ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The OnlinePresenceComponent used to represent the attitude
+			of an Agent towards the possibility of communication with
+			other Agents. The OnlineStatus is defined by its components."""@en .
+
+:OnlineStatusComponent a owl:Class ;
+	rdfs:label "OnlineStatusComponent"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	owl:disjointWith :OnlineStatus ;
+	rdfs:comment """The component of the OnlineStatus representing one of its
+			dimensions."""@en .
+
+:SourceOfPublishing a owl:Class ;
+	rdfs:label "SourceOfPublishing"@en ;
+	rdfs:subClassOf owl:Thing ;
+	owl:disjointWith :OnlinePresence , :Action ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The source that can publish Online Presence data."@en .
+
+:Visibility a owl:Class ;
+	rdfs:label "Visibility"@en ;
+	rdfs:subClassOf :OnlineStatusComponent ;
+	owl:disjointWith :Disturbability , :Activity , :Contactability ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """OnlineStatusComponent used to represent the possiblity of
+			others to see the OnlineStatus of the Agent"""@en .
+
+:StatusMessage a owl:Class ;
+	rdfs:label "StatusMessage"@en ;
+	rdfs:subClassOf sioc:Item ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "A status message that cannot be commented on."@en .
+
+:SharingSpace a owl:Class ;
+	rdfs:label "SharingSpace"@en ;
+	rdfs:subClassOf foaf:Group ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "A group of people belonging to a space for sharing online psresence data - the intended audience of data."@en .
+
+:Active a :Activity ;
+	rdfs:label "Active"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Agent is active on the system."@en .
+
+:AllNotificationsPass a :Notifiability ;
+	rdfs:label "AllNotificationsPass"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "Agent can receive notifications from applications"@en .
+
+:Available a :Disturbability ;
+	rdfs:label "Available"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The agent is not busy and therefore available for contatc by
+			other Agents."""@en .
+
+:ConstrainedContactability a :Contactability ;
+	rdfs:label "ConstrainedContactability"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The Agent cannot be contated by anyone on the Web, but the
+			contactability is controled by some rules/policies."""@en .
+
+:ConstrainedFindability a :Findability ;
+	rdfs:label "ConstrainedFindability"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The Agent's contact details cannot be found by anyone on
+			the Web, but the findability is controled by some
+			rules/policies."""@en .
+
+:DoNotDisturb a :Disturbability ;
+	rdfs:label "DoNotDisturb"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The Agent is busy and does not want to be contacted by other
+			Agents."""@en .
+
+:FreelyContactable a :Contactability ;
+	rdfs:label "FreelyContactable"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Agent can be contacted by anyone on the Web"@en .
+
+:Inactive a :Activity ;
+	rdfs:label "Inactive"@en ;
+	:inactivityPeriod "PT5M"^^xsd:duration ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Agent is inactive for at least 5 min."@en .
+
+:Invisible a :Visibility ;
+	rdfs:label "Invisible"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Agent's OnlineStatus is not visible to other Agents"@en .
+
+:NotificationsConstrained a :Notifiability ;
+	rdfs:label "NotificationsConstrained"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The acceptance of notifications from applications is somehow
+			constrained (by using some rules or policies)."""@en .
+
+:NotificationsProhibited a :Notifiability ;
+	rdfs:label "NotificationsProhibited"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "Agent cannot receive any notification form applications"@en .
+
+:ProlongedInactive a :Activity ;
+	rdfs:label "ProlongedInactive"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	:inactivityPeriod "PT20M"^^xsd:duration ;
+	rdfs:comment "The Agent is inactive for at least 20 min."@en .
+
+:PubliclyFindable a :Findability ;
+	rdfs:label "PubliclyFindable"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment """The Agent's contact details canbe found by anyone on the
+			Web"""@en .
+
+:Visible a :Visibility ;
+	rdfs:label "Visible"@en ;
+	rdfs:isDefinedBy <http://online-presence.net/opo/ns#> ;
+	rdfs:comment "The Agent's OnlineStatus is visible to other Agents"@en .
+
+_:node17168luf7x45 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x46 .
+
+_:node17168luf7x46 rdf:first :PubliclyFindable ;
+	rdf:rest _:node17168luf7x47 .
+
+_:node17168luf7x47 rdf:first :ConstrainedFindability ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x48 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x49 .
+
+_:node17168luf7x49 rdf:first :DoNotDistrub ;
+	rdf:rest _:node17168luf7x50 .
+
+_:node17168luf7x50 rdf:first :Available ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x51 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x52 .
+
+_:node17168luf7x52 rdf:first :FreelyContactable ;
+	rdf:rest _:node17168luf7x53 .
+
+_:node17168luf7x53 rdf:first :ConstrainedContactability ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x54 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x55 .
+
+_:node17168luf7x55 rdf:first :Active ;
+	rdf:rest _:node17168luf7x56 .
+
+_:node17168luf7x56 rdf:first :ProlongedInactive ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x57 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x58 .
+
+_:node17168luf7x58 rdf:first :AllNotificationsPass ;
+	rdf:rest _:node17168luf7x59 .
+
+_:node17168luf7x59 rdf:first :NotificationsConstrained ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x60 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x61 .
+
+_:node17168luf7x61 rdf:first :Active ;
+	rdf:rest _:node17168luf7x62 .
+
+_:node17168luf7x62 rdf:first :Inactive ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x63 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x64 .
+
+_:node17168luf7x64 rdf:first :NotificationsProhibited ;
+	rdf:rest _:node17168luf7x65 .
+
+_:node17168luf7x65 rdf:first :AllNotificationsPass ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x66 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x67 .
+
+_:node17168luf7x67 rdf:first :Visible ;
+	rdf:rest _:node17168luf7x68 .
+
+_:node17168luf7x68 rdf:first :Invisible ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x69 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x70 .
+
+_:node17168luf7x70 rdf:first :Inactive ;
+	rdf:rest _:node17168luf7x71 .
+
+_:node17168luf7x71 rdf:first :ProlongedInactive ;
+	rdf:rest rdf:nil .
+
+_:node17168luf7x72 a owl:AllDifferent ;
+	owl:distinctMembers _:node17168luf7x73 .
+
+_:node17168luf7x73 rdf:first :NotificationsProhibited ;
+	rdf:rest _:node17168luf7x74 .
+
+_:node17168luf7x74 rdf:first :NotificationsConstrained ;
+	rdf:rest rdf:nil .

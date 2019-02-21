@@ -1,0 +1,547 @@
+@prefix :      <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-lifemapper.owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix elseweb-data: <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-data.owl#> .
+@prefix ns0:   <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix resource: <http://semanticscience.org/resource/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix elseweb-modelling: <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-modelling.owl#> .
+
+:hasNumberOfOccurrences
+        a            owl:DatatypeProperty ;
+        rdfs:domain  :SpeciesOccurrenceSet ;
+        rdfs:label   "has number of occurrences" ;
+        rdfs:range   xsd:integer .
+
+:TIFFDataset  a              owl:Class ;
+        rdfs:label           "tiff dataset"^^xsd:string ;
+        resource:comment     "A dataset that is represented in TIFF format and provides the location where it can be retrieved, the units of the layers and the type code."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      elseweb-data:hasManifestation ;
+                                                       owl:someValuesFrom  elseweb-data:FileManifestation
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasLayerUnits ;
+                                                           owl:someValuesFrom  rdfs:Literal
+                                                         ] [ a                   owl:Restriction ;
+                                                             owl:onProperty      :hasTypeCode ;
+                                                             owl:someValuesFrom  xsd:integer
+                                                           ] )
+                             ] .
+
+:hasExperimentResult  a  owl:ObjectProperty ;
+        rdfs:label  "has experiment result" .
+
+:ExecutableExperimentSpecification
+        a                    owl:Class ;
+        rdfs:label           "executable experiment specification"^^xsd:string ;
+        resource:comment     "An executable experiment specification specifies a modelling algorithm, a modelling scenario and an ocurrence set to generate a species distribution model."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :specifiesModellingAlgorithm ;
+                                                       owl:someValuesFrom  :LifemapperAlgorithm
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :specifiesModellingScenario ;
+                                                         owl:someValuesFrom  :ModellingScenario
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :specifiesOccurrenceSet ;
+                                                           owl:someValuesFrom  :SpeciesOccurrenceSet
+                                                         ] )
+                             ] .
+
+:ExecutedExperimentSpecification
+        a                    owl:Class ;
+        rdfs:label           "executed experiment specification"^^xsd:string ;
+        rdfs:subClassOf      :ExecutableExperimentSpecification ;
+        resource:comment     "An executed experiment specification provides an experiment result."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasExperimentResult ;
+                               owl:someValuesFrom  :ExperimentResult
+                             ] .
+
+:hasExtractedPayload  a  owl:ObjectProperty ;
+        rdfs:label  "has extracted payload" .
+
+elseweb-data:representsEntity
+        a           owl:ObjectProperty ;
+        rdfs:label  "represents entity" .
+
+:ExtractedWCSResponse
+        a                    owl:Class ;
+        rdfs:label           "extracted wcs response"^^xsd:string ;
+        rdfs:subClassOf      :WCSResponse ;
+        resource:comment     "The TIFF dataset that contains the extracted payload from a WCS response."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasExtractedPayload ;
+                               owl:someValuesFrom  :TIFFDataset
+                             ] .
+
+:ParameterDescription
+        a                    owl:Class ;
+        rdfs:label           "parameter description"^^xsd:string ;
+        resource:comment     "The description of an algorithm parameter."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasParameterClass ;
+                                                       owl:someValuesFrom  xsd:anyURI
+                                                     ] [ a                owl:Restriction ;
+                                                         owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                                                         owl:onProperty   :hasLowerBoundInclusive
+                                                       ] [ a                owl:Restriction ;
+                                                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                                                           owl:onProperty   :hasUpperBoundInclusive
+                                                         ] )
+                             ] .
+
+:hasPublishedLayer  a  owl:ObjectProperty ;
+        rdfs:label  "has published layer" .
+
+:hasDefaultValue  a  owl:DatatypeProperty ;
+        rdfs:label  "has default value" .
+
+:hasPublishedScenario
+        a           owl:ObjectProperty ;
+        rdfs:label  "has published scenario" .
+
+:isScenarioLayerOf  a  owl:ObjectProperty ;
+        rdfs:label     "is scenario layer of" ;
+        owl:inverseOf  :hasScenarioLayer .
+
+:hasTypeCode  a     owl:DatatypeProperty ;
+        rdfs:label  "has type code" .
+
+:ModellingScenario  a        owl:Class ;
+        rdfs:label           "modelling scenario"^^xsd:string ;
+        rdfs:subClassOf      :Scenario ;
+        resource:comment     "A modelling scenario provides the specification of an experiment that can be executed."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :isModellingScenarioOf ;
+                               owl:someValuesFrom  :ExecutableExperimentSpecification
+                             ] .
+
+:JSONExperimentSpecification
+        a                    owl:Class ;
+        rdfs:label           "json experiment specification"^^xsd:string ;
+        resource:comment     "The location of an experiment specification in the JSON format."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                               owl:someValuesFrom  rdfs:Literal
+                             ] .
+
+:SpeciesOccurrenceLayer
+        a                    owl:Class ;
+        rdfs:label           "A layer containing data about species ocurrence." , "species occurrence layer" ;
+        rdfs:subClassOf      elseweb-data:Layer ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onClass               :SpeciesOccurrenceSet ;
+                               owl:onProperty            elseweb-data:containsFeatureSet ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] .
+
+:LifemapperParameter  a      owl:Class ;
+        rdfs:label           "lifemapper parameter"^^xsd:string ;
+        rdfs:subClassOf      elseweb-modelling:SpeciesModellingParameter ;
+        resource:comment     "A species modelling parameter that controls the behavior of a lifemapper algorithm."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      elseweb-modelling:boundToValue ;
+                                                       owl:someValuesFrom  rdfs:Literal
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      elseweb-modelling:hasParameterName ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] )
+                             ] .
+
+:specifiesProjectionScenario
+        a           owl:ObjectProperty ;
+        rdfs:label  "specifies projection scenario" .
+
+:hasParameterCollectionClass
+        a           owl:DatatypeProperty ;
+        rdfs:label  "has parameter collection class" .
+
+elseweb-data:FileManifestation
+        a       owl:Class .
+
+:hasExperimentResultID
+        a           owl:DatatypeProperty ;
+        rdfs:label  "has experiment result id" .
+
+:hasInputWCSDataset  a  owl:ObjectProperty ;
+        rdfs:label  "has input wcs dataset" .
+
+elseweb-data:containsFeatureSet
+        a           owl:ObjectProperty ;
+        rdfs:label  "contains feature set" .
+
+:SpeciesOccurrenceDataset
+        a                    owl:Class ;
+        rdfs:label           "species occurrence dataset" ;
+        rdfs:subClassOf      elseweb-data:VectorDataset ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      elseweb-data:hasLayer ;
+                               owl:someValuesFrom  :SpeciesOccurrenceLayer
+                             ] .
+
+:LifemapperSoftware  a    owl:Class ;
+        rdfs:label        "lifemapper software"^^xsd:string ;
+        rdfs:subClassOf   elseweb-modelling:SpeciesModellingSoftware ;
+        resource:comment  "A species modelling software provided by lifemapper."^^xsd:string .
+
+elseweb-data:WCSResponseManifestation
+        a       owl:Class .
+
+:hasJSONExperimentSpecificationURL
+        a           owl:DatatypeProperty ;
+        rdfs:label  "has json experiment specification  url" .
+
+:isModellingScenarioOf
+        a           owl:ObjectProperty ;
+        rdfs:label  "is modelling scenaio of" .
+
+:specifiesModellingScenario
+        a           owl:ObjectProperty ;
+        rdfs:label  "specifies modelling scenario" .
+
+elseweb-data:coversRegion
+        a           owl:ObjectProperty ;
+        rdfs:label  "covers region" .
+
+:specifiesOccurrenceSet
+        a           owl:ObjectProperty ;
+        rdfs:label  "specifies occurrence set" .
+
+:UnpostedScenario  a         owl:Class ;
+        rdfs:label           "unposted scenario"^^xsd:string ;
+        resource:comment     "A scenario that has not been posted and is composed by some scenario layer and has a JSON experiment specification URL."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasScenarioLayer ;
+                                                       owl:someValuesFrom  :ScenarioLayer
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] )
+                             ] .
+
+:InputWCSDataset  a          owl:Class ;
+        rdfs:label           "input wcs dataset"^^xsd:string ;
+        resource:comment     "A dataset that is required as an input to a WCS service."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      elseweb-data:coversRegion ;
+                                                       owl:someValuesFrom  elseweb-data:BoxedGeographicRegion
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      elseweb-data:hasManifestation ;
+                                                         owl:someValuesFrom  <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-edac.owl#RGISWCSManifestation>
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                                                           owl:someValuesFrom  rdfs:Literal
+                                                         ] [ a                   owl:Restriction ;
+                                                             owl:onProperty      :hasLayerUnits ;
+                                                             owl:someValuesFrom  rdfs:Literal
+                                                           ] [ a                   owl:Restriction ;
+                                                               owl:onProperty      :hasTypeCode ;
+                                                               owl:someValuesFrom  xsd:integer
+                                                             ] )
+                             ] .
+
+:hasWCSResponse  a  owl:ObjectProperty ;
+        rdfs:label  "has wcs response" .
+
+:SpeciesOccurrenceSet
+        a                    owl:Class ;
+        rdfs:label           "species ocurrence set"^^xsd:string ;
+        rdfs:subClassOf      elseweb-data:FeatureSet ;
+        resource:comment     "An species ocurrence set provides a set of species ocurrences required to generate a disctibution model."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasOccurrenceOfSpecies ;
+                                                       owl:someValuesFrom  :Species
+                                                     ] [ a                         owl:Restriction ;
+                                                         owl:onDataRange           xsd:integer ;
+                                                         owl:onProperty            :hasNumberOfOccurrences ;
+                                                         owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                                                       ] [ a                owl:Restriction ;
+                                                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                                                           owl:onProperty   :hasOccurrenceSetID
+                                                         ] )
+                             ] .
+
+:hasLayerURL  a     owl:DatatypeProperty ;
+        rdfs:label  "has layer url" .
+
+:hasParameterClass  a  owl:DatatypeProperty ;
+        rdfs:label  "has parameter class" .
+
+:hasModellingScenario
+        a              owl:ObjectProperty ;
+        rdfs:label     "has modelling scenario" ;
+        owl:inverseOf  :isModellingScenarioOf .
+
+:ExperimentResult  a         owl:Class ;
+        rdfs:comment         "An experiment result provides a result ID and a URL where the result of an experiment can be retrieved."^^xsd:string ;
+        rdfs:label           "experiment result"^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasExperimentResultID ;
+                                                       owl:someValuesFrom  rdfs:Literal
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasExperimentResultURL ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] )
+                             ] .
+
+:Scenario  a                 owl:Class ;
+        rdfs:label           "scenario"^^xsd:string ;
+        rdfs:subClassOf      :Scenario ;
+        resource:comment     "A modelling scenario that provides the URL of the specification, an scenario ID and a URL where it can be retrieved."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                                                       owl:someValuesFrom  rdfs:Literal
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasScenarioID ;
+                                                         owl:someValuesFrom  xsd:integer
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasScenarioURL ;
+                                                           owl:someValuesFrom  rdfs:Literal
+                                                         ] )
+                             ] .
+
+:describesBehaviorOf  a  owl:ObjectProperty ;
+        rdfs:domain  :ParameterDescriptions ;
+        rdfs:label   "describes behavior of" ;
+        rdfs:range   :LifemapperAlgorithm .
+
+:hasScenarioLayer  a  owl:ObjectProperty ;
+        rdfs:label  "has scenario layer" .
+
+elseweb-data:FeatureSet
+        a       owl:Class .
+
+:ParameterDescriptions
+        a                    owl:Class ;
+        rdfs:label           "parameter descriptions"^^xsd:string ;
+        resource:comment     "A set of parameter descriptions."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :describesBehaviorOf ;
+                                                       owl:someValuesFrom  :LifemapperAlgorithm
+                                                     ] [ a                            owl:Restriction ;
+                                                         owl:minQualifiedCardinality  "0"^^xsd:nonNegativeInteger ;
+                                                         owl:onClass                  :ParameterDescription ;
+                                                         owl:onProperty               :hasParameterDescription
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasParameterCollectionClass ;
+                                                           owl:someValuesFrom  xsd:anyURI
+                                                         ] )
+                             ] .
+
+:hasParameterDescription
+        a            owl:ObjectProperty ;
+        rdfs:domain  :ParameterDescriptions ;
+        rdfs:label   "has parameter description" ;
+        rdfs:range   :ParameterDescription .
+
+:hasLayerUnits  a   owl:DatatypeProperty ;
+        rdfs:label  "has layer units" .
+
+:hasUpperBoundInclusive
+        a           owl:DatatypeProperty ;
+        rdfs:label  "has upper bound inclusive" .
+
+:hasExperimentResultURL
+        a           owl:DatatypeProperty ;
+        rdfs:label  "has experiment result url" .
+
+:hasOccurrenceOfSpecies
+        a                   owl:ObjectProperty ;
+        rdfs:label          "has occurrence of species" ;
+        rdfs:subPropertyOf  elseweb-data:representsEntity .
+
+:PostedTIFFDataset  a        owl:Class ;
+        rdfs:comment         "A TIFF dataset with information about the layers it contains."^^xsd:string ;
+        rdfs:label           "posted tiff dataset"^^xsd:string ;
+        rdfs:subClassOf      :TIFFDataset ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasPublishedLayer ;
+                               owl:someValuesFrom  :Layer
+                             ] .
+
+:PostedScenario  a           owl:Class ;
+        rdfs:label           "posted scenario"^^xsd:string ;
+        rdfs:subClassOf      :UnpostedScenario ;
+        resource:comment     "A scenario that has been posted."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasPublishedScenario ;
+                               owl:someValuesFrom  :Scenario
+                             ] .
+
+:Species  a                  owl:Class ;
+        rdfs:label           "species"^^xsd:string ;
+        rdfs:subClassOf      elseweb-data:Entity ;
+        resource:comment     "Erinus alpinus"^^xsd:string , "A group of living organisms which is the principal natural taxonomic unit."^^xsd:string ;
+        owl:equivalentClass  [ a                owl:Restriction ;
+                               owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                               owl:onProperty   :hasGenusName
+                             ] .
+
+elseweb-data:VectorDataset
+        a       owl:Class .
+
+elseweb-data:Layer  a  owl:Class .
+
+:WCSResponse  a              owl:Class ;
+        rdfs:label           "wcs response"^^xsd:string ;
+        resource:comment     "A response obtained from a WCS server, including the response manifestation, the experiment specification URL, layer units and type code."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      elseweb-data:hasManifestation ;
+                                                       owl:someValuesFrom  elseweb-data:WCSResponseManifestation
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                                                         owl:someValuesFrom  rdfs:Literal
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasLayerUnits ;
+                                                           owl:someValuesFrom  rdfs:Literal
+                                                         ] [ a                   owl:Restriction ;
+                                                             owl:onProperty      :hasTypeCode ;
+                                                             owl:someValuesFrom  xsd:integer
+                                                           ] )
+                             ] .
+
+:hasOccurrenceSetID  a  owl:DatatypeProperty ;
+        rdfs:domain  :SpeciesOccurrenceSet ;
+        rdfs:label   "has occurrence set id" ;
+        rdfs:range   rdfs:Literal .
+
+:hasLayerID  a      owl:DatatypeProperty ;
+        rdfs:label  "has layer id" .
+
+:ExecutedWCSDataset  a       owl:Class ;
+        rdfs:label           "executed wcs dataset"^^xsd:string ;
+        rdfs:subClassOf      :InputWCSDataset ;
+        resource:comment     "A dataset that is the output of a WCS service."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasWCSResponse ;
+                               owl:someValuesFrom  :WCSResponse
+                             ] .
+
+elseweb-data:hasLayer
+        a           owl:ObjectProperty ;
+        rdfs:label  "has layer" .
+
+:Layer  a                    owl:Class ;
+        rdfs:label           "layer"^^xsd:string ;
+        resource:comment     "A unit of data (i.e. dataset) that is used as a component of a scenario specification."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      :hasJSONExperimentSpecificationURL ;
+                                                       owl:someValuesFrom  rdfs:Literal
+                                                     ] [ a                   owl:Restriction ;
+                                                         owl:onProperty      :hasLayerID ;
+                                                         owl:someValuesFrom  xsd:integer
+                                                       ] [ a                   owl:Restriction ;
+                                                           owl:onProperty      :hasLayerURL ;
+                                                           owl:someValuesFrom  rdfs:Literal
+                                                         ] )
+                             ] .
+
+:InputWCSDatasetExperimentSpecification
+        a                    owl:Class ;
+        rdfs:label           "input wcs dataset experiment specification"^^xsd:string ;
+        rdfs:subClassOf      :JSONExperimentSpecification ;
+        resource:comment     "An experiment specification that provides an input wcs dataset."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :hasInputWCSDataset ;
+                               owl:someValuesFrom  :InputWCSDataset
+                             ] .
+
+elseweb-data:BoxedGeographicRegion
+        a       owl:Class .
+
+:LifemapperParameters
+        a                    owl:Class ;
+        rdfs:label           "lifemapper parameters"^^xsd:string ;
+        rdfs:subClassOf      elseweb-modelling:SpeciesModellingParameters ;
+        resource:comment     "A set of parameters that controls the behaviour of a specific lifemapper algorithm."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      elseweb-modelling:hasParameterMember ;
+                               owl:someValuesFrom  :LifemapperParameter
+                             ] .
+
+:ScenarioLayer  a            owl:Class ;
+        rdfs:label           "scenario layer"^^xsd:string ;
+        rdfs:subClassOf      :Layer ;
+        resource:comment     "A layer that composes a scenario."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      :isScenarioLayerOf ;
+                               owl:someValuesFrom  :UnpostedScenario
+                             ] .
+
+:hasAlgorithmCode  a  owl:DatatypeProperty ;
+        rdfs:domain  :LifemapperAlgorithm ;
+        rdfs:label   "has algorithm code" ;
+        rdfs:range   rdfs:Literal .
+
+:specifiesModellingAlgorithm
+        a           owl:ObjectProperty ;
+        rdfs:label  "specifies modelling algorithm" ;
+        rdfs:range  :LifemapperAlgorithm .
+
+:hasScenarioURL  a  owl:DatatypeProperty ;
+        rdfs:label  "has scenario url" .
+
+:hasScenarioID  a   owl:DatatypeProperty ;
+        rdfs:label  "has scenario id" .
+
+:hasLowerBoundInclusive
+        a           owl:DatatypeProperty ;
+        rdfs:label  "has lower bound inclusive" .
+
+<http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-edac.owl>
+        a                              owl:Ontology ;
+        rdfs:isDefinedBy               <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-lifemapper.owl> ;
+        cc:license                     "http://creativecommons.org/licenses/by/3.0/"^^xsd:anyURI ;
+        ns0:defaultLanguage            "en" ;
+        dc:contributor                 "Contributors are those that engage in discussions during the development of this ontology (in alphabetical order):\nkarl benedict\nluis garnica\ncj grady\nbill hudspeth\ndeana pennington\nsoren scott\naimee stewart"^^xsd:string ;
+        dc:creator                     "Natalia Villanueva-Rosales"@en , "ELSEWeb team"@en , "http://cybershare.utep.edu"^^xsd:anyURI , "Nicholas del Rio"@en ;
+        dc:description                 "The ELSEWeb Lifemapper ontology provides classes for describing biodiversity modelling services provided by Lifemapper. This project provides  support for the ELSEWeb project(http://elseweb.cybershare.utep.edu/).\nwebsite: http://elseweb.cybershare.utep.edu/ontologies\nemail: nvillanuevarosales@utep.edu\n"@en ;
+        dc:issued                      "2014-05-01"^^xsd:date ;
+        dc:rights                      "free to use,share,modify. modify with attribution [http://creativecommons.org/licenses/by/3.0/]."^^xsd:string ;
+        dc:title                       "ELSEWeb Lifemapper Ontology"@en ;
+        terms:identifier               "elseweb-lifemapper.owl" ;
+        terms:modified                 "2015-09-24"^^xsd:date ;
+        vann:preferredNamespacePrefix  "elseweb-lifemapper"@en ;
+        vann:preferredNamespaceUri     "http://ontology.cybershare.utep.edu/ELSEWeb/"^^xsd:string ;
+        owl:imports                    <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-data.owl> , <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-modelling.owl> , <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-lifemapper-parameters.owl> , <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-edac.owl> ;
+        owl:versionIRI                 <http://ontology.cybershare.utep.edu/ELSEWeb/elseweb-lifemapper.owl> ;
+        owl:versionInfo                "1.2"^^xsd:string .
+
+:LifemapperAlgorithm  a      owl:Class ;
+        rdfs:label           "lifemapper algorithm"^^xsd:string ;
+        rdfs:subClassOf      elseweb-modelling:SpeciesModellingAlgorithm ;
+        resource:comment     "A species modelling algorithm provided by lifemapper that is controlled by lifemapper parameters."^^xsd:string ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( [ a                   owl:Restriction ;
+                                                       owl:onProperty      elseweb-modelling:behaviorControlledBy ;
+                                                       owl:someValuesFrom  :LifemapperParameters
+                                                     ] [ a                owl:Restriction ;
+                                                         owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                                                         owl:onProperty   :hasAlgorithmCode
+                                                       ] )
+                             ] .
+
+:hasGenusName  a     owl:DatatypeProperty ;
+        rdfs:domain  :Species ;
+        rdfs:label   "has genus name" ;
+        rdfs:range   rdfs:Literal .

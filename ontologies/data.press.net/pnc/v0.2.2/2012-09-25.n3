@@ -1,0 +1,64 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix psys: <http://proton.semanticweb.org/protonsys#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix pnc: <http://data.press.net/ontology/classification/> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://data.press.net/ontology/classification/> a owl:Ontology ;
+	dcterms:title "SNaP Classification Ontology"@en ;
+	dcterms:created "2011-07-28"^^xsd:date ;
+	dcterms:modified "2012-09-25"^^xsd:date ;
+	dcterms:license <http://creativecommons.org/licenses/by-nd/3.0/> ;
+	rdfs:comment "The Classification Ontology allows assets to be holistically classified using a controlled vocabulary or taxonomy."@en ;
+	foaf:maker <http://uk.linkedin.com/in/paulwilton> .
+
+<http://uk.linkedin.com/in/paulwilton> a foaf:Person ;
+	foaf:name "Paul Wilton" .
+
+<http://data.press.net/ontology/classification/> foaf:maker <http://uk.linkedin.com/in/jarredmcginnis> .
+
+<http://uk.linkedin.com/in/jarredmcginnis> a foaf:Person ;
+	foaf:name "Jarred McGinnis" .
+
+<http://data.press.net/ontology/classification/> foaf:maker <http://uk.linkedin.com/in/pauliharman> .
+
+<http://uk.linkedin.com/in/pauliharman> a foaf:Person ;
+	foaf:name "Paul Harman" .
+
+<http://data.press.net/ontology/classification/> owl:versionInfo "0.2.2"^^xsd:string .
+
+pnc:Classification a owl:Class ;
+	rdfs:label "Generic Classification Class."@en ;
+	rdfs:comment "Generic Classification Class. Vocabulary instances would be of this type."@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/classification/> ;
+	vs:term_status "testing" .
+
+pnc:isClassifiedBy a owl:ObjectProperty ;
+	rdfs:subPropertyOf dcterms:subject ;
+	psys:transitiveOver pnc:subClassificationOf .
+
+pnc:subClassificationOf a owl:TransitiveProperty ;
+	rdfs:domain pnc:Classification ;
+	rdfs:range pnc:Classification ;
+	rdfs:label "Parent-child transitive relationship between Classifications."@en ;
+	rdfs:comment "Transitive property that allows classifications to be related to parent classifications"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/classification/> ;
+	vs:term_status "testing" .
+
+pnc:isClassifiedBy rdfs:domain pnc:Classifiable .
+
+pnc:Classifiable a owl:Class ;
+	rdfs:label "Generic Classifiable Class"@en ;
+	rdfs:comment "Generic Classifiable Class - inheriting from this makes the descendant Classifiable by a Classification"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/classification/> ;
+	vs:term_status "testing" .
+
+pnc:isClassifiedBy rdfs:range pnc:Classification ;
+	rdfs:label "Property that associates Classifications with Classifiables. A subPropertyOf dcterms:subject"@en ;
+	rdfs:comment "Property that associates Classifications with Classifiables.  e.g. <MyAsset> isClassifiedBy <SomeClassification>"@en ;
+	rdfs:isDefinedBy <http://data.press.net/ontology/classification/> ;
+	vs:term_status "testing" .

@@ -1,0 +1,75 @@
+@prefix :      <http://delicias.dia.fi.upm.es/ontologies/ObjectWithStates.owl#> .
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix situ:  <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix col:   <http://ontologydesignpatterns.org/cp/owl/collectionentity.owl#> .
+@prefix cpannotationschema: <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix set:   <http://www.ontologydesignpatterns.org/cp/owl/set.owl#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+situ:isSettingFor  a  owl:ObjectProperty .
+
+col:isMemberOf  a  owl:ObjectProperty .
+
+:hasState  a                owl:ObjectProperty ;
+        rdfs:comment        "Defines the state of an object."@en ;
+        rdfs:domain         :Object ;
+        rdfs:label          "has state"@en ;
+        rdfs:range          :State ;
+        rdfs:subPropertyOf  situ:hasSetting ;
+        owl:inverseOf       :isStateOf .
+
+situ:Situation  a  owl:Class .
+
+set:size  a     owl:DatatypeProperty .
+
+:Object  a               owl:Class ;
+        rdfs:comment     "Objects are entities that have different states and that in each state different restrictions on their properties apply."@en ;
+        rdfs:label       "Object"@en ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               :State ;
+                           owl:onProperty            :hasState ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+:isStateOf  a               owl:ObjectProperty ;
+        rdfs:comment        "Defines the object that has an state"@en ;
+        rdfs:domain         :State ;
+        rdfs:label          "is state of"@en ;
+        rdfs:range          :Object ;
+        rdfs:subPropertyOf  situ:isSettingFor .
+
+<http://delicias.dia.fi.upm.es/ontologies/ObjectWithStates.owl>
+        a                             owl:Ontology ;
+        rdfs:comment                  "Ontology including the content ontology design pattern for modelling objects with states."@en ;
+        rdfs:label                    "Object with states ontology"@en ;
+        dc:creator                    <http://www.garcia-castro.com/#me> ;
+        cpannotationschema:coversRequirements
+                "Objects must have a unique state"@en , "The possible states are: StateA, StateB and StateC"@en , "Object states must belong to a single collection of non-duplicate elements (i.e., to a set)"@en , "Objects in StateB must have at most one value for property property2"@en , "Objects in StateA must have at least one value for property property1"@en , "Objects in StateC must have exactly one value for property property3"@en , "An object can have three different states"@en ;
+        cpannotationschema:hasConsequences
+                "The pattern requires modelling states as individuals instead of as literals."@en ;
+        cpannotationschema:hasIntent  "An object can have different states for which different restrictions apply. The goal of the pattern is to allow modelling the different states of an object and the restrictions on such object for its different states"@en ;
+        cpannotationschema:scenarios  "A sample scenario is the following. A software defect created in an issue tracker must have a creator and be associated to a certain software product. Once it is checked that the defect is reproducible, it must be assigned to some developer and have a certain priority. However, before checking the defect reproducilibty the defect must not have either asignee or priority."@en ;
+        owl:imports                   <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl> .
+
+situ:hasSetting  a  owl:ObjectProperty .
+
+:StateSet  a             owl:Class ;
+        rdfs:comment     "State sets are sets of states (i.e., collections of non-duplicate states)."@en ;
+        rdfs:label       "State set"@en ;
+        rdfs:subClassOf  set:Set .
+
+set:Set  a      owl:Class .
+
+:State  a                owl:Class ;
+        rdfs:comment     "States are the different states that an object can have. States must belong to a single collection of non-duplicate elements (i.e., to a set)."@en ;
+        rdfs:label       "State"@en ;
+        rdfs:subClassOf  situ:Situation ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               :StateSet ;
+                           owl:onProperty            col:isMemberOf ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .

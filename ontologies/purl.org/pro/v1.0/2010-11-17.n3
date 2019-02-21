@@ -1,0 +1,188 @@
+@prefix : <http://purl.org/spar/pso/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix tint: <http://www.ontologydesignpatterns.org/cp/owl/timeinterval.owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sit: <http://www.ontologydesignpatterns.org/cp/owl/situation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/Image> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix pro: <http://purl.org/spar/pro/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix tisit: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix core: <http://purl.org/vocab/frbr/core#> .
+@prefix part: <http://www.ontologydesignpatterns.org/cp/owl/participation.owl#> .
+
+<http://purl.org/spar/pro> a owl:Ontology ;
+	owl:versionInfo "1.0"^^xsd:string ;
+	dc:date "2010-11-17"^^xsd:date ;
+	dc:creator "David Shotton"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:description "PRO is an ontology for the characterization of the roles of agents (people, corporate bodies and computational agents; e.g. author, editor, reviewer, publisher, librarian) in the publication process, as they relate to bibliographic entities."@en ;
+	dc:title """Publishing Roles Ontology
+(PRO)"""@en ;
+	rdfs:comment "The Publishing Roles Ontology is an ontology for describing the roles associated to a particular agent at a certain point in time. It forms part of SPAR, a suite of Semantic Publishing and Referencing Ontologies."@en ;
+	dc:rights "This work is distribuited under Creative Commons Attribution Licence (http://creativecommons.org/licenses/by/3.0/)"@en ;
+	owl:imports <http://purl.org/swan/2.0/foaf-essential/> , <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl> .
+
+dc:creator a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+pro:holdsRoleInTime a owl:ObjectProperty ;
+	rdfs:label "holds a role in time"@en ;
+	rdfs:comment "An agent holds a role during a particular time."@en ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+pro:isHeldByAgent a owl:ObjectProperty ;
+	rdfs:label "is held by an agent"@en ;
+	rdfs:comment "A role is hold by an agent during a particular time."@en ;
+	rdfs:domain pro:RoleInTime ;
+	owl:inverseOf pro:holdsRoleInTime ;
+	rdfs:subPropertyOf tisit:forEntity ;
+	rdfs:range foaf:Agent .
+
+pro:isRelatedToRoleInTime a owl:ObjectProperty ;
+	rdfs:label "is related to a role in time"@en ;
+	rdfs:comment "A document representing a sort of context for a situation of defining a role in a specific time."@en ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+pro:isRoleIn a owl:ObjectProperty ;
+	rdfs:label "is role in"@en ;
+	rdfs:comment "A role is involved in a situation that specifies a time in which the role itself is held by someone."@en ;
+	owl:inverseOf pro:withRole ;
+	rdfs:subPropertyOf tisit:hasTimeIndexedSetting .
+
+pro:relatesToDocument a owl:ObjectProperty ;
+	rdfs:label "relates to a document"@en ;
+	rdfs:comment "The situation of defining a role in a specific time relates to some document that represents a sort of context for that role."@en ;
+	rdfs:domain pro:RoleInTime ;
+	owl:inverseOf pro:isRelatedToRoleInTime ;
+	rdfs:subPropertyOf tisit:forEntity ;
+	rdfs:range foaf:Document .
+
+pro:withRole a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "with role"@en ;
+	rdfs:comment "The situation of defining a role in a specific time involves a particular role."@en ;
+	rdfs:range pro:Role ;
+	rdfs:domain pro:RoleInTime ;
+	rdfs:subPropertyOf tisit:forEntity .
+
+tisit:atTime a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "at time"@en ;
+	rdfs:comment "A time interval during which a role is held by an agent."@en .
+
+tisit:forEntity a owl:ObjectProperty .
+
+tisit:hasTimeIndexedSetting a owl:ObjectProperty .
+
+pro:hasEndingTime a owl:DatatypeProperty ;
+	rdfs:label "has ending time"@en ;
+	rdfs:comment "A precise moment in time that defines the ending point of an time interval."@en ;
+	rdfs:subPropertyOf tint:hasIntervalEndDate ;
+	rdfs:range xsd:dateTime .
+
+pro:hasStartingTime a owl:DatatypeProperty ;
+	rdfs:label "has starting time"@en ;
+	rdfs:comment "A precise moment in time that defines the starting point of an time interval."@en ;
+	rdfs:subPropertyOf tint:hasIntervalStartDate ;
+	rdfs:range xsd:dateTime .
+
+tint:hasIntervalEndDate a owl:DatatypeProperty .
+
+tint:hasIntervalStartDate a owl:DatatypeProperty .
+
+pro:Role a owl:Class ;
+	rdfs:label "role"@en ;
+	rdfs:comment "A role some agents may have."@en .
+
+pro:RoleInTime a owl:Class ;
+	rdfs:label "role in time"@en ;
+	rdfs:subClassOf tisit:TimeIndexedSituation , _:node171hp519ox1 .
+
+_:node171hp519ox1 a owl:Restriction ;
+	owl:onProperty pro:isHeldByAgent ;
+	owl:onClass foaf:Agent ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox2 .
+
+_:node171hp519ox2 a owl:Restriction ;
+	owl:onProperty pro:withRole ;
+	owl:onClass pro:Role ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox3 .
+
+_:node171hp519ox3 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:onClass tint:TimeInterval ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox4 .
+
+_:node171hp519ox4 a owl:Restriction ;
+	owl:onProperty pro:relatesToDocument ;
+	owl:someValuesFrom foaf:Document .
+
+pro:RoleInTime rdfs:comment "A particular situation that describe a role some agents may have at a particular time."@en ;
+	dc:description """A role in time describes always:
+- a particular role R
+- a particular agent A holding R
+- a particular time interval T in which A holds R
+- a particular document that defines a context for R held by A"""@en .
+
+tisit:TimeIndexedSituation a owl:Class .
+
+tint:TimeInterval a owl:Class ;
+	rdfs:label "time interval"@en ;
+	rdfs:comment "Two (starting and ending) points in time that define a particular period of time."@en .
+
+foaf:Agent a owl:Class ;
+	rdfs:label "agent"@en ;
+	rdfs:comment "An abstract class defining any kind of agents, such as a person, a group, an organization or a software agent."@en .
+
+foaf:Document a owl:Class ;
+	rdfs:label "document"@en ;
+	rdfs:comment "An abstract class defining any kinds of publishing work."@en .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox5 .
+
+_:node171hp519ox5 a owl:Restriction ;
+	owl:onProperty pro:isHeldByAgent ;
+	owl:onClass foaf:Agent ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox6 .
+
+_:node171hp519ox6 a owl:Restriction ;
+	owl:onProperty pro:withRole ;
+	owl:onClass pro:Role ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox7 .
+
+_:node171hp519ox7 a owl:Restriction ;
+	owl:onProperty tisit:atTime ;
+	owl:onClass tint:TimeInterval ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+pro:RoleInTime rdfs:subClassOf _:node171hp519ox8 .
+
+_:node171hp519ox8 a owl:Restriction ;
+	owl:onProperty pro:relatesToDocument ;
+	owl:someValuesFrom foaf:Document .

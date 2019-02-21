@@ -1,0 +1,85 @@
+@prefix lode: <http://linkedevents.org/ontology/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix edm: <http://www.europeana.eu/schemas/edm/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ncal: <http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix ssso: <http://purl.org/ontology/ssso#> .
+@prefix tio: <http://purl.org/tio/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix schema: <http://schema.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix dul: <http://www.loa-cnr.it/ontologies/DUL.owl#> .
+@prefix event: <http://purl.org/ontology/c4dm/event.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix service: <http://purl.org/ontology/service#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix crm: <http://purl.org/NET/cidoc-crm/core#> .
+@prefix gr: <http://purl.org/goodrelations/v1#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+
+<http://purl.org/ontology/ssso> cc:license <http://creativecommons.org/licenses/by/3.0/> ;
+	dcterms:creator "Jakob Voß" ;
+	dcterms:description "An event-based RDF ontology for typical status in fulfillment of a service."@en ;
+	dcterms:modified "2013-11-19"^^xsd:date ;
+	dcterms:title "Simple Service Status Ontology"@en ;
+	vann:preferredNamespacePrefix "ssso" ;
+	vann:preferredNamespaceUri "http://purl.org/ontology/ssso#" ;
+	a owl:Ontology ;
+	rdfs:label "SSSO" ;
+	owl:versionInfo "0.3.0" .
+
+ssso:ExecutedService a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "ExecutedService"@en ;
+	rdfs:subClassOf ssso:ServiceEvent ;
+	owl:disjointWith ssso:PreparedService , ssso:ProvidedService , ssso:RejectedService , ssso:ReservedService .
+
+ssso:PreparedService a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "ReservedService"@en ;
+	rdfs:subClassOf ssso:ServiceEvent ;
+	owl:disjointWith ssso:ExecutedService , ssso:ProvidedService , ssso:RejectedService , ssso:ReservedService .
+
+ssso:RejectedService a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "RejectedService"@en ;
+	rdfs:subClassOf ssso:ServiceEvent ;
+	owl:disjointWith ssso:ExecutedService , ssso:PreparedService , ssso:ProvidedService , ssso:ReservedService .
+
+ssso:ReservedService a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "ReservedService"@en ;
+	rdfs:subClassOf ssso:ServiceEvent ;
+	owl:disjointWith ssso:ExecutedService , ssso:PreparedService , ssso:ProvidedService , ssso:RejectedService , ssso:ReservedService .
+
+ssso:ServiceEvent a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "ServiceEvent"@en ;
+	rdfs:subClassOf lode:Event , crm:E7_Activity , dctype:Event , gr:Individual , event:Event , service:Service , tio:Event , schema:Event , schema:IndividualProduct , edm:Event , dul:Event , ncal:Event , prov:Activity .
+
+ssso:ServiceFulfillment a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "ServiceFulfillment"@en ;
+	rdfs:subClassOf ssso:ServiceEvent .
+
+ssso:TimeTravel a owl:Class ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "TimeTravel"@en .
+
+ssso:nextService a owl:ObjectProperty ;
+	rdfs:domain ssso:ServiceEvent ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "nextService"@en ;
+	rdfs:range ssso:ServiceEvent ;
+	owl:inverseOf ssso:previousService .
+
+ssso:previousService a owl:ObjectProperty ;
+	rdfs:domain ssso:ServiceEvent ;
+	rdfs:isDefinedBy <http://purl.org/ontology/ssso> ;
+	rdfs:label "previousService"@en ;
+	rdfs:range ssso:ServiceEvent ;
+	owl:inverseOf ssso:nextService .

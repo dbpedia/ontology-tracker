@@ -1,0 +1,605 @@
+@prefix prv: <http://purl.org/net/provenance/ns#> .
+@prefix : <http://www.w3.org/1999/xhtml> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wot: <http://xmlns.com/wot/0.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xhv: <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+foaf:Group a owl:Class ;
+	rdfs:subClassOf prv:HumanActor .
+
+prv:HumanActor a owl:Class ;
+	rdfs:subClassOf prv:Actor .
+
+prv:Actor a owl:Class ;
+	owl:equivalentClass foaf:Agent .
+
+foaf:Agent a owl:Class .
+
+prv:Actor rdfs:comment "Actor is a general class that represents actors which usually performed the execution (see the class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Execution\" xml:lang=\"en\">Execution</a>) of an action or a process."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Actor"@en .
+
+prv:HumanActor owl:disjointWith prv:NonHumanActor .
+
+prv:NonHumanActor a owl:Class ;
+	rdfs:subClassOf prv:Actor ;
+	owl:disjointWith prv:HumanActor ;
+	rdfs:label "Non-Human Actor"@en ;
+	rdfs:comment "NonHumanActor is a general class that represents actors who are not social beings."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:HumanActor owl:disjointWith prv:Artifact .
+
+prv:Artifact a owl:Class ;
+	owl:disjointWith prv:Actor , prv:Execution .
+
+prv:Execution a owl:Class ;
+	owl:disjointWith prv:Actor , prv:Artifact ;
+	rdfs:comment "Execution is a general class that represents completed executions of actions or processes. An execution is usually performed by an actor (see the class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Actor\" xml:lang=\"en\">Actor</a>) and an execution, in most cases, yielded an artifact (see the class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Artifact\" xml:lang=\"en\">Artifact</a>)."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Execution"@en .
+
+prv:Artifact rdfs:comment "Artifact is a general class that represents artifacts which can be used during the execution (see the class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Execution\" xml:lang=\"en\">Execution</a>) of an action or a process and which can also be the result of such an execution."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Artifact"@en .
+
+prv:HumanActor owl:disjointWith prv:Execution ;
+	rdfs:label "Human Actor"@en ;
+	rdfs:comment "HumanActor is a general class that represents actors who are social beings such as persons, organizations, companies."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+foaf:primaryTopic a owl:ObjectProperty .
+
+prv:performedBy a owl:ObjectProperty ;
+	rdfs:range prv:Actor ;
+	rdfs:domain prv:Execution ;
+	rdfs:label "performed by"@en ;
+	rdfs:comment "This property refers to an actor that/who performed an execution."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:involvedActor .
+
+prv:involvedActor a owl:ObjectProperty ;
+	rdfs:range prv:Actor ;
+	rdfs:domain prv:Execution ;
+	rdfs:label "involved"@en ;
+	rdfs:comment "This is an abstract property that refers to an actor involved in an execution."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:operatedBy a owl:ObjectProperty ;
+	rdfs:range prv:HumanActor ;
+	rdfs:domain prv:NonHumanActor ;
+	rdfs:label "operated by"@en ;
+	rdfs:comment "This property refers to a human actor who was operating a non-human actor. For instance, a service provider operates a data providing service (see class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#DataProvidingService\" xml:lang=\"en\">prv:DataProvidingService</a>). Another example is a human actor who operates a non-human data creating actor."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:Document a owl:DeprecatedClass ;
+	owl:equivalentClass prv:Representation .
+
+prv:Representation a owl:Class ;
+	rdfs:subClassOf <http://sw.nokia.com/WebArch-1/Representation> .
+
+<http://sw.nokia.com/WebArch-1/Representation> a owl:Class .
+
+prv:Representation rdfs:subClassOf prv:Artifact , <http://www.ontologydesignpatterns.org/ont/web/irw.owl#WebRepresentation> .
+
+<http://www.ontologydesignpatterns.org/ont/web/irw.owl#WebRepresentation> a owl:Class .
+
+prv:Representation owl:disjointWith prv:DataItem .
+
+prv:DataItem a owl:Class ;
+	rdfs:subClassOf prv:Artifact , <http://www.ontologydesignpatterns.org/ont/web/irw.owl#InformationResource> .
+
+<http://www.ontologydesignpatterns.org/ont/web/irw.owl#InformationResource> a owl:Class .
+
+prv:DataItem owl:disjointWith prv:Representation , prv:File .
+
+prv:File a owl:Class ;
+	rdfs:subClassOf prv:Artifact , <http://www.ontologydesignpatterns.org/ont/web/irw.owl#InformationResource> ;
+	owl:disjointWith prv:DataItem , prv:Representation ;
+	rdfs:label "File"@en ;
+	rdfs:comment "File is a general class that represents files/documents of any kind."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:DataItem rdfs:label "Data Item"@en ;
+	rdfs:comment "DataItem is a general class that represents data items of any kind."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:Representation owl:disjointWith prv:File ;
+	rdfs:label "Web Representation"@en ;
+	rdfs:comment "Representation is a general concept that represents a Web representation of an information resource such as a data item. Such a Web representation was used during the retrieval of a data item from the Web."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:Document rdfs:comment "This class is deprecated and will be removed from the Provenance Vocabulary shortly. Use <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Representation\" xml:lang=\"en\">prv:Representation</a> instead. prv:Document was deprecated because its name caused confusion; the name made people assume this class represents information resources which is not the case; in fact, it represents a Web representation of an information resource."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Web Representation"@en .
+
+prv:retrievedBy a owl:ObjectProperty ;
+	rdfs:range prv:DataAccess .
+
+prv:DataAccess a owl:Class ;
+	rdfs:subClassOf prv:Execution ;
+	owl:disjointWith prv:DataCreation .
+
+prv:DataCreation a owl:Class ;
+	rdfs:subClassOf prv:Execution ;
+	owl:disjointWith prv:DataAccess ;
+	rdfs:label "Data Creation"@en ;
+	rdfs:comment "DataCreation is a class that represents the completed creation of a data item."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:DataAccess rdfs:label "Data Access"@en ;
+	rdfs:comment "DataAccess is a class that represents the completed execution of accessing a data item on the Web."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:retrievedBy rdfs:domain prv:Representation ;
+	rdfs:label "retrieved by"@en ;
+	rdfs:comment "This property refers to the data access by which a Web representation of a data item has been retrieved from the Web."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:yieldedBy .
+
+prv:yieldedBy a owl:ObjectProperty ;
+	rdfs:range prv:Execution ;
+	rdfs:domain prv:Artifact ;
+	rdfs:label "yielded by"@en ;
+	rdfs:comment "This is an abstract property that refers to the execution by which an artifact was yielded."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+prv:usedBy a owl:ObjectProperty ;
+	rdfs:range prv:DataPublisher .
+
+prv:DataPublisher a owl:Class ;
+	rdfs:subClassOf prv:HumanActor ;
+	rdfs:comment "DataPublisher is a class that represents entities such as persons, groups, or organizations who use a data providing service (see class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#DataProvidingService\" xml:lang=\"en\">prv:DataProvidingService</a>) to publish data on the Web."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Data Publisher"@en .
+
+prv:usedBy rdfs:domain prv:DataProvidingService .
+
+prv:DataProvidingService a owl:Class ;
+	rdfs:subClassOf prv:NonHumanActor ;
+	rdfs:comment "DataProvidingService is a class that represents a non-human actor - usually a Web service or a server - that processes data access requests and actually sends the requested Web representations (i.e. <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Representation\" xml:lang=\"en\">prv:Representation</a>) over the Web."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Data Providing Service"@en .
+
+prv:usedBy rdfs:label "used by"@en ;
+	rdfs:comment "This property refers to a data publisher who used a data providing services."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+dcterms:created a owl:DatatypeProperty .
+
+xhv:alternate a owl:ObjectProperty .
+
+prv:accessedService a owl:ObjectProperty ;
+	rdfs:range prv:DataProvidingService ;
+	rdfs:domain prv:DataAccess ;
+	rdfs:label "accessed"@en ;
+	rdfs:comment "This property refers to the service that provided the Web representation during the execution of a data access."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:involvedActor .
+
+<http://trdf.sourceforge.net/provenance/ns.html> a foaf:Document ;
+	wot:assurance <http://trdf.sourceforge.net/provenance/ns.html.sig> .
+
+<http://trdf.sourceforge.net/provenance/ns.html.sig> a wot:Endorsement ;
+	dcterms:title "Detached signature"@en ;
+	wot:endorser <http://olafhartig.de/foaf.rdf#pubkey2009> .
+
+<http://olafhartig.de/foaf.rdf#pubkey2009> a wot:PubKey .
+
+foaf:homepage a owl:ObjectProperty .
+
+dcterms:conformsTo a owl:ObjectProperty .
+
+foaf:name a owl:DatatypeProperty .
+
+foaf:Organization a owl:Class ;
+	rdfs:subClassOf prv:HumanActor .
+
+dcterms:title a owl:DatatypeProperty .
+
+xhv:license a owl:ObjectProperty .
+
+<http://trdf.sourceforge.net/provenance/ns-20091128.html> a foaf:Document ;
+	dcterms:conformsTo <http://www.w3.org/TR/rdfa-syntax> .
+
+<http://www.w3.org/TR/rdfa-syntax> a owl:Thing .
+
+<http://trdf.sourceforge.net/provenance/ns-20091128.html> dcterms:title "Provenance Vocabulary Core Ontology Specification"@en ;
+	foaf:primaryTopic <http://purl.org/net/provenance/ns#> .
+
+<http://purl.org/net/provenance/ns#> a prv:DataItem ;
+	dcterms:created "2009-11-28T12:00:00Z"^^xsd:dateTime ;
+	prv:createdBy _:node183fu8lthx1 .
+
+_:node183fu8lthx1 a prv:DataCreation ;
+	prv:performedAt "2009-11-28T12:00:00Z"^^xsd:dateTime ;
+	prv:performedBy <http://olafhartig.de/foaf.rdf#olaf> .
+
+<http://olafhartig.de/foaf.rdf#olaf> a foaf:Person ;
+	foaf:name "Olaf Hartig"@en ;
+	foaf:homepage <http://olafhartig.de/> .
+
+<http://olafhartig.de/> a foaf:Document .
+
+_:node183fu8lthx1 prv:performedBy <http://users.ox.ac.uk/~zool0770/foaf.rdf#me> .
+
+<http://users.ox.ac.uk/~zool0770/foaf.rdf#me> a foaf:Person ;
+	foaf:name "Jun Zhao"@en ;
+	foaf:homepage <http://users.ox.ac.uk/~zool0770/> .
+
+<http://users.ox.ac.uk/~zool0770/> a foaf:Document .
+
+<http://purl.org/net/provenance/ns#> dcterms:title "Provenance Vocabulary Core Ontology namespace"@en ;
+	a owl:Ontology ;
+	dcterms:description "The Provenance Vocabulary provides classes and properties to describe the provenance of data from the Web. Hence, this vocabulary enables providers of Web data to publish provenance-related metadata about their data. The Provenance Vocabulary Core Ontology provides the main classes and properties required to describe provenance of data on the Web. Notice, this vocabulary is not designed to describe provenance of other kinds of content such as documents."@en ;
+	dcterms:creator <http://olafhartig.de/foaf.rdf#olaf> , <http://users.ox.ac.uk/~zool0770/foaf.rdf#me> .
+
+<http://trdf.sourceforge.net/provenance/ns-20091128.html> rdfs:label "Document that defines the core ontology of the Provenance Vocabulary"@en ;
+	dcterms:description "This documents specifies the classes and properties introduced by the Provenance Vocabulary Core Ontology."@en ;
+	xhv:alternate <http://trdf.sourceforge.net/provenance/ns.rdf> ;
+	xhv:license <http://creativecommons.org/licenses/by/1.0/> .
+
+<http://creativecommons.org/licenses/by/1.0/> a owl:Thing .
+
+dcterms:description a owl:DatatypeProperty .
+
+<http://sw.nokia.com/WebArch-1/Server> a owl:Class ;
+	rdfs:subClassOf prv:DataProvidingService .
+
+<http://purl.org/net/provenance/ns.rdf> a foaf:Document .
+
+prv:usedGuideline a owl:ObjectProperty ;
+	rdfs:range prv:CreationGuideline .
+
+prv:CreationGuideline a owl:Class ;
+	rdfs:subClassOf prv:DataItem ;
+	rdfs:comment "CreationGuideline is a class that represents a guideline used to guide the execution of a data creation. Examples for creation guidelines are transformation rules, mapping definitions, entailment rules, and database queries."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:label "Creation Guideline"@en .
+
+prv:usedGuideline owl:propertyChainAxiom _:node183fu8lthx2 .
+
+_:node183fu8lthx2 rdf:first prv:usedGuidelineFile .
+
+prv:usedGuidelineFile a owl:ObjectProperty ;
+	rdfs:range prv:File ;
+	rdfs:domain prv:DataCreation ;
+	rdfs:label "guided by"@en ;
+	rdfs:comment "This property refers to a file encoding a creation guideline which guided the execution of a data creation. Notice, all files encoding creation guidelines have provenance; we strongly encourage to describe this provenance as well, at least as far as available information permits."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:usedFile .
+
+prv:usedFile a owl:ObjectProperty ;
+	rdfs:range prv:File ;
+	rdfs:domain prv:DataCreation ;
+	rdfs:label "used"@en ;
+	rdfs:comment "This property refers to a file encoding the source data item that has been used during the creation of a data item. Notice, all files that encode source data have provenance; we strongly encourage to describe this provenance as well, at least as far as available information permits."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:employedArtifact .
+
+prv:employedArtifact a owl:ObjectProperty ;
+	rdfs:range prv:Artifact ;
+	rdfs:domain prv:Execution ;
+	rdfs:label "used"@en ;
+	rdfs:comment "This is an abstract property that refers to an artifact which was used during an execution."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+_:node183fu8lthx2 rdf:rest _:node183fu8lthx3 .
+
+_:node183fu8lthx3 rdf:first _:node183fu8lthx4 .
+
+_:node183fu8lthx4 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+prv:encodedBy a owl:ObjectProperty ;
+	rdfs:range _:node183fu8lthx5 .
+
+_:node183fu8lthx5 a owl:Class ;
+	owl:unionOf _:node183fu8lthx6 .
+
+_:node183fu8lthx6 rdf:first prv:Representation ;
+	rdf:rest _:node183fu8lthx7 .
+
+_:node183fu8lthx7 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+prv:encodedBy rdfs:domain prv:DataItem ;
+	rdfs:label "encoded by"@en ;
+	rdfs:comment "This property refers to a file that contained a data item."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:containedBy .
+
+prv:containedBy a owl:ObjectProperty ;
+	rdfs:range prv:Artifact ;
+	rdfs:domain prv:DataItem ;
+	rdfs:label "contained in"@en ;
+	rdfs:comment "This property refers to an artifact that contained a data item. This artifact can either be a Web representation of the data item (see class <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"#Representation\" xml:lang=\"en\">prv:Representation</a>) or it can be another data item of a larger granularity (e.g. an RDF statement is usually contained in an RDF graph)."^^rdf:XMLLiteral ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+_:node183fu8lthx3 rdf:rest rdf:nil .
+
+prv:usedGuideline rdfs:domain prv:DataCreation ;
+	rdfs:label "guided by"@en ;
+	rdfs:comment "This property refers to a creation guideline which guided the execution of a data creation. Examples for creation guidelines are transformation rules, mapping definitions, entailment rules, and database queries. Notice, all creation guidelines have provenance; we strongly encourage to describe this provenance as well, at least as far as available information permits."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:usedData .
+
+prv:usedData a owl:ObjectProperty ;
+	rdfs:range prv:DataItem ;
+	owl:propertyChainAxiom _:node183fu8lthx8 .
+
+_:node183fu8lthx8 rdf:first prv:usedFile ;
+	rdf:rest _:node183fu8lthx9 .
+
+_:node183fu8lthx9 rdf:first _:node183fu8lthx10 .
+
+_:node183fu8lthx10 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+_:node183fu8lthx9 rdf:rest rdf:nil .
+
+prv:usedData rdfs:domain prv:DataCreation ;
+	rdfs:label "used"@en ;
+	rdfs:comment "This property refers to a source data item that has been used during the creation of a data item. Examples for source data are the content of a document used for machine learning, the statements in a knowledge base used to entail a new statement, and the entries in a database used to answer a query. Notice, all source data has provenance; we strongly encourage to describe this provenance as well, at least as far as available information permits."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:employedArtifact .
+
+<http://sw.nokia.com/WebArch-1/Service> a owl:Class ;
+	rdfs:subClassOf prv:DataProvidingService .
+
+wot:assurance a owl:ObjectProperty .
+
+wot:endorser a owl:ObjectProperty .
+
+prv:precededBy a owl:ObjectProperty ;
+	rdfs:range prv:DataItem ;
+	rdfs:domain prv:DataItem ;
+	rdfs:label "immediately preceded by"@en ;
+	rdfs:comment "This property refers to an immediately preceding version of a data item; hence, the new version (i.e. the subject) has been created using the old version (i.e. the object). We strongly encourage to also describe this creation of the new version explicitly."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf dcterms:replaces .
+
+dcterms:replaces a owl:ObjectProperty .
+
+prv:performedAt a owl:DatatypeProperty ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain prv:Execution ;
+	rdfs:label "executed at"@en ;
+	rdfs:comment "This property refers to the time an execution has been performed at."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> .
+
+<http://www.ontologydesignpatterns.org/ont/web/irw.owl#WebServer> a owl:Class ;
+	rdfs:subClassOf prv:DataProvidingService .
+
+dcterms:creator a owl:ObjectProperty .
+
+_:node183fu8lthx11 a owl:Class ;
+	owl:unionOf _:node183fu8lthx12 .
+
+_:node183fu8lthx12 rdf:first prv:DataItem ;
+	rdf:rest _:node183fu8lthx13 .
+
+_:node183fu8lthx13 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+wot:PubKey a owl:Class .
+
+wot:Endorsement a owl:Class .
+
+foaf:Document a owl:Class .
+
+_:node183fu8lthx14 rdf:rest "" ;
+	rdf:first prv:encodedBy .
+
+prv:createdBy a owl:ObjectProperty ;
+	rdfs:range prv:DataCreation ;
+	owl:propertyChainAxiom _:node183fu8lthx15 .
+
+_:node183fu8lthx15 rdf:first prv:encodedBy ;
+	rdf:rest _:node183fu8lthx16 .
+
+_:node183fu8lthx16 rdf:first prv:createdBy ;
+	rdf:rest rdf:nil .
+
+prv:createdBy rdfs:domain _:node183fu8lthx11 ;
+	rdfs:label "created by"@en ;
+	rdfs:comment "This property refers to the creation of a data item."@en ;
+	rdfs:isDefinedBy <http://purl.org/net/provenance/ns> ;
+	rdfs:subPropertyOf prv:yieldedBy .
+
+foaf:Person a owl:Class ;
+	rdfs:subClassOf prv:HumanActor .
+
+<http://purl.org/net/provenance/ns#> prv:createdBy _:node183fu8lthx17 .
+
+_:node183fu8lthx17 a prv:DataCreation ;
+	prv:performedAt "2009-11-28T12:00:00Z"^^xsd:dateTime ;
+	prv:performedBy <http://olafhartig.de/foaf.rdf#olaf> , <http://users.ox.ac.uk/~zool0770/foaf.rdf#me> .
+
+prv:usedGuideline owl:propertyChainAxiom _:node183fu8lthx18 .
+
+_:node183fu8lthx18 rdf:first prv:usedGuidelineFile ;
+	rdf:rest _:node183fu8lthx19 .
+
+_:node183fu8lthx19 rdf:first _:node183fu8lthx20 .
+
+_:node183fu8lthx20 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+prv:encodedBy rdfs:range _:node183fu8lthx21 .
+
+_:node183fu8lthx21 a owl:Class ;
+	owl:unionOf _:node183fu8lthx22 .
+
+_:node183fu8lthx22 rdf:first prv:Representation ;
+	rdf:rest _:node183fu8lthx23 .
+
+_:node183fu8lthx23 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+_:node183fu8lthx19 rdf:rest rdf:nil .
+
+prv:usedData owl:propertyChainAxiom _:node183fu8lthx24 .
+
+_:node183fu8lthx24 rdf:first prv:usedFile ;
+	rdf:rest _:node183fu8lthx25 .
+
+_:node183fu8lthx25 rdf:first _:node183fu8lthx26 .
+
+_:node183fu8lthx26 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+_:node183fu8lthx25 rdf:rest rdf:nil .
+
+_:node183fu8lthx27 a owl:Class ;
+	owl:unionOf _:node183fu8lthx28 .
+
+_:node183fu8lthx28 rdf:first prv:DataItem ;
+	rdf:rest _:node183fu8lthx29 .
+
+_:node183fu8lthx29 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+_:node183fu8lthx30 rdf:rest "" ;
+	rdf:first prv:encodedBy .
+
+prv:createdBy owl:propertyChainAxiom _:node183fu8lthx31 .
+
+_:node183fu8lthx31 rdf:first prv:encodedBy ;
+	rdf:rest _:node183fu8lthx32 .
+
+_:node183fu8lthx32 rdf:first prv:createdBy ;
+	rdf:rest rdf:nil .
+
+prv:createdBy rdfs:domain _:node183fu8lthx27 .
+
+<http://purl.org/net/provenance/ns#> prv:createdBy _:node183fu8lthx33 .
+
+_:node183fu8lthx33 a prv:DataCreation ;
+	prv:performedAt "2009-11-28T12:00:00Z"^^xsd:dateTime ;
+	prv:performedBy <http://olafhartig.de/foaf.rdf#olaf> , <http://users.ox.ac.uk/~zool0770/foaf.rdf#me> .
+
+prv:usedGuideline owl:propertyChainAxiom _:node183fu8lthx34 .
+
+_:node183fu8lthx34 rdf:first prv:usedGuidelineFile ;
+	rdf:rest _:node183fu8lthx35 .
+
+_:node183fu8lthx35 rdf:first _:node183fu8lthx36 .
+
+_:node183fu8lthx36 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+prv:encodedBy rdfs:range _:node183fu8lthx37 .
+
+_:node183fu8lthx37 a owl:Class ;
+	owl:unionOf _:node183fu8lthx38 .
+
+_:node183fu8lthx38 rdf:first prv:Representation ;
+	rdf:rest _:node183fu8lthx39 .
+
+_:node183fu8lthx39 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+_:node183fu8lthx35 rdf:rest rdf:nil .
+
+prv:usedData owl:propertyChainAxiom _:node183fu8lthx40 .
+
+_:node183fu8lthx40 rdf:first prv:usedFile ;
+	rdf:rest _:node183fu8lthx41 .
+
+_:node183fu8lthx41 rdf:first _:node183fu8lthx42 .
+
+_:node183fu8lthx42 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+_:node183fu8lthx41 rdf:rest rdf:nil .
+
+_:node183fu8lthx43 a owl:Class ;
+	owl:unionOf _:node183fu8lthx44 .
+
+_:node183fu8lthx44 rdf:first prv:DataItem ;
+	rdf:rest _:node183fu8lthx45 .
+
+_:node183fu8lthx45 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+_:node183fu8lthx46 rdf:rest "" ;
+	rdf:first prv:encodedBy .
+
+prv:createdBy owl:propertyChainAxiom _:node183fu8lthx47 .
+
+_:node183fu8lthx47 rdf:first prv:encodedBy ;
+	rdf:rest _:node183fu8lthx48 .
+
+_:node183fu8lthx48 rdf:first prv:createdBy ;
+	rdf:rest rdf:nil .
+
+prv:createdBy rdfs:domain _:node183fu8lthx43 .
+
+<http://purl.org/net/provenance/ns#> prv:createdBy _:node183fu8lthx49 .
+
+_:node183fu8lthx49 a prv:DataCreation ;
+	prv:performedAt "2009-11-28T12:00:00Z"^^xsd:dateTime ;
+	prv:performedBy <http://olafhartig.de/foaf.rdf#olaf> , <http://users.ox.ac.uk/~zool0770/foaf.rdf#me> .
+
+prv:usedGuideline owl:propertyChainAxiom _:node183fu8lthx50 .
+
+_:node183fu8lthx50 rdf:first prv:usedGuidelineFile ;
+	rdf:rest _:node183fu8lthx51 .
+
+_:node183fu8lthx51 rdf:first _:node183fu8lthx52 .
+
+_:node183fu8lthx52 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+prv:encodedBy rdfs:range _:node183fu8lthx53 .
+
+_:node183fu8lthx53 a owl:Class ;
+	owl:unionOf _:node183fu8lthx54 .
+
+_:node183fu8lthx54 rdf:first prv:Representation ;
+	rdf:rest _:node183fu8lthx55 .
+
+_:node183fu8lthx55 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+_:node183fu8lthx51 rdf:rest rdf:nil .
+
+prv:usedData owl:propertyChainAxiom _:node183fu8lthx56 .
+
+_:node183fu8lthx56 rdf:first prv:usedFile ;
+	rdf:rest _:node183fu8lthx57 .
+
+_:node183fu8lthx57 rdf:first _:node183fu8lthx58 .
+
+_:node183fu8lthx58 a owl:ObjectProperty ;
+	owl:inverseOf prv:encodedBy .
+
+_:node183fu8lthx57 rdf:rest rdf:nil .
+
+_:node183fu8lthx59 a owl:Class ;
+	owl:unionOf _:node183fu8lthx60 .
+
+_:node183fu8lthx60 rdf:first prv:DataItem ;
+	rdf:rest _:node183fu8lthx61 .
+
+_:node183fu8lthx61 rdf:first prv:File ;
+	rdf:rest rdf:nil .
+
+_:node183fu8lthx62 rdf:rest "" ;
+	rdf:first prv:encodedBy .
+
+prv:createdBy owl:propertyChainAxiom _:node183fu8lthx63 .
+
+_:node183fu8lthx63 rdf:first prv:encodedBy ;
+	rdf:rest _:node183fu8lthx64 .
+
+_:node183fu8lthx64 rdf:first prv:createdBy ;
+	rdf:rest rdf:nil .
+
+prv:createdBy rdfs:domain _:node183fu8lthx59 .

@@ -1,0 +1,730 @@
+@prefix : <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L2.owl#> .
+@prefix daml: <http://www.daml.org/2001/03/daml+oil#> .
+@prefix iol: <http://www.ontologydesignpatterns.org/ont/dul/IOLite.owl#> .
+@prefix lmm1: <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owlodm: <http://www.ontologydesignpatterns.org/ont/odm/owl10b.owl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix dul: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix ofntb: <http://www.ontologydesignpatterns.org/ont/ofn/ofntb.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wn20: <http://www.ontologydesignpatterns.org/ont/wn/wn20.owl#> .
+
+<http://www.ontologydesignpatterns.org/ont/lmm/LMM_L2.owl> a owl:Ontology ;
+	owl:imports <http://www.ontologydesignpatterns.org/ont/lmm/LMM_L1.owl> ;
+	rdfs:comment """An ontology for aligning existing linguistic ontologies, and for describing the research objects of NLP.
+It uses the ontology IOL.owl, a plugin of DOLCE-Ultralite for information objects; it imports LMM_L1.owl, a design pattern for the basic semiotic categories; it also imports, for alignment reasons: owl10a.owl (the OWL1.0 metamodel), wn20schema.owl (the WordNet 2.0 datamodel), ofntb.owl (the OntoFrameNet metamodel).
+The ontology also includes some SuperSenses from WordNet and a proposal to match term types to referenced entity types, as an example of the usage of this ontology in NER and sense tagging applications."""^^xsd:string ;
+	rdfs:label "Lexical MetaModel Level 2"^^xsd:string .
+
+:ConceptExpression a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx1 .
+
+_:node177vmbc6fx1 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :MultipleReference .
+
+:ConceptExpression rdfs:subClassOf _:node177vmbc6fx2 .
+
+_:node177vmbc6fx2 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ConceptExpression rdfs:subClassOf lmm1:Expression , iol:Term ;
+	owl:disjointWith :Name , :ContextualExpression .
+
+:hasSyntacticFunction a owl:ObjectProperty ;
+	owl:inverseOf :isSyntacticFunctionOf ;
+	rdfs:subPropertyOf dul:hasRole ;
+	rdfs:domain iol:LinguisticObject ;
+	rdfs:range iol:LinguisticFunction .
+
+dul:Situation a owl:Class ;
+	rdfs:subClassOf lmm1:Reference .
+
+:NamedEntity a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx3 .
+
+_:node177vmbc6fx3 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :Name .
+
+:NamedEntity rdfs:subClassOf :IndividualReference .
+
+:IndividualReference a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx4 .
+
+_:node177vmbc6fx4 a owl:Restriction ;
+	owl:onProperty :isInstanceOf ;
+	owl:someValuesFrom dul:Concept .
+
+:IndividualReference rdfs:subClassOf _:node177vmbc6fx5 .
+
+_:node177vmbc6fx5 a owl:Restriction ;
+	owl:onProperty dul:isMemberOf ;
+	owl:someValuesFrom :MultipleReference .
+
+:IndividualReference rdfs:subClassOf lmm1:Reference .
+
+:SyntacticRule a owl:Class ;
+	rdfs:subClassOf lmm1:ConstructionRule .
+
+:OEisLexicalizedBy a owl:ObjectProperty ;
+	owl:inverseOf :lexicalizesOE ;
+	rdfs:subPropertyOf iol:isLexicalizedBy ;
+	rdfs:domain iol:FormalExpression ;
+	rdfs:range iol:LinguisticObject .
+
+:ContextualReference a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx6 .
+
+_:node177vmbc6fx6 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :ContextualExpression .
+
+:ContextualReference rdfs:subClassOf :IndividualReference .
+
+:LatentContext a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx7 .
+
+_:node177vmbc6fx7 a owl:Restriction ;
+	owl:onProperty dul:isUnifiedBy ;
+	owl:someValuesFrom _:node177vmbc6fx8 .
+
+_:node177vmbc6fx8 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx9 .
+
+_:node177vmbc6fx9 rdf:first :LSARule .
+
+:LSARule a owl:Class .
+
+_:node177vmbc6fx9 rdf:rest _:node177vmbc6fx11 .
+
+_:node177vmbc6fx11 rdf:first _:node177vmbc6fx10 .
+
+_:node177vmbc6fx10 a owl:Restriction ;
+	owl:onProperty dul:describes ;
+	owl:someValuesFrom iol:LinguisticObject .
+
+_:node177vmbc6fx11 rdf:rest rdf:nil .
+
+:LatentContext rdfs:subClassOf :AssociativeContext .
+
+:ConceptReference a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx12 .
+
+_:node177vmbc6fx12 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :ConceptExpression .
+
+:ConceptReference rdfs:subClassOf :MultipleReference , dul:TypeCollection .
+
+iol:LinguisticFunction a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx13 .
+
+_:node177vmbc6fx13 a owl:Restriction ;
+	owl:onProperty :isSyntacticFunctionOf ;
+	owl:allValuesFrom iol:LinguisticObject .
+
+iol:LinguisticFunction rdfs:subClassOf dul:Role .
+
+:MultipleReference a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx14 .
+
+_:node177vmbc6fx14 a owl:Restriction ;
+	owl:onProperty dul:hasMember ;
+	owl:allValuesFrom :IndividualReference .
+
+:MultipleReference rdfs:subClassOf lmm1:Reference , dul:Collection .
+
+:Name a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx15 .
+
+_:node177vmbc6fx15 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom _:node177vmbc6fx16 .
+
+_:node177vmbc6fx16 a owl:Class ;
+	owl:unionOf _:node177vmbc6fx17 .
+
+_:node177vmbc6fx17 rdf:first :ExtensionalReference .
+
+:ExtensionalReference a owl:Class .
+
+_:node177vmbc6fx17 rdf:rest _:node177vmbc6fx18 .
+
+_:node177vmbc6fx18 rdf:first :NamedEntity ;
+	rdf:rest rdf:nil .
+
+:Name rdfs:subClassOf _:node177vmbc6fx19 .
+
+_:node177vmbc6fx19 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:Name rdfs:subClassOf lmm1:Expression , iol:Term .
+
+:lexicalizesOE a owl:ObjectProperty ;
+	rdfs:subPropertyOf iol:lexicalizes ;
+	rdfs:domain iol:LinguisticObject ;
+	rdfs:range iol:FormalExpression .
+
+:ExtensionalReference rdfs:subClassOf _:node177vmbc6fx20 .
+
+_:node177vmbc6fx20 a owl:Restriction ;
+	owl:onProperty dul:hasMember ;
+	owl:allValuesFrom _:node177vmbc6fx21 .
+
+_:node177vmbc6fx21 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx22 .
+
+_:node177vmbc6fx22 rdf:first :IndividualReference ;
+	rdf:rest _:node177vmbc6fx24 .
+
+_:node177vmbc6fx24 rdf:first _:node177vmbc6fx23 .
+
+_:node177vmbc6fx23 a owl:Restriction ;
+	owl:onProperty dul:hasSetting ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node177vmbc6fx24 rdf:rest rdf:nil .
+
+:ExtensionalReference rdfs:subClassOf _:node177vmbc6fx25 .
+
+_:node177vmbc6fx25 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :ContextualExpression .
+
+:ExtensionalReference rdfs:subClassOf _:node177vmbc6fx26 .
+
+_:node177vmbc6fx26 a owl:Restriction ;
+	owl:onProperty dul:hasMember ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+:ExtensionalReference rdfs:subClassOf :MultipleReference .
+
+:isInstanceOf a owl:ObjectProperty ;
+	owl:inverseOf :hasInstance ;
+	rdfs:subPropertyOf dul:isClassifiedBy ;
+	rdfs:domain lmm1:Reference ;
+	rdfs:range dul:Concept .
+
+iol:LinguisticObject a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx27 .
+
+_:node177vmbc6fx27 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:allValuesFrom iol:LinguisticFunction .
+
+:ContextualExpression a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx28 .
+
+_:node177vmbc6fx28 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ContextualExpression rdfs:subClassOf _:node177vmbc6fx29 .
+
+_:node177vmbc6fx29 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom _:node177vmbc6fx30 .
+
+_:node177vmbc6fx30 a owl:Class ;
+	owl:unionOf _:node177vmbc6fx31 .
+
+_:node177vmbc6fx31 rdf:first :ContextualReference ;
+	rdf:rest _:node177vmbc6fx32 .
+
+_:node177vmbc6fx32 rdf:first :ExtensionalReference ;
+	rdf:rest rdf:nil .
+
+:ContextualExpression rdfs:subClassOf lmm1:Expression , iol:Term ;
+	owl:disjointWith :Name .
+
+dul:PhysicalArtifact a owl:Class ;
+	rdfs:subClassOf lmm1:Reference .
+
+:isSyntacticFunctionOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf dul:isRoleOf ;
+	rdfs:domain iol:LinguisticFunction ;
+	rdfs:range iol:LinguisticObject .
+
+:AnalyticFeature a owl:Class ;
+	rdfs:subClassOf dul:Role .
+
+:SyntacticContext a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx33 .
+
+_:node177vmbc6fx33 a owl:Restriction ;
+	owl:onProperty dul:isUnifiedBy ;
+	owl:someValuesFrom _:node177vmbc6fx34 .
+
+_:node177vmbc6fx34 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx35 .
+
+_:node177vmbc6fx35 rdf:first :SyntacticRule ;
+	rdf:rest _:node177vmbc6fx37 .
+
+_:node177vmbc6fx37 rdf:first _:node177vmbc6fx36 .
+
+_:node177vmbc6fx36 a owl:Restriction ;
+	owl:onProperty dul:describes ;
+	owl:someValuesFrom iol:LinguisticObject .
+
+_:node177vmbc6fx37 rdf:rest rdf:nil .
+
+:SyntacticContext rdfs:subClassOf lmm1:CoText .
+
+:SimpleConceptExpression a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx38 .
+
+_:node177vmbc6fx38 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :ConceptReference .
+
+:SimpleConceptExpression rdfs:subClassOf :ConceptExpression .
+
+:hasInstance a owl:ObjectProperty ;
+	rdfs:subPropertyOf dul:classifies ;
+	rdfs:domain dul:Concept ;
+	rdfs:range lmm1:Reference .
+
+:LSARule rdfs:subClassOf :AssociativeRule .
+
+:AssociativeRule a owl:Class ;
+	rdfs:subClassOf lmm1:ConstructionRule .
+
+:EnumeratedExpression a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx39 .
+
+_:node177vmbc6fx39 a owl:Restriction ;
+	owl:onProperty dul:hasPart ;
+	owl:someValuesFrom _:node177vmbc6fx40 .
+
+_:node177vmbc6fx40 a owl:Class ;
+	owl:unionOf _:node177vmbc6fx41 .
+
+_:node177vmbc6fx41 rdf:first :ContextualExpression ;
+	rdf:rest _:node177vmbc6fx42 .
+
+_:node177vmbc6fx42 rdf:first :Name ;
+	rdf:rest rdf:nil .
+
+:EnumeratedExpression rdfs:subClassOf _:node177vmbc6fx43 .
+
+_:node177vmbc6fx43 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :ExtensionalReference .
+
+:EnumeratedExpression rdfs:subClassOf :ContextualExpression .
+
+:AssociativeContext a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx44 .
+
+_:node177vmbc6fx44 a owl:Restriction ;
+	owl:onProperty dul:isUnifiedBy ;
+	owl:someValuesFrom _:node177vmbc6fx45 .
+
+_:node177vmbc6fx45 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx46 .
+
+_:node177vmbc6fx46 rdf:first :AssociativeRule ;
+	rdf:rest _:node177vmbc6fx48 .
+
+_:node177vmbc6fx48 rdf:first _:node177vmbc6fx47 .
+
+_:node177vmbc6fx47 a owl:Restriction ;
+	owl:onProperty dul:describes ;
+	owl:someValuesFrom iol:LinguisticObject .
+
+_:node177vmbc6fx48 rdf:rest rdf:nil .
+
+:AssociativeContext rdfs:subClassOf lmm1:CoText .
+
+dul:Description a owl:Class ;
+	rdfs:subClassOf lmm1:Meaning .
+
+lmm1:Meaning a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx49 .
+
+_:node177vmbc6fx49 a owl:Restriction ;
+	owl:onProperty dul:specializes ;
+	owl:allValuesFrom lmm1:Meaning .
+
+dul:Concept a owl:Class ;
+	rdfs:subClassOf lmm1:Meaning .
+
+:PolyrhematicConceptExpression a owl:Class ;
+	rdfs:subClassOf _:node177vmbc6fx50 .
+
+_:node177vmbc6fx50 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :MultipleReference .
+
+:PolyrhematicConceptExpression rdfs:subClassOf :ConceptExpression .
+
+lmm1:Expression a owl:Class ;
+	rdfs:label "Expression"@en .
+
+lmm1:Meaning rdfs:label "Meaning"@en .
+
+lmm1:Reference a owl:Class ;
+	rdfs:label "Reference"@en .
+
+:AnalyticFeature rdfs:comment """Any 'feature' used in automatic classification, learning, and in general in all feature-based analyses.
+In NLP, this role can be used with a LinguisticFunction, a PartOfSpeech, a graphical feature, etc."""^^xsd:string ;
+	rdfs:label "Analytic feature"@en .
+
+:AssociativeContext rdfs:comment "An associative rule is a lmm1:CoText where a neighborhood of a chunk of text is built out of the terms related to the chunk across the texts of a corpus, e.g. given a certain statistical threshold."^^xsd:string ;
+	rdfs:label "Associative context"@en .
+
+:AssociativeRule rdfs:label "Associative rule"@en .
+
+:ConceptExpression rdfs:comment "A Term that expresses a Meaning, and denotes a MultipleReference, e.g. 'Dog', 'Black box'"^^xsd:string ;
+	rdfs:label "Concept expression"@en .
+
+:ConceptReference rdfs:comment """A MultipleReference that is also a TypeCollection, i.e. a Collection whose members constitute the maximal set of individuals that share the same (named) type, i.e. a Concept . 
+E.g. 'the Italians', 'the nurses', 'the automotive workers'. 
+
+The Expressions that denote such references are typically composed by a determiner ('the' in English), and a noun phrase in plural form.
+
+Concept references can be empty collections, e.g. 'the square circles'."""^^xsd:string ;
+	rdfs:label "Concept reference"@en .
+
+:ContextualExpression rdfs:comment "A Term that denotes a Reference via anaphora or deixis, e.g. 'the dog over there', 'all my family', 'the current ACME employees', 'the lion described above'."^^xsd:string ;
+	rdfs:label "Contextual expression"@en .
+
+:ContextualReference rdfs:comment """An IndividualReference that is denoted by a ContextualExpression (anaphoric or deictic), e.g. 'the book in my bag', 'the book mentioned at the beginning of the story'.
+The extensional interpretation of Named and Contextual references in a de-reified model can be equivalent, reflecting the paraphrastic property of natural languages, e.g. the extensional interpretations of 'Linosa' and 'the Italian most southern island' are equivalent. This corresponds to saying that names and contextual expressions can denote the same entities."""^^xsd:string ;
+	rdfs:label "Contextual reference"@en .
+
+:EnumeratedExpression rdfs:comment "An AnaphoricExpression that denotes an enumerated PluralReference, e.g. 'John, Mary, and me'. Enumerated expressions typically have names and anaphoric expressions (e.g. pronouns) as parts."^^xsd:string ;
+	rdfs:label "Enumerated expression"@en .
+
+:ExtensionalReference rdfs:comment """Extensional references are collections that require an extensional enumeration (e.g. 'John and Mary'), or an anaphora that allows to extract an implicit enumeration (e.g. 'the books on my table'). Hence, extensional references have individual references as members.
+
+Individual references in the extensional reference must be in the setting of some Situation, which means that extensional references only exist if some fact is described by an observer/interpreter.
+
+The terms expressing extensional references can be names or contextual expressions.
+
+The extensional interpretation of Concept and Extensional references in a de-reified (abstract) model can be equivalent, reflecting the paraphrastic property of natural languages, e.g. the extensional interpretations of 'IberianCountry' and {Spain, Portugal, Andorra, Gibraltar} are equivalent. This corresponds to saying that concept expressions and contextual expressions can denote the same entities, while having different intensional interpretations (meanings)."""^^xsd:string ;
+	rdfs:label "Extensional reference"@en .
+
+:IndividualReference rdfs:comment "Any LMM1:Reference that isInstanceOf a dul:Concept"^^xsd:string ;
+	rdfs:label "Individual reference"@en .
+
+:LSARule rdfs:label "LSA rule"@en .
+
+:LatentContext rdfs:label "Latent context"@en .
+
+:MultipleReference rdfs:comment """Any LMM1:Reference that is also a dul:Collection, and can have members that are individual references.
+As a collection, a multiple reference can be covered by a dul:Concept, whose instances are the members of the MultipleReference . For example, JohnDoe (an IndividualReference) isMemberOf ACMEEmployees (a MultipleReference), that dul:isCoveredBy the Employee concept. It also holds that JohnDoe isInstanceOf Employee"""^^xsd:string ;
+	rdfs:label "Multiple reference"@en .
+
+:Name rdfs:comment "A proper noun that denotes an IndividualReference, e.g. 'John Zorn', 'Daimler Benz'."^^xsd:string ;
+	rdfs:label "Name"@en .
+
+:NamedEntity rdfs:comment "An IndividualReference that is denoted by a Name, e.g. 'John_Zorn' (as an Entity)."^^xsd:string ;
+	rdfs:label "Named entity"@en .
+
+:PolyrhematicConceptExpression rdfs:comment """A complex ConceptExpression that denotes a MultipleReference, e.g. 'the antique books'.
+A polyrhematic expression usually has an associated 'head word'."""^^xsd:string ;
+	rdfs:label "Polyrhematic concept expression"@en .
+
+:SimpleConceptExpression rdfs:comment "A simple ConceptExpression that denotes a ClassReference, e.g. 'the nurses'."^^xsd:string ;
+	rdfs:label "Simple concept expression"@en .
+
+:SyntacticContext rdfs:comment "A lmm1:CoText that is equivalent to a neighborhood of a certain chunk of text, which can be built based on a syntagmatic rule, e.g. all words from the sentence where the chunk occurs."^^xsd:string ;
+	rdfs:label "Syntactic context"@en .
+
+:OEisLexicalizedBy rdfs:label "OEis lexicalized by"@en .
+
+:hasInstance rdfs:label "has instance"@en .
+
+:hasSyntacticFunction rdfs:label "has syntactic function"@en .
+
+:isInstanceOf rdfs:label "is instance of"@en .
+
+:isSyntacticFunctionOf rdfs:label "is syntactic function of"@en .
+
+:lexicalizesOE rdfs:comment "Lexicalization for ontology elements."^^xsd:string ;
+	rdfs:label "lexicalizes oE"@en .
+
+dul:Collection a owl:Class .
+
+dul:Role a owl:Class .
+
+dul:TypeCollection a owl:Class .
+
+iol:FormalExpression a owl:Class .
+
+iol:Term a owl:Class .
+
+lmm1:CoText a owl:Class .
+
+lmm1:ConstructionRule a owl:Class .
+
+dul:classifies a owl:ObjectProperty .
+
+dul:describes a owl:ObjectProperty .
+
+dul:hasMember a owl:ObjectProperty .
+
+dul:hasPart a owl:ObjectProperty .
+
+dul:hasRole a owl:ObjectProperty .
+
+dul:hasSetting a owl:ObjectProperty .
+
+dul:isClassifiedBy a owl:ObjectProperty .
+
+dul:isMemberOf a owl:ObjectProperty .
+
+dul:isRoleOf a owl:ObjectProperty .
+
+dul:isUnifiedBy a owl:ObjectProperty .
+
+dul:specializes a owl:ObjectProperty .
+
+iol:isLexicalizedBy a owl:ObjectProperty .
+
+iol:lexicalizes a owl:ObjectProperty .
+
+lmm1:denotes a owl:ObjectProperty .
+
+lmm1:isDenotedBy a owl:ObjectProperty .
+
+:ConceptExpression rdfs:subClassOf _:node177vmbc6fx51 .
+
+_:node177vmbc6fx51 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :MultipleReference .
+
+:ConceptExpression rdfs:subClassOf _:node177vmbc6fx52 .
+
+_:node177vmbc6fx52 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:NamedEntity rdfs:subClassOf _:node177vmbc6fx53 .
+
+_:node177vmbc6fx53 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :Name .
+
+:IndividualReference rdfs:subClassOf _:node177vmbc6fx54 .
+
+_:node177vmbc6fx54 a owl:Restriction ;
+	owl:onProperty :isInstanceOf ;
+	owl:someValuesFrom dul:Concept .
+
+:IndividualReference rdfs:subClassOf _:node177vmbc6fx55 .
+
+_:node177vmbc6fx55 a owl:Restriction ;
+	owl:onProperty dul:isMemberOf ;
+	owl:someValuesFrom :MultipleReference .
+
+:ContextualReference rdfs:subClassOf _:node177vmbc6fx56 .
+
+_:node177vmbc6fx56 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :ContextualExpression .
+
+:LatentContext rdfs:subClassOf _:node177vmbc6fx57 .
+
+_:node177vmbc6fx57 a owl:Restriction ;
+	owl:onProperty dul:isUnifiedBy ;
+	owl:someValuesFrom _:node177vmbc6fx58 .
+
+_:node177vmbc6fx58 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx59 .
+
+_:node177vmbc6fx59 rdf:first :LSARule ;
+	rdf:rest _:node177vmbc6fx61 .
+
+_:node177vmbc6fx61 rdf:first _:node177vmbc6fx60 .
+
+_:node177vmbc6fx60 a owl:Restriction ;
+	owl:onProperty dul:describes ;
+	owl:someValuesFrom iol:LinguisticObject .
+
+_:node177vmbc6fx61 rdf:rest rdf:nil .
+
+:ConceptReference rdfs:subClassOf _:node177vmbc6fx62 .
+
+_:node177vmbc6fx62 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :ConceptExpression .
+
+iol:LinguisticFunction rdfs:subClassOf _:node177vmbc6fx63 .
+
+_:node177vmbc6fx63 a owl:Restriction ;
+	owl:onProperty :isSyntacticFunctionOf ;
+	owl:allValuesFrom iol:LinguisticObject .
+
+:MultipleReference rdfs:subClassOf _:node177vmbc6fx64 .
+
+_:node177vmbc6fx64 a owl:Restriction ;
+	owl:onProperty dul:hasMember ;
+	owl:allValuesFrom :IndividualReference .
+
+:Name rdfs:subClassOf _:node177vmbc6fx65 .
+
+_:node177vmbc6fx65 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom _:node177vmbc6fx66 .
+
+_:node177vmbc6fx66 a owl:Class ;
+	owl:unionOf _:node177vmbc6fx67 .
+
+_:node177vmbc6fx67 rdf:first :ExtensionalReference ;
+	rdf:rest _:node177vmbc6fx68 .
+
+_:node177vmbc6fx68 rdf:first :NamedEntity ;
+	rdf:rest rdf:nil .
+
+:Name rdfs:subClassOf _:node177vmbc6fx69 .
+
+_:node177vmbc6fx69 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ExtensionalReference rdfs:subClassOf _:node177vmbc6fx70 .
+
+_:node177vmbc6fx70 a owl:Restriction ;
+	owl:onProperty dul:hasMember ;
+	owl:allValuesFrom _:node177vmbc6fx71 .
+
+_:node177vmbc6fx71 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx72 .
+
+_:node177vmbc6fx72 rdf:first :IndividualReference ;
+	rdf:rest _:node177vmbc6fx74 .
+
+_:node177vmbc6fx74 rdf:first _:node177vmbc6fx73 .
+
+_:node177vmbc6fx73 a owl:Restriction ;
+	owl:onProperty dul:hasSetting ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node177vmbc6fx74 rdf:rest rdf:nil .
+
+:ExtensionalReference rdfs:subClassOf _:node177vmbc6fx75 .
+
+_:node177vmbc6fx75 a owl:Restriction ;
+	owl:onProperty lmm1:isDenotedBy ;
+	owl:someValuesFrom :ContextualExpression .
+
+:ExtensionalReference rdfs:subClassOf _:node177vmbc6fx76 .
+
+_:node177vmbc6fx76 a owl:Restriction ;
+	owl:onProperty dul:hasMember ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger .
+
+iol:LinguisticObject rdfs:subClassOf _:node177vmbc6fx77 .
+
+_:node177vmbc6fx77 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:allValuesFrom iol:LinguisticFunction .
+
+:ContextualExpression rdfs:subClassOf _:node177vmbc6fx78 .
+
+_:node177vmbc6fx78 a owl:Restriction ;
+	owl:onProperty :hasSyntacticFunction ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+:ContextualExpression rdfs:subClassOf _:node177vmbc6fx79 .
+
+_:node177vmbc6fx79 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom _:node177vmbc6fx80 .
+
+_:node177vmbc6fx80 a owl:Class ;
+	owl:unionOf _:node177vmbc6fx81 .
+
+_:node177vmbc6fx81 rdf:first :ContextualReference ;
+	rdf:rest _:node177vmbc6fx82 .
+
+_:node177vmbc6fx82 rdf:first :ExtensionalReference ;
+	rdf:rest rdf:nil .
+
+:SyntacticContext rdfs:subClassOf _:node177vmbc6fx83 .
+
+_:node177vmbc6fx83 a owl:Restriction ;
+	owl:onProperty dul:isUnifiedBy ;
+	owl:someValuesFrom _:node177vmbc6fx84 .
+
+_:node177vmbc6fx84 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx85 .
+
+_:node177vmbc6fx85 rdf:first :SyntacticRule ;
+	rdf:rest _:node177vmbc6fx87 .
+
+_:node177vmbc6fx87 rdf:first _:node177vmbc6fx86 .
+
+_:node177vmbc6fx86 a owl:Restriction ;
+	owl:onProperty dul:describes ;
+	owl:someValuesFrom iol:LinguisticObject .
+
+_:node177vmbc6fx87 rdf:rest rdf:nil .
+
+:SimpleConceptExpression rdfs:subClassOf _:node177vmbc6fx88 .
+
+_:node177vmbc6fx88 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :ConceptReference .
+
+:EnumeratedExpression rdfs:subClassOf _:node177vmbc6fx89 .
+
+_:node177vmbc6fx89 a owl:Restriction ;
+	owl:onProperty dul:hasPart ;
+	owl:someValuesFrom _:node177vmbc6fx90 .
+
+_:node177vmbc6fx90 a owl:Class ;
+	owl:unionOf _:node177vmbc6fx91 .
+
+_:node177vmbc6fx91 rdf:first :ContextualExpression ;
+	rdf:rest _:node177vmbc6fx92 .
+
+_:node177vmbc6fx92 rdf:first :Name ;
+	rdf:rest rdf:nil .
+
+:EnumeratedExpression rdfs:subClassOf _:node177vmbc6fx93 .
+
+_:node177vmbc6fx93 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :ExtensionalReference .
+
+:AssociativeContext rdfs:subClassOf _:node177vmbc6fx94 .
+
+_:node177vmbc6fx94 a owl:Restriction ;
+	owl:onProperty dul:isUnifiedBy ;
+	owl:someValuesFrom _:node177vmbc6fx95 .
+
+_:node177vmbc6fx95 a owl:Class ;
+	owl:intersectionOf _:node177vmbc6fx96 .
+
+_:node177vmbc6fx96 rdf:first :AssociativeRule ;
+	rdf:rest _:node177vmbc6fx98 .
+
+_:node177vmbc6fx98 rdf:first _:node177vmbc6fx97 .
+
+_:node177vmbc6fx97 a owl:Restriction ;
+	owl:onProperty dul:describes ;
+	owl:someValuesFrom iol:LinguisticObject .
+
+_:node177vmbc6fx98 rdf:rest rdf:nil .
+
+lmm1:Meaning rdfs:subClassOf _:node177vmbc6fx99 .
+
+_:node177vmbc6fx99 a owl:Restriction ;
+	owl:onProperty dul:specializes ;
+	owl:allValuesFrom lmm1:Meaning .
+
+:PolyrhematicConceptExpression rdfs:subClassOf _:node177vmbc6fx100 .
+
+_:node177vmbc6fx100 a owl:Restriction ;
+	owl:onProperty lmm1:denotes ;
+	owl:someValuesFrom :MultipleReference .

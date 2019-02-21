@@ -1,0 +1,172 @@
+@prefix :      <http://purl.org/hpi/patchr#> .
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pat:   <http://purl.org/hpi/patchr#> .
+@prefix prov:  <http://purl.org/net/provenance/ns#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix void:  <http://rdfs.org/ns/void> .
+@prefix guo:   <http://webr3.org/owl/guo#> .
+
+pat:PatchGroup  a         owl:Class ;
+        rdfs:comment      "A patch group is a collection of patches that apply to a common problem."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "PatchGroup"@en .
+
+guo:UpdateInstruction
+        a       owl:Class .
+
+pat:    a                owl:Ontology ;
+        dc:creator       <http://magnus.13mm.de> , <http://jhercher.de> ;
+        dc:description   "The Patch Request Ontology provides a schema to describe desired changes in Linked Data. By wrapping the Graph Update Ontology (guo) patch requests can be formulated to add, modify or delete particular triples (or subgraphs) within a dataset."@en ;
+        dc:title         "Patch Request Ontology"@en ;
+        owl:versionInfo  "Revision: 0.6" .
+
+pat:provenance  a         owl:ObjectProperty ;
+        rdfs:comment      "This property is deprecated and should not be used any more, use prov:wasGeneratedBy instead.\n\nRefers to the provenance context where this patch was created."@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( pat:Patch pat:PatchGroup )
+                          ] ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "provenance"@en ;
+        rdfs:range        prov:DataCreation ;
+        owl:deprecated    true .
+
+<http://rdfs.org/ns/void#Dataset>
+        a       owl:Class .
+
+pat:patchrService  a      owl:ObjectProperty ;
+        rdfs:comment      "Links a resource to the PatchR instance responsible for collecting patch requests."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "patchrService"@en .
+
+pat:appliesTo  a          owl:ObjectProperty ;
+        rdfs:comment      "Refers to a void:Dataset to allow convenient selection of patches per dataset."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "appliesTo"@en ;
+        rdfs:range        <http://rdfs.org/ns/void#Dataset> .
+
+pat:Patch  a              owl:Class ;
+        rdfs:comment      "A patch is a request to add, change or delete certain triples (or subgraphs) within a dataset. A patch refers to an guo:UpdateInstruction. For convenient retrieval a patch should be described with provenance data, a patch type and a dataset it applies to."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "Patch"@en ;
+        rdfs:subClassOf   [ a                         owl:Restriction ;
+                            owl:onClass               guo:UpdateInstruction ;
+                            owl:onProperty            pat:update ;
+                            owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                          ] ;
+        rdfs:subClassOf   [ a                         owl:Restriction ;
+                            owl:onClass               <http://rdfs.org/ns/void#Dataset> ;
+                            owl:onProperty            pat:appliesTo ;
+                            owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                          ] .
+
+pat:comment  a            owl:DatatypeProperty ;
+        rdfs:comment      "This property is deprecated and should not be used any more, use dcterms:description instead.\n\nA comment on the patch. This is likely just an informal message a user wants to share when submitting a Patch."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "comment"@en ;
+        rdfs:range        rdfs:Literal ;
+        owl:deprecated    true .
+
+pat:confidence  a         owl:DatatypeProperty , owl:ObjectProperty ;
+        rdfs:comment      "A confidence assigned by the creator of the patch, e.g. in case heuristic methods identified an inconsistency. This confidence must be expressed in the range of [-1,1], whereas a high value means higher confidence and a value of 1 signifies absolute certainty. Negative values indicate criticism towards this patch."@en ;
+        rdfs:domain       prov:DataCreation ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "confidence"@en ;
+        rdfs:range        xsd:Double .
+
+pat:Resolved  a           pat:PatchStatus , owl:NamedIndividual ;
+        rdfs:comment      "The patch has been resolved, i.e. this patch has been applied. It can be more or less ignored but is kept for archival reasons, new requests for that patch will be answered as resolved."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "Resolved"@en .
+
+pat:PatchType  a          owl:Class ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "PatchType"@en .
+
+pat:advocate  a           owl:ObjectProperty ;
+        rdfs:comment      "This property is deprecated and should not be used any more, rather use a positive confidence value for advocating agents.\n\nLinks agents who support, i.e. vote for, a :Patch. Each time a user creates a patch request, appropriate provenance information is generated."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "advocate"@en ;
+        rdfs:range        foaf:Agent ;
+        owl:deprecated    true .
+
+pat:Rejected  a           pat:PatchStatus , owl:NamedIndividual ;
+        rdfs:comment      "The patch has been rejected, i.e. this patch will not be applied. It can be more or less ignored but is kept for archival reasons, new requests for that patch will be rejected."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "Rejected"@en .
+
+pat:status  a             owl:ObjectProperty ;
+        rdfs:comment      "The status of the patch, might be one of Open, Resolved, Postponed, or Rejected."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "status"@en ;
+        rdfs:range        pat:PatchStatus .
+
+pat:update  a             owl:FunctionalProperty , owl:ObjectProperty ;
+        rdfs:comment      "Refers to a guo:UpdateInstruction. There must be exactly one guo:UpdateInstruction per :Patch. The guo:UpdateInstruction either is a deletion, insertion, or replacement of triples for one particular subject resource."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "update"@en ;
+        rdfs:range        guo:UpdateInstruction .
+
+pat:DisjunctivePatchGroup
+        a                 owl:Class ;
+        rdfs:comment      "A disjunctive patch group is collection (alternative list) of patches where one member patch need to be applied to resolve the problem."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "DisjunctivePatchGroup"@en ;
+        rdfs:subClassOf   pat:PatchGroup .
+
+pat:Open  a               pat:PatchStatus , owl:NamedIndividual ;
+        rdfs:comment      "The patch has been raised."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "Open"@en .
+
+foaf:Agent  a   owl:Class .
+
+prov:DataCreation  a  owl:Class .
+
+pat:criticiser  a         owl:ObjectProperty ;
+        rdfs:comment      "This property is deprecated and should not be used any more, rather use a negative confidence value for advocating agents.\n\nLinks agents who disagree, i.e. vote against, a :Patch."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "criticiser"@en ;
+        rdfs:range        foaf:Agent ;
+        owl:deprecated    true .
+
+pat:PatchStatus  a        owl:Class ;
+        rdfs:comment      "The status of the patch, might be one of Open, Resolved, Postponed, or Rejected."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "PatchStatus"@en .
+
+pat:Postponed  a          pat:PatchStatus , owl:NamedIndividual ;
+        rdfs:comment      "The patch has been postponed."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "Postponed"@en .
+
+pat:ConjunctivePatchGroup
+        a                 owl:Class ;
+        rdfs:comment      "A conjunctive patch group is collection (list) of patches where all member patches need to be applied to the dataset to resolve the problem."@en ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "ConjunctivePatchGroup"@en ;
+        rdfs:subClassOf   pat:PatchGroup .
+
+xsd:Double  a   owl:Class .
+
+pat:patchType  a          owl:ObjectProperty ;
+        rdfs:comment      "Refers to a classification of the patch. There might be patch taxonomies from different applications that define the reason for a :Patch on their own. A :Patch may have multiple types."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "patchType"@en ;
+        rdfs:range        pat:PatchType .
+
+pat:memberOf  a           owl:ObjectProperty ;
+        rdfs:comment      "Relates a Patch to a PatchGroup. A Patch may be part of multiple :PatchGroups."@en ;
+        rdfs:domain       pat:Patch ;
+        rdfs:isDefinedBy  pat: ;
+        rdfs:label        "memberOf"@en ;
+        rdfs:range        pat:PatchGroup .

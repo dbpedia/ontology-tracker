@@ -1,0 +1,120 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix oo: <http://purl.org/openorg/> .
+@prefix lv: <http://purl.org/lobid/lv#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix schema: <http://schema.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix voaf: <http://purl.org/vocommons/voaf#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://purl.org/lobid/lv> a owl:Ontology , voaf:Vocabulary ;
+	vann:preferredNamespacePrefix "lv" ;
+	dct:title "lobid vocab" ;
+	dct:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+	dct:description "Under this name space new properties and classes needed for the service lobid ('linking open bibliographic data') are defined . Already existing properties and classes which are (re)used in lobid aren't documented here."@en ;
+	dct:issued "2012-01-17" ;
+	dct:modified "2014-06-10"^^xsd:date ;
+	skos:historyNote "See the commit history for this vocabulary at https://github.com/lobid/vocabs/commits/master/lobid-vocab.ttl." ;
+	dct:publisher <http://lobid.org/organisation/DE-605> ;
+	dct:creator <http://lobid.org/team/ap> ;
+	vann:preferredNamespaceUri "http://purl.org/lobid/lv#" ;
+	oo:contact <mailto:semweb@hbz-nrw.de> .
+
+lv:Bibliography a owl:Class ;
+	rdfs:subClassOf bibo:Collection ;
+	rdfs:label "Bibliography"@en , "Bibliographie"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "A collection of documents relevant to a particular subject or author."@en .
+
+lv:contactqr a owl:ObjectProperty ;
+	rdfs:label "Contact QR code"@en , "Kontakt-QR-Code"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "Relates a person, organization or other agent to a QR code that encodes the agent's contact information."@en ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Image .
+
+lv:fulltextOnline a owl:ObjectProperty ;
+	rdfs:label "Fulltext Online"@en , "Online-Volltext"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "Relates a bibliographic resource to an online resource (full text in HTML, PDFs or landing pages in OA repositories, on publishers' websites etc.) that represents the full text of the bibliographic resource or contains a link to a full text of the resource. "@en ;
+	rdfs:domain dct:BibliographicResource ;
+	rdfs:range foaf:Document .
+
+lv:fundertype a owl:ObjectProperty ;
+	rdfs:label "Type of funding organization"@en , "Art des Unterhaltträgers"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "Indicates which type an institution's funder is of. It should be used with a controlled vocabulary like http://purl.org/lobid/fundertype."@en ;
+	rdfs:domain foaf:Organization ;
+	rdfs:range skos:Concept .
+
+lv:hbzID a owl:DatatypeProperty ;
+	rdfs:label "hbz-ID"@de , "hbz ID"@en ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "HT-Nummer. Der Identifier, der einer bibliographischen Ressource im hbz-Verbundkatalog zugewiesen wurde."@de , "The identifier that is assigned to a bibliographic resource in the hbz union catalogue."@en ;
+	rdfs:subPropertyOf dct:identifier ;
+	rdfs:domain dct:BibliographicResource ;
+	rdfs:range rdfs:Literal .
+
+lv:isil a owl:DatatypeProperty ;
+	rdfs:label "ISIL" ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "International Standard Identifier for Libraries and Related Organizations (ISIL). Ein eindeutiger Identifikator für Bibliotheken und verwandte Einrichtungen oder untergeordnete Organisationseinheiten, der durch ISIL-Agenturen vergeben wird. Das Literal sollte durch den folgenden regulären Ausdruck gematcht werden: [A-Z]{1,4}-[0-9a-zA-Z:-/]{1,11} ."@de , "International Standard Identifier for Libraries and Related Organizations (ISIL). 'An ISIL identifies an organization, i.e., a library or a related organization, or one of its subordinate units, which is responsible for an action or service in a bibliographic environment (e.g. creation of machine-readable information). It can be used to identify the originator or holder of a resource (e.g. library material).' The literal should conform to this regular expression: [A-Z]{1,4}-[0-9a-zA-Z:-/]{1,11} ."@en ;
+	rdfs:subPropertyOf dct:identifier ;
+	rdfs:seeAlso <http://biblstandard.dk/isil/scope.htm> ;
+	rdfs:domain foaf:Organization .
+
+_:node18tur8guux1 a rdfs:Datatype ;
+	owl:onDatatype xsd:string .
+
+_:node18tur8guux3 xsd:pattern "[A-Z]{1,4}-[0-9a-zA-Z:-/]{1,11}" .
+
+_:node18tur8guux2 rdf:first _:node18tur8guux3 ;
+	rdf:rest rdf:nil .
+
+_:node18tur8guux1 owl:withRestrictions _:node18tur8guux2 .
+
+lv:isil rdfs:range _:node18tur8guux1 .
+
+lv:stocksize a rdf:Property ;
+	rdfs:label "Stock Size"@en , "Bestandsgröße"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "Indicates an institution's stock size. This property is especially used to indicate the size of a library's collection. It is recommended to be used with the controlled vocabulary at http://purl.org/lobid/stocksize."@en ;
+	rdfs:domain foaf:Organization .
+
+lv:titleKeyword a owl:DatatypeProperty ;
+	rdfs:label "Title Keyword"@en , "Titelstichwort"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "Indicates a title keyword, possibly in a different spelling than used in the original title."@en ;
+	rdfs:domain schema:CreativeWork .
+
+lv:urn a owl:DatatypeProperty ;
+	rdfs:label "URN"@en , "URN"@de ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "This property is used to indicate the uniform resource name (URN) of a bibliographic resource. The URN must be stated as a string not as URI, thus identifying the identifier itself and not the resource that is identified by the URN."@en ;
+	rdfs:domain dct:BibliographicResource ;
+	rdfs:range rdfs:Literal .
+
+lv:zdbID a owl:DatatypeProperty ;
+	rdfs:label "ZDB-ID"@de , "ZDB ID"@en ;
+	rdfs:isDefinedBy <http://purl.org/lobid/lv> ;
+	rdfs:comment "ZDB-Nummer. Der Identifier, der einer bibliographischen Ressource in der Zeitschriftendatenbank (ZDB) zugewiesen wurde."@de , "The identifier that is assigned to a bibliographic resource in the German Journal Database (Zeitschriftendatenbank, ZDB)."@en ;
+	rdfs:subPropertyOf dct:identifier ;
+	rdfs:domain dct:BibliographicResource ;
+	rdfs:range rdfs:Literal .
+
+_:node18tur8guux4 a rdfs:Datatype ;
+	owl:onDatatype xsd:string .
+
+_:node18tur8guux6 xsd:pattern "[A-Z]{1,4}-[0-9a-zA-Z:-/]{1,11}" .
+
+_:node18tur8guux5 rdf:first _:node18tur8guux6 ;
+	rdf:rest rdf:nil .
+
+_:node18tur8guux4 owl:withRestrictions _:node18tur8guux5 .
+
+lv:isil rdfs:range _:node18tur8guux4 .

@@ -1,0 +1,207 @@
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dcterms:licence a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dcterms:issued a owl:AnnotationProperty .
+
+foaf:homepage a owl:AnnotationProperty .
+
+foaf:depiction a owl:AnnotationProperty .
+
+skos:Concept a owl:Class .
+
+sioc:Item a owl:Class .
+
+sioc:UserAccount a owl:Class .
+
+sioc:about a owl:ObjectProperty .
+
+sioc:has_creator a owl:ObjectProperty .
+
+sioc:creator_of a owl:ObjectProperty .
+
+dcterms:created a owl:DatatypeProperty .
+
+dcterms:modified a owl:DatatypeProperty .
+
+<http://purl.org/muto/core> a owl:Ontology ;
+	dc:title "Modular Unified Tagging Ontology (MUTO)" ;
+	rdfs:label "MUTO Core Ontology"@en ;
+	dc:description "The Modular and Unified Tagging Ontology (MUTO) is an ontology for tagging and folksonomies. It is based on a thorough review of earlier tagging ontologies and unifies core concepts in one consistent schema. It supports different forms of tagging, such as common, semantic, group, private, and automatic tagging, and is easily extensible." ;
+	dc:creator "Steffen Lohmann" ;
+	dcterms:issued "2011-11-16" ;
+	dcterms:licence "http://creativecommons.org/licenses/by/3.0/" ;
+	rdfs:seeAlso "http://purl.org/muto/core#" ;
+	foaf:homepage "http://purl.org/muto" ;
+	foaf:depiction "http://purl.org/muto/core/muto-compact.png" , "http://purl.org/muto/core/muto-UML.png" ;
+	owl:versionInfo "Version 1.0 - Global changes (compared to earlier versions): Some properties have been renamed; cardinality constraints in class descriptions (owl:Restriction) have been replaced by global cardinality constraints (owl:FunctionalProperty)." .
+
+<http://purl.org/muto/core#Tagging> a owl:Class ;
+	rdfs:label "Tagging"@en ;
+	rdfs:comment "A tagging links a resource to a user account and one or more tags."@en ;
+	rdfs:subClassOf sioc:Item ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#PrivateTagging> a owl:Class ;
+	rdfs:label "Private Tagging"@en ;
+	rdfs:subClassOf <http://purl.org/muto/core#Tagging> ;
+	rdfs:comment "A private tagging is a tagging that is only visible to its creator (unless the creator has not granted access to others via muto:grantAccess). Every tagging that is not an instance of muto:PrivateTagging is public by default."@en ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#Tag> a owl:Class ;
+	rdfs:label "Tag"@en ;
+	rdfs:comment "A Tag consists of an arbitrary text label. Note that tags with the same label are NOT merged in the ontology."@en ;
+	rdfs:subClassOf skos:Concept ;
+	owl:versionInfo "Version 1.0: The owl:disjointWith statement was removed to make MUTO conform to OWL Lite (the statement is not essential in this case)." ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#AutoTag> a owl:Class ;
+	rdfs:label "Automatic Tag"@en ;
+	rdfs:subClassOf <http://purl.org/muto/core#Tag> ;
+	rdfs:comment "An automatic tag is a tag that is automatically associated with a resource (e.g. by a tagging system), i.e. it is not entered by a human being."@en ;
+	owl:versionInfo "Version 1.0: muto:AutoTag was a subclass of muto:Tagging (called muto:autoTagging) in earlier versions. Defining it as a subclass of muto:Tag is more appropriate and allows for taggings that contain a combination of manually and automatically created tags." ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#hasTag> a owl:ObjectProperty ;
+	rdfs:label "has tag"@en ;
+	rdfs:comment "A tagging consists of a (theoretically unlimited) number of tags. A tagging may also consist of no tags, e.g. if the system allows its users to mark a resource first and add tags later."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tagging> ;
+	rdfs:range <http://purl.org/muto/core#Tag> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#tagOf> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "tag of"@en ;
+	rdfs:comment "Every tag is linked to exactly one tagging. This results from the fact that tags with same labels are NOT merged in the ontology."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:range <http://purl.org/muto/core#Tagging> ;
+	owl:inverseOf <http://purl.org/muto/core#hasTag> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#taggedResource> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "tagged resource"@en ;
+	rdfs:comment "Every tagging is linked to exactly one resource. This can be any kind of resource (i.e. all subclasses of rdfs:Resource), including tags and taggings."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tagging> ;
+	rdfs:subPropertyOf sioc:about ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#taggedWith> a owl:ObjectProperty ;
+	rdfs:label "tagged with"@en ;
+	rdfs:comment "A resource can have several taggings from different users. Tags are never directly linked to resources but can be inferred from the taggings."@en ;
+	rdfs:range <http://purl.org/muto/core#Tagging> ;
+	owl:inverseOf <http://purl.org/muto/core#taggedResource> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#hasCreator> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has creator"@en ;
+	rdfs:comment "Every tagging is linked to at most one user account. This property can be omitted for automatic taggings. In contrast to its superproperty sioc:has_creator, it is functional and with an explicit domain. Use sioc:member_of to define groups for group tagging or link to foaf:Agent, foaf:Person, or foaf:Group via sioc:account_of."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tagging> ;
+	rdfs:range sioc:UserAccount ;
+	rdfs:subPropertyOf sioc:has_creator ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#creatorOf> a owl:ObjectProperty ;
+	rdfs:label "creator of"@en ;
+	rdfs:comment "A user account can have a (theoretically unlimited) number of taggings. Use sioc:member_of to define groups for group tagging or link to foaf:Agent, foaf:Person, or foaf:Group via sioc:account_of."@en ;
+	rdfs:domain sioc:UserAccount ;
+	rdfs:range <http://purl.org/muto/core#Tagging> ;
+	rdfs:subPropertyOf sioc:creator_of ;
+	owl:inverseOf <http://purl.org/muto/core#hasCreator> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#grantAccess> a owl:ObjectProperty ;
+	rdfs:label "grant access"@en ;
+	rdfs:comment "A (usually private) tagging can be linked to one or more user accounts or user groups that should have access to it (apart from the creator). This property can also be used in public tagging to link a user account or user group to a tagging (e.g. if the creator of a tagging wants to suggest the tagging to another user)."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tagging> ;
+	owl:versionInfo "Version 1.0: The range information has been removed for greater flexibility and OWL Lite conformance (no longer owl:unionOf). Classes from different vocabularies can now be used here - such as sioc:UserAccount, sioc:Usergroup, foaf:OnlineAccount, foaf:Group, or dcterms:Agent -, though we recommend the use of sioc:UserAccount or sioc:Usergroup to remain in the SIOC namespace." ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#hasAccess> a owl:ObjectProperty ;
+	rdfs:label "has access"@en ;
+	rdfs:comment "A user account or user group can have access to a private tagging from another user if the access is explicitly permitted by the creator of the tagging. This property can also be used in public tagging to link a user account or user group to a tagging (e.g. if the creator of a tagging has suggested the tagging to another user)."@en ;
+	rdfs:range <http://purl.org/muto/core#Tagging> ;
+	owl:inverseOf <http://purl.org/muto/core#grantAccess> ;
+	owl:versionInfo "Version 1.0: see muto:grantAccess" ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#taggingCreated> a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "tagging created"@en ;
+	rdfs:comment "Every tagging has exactly one creation date and time. The datatype of this property is xsd:dateTime (in contrast to its superproperty dcterms:created which has range rdfs:Literal)."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tagging> ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dcterms:created ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#taggingModified> a owl:DatatypeProperty ;
+	rdfs:label "tagging modified"@en ;
+	rdfs:comment "A tagging can have multiple modification dates, as the number of times a tagging can be edited (e.g. to add or remove tags) is theoretically unlimited. The datatype of this property is xsd:dateTime (in contrast to it superproperty dcterms:created which has range rdfs:Literal)."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tagging> ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dcterms:modified ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#tagCreated> a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "tag created"@en ;
+	rdfs:comment "The creation date and time of a tag. This property can be omitted if muto:taggingCreated = muto:tagCreated (i.e. in the common case that a tag has been created along with a tagging, not in a later edit of the tagging). The datatype of this property is xsd:dateTime (in contrast to it superproperty dcterms:created which has range rdfs:Literal)."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:range xsd:dateTime ;
+	rdfs:subPropertyOf dcterms:created ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#tagMeaning> a owl:ObjectProperty ;
+	rdfs:label "tag meaning"@en ;
+	rdfs:comment "The meaning of a tag can be expressed by a link to a well-defined resource. This can be any resource that clarifies the meaning of the tag (e.g. some DBpedia resource)."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#meaningOf> a owl:ObjectProperty ;
+	rdfs:label "meaning of"@en ;
+	rdfs:comment "The number of tags that can be linked to one and the same meaning is theoretically unlimited."@en ;
+	rdfs:range <http://purl.org/muto/core#Tag> ;
+	owl:inverseOf <http://purl.org/muto/core#tagMeaning> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#autoMeaning> a owl:ObjectProperty ;
+	rdfs:label "automatic tag meaning"@en ;
+	rdfs:comment "This subproperty indicates that the meaning of a tag has been automatically defined (e.g. by a tagging system), i.e. it has not been defined by a human being. The default case is disambiguation by users via muto:tagMeaning."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:subPropertyOf <http://purl.org/muto/core#tagMeaning> ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#tagLabel> a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "tag label"@en ;
+	rdfs:comment "Every tag has exactly one label (usually the one given by the user) - otherwise it is not a tag. Additional labels can be defined in the resource that is linked via muto:tagMeaning."@en ;
+	owl:versionInfo "Version 1.0: The subproperty relation to rdfs:label has been removed for OWL DL conformance (rdfs:label is an annotation property and one cannot define subproperties for annotation properties in OWL DL)." ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#nextTag> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "next tag"@en ;
+	rdfs:comment "This property indicates the tag that follows next in the list of tags. It can be used to describe the order in which the tags have been entered by the user."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:range <http://purl.org/muto/core#Tag> ;
+	owl:versionInfo "Version 1.0: Earlier versions of MUTO defined a datatype property muto:tagPosition with integer values which has some drawbacks compared to this solution." ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .
+
+<http://purl.org/muto/core#previousTag> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "previous tag"@en ;
+	rdfs:comment "This property indicates the tag that is preceding in the list of tags. It can be used to describe the order in which the tags have been entered by the user."@en ;
+	rdfs:domain <http://purl.org/muto/core#Tag> ;
+	rdfs:range <http://purl.org/muto/core#Tag> ;
+	owl:inverseOf <http://purl.org/muto/core#nextTag> ;
+	owl:versionInfo "Version 1.0: see muto:nextTag" ;
+	rdfs:isDefinedBy <http://purl.org/muto/core#> .

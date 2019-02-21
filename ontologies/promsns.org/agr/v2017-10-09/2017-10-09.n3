@@ -1,0 +1,156 @@
+@prefix :      <http://promsns.org/def/agr#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix org:   <http://www.w3.org/ns/org#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+:MAY    a           :RequirementLevel ;
+        rdfs:label  "MAY" .
+
+:MUST   a           :RequirementLevel ;
+        rdfs:label  "MUST" .
+
+:OPTIONAL  a        :RequirementLevel ;
+        rdfs:label  "OPTIONAL" .
+
+:SHOULD  a          :RequirementLevel ;
+        rdfs:label  "SHOULD" .
+
+:SHALL_NOT  a       :RequirementLevel ;
+        rdfs:label  "SHALL NOT" .
+
+:hasScope  a                owl:ObjectProperty ;
+        rdfs:comment        "This property is the union (group) of all Agents indicated as being within the scope of an Agreement by the hasWithinScope property."@en ;
+        rdfs:domain         :Agreement ;
+        rdfs:label          "has scope"@en ;
+        rdfs:range          prov:Agent ;
+        rdfs:subPropertyOf  prov:influenced ;
+        owl:inverseOf       :scopeOf .
+
+:Agreement  a            owl:Class ;
+        rdfs:comment     "A description of a set of required actions by particular agents. All the required actions are detailed in Requirements class objects that this is a Collection of so the Agreement is just a container"@en ;
+        rdfs:label       "Agreement"@en ;
+        rdfs:subClassOf  prov:Plan , <http://www.w3.org/2004/02/skos/core#Collection> ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      :requires
+                         ] .
+
+:SHALL  a           :RequirementLevel ;
+        rdfs:label  "SHALL" .
+
+:satisfies  a               owl:ObjectProperty ;
+        rdfs:comment        "a Requirement Resolution satisfies a Requirement"@en ;
+        rdfs:domain         :RequirementResolution ;
+        rdfs:label          "satisfies"@en ;
+        rdfs:range          :Requirement ;
+        rdfs:subPropertyOf  prov:wasInfluencedBy ;
+        owl:inverseOf       :satisfiedBy .
+
+:MUST_NOT  a        :RequirementLevel ;
+        rdfs:label  "MUST NOT" .
+
+:requirementOf  a           owl:InverseFunctionalProperty ;
+        rdfs:comment        "A Requirement is a requirementOf an Agreement"@en ;
+        rdfs:domain         :Requirement ;
+        rdfs:label          "requirement of"@en ;
+        rdfs:range          :Agreement ;
+        rdfs:subPropertyOf  dcterms:isPartOf ;
+        owl:inverseOf       :requires .
+
+:RequirementResolution
+        a                owl:Class ;
+        rdfs:comment     "An action that resolves requirements"@en ;
+        rdfs:label       "Requirement Resolution"@en ;
+        rdfs:subClassOf  prov:Activity , <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   :satisfies
+                         ] .
+
+:satisfiedBy  a             owl:InverseFunctionalProperty ;
+        rdfs:comment        "inverse of satisfies"@en ;
+        rdfs:domain         :Requirement ;
+        rdfs:label          "satisfied by"@en ;
+        rdfs:range          :RequirementResolution ;
+        rdfs:subPropertyOf  prov:influenced ;
+        owl:inverseOf       :satisfies .
+
+:RECOMMENDED  a     :RequirementLevel ;
+        rdfs:label  "RECOMMENDED" .
+
+:requires  a                owl:ObjectProperty ;
+        rdfs:comment        "An Agreement requires a Requirement"@en ;
+        rdfs:domain         :Agreement ;
+        rdfs:label          "requires"@en ;
+        rdfs:range          :Requirement ;
+        rdfs:subPropertyOf  dcterms:hasPart ;
+        owl:inverseOf       :requirementOf .
+
+:scopeOf  a                 owl:ObjectProperty ;
+        rdfs:comment        "inverse of hasScopeOf"@en ;
+        rdfs:domain         prov:Agent ;
+        rdfs:label          "scope of"@en ;
+        rdfs:range          :Agreement ;
+        rdfs:subPropertyOf  prov:wasInfluencedBy ;
+        owl:inverseOf       :hasScope .
+
+:SHOULD_NOT  a      :RequirementLevel ;
+        rdfs:label  "SHOULD NOT" .
+
+<https://orcid.org/0000-0002-8742-7730>
+        a             dcterms:Agent ;
+        rdfs:comment  "Contact Nicholas on nicholas.car@ga.gov.au."@en ;
+        rdfs:label    "Nicholas Car"@en .
+
+:Requirement  a          owl:Class ;
+        rdfs:comment     "This class is analagous to the Creative Commons ontology formerly available. According to CC, a Requirement is \"an action that may or may not be requested of you\". In this ontology, it is only \"an action that may be requested of you\""@en ;
+        rdfs:label       "Requirement"@en ;
+        rdfs:subClassOf  prov:Plan , <http://www.w3.org/2004/02/skos/core#Concept> ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   :requirementLevel
+                         ] .
+
+:REQUIRED  a        :RequirementLevel ;
+        rdfs:label  "REQUIRED" .
+
+<http://promsns.org/def/agr>
+        a                 owl:Ontology ;
+        rdfs:comment      "This Agreements Ontology is designed to model 'agreements' which are social contracts that include licenses, laws, contracts, Memoranda of Understanding, standards and definitional metadata. Its purpose is to support data sharing by making explicit the relationships between agreements and data and agreements and Agents (people and organisations). Eventually it will also help with the interplay between different classes of agreements."@en ;
+        rdfs:label        "Agreements ontology"@en ;
+        dcterms:created   "2016-09-12"^^xsd:date ;
+        dcterms:creator   <https://orcid.org/0000-0002-8742-7730> ;
+        dcterms:modified  "2016-10-12"^^xsd:date ;
+        owl:imports       <http://dublincore.org/2012/06/14/dcterms.rdf> , <http://www.w3.org/2004/02/skos/core> , <http://creativecommons.org/schema.rdf> , <http://www.w3.org/ns/prov-o#> , <http://www.w3.org/ns/org.ttl> ;
+        owl:versionInfo   "v1.1" .
+
+:requirementLevel  a  owl:ObjectProperty ;
+        rdfs:comment  "a Requirement has a requirementLevel of a RequirementLevel"@en ;
+        rdfs:domain   :Requirement ;
+        rdfs:label    "requirement level"@en ;
+        rdfs:range    :RequirementLevel .
+
+:withinScopeOf  a           owl:ObjectProperty ;
+        rdfs:comment        "inverse of hasWithinScope"@en ;
+        rdfs:domain         prov:Agent ;
+        rdfs:label          "within scope"@en ;
+        rdfs:range          :Agreement ;
+        rdfs:subPropertyOf  prov:wasInfluencedBy ;
+        owl:inverseOf       :hasWithinScope .
+
+:RequirementLevel  a     owl:Class ;
+        rdfs:comment     "An RequirementLevel is the level at which an Agreement complels the Agents it affects to action. The initial instances of Imperative are taken from RFC2119."@en ;
+        rdfs:label       "Requirement Level"@en ;
+        rdfs:subClassOf  <http://www.w3.org/2004/02/skos/core#Concept> .
+
+:hasWithinScope  a          owl:ObjectProperty ;
+        rdfs:comment        "This property indicates an Agent affected by an Agreement. It is likely that the Agent will be a group (foaf:Group) or an Organization (org:Organisation) rather than an individual person and certainly not a machine Agent. Individual Agents indicated as being affected by an Agreement via this property collectively make a group, formal or informal, that can be indicated as being the entire scope group of an Agreement via hasScopeOf property of it."@en ;
+        rdfs:domain         :Agreement ;
+        rdfs:label          "has within scope"@en ;
+        rdfs:range          prov:Agent ;
+        rdfs:subPropertyOf  prov:influenced ;
+        owl:inverseOf       :withinScopeOf .

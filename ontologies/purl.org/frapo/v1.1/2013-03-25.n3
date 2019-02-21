@@ -1,0 +1,1384 @@
+@prefix : <http://purl.org/cerif/frapo/> .
+@prefix spec: <http://xmlns.com/foaf/spec/#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix fabio: <http://purl.org/spar/fabio/> .
+@prefix owl2: <http://purl.org/cerif/frapo/owl:> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix cerro: <http://purl.org/cerif/cerro/> .
+@prefix tz: <http://www.w3.org/2006/timezone#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pro: <http://purl.org/spar/pro/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix prism: <http://prismstandard.org/namespaces/basic/2.0/> .
+
+<http://purl.org/cerif/frapo/> a owl:Ontology ;
+	owl:versionInfo "1.1"^^xsd:string ;
+	dc:date "2013-03-25"^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string ;
+	dc:contributor "Silvio Peroni"^^xsd:string ;
+	dc:description """FRAPO is an ontology for use to describe research project administrative information and to work with CRIS (Current Research Information Systems). It can be used for the characterization of grant applications, funding bodies, projects, project partners, etc.  It can also be used to describe other types of projects, for example building projects and educational projects.  
+
+FRAPO imports FOAF and is designed to work with SCoRO, the Scholarly Contributions and Roles Ontology (http://purl.org/spar/scoro/), which is used to characterize the contributions and time-limited roles that may exist between agents such as people and organizations and entities such as projects, research investigations or research outputs.  
+
+FaBiO, the FRBR-alightned bibliographic ontology (http://purl.org/spar/fabio/), provides terms for documents of relevance, such as grant applications, project plans, project reports, datasets and journal articles, which are therefore not included within FRAPO.
+
+FRAPO is not intended to describe the details of research investigations enabled by funded research projects, nor their component studies and assays, which are the domain of a complementary ontology, ISA-RDF (under development - add URL)."""@en ;
+	dc:title "FRAPO, the Funding, Research Administration and Projects Ontology"@en ;
+	rdfs:comment "FRAPO, the Funding, Research Administration and Projects Ontology, is a CERIF-compliant ontology  written in OWL 2 DL for describing research project administrative information.  This ontology is available at http://purl.org/cerif/frapo/, and uses the namespace prefix 'frapo'."@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://purl.org/swan/2.0/foaf-essential/> .
+
+:Business_angel a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:label .
+
+foaf:gender a owl:AnnotationProperty .
+
+foaf:surname a owl:AnnotationProperty .
+
+foaf:firstName a owl:AnnotationProperty .
+
+:hasInvoiceDate a owl:AnnotationProperty ;
+	rdfs:label "has invoice date"@en ;
+	rdfs:comment "A data property linking an invoice to its date."@en ;
+	rdfs:domain :Invoice .
+
+dc:description a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+:hasApplicationDeadline a owl:AnnotationProperty ;
+	rdfs:label "has application deadline"@en ;
+	rdfs:comment "The date by which an application, for example a job application, a fellowship application or a grant application, has to be submitted if it is to be considered for acceptance or funding."@en ;
+	dc:description "owl:equivalentProperty fabio:hasApplicationDeadline ."@en ;
+	rdfs:domain :Application .
+
+foaf:name a owl:AnnotationProperty .
+
+foaf:family_name a owl:AnnotationProperty .
+
+:hasProjectIdentifier a owl:AnnotationProperty ;
+	rdfs:label "has project identifier"@en ;
+	rdfs:comment "A data property linking a project to an identifier for that project."@en ;
+	rdfs:domain foaf:Project .
+
+cerro:results_in_beginning a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:label .
+
+dc:creator a owl:AnnotationProperty .
+
+foaf:givenname a owl:AnnotationProperty .
+
+foaf:nick a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+foaf:title a owl:AnnotationProperty .
+
+rdfs:seeAlso a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+owl2:sameAs a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+xsd:date a rdfs:Datatype .
+
+:appliesFor a owl:ObjectProperty ;
+	rdfs:label "applies for"@en ;
+	rdfs:comment "An object property linking an agent to something for which that agent applies, for example a job, membership of an organization, or a grant from a funding agency."@en ;
+	rdfs:domain foaf:Agent .
+
+:awards a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:label "awards"@en ;
+	rdfs:comment "An object property linking an agent to something the agent awards, for example linking a funding agency to a grant, a university to a degree, or an organization to a prize."@en ;
+	rdfs:domain foaf:Agent .
+
+:collaboratesWith a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "collaborates with"@en ;
+	rdfs:comment "An object property linking agents, for example different organizations, or people typically from different groups or organizations, that work together on a common task, project or endeavour, or towards a common goal."@en ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Agent .
+
+:donates a owl:ObjectProperty ;
+	rdfs:label "donates"@en ;
+	rdfs:comment "An object property linking a benefactor to a gift."@en ;
+	dc:description "Range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:domain foaf:Agent .
+
+:employs a owl:ObjectProperty ;
+	rdfs:label "employs"@en ;
+	rdfs:comment "An object property relating an employing agent to an employed agent, for example a person or an organization, who is typically employed to undertaking specified work in exchange for payment."@en ;
+	dc:description "This property should not be used for the other meaning of 'employ', meaning to use something, e.g. 'He employed great skill . . .'/"@en ;
+	rdfs:range foaf:Agent ;
+	rdfs:domain foaf:Agent .
+
+:enables a owl:ObjectProperty ;
+	rdfs:label "enables"@en ;
+	rdfs:comment "An object property relating an entity to another entity that it enables, e.g. linking a project to an endeavour that the project enables."@en ;
+	dc:description "Domain and range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en .
+
+:evaluates a owl:ObjectProperty ;
+	rdfs:label "evaluates"@en ;
+	rdfs:comment "An object property linking an agent to an entity which that agent evaluates, for example a funding agency that is evaluating a grant application to determine whether the proposed project is worthy of funding, or a publisher evaluating a manuscript to determine whether it is suitable for publication."@en ;
+	rdfs:domain foaf:Agent .
+
+:funds a owl:ObjectProperty ;
+	rdfs:label "funds"@en ;
+	rdfs:comment "An object property that links a grant to something that it funds (i.e. that it finances or pays for), or that links an agent providing funding to something that it funds.  This flexibility is given because of alternative usages of the English word 'funds'.  [See also frapo:awards and frapo:supports.]"@en ;
+	owl:inverseOf :isFundedBy ;
+	rdfs:subPropertyOf :supports .
+
+:hasCurriculumVitae a owl:ObjectProperty ;
+	rdfs:label "has curriculum vitae"@en ;
+	rdfs:comment "An object property linking a person to an on-line version of that person's curriculum vitae."@en ;
+	rdfs:range foaf:Document ;
+	rdfs:domain foaf:Person .
+
+:hasFundingAgency a owl:ObjectProperty ;
+	rdfs:label "has funding agency"@en ;
+	rdfs:comment "An object property linking something to a funding agency that provides funding for it."@en ;
+	rdfs:range :FundingAgency ;
+	rdfs:subPropertyOf :isSupportedBy .
+
+:hasIPROwner a owl:ObjectProperty ;
+	rdfs:label "has IPR owner"@en ;
+	rdfs:comment "An object property linking an entity such as a project, an endeavour or an output to an agent who owns the IPR arising from or related to that entity."@en ;
+	rdfs:subPropertyOf :isOwnedBy ;
+	rdfs:range foaf:Agent .
+
+:hasOutput a owl:ObjectProperty ;
+	rdfs:label "has output"@en ;
+	rdfs:comment "An object property linking an activity such as a project or endeavour to something that is created or produced as a result of that activity.  Examples include a building created as a result of a building project, and a journal article published to describe the results of a research investigation."@en ;
+	dc:description "Domain and range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en .
+
+:isAppliedForBy a owl:ObjectProperty ;
+	rdfs:label "is applied for by"@en ;
+	rdfs:comment "An object property linking something applied for to the agent making the application."@en ;
+	owl:inverseOf :appliesFor ;
+	rdfs:range foaf:Agent .
+
+:isAwardedBy a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "is awarded by"@en ;
+	rdfs:comment "An object property linking something awarded to the agent making the award, for example linking a grant to a funding agency, a degree to a university, or a prize to the awarding organization."@en ;
+	dc:description "Domain constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	owl:inverseOf :awards ;
+	rdfs:range foaf:Agent .
+
+:isDonatedBy a owl:ObjectProperty ;
+	rdfs:label "is donated by"@en ;
+	rdfs:comment "An object property linking a gift to the benefactor who provided it."@en ;
+	dc:description "Domain constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	owl:inverseOf :donates ;
+	rdfs:range foaf:Agent .
+
+:isEmployedBy a owl:ObjectProperty ;
+	rdfs:label "is employed by"@en ;
+	rdfs:comment "An object property relating an employed agent, typically a person or an organization, to an employing agent."@en ;
+	dc:description "This property should not be used for the other meaning of 'employ', meaning to use something, e.g. 'Great skill is employed by master craftsmen . . .'/"@en ;
+	owl:inverseOf :employs ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Agent .
+
+:isEnabledBy a owl:ObjectProperty ;
+	rdfs:label "is enabled by"@en ;
+	rdfs:comment "An object property relating an entity to another entity that enables it, e.g. linking an investigation to a project that enables it."@en ;
+	dc:description "Domain and range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	owl:inverseOf :enables .
+
+:isEvaluatedBy a owl:ObjectProperty ;
+	rdfs:label "is evaluated by"@en ;
+	rdfs:comment "An object property linking an entity to an agent that evaluates it."@en ;
+	owl:inverseOf :evaluates ;
+	rdfs:range foaf:Agent .
+
+:isFundedBy a owl:ObjectProperty ;
+	rdfs:label "is funded by"@en ;
+	rdfs:comment "An object property linking something to the funding that funds it (i.e. that finances or pays for it), or to the funding agency providing that funding.  This flexibility is given because of alternative usages of the English word 'funds'.  [See also frapo:isAwardedBy and frapo:hasFundingAgency and frapo:isSupportedBy.]"@en ;
+	rdfs:subPropertyOf :isSupportedBy .
+
+:isFundingAgencyFor a owl:ObjectProperty ;
+	rdfs:label "is funding agency for"@en ;
+	rdfs:comment "An object property linking a funding agency to an entity for which it provides funding."@en ;
+	rdfs:domain :FundingAgency ;
+	owl:inverseOf :hasFundingAgency ;
+	rdfs:subPropertyOf :supports .
+
+:isManufacturedBy a owl:ObjectProperty ;
+	rdfs:label "is manufactured by"@en ;
+	rdfs:comment "An object property relating a manufactured entity to its manufacturer."@en ;
+	rdfs:range :Manufacturer ;
+	owl:inverseOf :manufactures .
+
+:isOutputOf a owl:ObjectProperty ;
+	rdfs:label "is output of"@en ;
+	rdfs:comment "An object property linking something that is created or produced to the activity that created or produced it."@en ;
+	dc:description "Domain and range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	owl:inverseOf :hasOutput .
+
+:isOwnedBy a owl:ObjectProperty ;
+	rdfs:label "is owned by"@en ;
+	rdfs:comment "An object property linking an entity to the agent that owns it."@en ;
+	owl:inverseOf :owns ;
+	rdfs:range foaf:Agent .
+
+:isPurchasedBy a owl:ObjectProperty ;
+	rdfs:label "was purchased by"@en ;
+	rdfs:comment "An object property relating a purchased entity to its purchaser."@en ;
+	dc:description "Domain constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:range foaf:Agent .
+
+:isSubmittedBy a owl:ObjectProperty ;
+	rdfs:label "is submitted by"@en ;
+	rdfs:comment "An object property linking an entity that is submitted (to some third party) to the agent who submits it."@en ;
+	owl:inverseOf :submits ;
+	rdfs:range foaf:Agent .
+
+:isSuppliedBy a owl:ObjectProperty ;
+	rdfs:label "is supplied by"@en ;
+	rdfs:comment "An object property relating an entity that is supplied, or an agent to whom an entity is supplied, to the supplier."@en ;
+	rdfs:range :Supplier ;
+	owl:inverseOf :supplies .
+
+:isSupportedBy a owl:ObjectProperty ;
+	rdfs:label "is supported by"@en ;
+	rdfs:comment "An object property linking something to an agent that provides funding or other support for it."@en ;
+	dc:description "This property is not intended for use to describe mechanical or physical support, as in 'The statue is supported by the plinth'."@en ;
+	owl:inverseOf :supports ;
+	rdfs:range _:node17qq70bgex1 .
+
+_:node17qq70bgex1 a owl:Class ;
+	owl:unionOf _:node17qq70bgex2 .
+
+_:node17qq70bgex2 rdf:first :Funding ;
+	rdf:rest _:node17qq70bgex3 .
+
+_:node17qq70bgex3 rdf:first foaf:Agent ;
+	rdf:rest rdf:nil .
+
+:manufactures a owl:ObjectProperty ;
+	rdfs:label "manufactures"@en ;
+	rdfs:comment "An object property relating a manufacturer to a manufactured entity."@en ;
+	rdfs:domain :Manufacturer .
+
+:owns a owl:ObjectProperty ;
+	rdfs:label "owns"@en ;
+	rdfs:comment "An object property linking an agent to an entity owned by that agent."@en ;
+	rdfs:domain foaf:Agent .
+
+:ownsIRPOf a owl:ObjectProperty ;
+	rdfs:label "owns IPR of"@en ;
+	rdfs:comment "An object property linking an agent who owns IPR arising from or relating to an entity to that entity."@en ;
+	owl:inverseOf :hasIPROwner ;
+	rdfs:subPropertyOf :owns ;
+	rdfs:domain foaf:Agent .
+
+:providesFractionOfTotalFunding a owl:ObjectProperty ;
+	rdfs:label "percentage of total funding"@en ;
+	rdfs:comment "An object property linking funding to a budget, specifying what fraction of the total budget is provided by that source of funding."@en ;
+	rdfs:range :Budget ;
+	rdfs:domain :Funding .
+
+:providesService a owl:ObjectProperty ;
+	rdfs:label "provides service"@en ;
+	rdfs:comment "An agent that provides a service."@en ;
+	dc:description "Range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:domain foaf:Agent .
+
+:purchases a owl:ObjectProperty ;
+	rdfs:label "purchases"@en ;
+	rdfs:comment "An object property relating a purchaser to a purchased entity."@en ;
+	dc:description "Range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	owl:inverseOf :isPurchasedBy ;
+	rdfs:domain foaf:Agent .
+
+:purchasesFrom a owl:ObjectProperty ;
+	rdfs:label "purchases from"@en ;
+	rdfs:comment "An object property relating a purchaser to a supplier from whom the purchase is made."@en ;
+	dc:description "Domain and range constraints on this object property have been relaxed to permit it to be used in unforeseen ways."@en ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Agent .
+
+:sellsTo a owl:ObjectProperty ;
+	rdfs:label "sells to"@en ;
+	rdfs:comment "An object property relating a supplier to a purchaser to whom an entity is sold."@en ;
+	dc:description "Domain and range constraints on this object property have been relaxed to permit it to be used in unforeseen ways."@en ;
+	owl:inverseOf :purchasesFrom ;
+	rdfs:range foaf:Agent ;
+	rdfs:domain foaf:Agent .
+
+:specifiesExpediture a owl:ObjectProperty ;
+	rdfs:label "specifies expenditure"@en ;
+	rdfs:comment "An object property relating an agent or a budget to the expenditure specified by that agent or budget."@en ;
+	dc:description "Range constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:domain _:node17qq70bgex4 .
+
+_:node17qq70bgex4 a owl:Class ;
+	owl:unionOf _:node17qq70bgex5 .
+
+_:node17qq70bgex5 rdf:first :Budget ;
+	rdf:rest _:node17qq70bgex6 .
+
+_:node17qq70bgex6 rdf:first foaf:Agent ;
+	rdf:rest rdf:nil .
+
+:submits a owl:ObjectProperty ;
+	rdfs:label "submits"@en ;
+	rdfs:comment "An object property linking an agent to an entity that is submitted to some third party, for example a grant application submitted to a funding agency, a manuscript submitted to a publisher, a quotation submitted by a vendor, or a dataset submitted by a researcher to a data repository."@en ;
+	rdfs:domain foaf:Agent .
+
+:supplies a owl:ObjectProperty ;
+	rdfs:label "supplies"@en ;
+	rdfs:comment "An object property relating a supplier to a supplied entity, or to an agent to whom the entity is supplied."@en ;
+	dc:description "Domain constraints on this object property have been relaxed to permit it to be used in unforeseen ways."@en ;
+	rdfs:domain foaf:Agent .
+
+:supports a owl:ObjectProperty ;
+	rdfs:label "supports"@en ;
+	rdfs:comment "An object property linking an agent to something that the agent supports by financial or other means."@en ;
+	dc:description "This property is not intended for use to describe mechanical or physical support, as in 'The plinth supports the statue'."@en ;
+	rdfs:domain _:node17qq70bgex7 .
+
+_:node17qq70bgex7 a owl:Class ;
+	owl:unionOf _:node17qq70bgex8 .
+
+_:node17qq70bgex8 rdf:first :Funding ;
+	rdf:rest _:node17qq70bgex9 .
+
+_:node17qq70bgex9 rdf:first foaf:Agent ;
+	rdf:rest rdf:nil .
+
+:usesEquipment a owl:ObjectProperty ;
+	rdfs:label "uses equipment"@en ;
+	rdfs:comment "An object property linking an activity such as an expedition, a research project or an investigation, to an item of equipment employed in that activity."@en ;
+	dc:description "Domain constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:range :Equipment ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:usesFacility a owl:ObjectProperty ;
+	rdfs:label "uses facility"@en ;
+	rdfs:comment "An object property linking an activity such as an expedition, a research project or an investigation, to a facility employed in that activity."@en ;
+	dc:description "Domain constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:range :Facility ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+
+:usesService a owl:ObjectProperty ;
+	rdfs:label "uses service"@en ;
+	rdfs:comment "An object property linking an activity such as an expedition, a research project or an investigation, to a service employed in that activity."@en ;
+	dc:description "Domain constraints have been removed from this object property to permit it to be used in unforeseen ways."@en ;
+	rdfs:range :Service .
+
+:familyNameInitial a owl:DatatypeProperty ;
+	rdfs:label "family name initial"@en ;
+	rdfs:comment "A data property permitting specification of the initial(s) of a person's family name."@en ;
+	rdfs:subPropertyOf :initial .
+
+:feeOrFree a owl:DatatypeProperty ;
+	rdfs:label "fee or free"@en ;
+	rdfs:comment "A data property defining whether participation in an event is free, or requires payment of a fee."@en .
+
+:givenNameInitial a owl:DatatypeProperty ;
+	rdfs:label "given name initial"@en ;
+	rdfs:comment "A data property permitting specification of the initial(s) of a person's given name(s)."@en ;
+	rdfs:subPropertyOf :initial .
+
+:hasAccountNumber a owl:DatatypeProperty ;
+	rdfs:label "has account number"@en ;
+	rdfs:comment "A data property linking a financial account to an identifying number for that account."@en ;
+	rdfs:domain :Account ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasAcronym a owl:DatatypeProperty ;
+	rdfs:label "has acronym"@en ;
+	rdfs:comment "A data property linking an entity to an acronym used to identify it, based on its full name or title.  For example, this ontology has the full name 'Funding, Research Administration and Projects Ontology' and the acronym 'FRAPO'."@en .
+
+:hasAgentInformation a owl:DatatypeProperty ;
+	rdfs:label "has information"@en ;
+	rdfs:comment "A data property linking an agent to information about that agent."@en ;
+	rdfs:domain foaf:Agent .
+
+:hasApplicationDeadline a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasApplicationOutcome a owl:DatatypeProperty ;
+	rdfs:label "has application outcome"@en ;
+	rdfs:comment "A data property that permits the outcome of an application to be described, for example that a job has been offered or that a grant has been awarded."@en ;
+	rdfs:subPropertyOf owl:topDataProperty .
+
+:hasAwardDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has award date"@en ;
+	rdfs:comment "The date on which notification is given or received that something, for example a scholarship or a grant, has been awarded.  [See also frapo:hasDecisionDate.]"@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+:hasBatchNumber a owl:DatatypeProperty ;
+	rdfs:label "has batch number"@en ;
+	rdfs:comment "A data property linking something, for example a chemical or drug, to its manufacturing batch number."@en ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasBirthDate a owl:DatatypeProperty ;
+	rdfs:label "has birth date"@en ;
+	rdfs:comment "A data property permitting specification of the birth date of a person."@en ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain foaf:Person ;
+	rdfs:subPropertyOf foaf:birthday .
+
+:hasCallIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has call identifier"@en ;
+	rdfs:comment "A data property specifying the identifying number of a call for applications issued by a funding agency."@en ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasCatalogNumber a owl:DatatypeProperty ;
+	rdfs:label "has catalog number"@en ;
+	rdfs:comment "A data property linking something to its catalog number."@en ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasCityOrTown a owl:DatatypeProperty ;
+	rdfs:label "has city or town"@en ;
+	rdfs:comment "A data property specifying a city or town, for example as the location of an event."@en .
+
+:hasCode a owl:DatatypeProperty ;
+	rdfs:label "has code"@en ;
+	rdfs:comment "A data property defining a code."@en .
+
+:hasCompletionDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has completion date"@en ;
+	rdfs:comment "A data property linking something such as a building or a contract to its date of completion."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasCost a owl:DatatypeProperty ;
+	rdfs:label "has cost"@en ;
+	rdfs:comment "A data property enabling the cost of something that can be paid for to be defined."@en .
+
+:hasCountry a owl:DatatypeProperty ;
+	rdfs:label "has country"@en ;
+	rdfs:comment "A data property specifying a country, for example as the location of an event."@en .
+
+:hasCountryCode a owl:DatatypeProperty ;
+	rdfs:label "has country code"@en ;
+	rdfs:comment "A data property specifying the two-letter or three-letter upper-case country code used to identify a country (e.g. FR/FRA for France, DE/DEU for Germany) (see http://countrycode.org/)."@en ;
+	rdfs:subPropertyOf :hasCode .
+
+:hasCurrency a owl:DatatypeProperty ;
+	rdfs:label "has currency"@en ;
+	rdfs:comment "A data property defining the currency used to specify a financial entity.  Use in conjection with frapo:hasMonetaryValue."@en .
+
+:hasCurrencyCode a owl:DatatypeProperty ;
+	rdfs:label "has currency code"@en ;
+	rdfs:comment """A data property specifying the three-letter currency code used to identify a currency, as defined by ISO 4217 (e.g. EUR or GBP) (see http://en.wikipedia.org/wiki/ISO_4217).  
+
+Not to be confused with the symbol used with numbers to denote an amount of money in a particular currency (e.g.€500; £3.40)"""@en ;
+	rdfs:subPropertyOf :hasCode .
+
+:hasCustomerNumber a owl:DatatypeProperty ;
+	rdfs:label "has customer number"@en ;
+	rdfs:comment "A data property linking an agent to an identifying number for that agent, typically used by the accounting system of the supplier when issuing quotations, fulfilling orders and submitting invoices."@en ;
+	rdfs:domain :Purchaser ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasDecisionDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has decision date"@en ;
+	rdfs:comment "The date on which a particular action is or will be decided upon, or when an application, such as a grant application, is or will be approved or rejected. [See also frapo:hasAwardDate.]"@en ;
+	dc:description "This same data property appears in FaBiO, the FRBR-aligned Bibliographic Ontology (http://purl.org/spar/fabio/)."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:seeAlso fabio:hasDecisionDate ;
+	rdfs:range xsd:dateTime .
+
+:hasDegreeSuffix a owl:DatatypeProperty ;
+	rdfs:label "has degrees"@en ;
+	rdfs:comment "The letters that should be displayed after a person's name to indicate an academic degree, e.g. BA, BVSc, PhD, DSc."@en ;
+	rdfs:subPropertyOf :hasNameSuffix .
+
+:hasDeliverable a owl:DatatypeProperty ;
+	rdfs:label "has deliverable"@en ;
+	rdfs:comment "A data property that permits one to define a deliverable of a project."@en .
+
+:hasDeliveryDate a owl:DatatypeProperty ;
+	rdfs:label "has delivery date"@en ;
+	rdfs:comment "The date on which something is delivered, or is due to be delivered."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasDispatchDate a owl:DatatypeProperty ;
+	rdfs:label "has dispatch date"@en ;
+	rdfs:comment "The date on which something, for example an item of equipment, is dispatched by the supplier."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasDomainName a owl:DatatypeProperty ;
+	rdfs:label "has domain name"@en ;
+	rdfs:comment "A data property linking an entity to an internet domain name that has been registered for that entity, for example http://www.miidi.org for MIIDI, the Minimal Information standard for reporting an Infectious Disease Investigation."@en .
+
+:hasEndDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has end date"@en ;
+	rdfs:comment "A data property linking something such as a project to its end date."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasExchangeRate a owl:DatatypeProperty ;
+	rdfs:label "has exchange rate"@en ;
+	rdfs:comment "A data property specifying the currency exchange rate between two specified currencies."@en .
+
+:hasExpertise a owl:DatatypeProperty ;
+	rdfs:label "has expertise"@en ;
+	rdfs:comment "A data property identifying the area(s) of expertise and skills posessed by an individual or an organization."@en ;
+	rdfs:subPropertyOf :hasAgentInformation .
+
+:hasExpiryDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has expiry date"@en ;
+	rdfs:comment "A data property linking something, for example a drug, to its expiry date, beyond which the manufacture recommends that it should not be used."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasFamilialSuffix a owl:DatatypeProperty ;
+	rdfs:label "has familiar suffix"@en ;
+	rdfs:comment "The letters that may be displayed after a person's name to indicate familial status, e.g. Sn., Jn., III, 3rd."@en ;
+	rdfs:subPropertyOf :hasNameSuffix .
+
+:hasFaxNumber a owl:DatatypeProperty ;
+	rdfs:label "has fax number"@en ;
+	rdfs:comment "A data property identifying a Fax number for an agent."@en ;
+	rdfs:subPropertyOf :hasAgentInformation .
+
+:hasFunderIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has funder identifer"@en ;
+	rdfs:comment "A data property linking a funding agency to an identifier for that funding agency."@en ;
+	rdfs:domain :FundingAgency ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasGrantNumber a owl:DatatypeProperty ;
+	rdfs:label "has grant number"@en ;
+	rdfs:comment "A data property specifying the grant number of a grant provided by a funding agency."@en ;
+	rdfs:domain :Grant ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasHeadcount a owl:DatatypeProperty ;
+	rdfs:label "has headcount"@en ;
+	rdfs:comment "A data property specifying the number of people employed by an organization."@en ;
+	rdfs:subPropertyOf :hasOrganizationalInformation .
+
+:hasHonorificSuffix a owl:DatatypeProperty ;
+	rdfs:label "post-nominals"@en ;
+	rdfs:comment "The letters that should be displayed after a person's name to indicate qualification, membership or fellowship in a professional society, honours or elite status, e.g. MRCVS, FRCS, FRS, OBE, Kt."@en ;
+	rdfs:subPropertyOf :hasNameSuffix .
+
+:hasInvoiceDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+:hasJobTitle a owl:DatatypeProperty ;
+	rdfs:label "has job title"@en ;
+	rdfs:comment """A data property permitting specification of the job title held by a person, such as might appear next to the name in a directory or on a conference name badge.  For example, the person's specific Job Title might be 'Linacre Professor of Zoology' or 'Regius Professor of Moral Philosophy'. 
+
+This job title properly refers to the **role** held by that person (e.g. 'Head of Department'), which can be separately defined using SCoRO, the Scholarly Contributions and Roles Ontology (http://purl.org/spar/scoro/). [see scoro:withJobTitle]."""@en ;
+	rdfs:subPropertyOf :hasPersonalInformation ;
+	rdfs:domain foaf:Person .
+
+:hasKeyword a owl:DatatypeProperty ;
+	rdfs:label "has keyword"@en ;
+	rdfs:comment "A data property permitting specification of a keyword relating to an entity."@en .
+
+:hasLanguageCode a owl:DatatypeProperty ;
+	rdfs:label "has language code"@en ;
+	rdfs:comment "A data property specifying the two-letter or three-letter lower-case code used to identify a language (e.g. fr/fra for French, de/deu for Germany) (see http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)."@en ;
+	rdfs:subPropertyOf :hasCode .
+
+:hasLocation a owl:DatatypeProperty ;
+	rdfs:label "has location"@en ;
+	rdfs:comment "A data property link an entity to a relevant location, which might be geographical (e.g. New York City) or local (e.g. Freezer B, second shelf)."@en .
+
+:hasManufactureDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has data of manufacture"@en ;
+	rdfs:comment "A data property linking something to its date of manufacture."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasMilestone a owl:DatatypeProperty ;
+	rdfs:label "has milestone"@en ;
+	rdfs:comment "A data property that permits one to define a significant event (a 'milestone') in the progress of a project."@en .
+
+:hasModelNumber a owl:DatatypeProperty ;
+	rdfs:label "has model number"@en ;
+	rdfs:comment "A data property linking something, for example a piece of equipment, to its model number."@en ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasMonetaryValue a owl:DatatypeProperty ;
+	rdfs:label "has value"@en ;
+	rdfs:comment "A data property enabling one to specify the monetary value of a financial entity such as a grant, a gift or a budget category.  Use in conjuction with frapo:hasCurrency."@en .
+
+:hasNameSuffix a owl:DatatypeProperty ;
+	rdfs:label "has name suffix"@en ;
+	rdfs:comment "The letters that should be displayed after a person's name."@en ;
+	rdfs:subPropertyOf :hasPersonalInformation .
+
+:hasORCID a owl:DatatypeProperty ;
+	rdfs:label "has ORCID"@en ;
+	rdfs:comment "A data property relating an individual to his/her Open Researcher and Contributor ID (ORCID), an alphanumeric identifier for individual scholars described at http://about.orcid.org/."@en ;
+	dc:description "owl:equivalentProperty <http://purl.org/spar/scoro/hasORCID> ."@en ;
+	rdfs:subPropertyOf :hasPersonalIdentifier .
+
+:hasOrganizationalInformation a owl:DatatypeProperty ;
+	rdfs:label "has organizational information"@en ;
+	rdfs:comment "It describes information about the organization."@en ;
+	rdfs:subPropertyOf :hasAgentInformation ;
+	rdfs:domain foaf:Organization .
+
+:hasPersonalIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has personal identifier"@en ;
+	dc:description "owl:equivalentProperty <http://purl.org/spar/datacite/hasPersonalIdentifier> ." ;
+	rdfs:comment "A unique and unambiguous identifier for an individual person within a given context."@en ;
+	dc:description "owl:equivalentProperty <http://purl.org/spar/scoro/hasPersonalIdentifier> ."@en ;
+	rdfs:subPropertyOf :hasPersonalInformation , dcterms:identifier ;
+	rdfs:domain foaf:Person .
+
+:hasPersonalInformation a owl:DatatypeProperty ;
+	rdfs:label "has contact information"@en ;
+	rdfs:comment "A data property linking a person to information about that person."@en ;
+	rdfs:subPropertyOf :hasAgentInformation ;
+	rdfs:domain foaf:Person .
+
+:hasPhoneNumber a owl:DatatypeProperty ;
+	rdfs:label "has phone number"@en ;
+	rdfs:comment "A data property identifying a telephone number for an agent."@en ;
+	rdfs:subPropertyOf :hasAgentInformation .
+
+:hasPostCode a owl:DatatypeProperty ;
+	rdfs:label "has post code"@en ;
+	rdfs:comment "A data property defining the postal code of an address."@en ;
+	rdfs:subPropertyOf :hasCode .
+
+:hasPostalAddress a owl:DatatypeProperty ;
+	rdfs:label "has postal address"@en ;
+	rdfs:comment "A data property identifying a postal address for an agent."@en ;
+	rdfs:subPropertyOf :hasAgentInformation .
+
+:hasPostalAddressLine a owl:DatatypeProperty ;
+	rdfs:label "has postal address line"@en ;
+	rdfs:comment "A data property permitting specification of a single line of a postal address."@en ;
+	rdfs:domain :PostalAddress ;
+	rdfs:subPropertyOf :hasAgentInformation .
+
+:hasProfessionalName a owl:DatatypeProperty ;
+	rdfs:label "has alternate name"@en ;
+	rdfs:comment "An alternative name that a person uses for professional purposes, for example the pen name of an author, or a married woman's maiden name used as her professional name."@en ;
+	rdfs:subPropertyOf :hasPersonalInformation .
+
+:hasProjectIdentifier a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasProvenance a owl:DatatypeProperty ;
+	rdfs:label "has provenance"@en ;
+	rdfs:comment "A data property that permits the provenance of an entity to be described."@en ;
+	rdfs:subPropertyOf owl:topDataProperty .
+
+:hasPurchaseDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has purchase date"@en ;
+	rdfs:comment "A data property linking something to its purchase date."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasPurchaseOrderNumber a owl:DatatypeProperty ;
+	rdfs:label "has purchase order number"@en ;
+	rdfs:comment "A data property identifying an official purchase order issued by a purchasing agent to a supplier of goods or services, and used by the supplier to identify the order when delivering goods or submitting an invoice."@en ;
+	rdfs:domain :PurchaseOrder ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasQualification a owl:DatatypeProperty ;
+	rdfs:label "has qualification"@en ;
+	rdfs:comment "A data property permitting specification of the qualification held by a person."@en ;
+	rdfs:subPropertyOf :hasPersonalInformation .
+
+:hasQuotationDate a owl:DatatypeProperty ;
+	rdfs:label "has quotation date"@en ;
+	rdfs:comment "A data property linking a quotation to its date."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasReferenceNumber a owl:DatatypeProperty ;
+	rdfs:label "has reference number"@en ;
+	rdfs:comment "A data property linking something to a reference number for that item."@en ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasRegistrationDeadline a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has registration deadline"@en ;
+	rdfs:comment "The date by which registration must be made, for example renewal of an internet domain name."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasSerialNumber a owl:DatatypeProperty ;
+	rdfs:label "has serial number"@en ;
+	rdfs:comment "A data property linking something, for example a piece of equipment, to its serial number."@en ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasStartDate a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has start date"@en ;
+	rdfs:comment "A data property linking something such as a project to its start date."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+:hasSupplierNumber a owl:DatatypeProperty ;
+	rdfs:label "has supplier number"@en ;
+	rdfs:comment "A data property linking a supplier to an identifying number for that supplier, typically used by the accounting system of the purchasing institution when placing and tracking orders."@en ;
+	rdfs:domain :Supplier ;
+	rdfs:subPropertyOf dcterms:identifier .
+
+:hasTemporalDuration a owl:DatatypeProperty ;
+	rdfs:label "has temporal duration"@en ;
+	rdfs:comment "A data property enabling one to define the temporal duration of some entity such as an event or a project."@en ;
+	rdfs:range xsd:dateTime .
+
+:initial a owl:DatatypeProperty ;
+	rdfs:label "initials"@en ;
+	rdfs:comment "A data property permitting specification of the initial(s) of a person's name."@en ;
+	rdfs:subPropertyOf :hasPersonalInformation .
+
+dcterms:created a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has creation date"@en ;
+	rdfs:comment "A data property linking something to its date of creation."@en ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:dateTime .
+
+dcterms:date a owl:DatatypeProperty .
+
+dcterms:identifier a owl:DatatypeProperty ;
+	rdfs:label "identifier"@en ;
+	rdfs:comment """A unique and unambiguous reference to the resource within a given context.
+
+Recommended best practice is to identify the resource by means of a string conforming to a formal identification system."""@en .
+
+tz:TimeZone a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has time zone"@en ;
+	rdfs:comment "A data property that permits the time zone relating to an entity to be specified."@en .
+
+foaf:birthday a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:date ;
+	rdfs:range xsd:date .
+
+foaf:family_name rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:firstName rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:gender rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:givenname rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:name rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:nick rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:surname rdfs:subPropertyOf :hasPersonalInformation .
+
+foaf:title rdfs:subPropertyOf :hasPersonalInformation .
+
+:Account a owl:Class ;
+	rdfs:label "account"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A mechanism for administering money, typically owned by an agent and dedicated to a particular purpose, for example the equipment account of a university department, to be used only for the purchase or maintenance of items of equipment."@en .
+
+:AccountStatement a owl:Class ;
+	rdfs:label "account statement"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A statement of income and expenditure for an account, typically presented as dated income receipts and outgoings against categories in a budget for that account."@en .
+
+:AdmissionApplication a owl:Class ;
+	rdfs:label "admission application"@en ;
+	rdfs:subClassOf :Application ;
+	rdfs:comment "The activity of applying for admission to some group or institution, for example a learned society or a university."@en .
+
+:AnnualTurnover a owl:Class ;
+	rdfs:label "annual turnover"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "The anual financial turnover of an organization (in a specified currency)."@en .
+
+:Application a owl:Class ;
+	rdfs:label "application"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "The activity of making an application, for example for a job, or for funding."@en .
+
+:ArticlePublishingCharge a owl:Class ;
+	rdfs:label "article publishing charge"@en ;
+	rdfs:subClassOf :Fee ;
+	rdfs:comment "A fee levied by a publisher on an author or an institution to cover the cost of publishing an Open Access journal article."@en .
+
+:AvailableFunds a owl:Class ;
+	rdfs:label "available funds"@en ;
+	rdfs:subClassOf :BudgetInformation ;
+	rdfs:comment "The amount available to spend in a budget category, equalling the income minus the expenditure to date plus future expenditure commitments."@en .
+
+:Budget a owl:Class ;
+	rdfs:label "budget"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A structured statement of how funds are to be used for expenditure in defined budget categories.  A budget is created, for example, when applying for funding for a project, and is subsequently used to manage the expenditure from the awarded grant for that project."@en .
+
+:BudgetCategory a owl:Class ;
+	rdfs:label "budget category"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A category of expenditure within a budget, determining what the allocated money can be spent on, for example salaries, equipment, travel."@en .
+
+:BudgetInformation a owl:Class ;
+	rdfs:label "budget information"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "Information about an aspect of a budget."@en .
+
+:BudgetedAmount a owl:Class ;
+	rdfs:label "budgeted amount"@en ;
+	rdfs:subClassOf :BudgetInformation ;
+	rdfs:comment "The amount of money originally available to spend in a particular budget category."@en .
+
+:Bursary a owl:Class ;
+	rdfs:label "bursary"@en ;
+	rdfs:subClassOf :Funding ;
+	rdfs:comment "An amount of money given to a person by an organization, for example by a university to a university student in need to enable that student to continue his/her studies."@en .
+
+:College a owl:Class ;
+	rdfs:label "college"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An academic organization that is either a small degree-giving university, or (in the OxBridge sense) an independent corporation of scholars within a larger university, providing undergraduate tuition and a social environment for its students and fellows."@en .
+
+:Commitments a owl:Class ;
+	rdfs:label "commitments"@en ;
+	rdfs:subClassOf :BudgetInformation ;
+	rdfs:comment "Money set aside to honour expenditures already made but for which no invoices have yet been received, or expenditures planned for the future, for example for salaries."@en .
+
+:Company a owl:Class ;
+	rdfs:label "company"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "A commercial company or business run for profit."@en .
+
+:ComputationalAgent a owl:Class ;
+	rdfs:label "computational agent"@en ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:comment "A computer system or software program whose action has an effect on external events, for example a laboratory robot that undertakes your experiments, or the financial control system that controls an institution's payrole, or that, following programmed business rules, prevents the principal investigator from placing an order for research equipment because there is insufficient money left in the project budget."@en .
+
+:ComputationalService a owl:Class ;
+	rdfs:label "computational service"@en ;
+	rdfs:subClassOf :Service ;
+	rdfs:comment "A service provided by a computer system."@en .
+
+:ConferenceFee a owl:Class ;
+	rdfs:label "conference fee"@en ;
+	rdfs:subClassOf :Fee ;
+	rdfs:comment "A fee paid to attend a conference."@en .
+
+:ConsortiumAgreement a owl:Class ;
+	rdfs:label "consortium agreement"@en ;
+	rdfs:subClassOf :Contract ;
+	rdfs:comment "A formal agreement between members of a consortium, for example between research groups at different universities engaged in a multi-partner research project."@en .
+
+:ConsultancyAgreement a owl:Class ;
+	rdfs:label "consultancy agreement"@en ;
+	rdfs:subClassOf :Contract ;
+	rdfs:comment "A contract between an employer and a consultant, detailing the terms of the consultancy."@en .
+
+:Contract a owl:Class ;
+	rdfs:label "contract"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A legally binding agreement between parties."@en .
+
+:DataRepository a owl:Class ;
+	rdfs:label "data repository"@en ;
+	rdfs:subClassOf :Repository ;
+	rdfs:comment "A facility in which digital data are deposited for long-term preservation and (optional) publication."@en ;
+	dc:description "May also be described as a data archive, or as a database."@en .
+
+:Deliverable a owl:Class ;
+	rdfs:label "deliverable"@en ;
+	rdfs:subClassOf :Output ;
+	rdfs:comment "A class defining a 'deliverable' of a project, i.e. something that the project set out to deliver, or succeeds in delivering."@en .
+
+:Department a owl:Class ;
+	rdfs:label "department"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "A department or sub-section within a larger organization, for example a university academic department."@en .
+
+:Division a owl:Class ;
+	rdfs:label "division"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "A grouping of similar departments within a larger organization.  In the university context, also known as a school or a faculty, for example the Humanities Division, the Mathematics Faculty, or the School of Medicine."@en .
+
+:DocumentRepository a owl:Class ;
+	rdfs:label "document repository"@en ;
+	rdfs:subClassOf :Repository ;
+	rdfs:comment "A facility in which digital documents are deposited for long-term preservation and (optional) publication."@en ;
+	dc:description "May also be described as a document archive, or a digital library."@en .
+
+:EmploymentApplication a owl:Class ;
+	rdfs:label "employment application"@en ;
+	rdfs:subClassOf :Application ;
+	rdfs:comment "The activity of applying for a job."@en .
+
+:EmploymentContract a owl:Class ;
+	rdfs:label "employment contract"@en ;
+	rdfs:subClassOf :Contract ;
+	rdfs:comment "A contract of employment between a person and an organization."@en .
+
+:Endeavour a owl:Class ;
+	rdfs:label "endeavour"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "In FRAPO, an endeavour is an activity such as a research investigation that is enabled by a project.  An endeavour relate to the academic and practical aspects of undertaking that endeavour - thus for a research investigation the research itself, including the hypotheses being investigated, the experiments being undertaken, the data being gathered and analysed, the interpretations being drawn from the data, and the results obtained.  In contrast, the project relates to the administrative aspects of undertaking an endeavour, including the funding obtained, the people employed, and the management of the project in terms of deadlines and deliverables."@en .
+
+:Endowment a owl:Class ;
+	rdfs:label "endowment"@en ;
+	rdfs:subClassOf :Gift ;
+	rdfs:comment "A transfer, generally as a gift, of money or property to an institution to provide a permanent fund, the income from which is to be used for a particular purpose.  (Abbreviated from http://legal-dictionary.thefreedictionary.com/endowment)."@en .
+
+:Equipment a owl:Class ;
+	rdfs:label "equipment"@en ;
+	rdfs:subClassOf :InfrastructureEntity ;
+	rdfs:comment "An item of equipment or apparatus, or a laboratory instrument, for example a refrigerated centrifuge."@en .
+
+:Expenditure a owl:Class ;
+	rdfs:label "expenditure"@en ;
+	rdfs:subClassOf :BudgetInformation ;
+	rdfs:comment "Money going out of an account, because of expenditure on various entities. May be associated with a particular budget category."@en .
+
+:ExpenditureToDate a owl:Class ;
+	rdfs:label "expenditure to date"@en ;
+	rdfs:subClassOf :Expenditure ;
+	rdfs:comment "Total money expended to date from an an account, or from a particular budget category."@en .
+
+:Facility a owl:Class ;
+	rdfs:label "facility"@en ;
+	rdfs:subClassOf :InfrastructureEntity ;
+	rdfs:comment "A place or installation built or designed to serve a specific function or provide a specific service, for example an animal breeding centre, a DNA sequencing facility or a confocal imaging laboratory."@en .
+
+:Faculty a owl:Class ;
+	rdfs:label "faculty"@en ;
+	rdfs:subClassOf :Division ;
+	rdfs:comment "A grouping of similar departments within a university context, also known as a school or a division, for example the Humanities Division, the Mathematics Faculty, or the School of Medicine."@en .
+
+:Fee a owl:Class ;
+	rdfs:label "fee"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "An amount of money paid for something that is not purchased."@en .
+
+:Fellowship a owl:Class ;
+	rdfs:label "fellowship"@en ;
+	rdfs:subClassOf :Stipend ;
+	rdfs:comment "The stipend paid to a fellow in a college or university."@en .
+
+:FinancialControlSystem a owl:Class ;
+	rdfs:label "financial control system"@en ;
+	rdfs:subClassOf :ComputationalService ;
+	rdfs:comment "A software system controlling the financial activities of an organization, for example determining full economic cost budgets for grant applications, and managing the funding of funded projects."@en .
+
+:FinancialEntity a owl:Class ;
+	rdfs:label "financial entity"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "An entity primarily to do with money."@en .
+
+:Funding a owl:Class ;
+	rdfs:label "funding"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "An amount of money available to finance some project or activity."@en .
+
+:FundingAgency a owl:Class ;
+	rdfs:label "funding agency"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An organization that provides funding for projects, often in the form of grants awarded on the basis of competitive application."@en .
+
+:FundingApplication a owl:Class ;
+	rdfs:label "funding application"@en ;
+	rdfs:subClassOf :Application ;
+	dc:description "For the documents supporting a funding application, use fabio:GrantApplicationDocument and fabio:CaseForSupportDocument."@en ;
+	rdfs:comment "The activity of applying for funding."@en .
+
+:FundingProgramme a owl:Class ;
+	rdfs:label "funding programme"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "A programme of related funded activities or projects, typically established by a funding agency.  Often associated with publication of a call for applications (fabio:CallForApplications)."@en .
+
+:Gift a owl:Class ;
+	rdfs:label "gift"@en ;
+	rdfs:subClassOf :Funding ;
+	rdfs:comment "A gift, donation, benefaction or legacy, typically of money."@en .
+
+:GovernmentOrganization a owl:Class ;
+	rdfs:label "government organization"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An organization that is part of, or funded by, central or local goverment."@en .
+
+:Grant a owl:Class ;
+	rdfs:label "grant"@en ;
+	rdfs:subClassOf :Funding ;
+	rdfs:comment "A financial award by a funding agency for a particular project or purpose, usually awarded on the basis of a competitive application."@en .
+
+:HostInstitution a owl:Class ;
+	rdfs:label "host institution"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An institution that acts as a host, for example of a project or a person."@en .
+
+:Income a owl:Class ;
+	rdfs:label "income"@en ;
+	rdfs:subClassOf :BudgetInformation ;
+	rdfs:comment "Money coming into an account.  May be associated with a particular budget category."@en .
+
+:InfrastructureEntity a owl:Class ;
+	rdfs:label "infrastructure entity"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "An entity that facilitates work."@en ;
+	dc:description "owl:equivalentClass cerif:InfrastructureEntity ."@en .
+
+:Investigation a owl:Class ;
+	rdfs:label "investigation"@en ;
+	rdfs:subClassOf :Endeavour ;
+	rdfs:comment """An investigation is an endeavour that involves research, enabled by a project.  
+
+The investigation relate to the scholarly and practical aspects of conducting the research itself, including the hypotheses being investigated, the experiments being undertaken, the data being gathered and analysed, the interpretations being drawn from the data, and the results obtained.  
+
+In contrast, the project that enables it encompasses the administrative aspects of undertaking the endeavour, including the funding obtained, the people employed, and the management of the project in terms of deadlines and deliverables."""@en ;
+	dc:description "Equivalent class in ISA-RDF: 'Investigation'."@en .
+
+:Investment a owl:Class ;
+	rdfs:label "investment"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "An investment of money, generally in stocks and shares, or in property, for the purpose of safeguarding the capital and yielding an income."@en .
+
+:Invoice a owl:Class ;
+	rdfs:label "invoice"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "An invoice for payment of goods or services."@en .
+
+:Laboratory a owl:Class ;
+	rdfs:label "laboratory"@en ;
+	rdfs:subClassOf :Facility ;
+	rdfs:comment "A facility in which research can be conducted."@en .
+
+:Legacy a owl:Class ;
+	rdfs:label "legacy"@en ;
+	rdfs:subClassOf :Gift ;
+	rdfs:comment "A gift of money or property specified in the will of a person, that is made after that person's death."@en .
+
+:Library a owl:Class ;
+	rdfs:label "library"@en ;
+	rdfs:subClassOf :Repository ;
+	rdfs:comment "A facility in which printed documents (for example books and journals) are deposited for long-term preservation and access."@en .
+
+:Manufacturer a owl:Class ;
+	rdfs:label "manufacturer"@en ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:comment "An agent who manufactures goods or equipment."@en .
+
+:MaterialOutput a owl:Class ;
+	rdfs:label "material output"@en ;
+	rdfs:subClassOf :Output ;
+	rdfs:comment "A material or physical output created or produced as a result of a project or an endeavour such as a research investigation. Examples include a building constructed as a result of a building project, and research outputs such as a cell line, a mouse mutant or a new form of microscope."@en .
+
+:NotForProfitOrganization a owl:Class ;
+	rdfs:label "not-for-profit organization"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An organization that does not primarily exist to make profit, for example a charity or charitable foundation, a learned society, or a standards body such as the World Wide Web Consortium."@en .
+
+:Output a owl:Class ;
+	rdfs:label "output"@en ;
+	rdfs:subClassOf :Equipment , owl:Thing ;
+	dc:description "Ontology terms and definitions for most publishable project outputs are given as 'Expression' classes in FaBiO, the FRBR-aligned Bibliographic Ontology, e.g. fabio:JournalArticle, fabio:DataSet.  For 'deliverables', use frapo:Deliverable.  For material outputs, use frapo:MaterialOutput."@en ;
+	rdfs:comment "Something that is created or produced as a result of a project or an endeavour. Examples include a building resulting from a building project, educated students graduating from an educational programme, and a journal article published as a result of a research project.  Research outputs can also include reports, datasets, experimental protocols, workflows and mathematical models, and material outputs such as a cell line, a mouse mutant or a new form of microscope."@en .
+
+:Owner a owl:Class ;
+	rdfs:label "owner"@en ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:comment "The agent who owns an entity."@en .
+
+:Payment a owl:Class ;
+	rdfs:label "payment"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A financial payment made, for example in exchange for something purchased such as property, goods or services, or to refund expenses incurred."@en .
+
+:PostalAddress a owl:Class ;
+	rdfs:label "postal address"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "A postal address."@en .
+
+:ProjectBudget a owl:Class ;
+	rdfs:label "project budget"@en ;
+	rdfs:subClassOf :Budget ;
+	rdfs:comment "A budget for a research project."@en .
+
+:Purchase a owl:Class ;
+	rdfs:label "purchase"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "The payment for obtaining something, for example property, goods or services."@en .
+
+:PurchaseOrder a owl:Class ;
+	rdfs:label "purchase order"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "An official order from a purchasing institution to a supplier for the purchase of goods or services, often issued in response to the receipt of a quotation from the supplier."@en .
+
+:Purchaser a owl:Class ;
+	rdfs:label "purchaser"@en ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:comment "An agent who purchases something from a supplier."@en .
+
+:Quotation a owl:Class ;
+	rdfs:label "quotation"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "A formal statement of promise (usually provided in response to a request for quotation) by potential supplier to supply goods or services at specified prices and within a specified period. Acceptance of the quotation by the buyer constitutes an agreement binding on both parties.  (Shortened from http://www.businessdictionary.com/definition/quotation.html)."@en .
+
+:RegistrationAgency a owl:Class ;
+	rdfs:label "registration agency"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An organization that acts to register things.  For example, CrossRef is a registration agency for DOIs relating to documents, while DataCite is a registration agency for DOIs relating to datasets."@en .
+
+:RegistrationAuthority a owl:Class ;
+	rdfs:label "registration authority"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An agency with responsibility for registering and maintaining international standards, internet domain names, patents, controlled vocabularies and other similar entities required for reliable international cooperatative activities."@en .
+
+:Repository a owl:Class ;
+	rdfs:label "repository"@en ;
+	rdfs:subClassOf :Facility ;
+	rdfs:comment "A facility in which entities can be deposited for long-term preservation."@en ;
+	dc:description "May also be described as an archive, or as a database."@en .
+
+:ResearchGroup a owl:Class ;
+	rdfs:label "research group"@en ;
+	rdfs:subClassOf foaf:Group ;
+	rdfs:comment "A group of people, usually within a university department or a research institute, and typically under a single group leader, dedicated to working together to undertake research on one or more topics. May also be called a research unit."@en .
+
+:ResearchInformationSystem a owl:Class ;
+	rdfs:label "research information system"@en ;
+	rdfs:subClassOf :ComputationalService ;
+	rdfs:comment "A database containing administrative information about the research undertaken in an institution, and the publications and other outputs from such research."@en .
+
+:ResearchInstitute a owl:Class ;
+	rdfs:label "research institute"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "An organization primarily dedicated to undertaking research, that might be part of a university or of a commercial company, or might be independently funded by a research funding agency."@en .
+
+:SME a owl:Class ;
+	rdfs:label "small to medium enterprise"@en , "sme"@en ;
+	rdfs:subClassOf :Company ;
+	rdfs:comment "A small to medium enterprise, having up to 250 employees."@en .
+
+:Scholarship a owl:Class ;
+	rdfs:label "scholarship"@en ;
+	rdfs:subClassOf :Stipend ;
+	rdfs:comment "A financial grant to a scholar to enable him/her to undertake advanced academic study."@en .
+
+:ScholarshipApplication a owl:Class ;
+	rdfs:label "scholarship application"@en ;
+	rdfs:subClassOf :Application ;
+	rdfs:comment "The activity of applying for an educational scholarship."@en .
+
+:Service a owl:Class ;
+	rdfs:label "service"@en ;
+	rdfs:subClassOf :InfrastructureEntity ;
+	rdfs:comment "A service of help to others, often requiring funding, employees, equipment and/or facilities for its provision, for example a library service, a transportation service, a DNA sequencing service."@en .
+
+:ServiceContract a owl:Class ;
+	rdfs:label "service contract"@en ;
+	rdfs:subClassOf :Contract ;
+	rdfs:comment "A contract for the provision of a service such as a cleaning service, or for the regular servicing, maintenance and repair of some item of equipment or infrastructure."@en .
+
+:ServiceContractFee a owl:Class ;
+	rdfs:label "service contract fee"@en ;
+	rdfs:subClassOf :Fee ;
+	rdfs:comment "A fee paid periodically, typically annually, to obtain access when required to a service such as an equipment maintenance contract.\""@en .
+
+:SpinOffCompany a owl:Class ;
+	rdfs:label "spin-off company"@en ;
+	rdfs:subClassOf :Company ;
+	rdfs:comment "A company that has been established by a university or research institute to mature and market the results of research conducted at that research institution."@en .
+
+:Status a owl:Class ;
+	rdfs:label "status"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "The status of something such as an application, an investigation or a project."@en .
+
+:Stipend a owl:Class ;
+	rdfs:label "stipend"@en ;
+	rdfs:subClassOf :Funding ;
+	rdfs:comment "A sum of money allotted on a regular basis, usually for some specific purpose."@en .
+
+:Studentship a owl:Class ;
+	rdfs:label "studentship"@en ;
+	rdfs:subClassOf :Stipend ;
+	rdfs:comment "A financial grant to a student to enable him/her to undertake advanced academic study."@en .
+
+:Subscription a owl:Class ;
+	rdfs:label "subscription"@en ;
+	rdfs:subClassOf :Fee ;
+	rdfs:comment "Payment, commonly made annually, to obtain access to something on a periodic or continuing basis, such as a journal."@en .
+
+:Supplier a owl:Class ;
+	rdfs:label "supplier"@en ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:comment "An agent who supplies something, such as goods or services."@en .
+
+:Tender a owl:Class ;
+	rdfs:label "tender"@en ;
+	rdfs:subClassOf :FinancialEntity ;
+	rdfs:comment "Sealed bid or offer document submitted in response to a request for tenders, containing detailed information on costs, requirements and terms associated with a potential contract.  (Adapted from http://www.businessdictionary.com/definition/tender.html)."@en .
+
+:University a owl:Class ;
+	rdfs:label "university"@en ;
+	rdfs:subClassOf foaf:Organization ;
+	rdfs:comment "A university at which higher education and research is conducted."@en .
+
+:Vendor a owl:Class ;
+	rdfs:label "vendor"@en ;
+	rdfs:subClassOf :Supplier ;
+	rdfs:comment "An agent who supplies goods or services in exchange for payment, in response to receipt of payment or of an official purchase order from a purchaser that is responded to by submission of an invoice for what is supplied."@en .
+
+foaf:Agent a owl:Class .
+
+foaf:Document dc:description "Ontology terms and definitions for many documents relevant to FRAPO are given as 'Expression' classes in FaBiO, the FRBR-aligned Bibliographic Ontology, e.g. fabio:CallForApplications, fabio:DataManagementPlan, fabio:GrantApplicationDocument, fabio:ProjectPlan.  Others are given as sub-classes of this class."@en .
+
+foaf:Group a owl:Class .
+
+foaf:Organization dc:description "owl:equivalentClass cerf:OrganizationalUnit ."@en .
+
+foaf:Person a owl:Class .
+
+foaf:Project a owl:Class ;
+	rdfs:label "project"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "In FRAPO, a project is an administrative entity that enables an endeavour such as a research investigation.  A project relates to the administrative aspects of undertaking an endeavour, including the funding obtained, the people employed, and the management of the project in terms of deadlines and deliverables.  In contrast, an endeavour such as a research investigation relate to the academic and practical aspects of undertaking that endeavour - thus for a research investigation: the research itself, including the hypotheses being investigated, the experiments being undertaken, the data being gathered and analysed, the interpretations being drawn from the data, and the results obtained."@en ;
+	dc:description "Super-class of cerif:Project."@en .
+
+:academic a foaf:Person , owl:NamedIndividual ;
+	rdfs:label "academic"@en ;
+	rdfs:comment "A member of the academic staff of an academic institution such as a university."@en .
+
+:accepted a owl:NamedIndividual , :Status ;
+	rdfs:label "accepted"@en ;
+	rdfs:comment "The status of something such as an application as having been accepted."@en .
+
+:benefactor a foaf:Person , owl:NamedIndividual ;
+	rdfs:label "benefactor"@en ;
+	rdfs:comment "A person who gives a gift."@en .
+
+:building-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "building costs"@en ;
+	rdfs:comment "A budget category to cover the costs of constructing, renovating or modifying a physical building."@en .
+
+:business-angel a foaf:Person , owl:NamedIndividual ;
+	rdfs:label "business angel"@en ;
+	rdfs:comment "A person willing to invest in start-up companies."@en .
+
+:consultancy-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "consultancy costs"@en ;
+	rdfs:comment "A budget category to cover the costs of consultancy fees."@en .
+
+:consumables-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "consumables costs"@en ;
+	rdfs:comment "A budget category to cover the costs of purchasing consumables."@en .
+
+:contributions-in-kind a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "contributions in kind"@en ;
+	rdfs:comment "A budget category to categorize the financial worth of contributions in kind (e.g. staff effort, access to facilities, sharing of know-how) given to a project by an agent, for example by the host institution or by a commerical partner in an academic project."@en .
+
+:directly-allocated-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "directly allocated costs"@en ;
+	rdfs:comment "A budget category to cover those costs normally borne by an institution, that are assigned to the budget of an externally funded project to cover the value of contributions to that project, for example to pay for the salary of a permanent member of staff seconded to work on the project, to compensate the employing organization for the loss of that person's efforts on other activities that he or she would otherwise be undertaking were it not for that secondment."@en .
+
+:directly-incurred-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "directly incurred costs"@en ;
+	rdfs:comment "A budget category to cover all costs directly incurred because of a legitimate expenditure on a project, for example the purchase of reagents or the employment of a post-doctoral researcher."@en ;
+	dc:description "Also known as the 'direct costs' of the project."@en .
+
+:entrepreneur a foaf:Person , owl:NamedIndividual ;
+	rdfs:label "A person who invests in novel enterprises."@en , "entrepreneur"@en .
+
+:estates-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "estates costs"@en ;
+	rdfs:comment "A budget category to cover the 'overhead' costs of maintaining the premises in which work is undertaken."@en .
+
+:facilities-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "facilities costs"@en ;
+	rdfs:comment "A budget category to cover the costs of maintaining facilities used by a project, for example an electron microscopy facility."@en .
+
+:full-economic-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "full economic costs"@en ;
+	rdfs:comment "A budget category to cover all the direct and indirect costs of a project."@en ;
+	dc:description "Frequently abbreviated 'FEC'."@en .
+
+:funded a owl:NamedIndividual , :Status ;
+	rdfs:label "funded"@en ;
+	rdfs:comment "The status of something such as an investigation or a project as being funded."@en .
+
+:indirect-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "indirect costs"@en ;
+	rdfs:comment "A budget category to cover the indirect costs of running a project, for example heating and lighting, and the employment of non-project staff including administrators, accountants and cleaners."@en .
+
+:non-staff-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "non-staff costs"@en ;
+	rdfs:comment "A budget category to cover all the costs associated with a project that do not involve the employment of staff by the institution, thus, for example, including consumables purchase, travel costs and consultancy fees, but excluding the salary, estates and indirect costs associated with the allocation of the PI's time to the project and the direct employment of a project manager."@en .
+
+:other-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "other costs"@en ;
+	rdfs:comment "A budget category to cover costs not covered in other budget categories."@en .
+
+:overhead-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "overhead costs"@en ;
+	rdfs:comment "A budget category to cover all the non-directly incurred costs of a project, including estates costs and indirect costs, that enable an institution to host an externally-funded project."@en .
+
+:publishing-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "publishing costs"@en ;
+	rdfs:comment "A budget category to cover the cost of publishing outpots from a project, for example author fees for journal articles in an open access journal."@en .
+
+:rejected a owl:NamedIndividual , :Status ;
+	rdfs:label "rejected"@en ;
+	rdfs:comment "The status of something such as an application as having been rejected."@en .
+
+:service-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "service costs"@en ;
+	rdfs:comment "A budget category to cover the costs of services used by a project, for example a DNA sequencing service, or an equipment maintenance service."@en .
+
+:software-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "software costs"@en ;
+	rdfs:comment "A budget category to cover the costs of software licenses required by a project."@en .
+
+:travel-and-subsistence-costs a owl:NamedIndividual , :BudgetCategory ;
+	rdfs:label "travel and subsistence costs"@en ;
+	rdfs:comment "A budget category to cover the costs of travel and subsistence incurred on behalf of the project."@en .
+
+:unfunded a owl:NamedIndividual , :Status ;
+	rdfs:label "unfunded"@en ;
+	rdfs:comment "The status of something such as an investigation or a project as being unfunded."@en .
+
+:isSupportedBy rdfs:range _:node17qq70bgex10 .
+
+_:node17qq70bgex10 a owl:Class ;
+	owl:unionOf _:node17qq70bgex11 .
+
+_:node17qq70bgex11 rdf:first :Funding ;
+	rdf:rest _:node17qq70bgex12 .
+
+_:node17qq70bgex12 rdf:first foaf:Agent ;
+	rdf:rest rdf:nil .
+
+:specifiesExpediture rdfs:domain _:node17qq70bgex13 .
+
+_:node17qq70bgex13 a owl:Class ;
+	owl:unionOf _:node17qq70bgex14 .
+
+_:node17qq70bgex14 rdf:first :Budget ;
+	rdf:rest _:node17qq70bgex15 .
+
+_:node17qq70bgex15 rdf:first foaf:Agent ;
+	rdf:rest rdf:nil .
+
+:supports rdfs:domain _:node17qq70bgex16 .
+
+_:node17qq70bgex16 a owl:Class ;
+	owl:unionOf _:node17qq70bgex17 .
+
+_:node17qq70bgex17 rdf:first :Funding ;
+	rdf:rest _:node17qq70bgex18 .
+
+_:node17qq70bgex18 rdf:first foaf:Agent ;
+	rdf:rest rdf:nil .

@@ -1,0 +1,85 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ep: <http://eprints.org/ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://eprints.org/ontology/> a owl:Ontology ;
+	dcterms:title "EPrints Ontology"@en ;
+	dcterms:description "Describes the main classes and properties which EPrints adds to voID, DC, BIBO and SKOS etc. and some notes on the patterns this data will take."@en ;
+	dcterms:issued "2010-10-20"^^<http://www.w3.org/2001/XMLSchema#date> ;
+	dcterms:creator <http://id.ecs.soton.ac.uk/person/1248> .
+
+<http://id.ecs.soton.ac.uk/person/1248> a foaf:Person ;
+	foaf:name "Christopher Gutteridge" .
+
+<http://eprints.org/ontology/> vann:preferredNamespacePrefix "ep" .
+
+<http://www.w3.org/2004/02/skos/core#> a owl:Ontology ;
+	vann:preferredNamespacePrefix "skos" .
+
+<http://xmlns.com/foaf/0.1/> a owl:Ontology ;
+	vann:preferredNamespacePrefix "foaf" .
+
+<http://purl.org/dc/terms/> a owl:Ontology ;
+	vann:preferredNamespacePrefix "dcterms" .
+
+<http://rdfs.org/ns/void#> a owl:Ontology ;
+	vann:preferredNamespacePrefix "void" .
+
+ep:Repository a rdfs:Class , owl:Class ;
+	rdfs:label "EPrints Repository"@en ;
+	rdfs:comment "An EPrints Repository. This will have a number of EPrints records associated with it via the ep:hasEPrint predicate, and the records will generally be expressed as BIBO & Dublin Core, plus EPrints extensions to describe the attached documents and files. Resolving the URI of this class using a client which prefers RDF XML (or text/n3) will return an RDF document describing the repository using voID and Dublin Core, plus a ep:hasEPrint link to every current record in the public part of the repository. See ep:EPrint for more description about such records. EPrints generally supports a sitemap.xml file which describes a set of data-dump-locations. Resolving these is the fastest way to obtain every bit of RDF data from an EPrints repository."@en ;
+	rdfs:subClassOf void:Dataset ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:EPrint a rdfs:Class , owl:Class ;
+	rdfs:label "EPrint Record"@en ;
+	rdfs:comment "A single record in an EPrints Repository. Generally this will be described as BIBO and Dublin Core, and may have a number of associated ep:Documents. Resolving a URI of class ep:EPrint will direct to the HTML summary page for the record, in an HTML browser, or to an RDF (XML or N3) document in an RDF client. The RDF document will contain all available RDF information about the record including all attached ep:Document records and their metadata and links from the document to the files via ep:hasFile. Not all files may be available without authentication. If the files themselves contain semantic information of interest these will need to be resolved separately. References to people, organisations, publications and locations may be given URIs of the form /id/<typeofthing>/ext-<somevalue> -- in this case the URI will be resolvable as RDF+XML or N3 and may yield additional records in the repository referencing the same thing, although this is usually based on the hashing of metadata strings and may not be complete or perfect. The ext- indicates that this concept is not something the repository actually stores information about, it is just referenced by one or more records. For example, the RDF for an EPrint about a paper given at a conference may reference that conference with a URI of the form /id/event/ext-a43de4454. That URI will be resolvable but the repository does not contain full information about that event, just information derived from EPrint record metadata. It is hoped that the community may develop systems to link such URIs to the more definitive URI for an event, person, location etc."@en ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:Document a rdfs:Class , owl:Class ;
+	rdfs:label "Document"@en ;
+	rdfs:comment "A single document that is part of an ep:EPrint record. It may be a machine generated version of another document,  eg. a thumbnail, in which case this will be expressed with relations from the http://eprints.org/relation/ namespace. It will have one or more files associated. Some documents can have multilple files, such as an HTML page plus image files. Resolving a document URI will redirect you to the primary file of the document."@en ;
+	owl:equivalentClass foaf:Document ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:OAIPMH2 a rdf:Property , owl:ObjectProperty ;
+	rdfs:label "OAI-PMH URL"@en ;
+	rdfs:comment "The base URL to use to query this repository via OAI-PMH. Note that the domain is set to any dataset, not just an EPrints Repository, so as not to limit use by non-eprints repositories."@en ;
+	rdfs:domain void:Dataset ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:hasConceptScheme a rdf:Property , owl:ObjectProperty ;
+	rdfs:label "SKOS Concept Scheme"@en ;
+	rdfs:comment "A SKOS concept scheme employed by this dataset."@en ;
+	rdfs:domain void:Dataset ;
+	rdfs:range skos:ConceptScheme ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:hasEPrint a rdf:Property , owl:ObjectProperty ;
+	rdfs:label "has EPrint Record"@en ;
+	rdfs:comment "An EPrint record which is part of this Repository."@en ;
+	rdfs:domain ep:Repository ;
+	rdfs:range ep:EPrint ;
+	rdfs:subPropertyof dcterms:hasPart ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:hasDocument a rdf:Property , owl:ObjectProperty ;
+	rdfs:label "has Document"@en ;
+	rdfs:comment "A Document which is part of this EPrint Record."@en ;
+	rdfs:domain ep:EPrint ;
+	rdfs:range ep:Document ;
+	rdfs:subPropertyof dcterms:hasPart ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .
+
+ep:hasFile a rdf:Property , owl:ObjectProperty ;
+	rdfs:label "has File"@en ;
+	rdfs:comment "A File which is part of this Document."@en ;
+	rdfs:domain ep:Document ;
+	rdfs:subPropertyof dcterms:hasPart ;
+	rdfs:isDefinedBy <http://eprints.org/ontology/> .

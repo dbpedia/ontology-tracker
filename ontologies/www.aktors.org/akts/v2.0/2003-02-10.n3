@@ -1,0 +1,381 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix support: <http://www.aktors.org/ontology/support#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.aktors.org/ontology/support> a owl:Ontology ;
+	rdfs:label "AKT Reference Ontology (Support Ontology)" ;
+	dc:title "AKT Reference Ontology (Support Ontology)"@en ;
+	dc:description "The AKT Reference Ontology has been designed to support the AKT-2 demonstrator (\"AKTive Portal\"), and subsequent activities. The ontology, designed by the AKT-2 group and codified by Enrico Motta, extends Version 1."@en ;
+	dc:creator "AKT Project" , "Enrico Motta (OCML version)" , "Nick Gibbins (OWL translation)" ;
+	dct:created "2003-02-10" ;
+	dc:source <http://d3e.open.ac.uk/akt/2002/ref-onto.html> ;
+	rdfs:seeAlso <http://d3e.open.ac.uk/akt/2002/ref-onto.html> ;
+	owl:versionInfo "2.0" .
+
+rdfs:isDefinedBy a owl:AnnotationProperty .
+
+rdfs:seeAlso a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+dct:created a owl:AnnotationProperty .
+
+dc:source a owl:AnnotationProperty .
+
+support:Thing a owl:Class ;
+	rdfs:label "Thing" ;
+	rdfs:comment "This is the top-level concept in the AKT reference ontology" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:has-pretty-name a owl:DatatypeProperty ;
+	rdfs:label "has pretty name" ;
+	rdfs:comment "A human readable name" ;
+	rdfs:domain support:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:has-variant-name a owl:DatatypeProperty ;
+	rdfs:label "has variant name" ;
+	rdfs:comment "Other variants of the human readable name" ;
+	rdfs:domain support:Thing ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Intangible-Thing a owl:Class ;
+	rdfs:label "Intangible Thing" ;
+	rdfs:comment "This comes from HPKB upper level. The collection of things that are not physical - are not made of, or encoded in, matter. Every Collection is an Intangible (even if its instances are tangible), and so are some Individuals. Caution: do not confuse `tangibility' with `perceivability' - humans can perceive light even though it's intangible - at least in a sense." ;
+	rdfs:subClassOf support:Thing ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Temporal-Thing a owl:Class ;
+	rdfs:label "Temporal Thing" ;
+	rdfs:comment "Like in Cyc, this is something which has a temporal extent." ;
+	rdfs:subClassOf support:Thing ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:has-time-interval a owl:ObjectProperty ;
+	rdfs:label "has time interval" ;
+	rdfs:domain support:Temporal-Thing ;
+	rdfs:range support:Time-Interval ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Tangible-Thing a owl:Class ;
+	rdfs:label "Tangible Thing" ;
+	rdfs:comment "Something which is not intangible, something which is physical, made of matter. It does not matter whether things are real of imaginary.  Therefore we consider Mickey Mouse's car and a hippogriff as  tangible things" ;
+	rdfs:subClassOf support:Temporal-Thing ;
+	owl:complementOf support:Intangible-Thing ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Quantity a owl:Class ;
+	rdfs:label "Quantity" ;
+	rdfs:comment "From SUO: Any specification of how many or how much of something there is. Accordingly, there are two subclasses of Quantity: Number (how many) and Physical-Quantity (how much)." ;
+	rdfs:subClassOf support:Intangible-Thing ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Physical-Quantity a owl:Class ;
+	rdfs:label "Physical Quantity" ;
+	rdfs:comment "SUO: Physical Quantities are distinguished from Numbers by the fact that the former are associated with a dimension of measurement." ;
+	rdfs:subClassOf support:Quantity ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:has-magnitude a owl:DatatypeProperty ;
+	rdfs:label "has magnitude" ;
+	rdfs:domain support:Physical-Quantity ;
+	rdfs:range xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:has-unit-of-measure a owl:ObjectProperty ;
+	rdfs:label "has unit of measure" ;
+	rdfs:domain support:Physical-Quantity ;
+	rdfs:range support:Unit-Of-Measure ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Unit-Of-Measure a owl:Class ;
+	rdfs:label "Unit of Measure" ;
+	rdfs:comment "Any kind of unit of measure, metre, dollar, kilogram, etc." ;
+	rdfs:subClassOf support:Intangible-Thing ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Time-Position a owl:Class ;
+	rdfs:label "Time Position" ;
+	rdfs:comment "A time position is either a time interval or a time point. Any time position is relative to a time zone" ;
+	rdfs:subClassOf support:Intangible-Thing ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:in-timezone a owl:DatatypeProperty ;
+	rdfs:label "in timezone" ;
+	rdfs:domain support:Time-Position ;
+	rdfs:range xsd:integer ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Time-Point a owl:Class ;
+	rdfs:label "Time Point" ;
+	rdfs:comment "A point in time" ;
+	rdfs:subClassOf support:Time-Position , _:node17168lpjsx17 .
+
+_:node17168lpjsx17 a owl:Restriction ;
+	owl:onProperty support:second-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Time-Point rdfs:subClassOf _:node17168lpjsx18 .
+
+_:node17168lpjsx18 a owl:Restriction ;
+	owl:onProperty support:minute-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Time-Point rdfs:subClassOf _:node17168lpjsx19 .
+
+_:node17168lpjsx19 a owl:Restriction ;
+	owl:onProperty support:hour-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Time-Point rdfs:subClassOf _:node17168lpjsx20 .
+
+_:node17168lpjsx20 a owl:Restriction ;
+	owl:onProperty support:day-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Time-Point rdfs:subClassOf _:node17168lpjsx21 .
+
+_:node17168lpjsx21 a owl:Restriction ;
+	owl:onProperty support:month-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Time-Point rdfs:subClassOf _:node17168lpjsx22 .
+
+_:node17168lpjsx22 a owl:Restriction ;
+	owl:onProperty support:year-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Time-Point rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:second-of a owl:DatatypeProperty ;
+	rdfs:label "second of" ;
+	rdfs:domain support:Time-Point ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:minute-of a owl:DatatypeProperty ;
+	rdfs:label "minute of" ;
+	rdfs:domain support:Time-Point ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:hour-of a owl:DatatypeProperty ;
+	rdfs:label "hour of" ;
+	rdfs:domain support:Time-Point ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:day-of a owl:DatatypeProperty ;
+	rdfs:label "day of" ;
+	rdfs:domain support:Time-Point ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:month-of a owl:DatatypeProperty ;
+	rdfs:label "month of" ;
+	rdfs:domain support:Time-Point ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:year-of a owl:DatatypeProperty ;
+	rdfs:label "year of" ;
+	rdfs:domain support:Time-Point ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Calendar-Date a owl:Class ;
+	rdfs:label "Calendar Date" ;
+	rdfs:comment "A point in time" ;
+	rdfs:subClassOf support:Time-Point , _:node17168lpjsx23 .
+
+_:node17168lpjsx23 a owl:Restriction ;
+	owl:onProperty support:second-of ;
+	owl:maxCardinality "0"^^xsd:nonNegativeInteger .
+
+support:Calendar-Date rdfs:subClassOf _:node17168lpjsx24 .
+
+_:node17168lpjsx24 a owl:Restriction ;
+	owl:onProperty support:minute-of ;
+	owl:maxCardinality "0"^^xsd:nonNegativeInteger .
+
+support:Calendar-Date rdfs:subClassOf _:node17168lpjsx25 .
+
+_:node17168lpjsx25 a owl:Restriction ;
+	owl:onProperty support:hour-of ;
+	owl:maxCardinality "0"^^xsd:nonNegativeInteger .
+
+support:Calendar-Date rdfs:subClassOf _:node17168lpjsx26 .
+
+_:node17168lpjsx26 a owl:Restriction ;
+	owl:onProperty support:day-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Calendar-Date rdfs:subClassOf _:node17168lpjsx27 .
+
+_:node17168lpjsx27 a owl:Restriction ;
+	owl:onProperty support:month-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Calendar-Date rdfs:subClassOf _:node17168lpjsx28 .
+
+_:node17168lpjsx28 a owl:Restriction ;
+	owl:onProperty support:year-of ;
+	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+
+support:Calendar-Date rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Time-Interval a owl:Class ;
+	rdfs:label "Time Interval" ;
+	rdfs:comment "An interval is defined by two time points or a duration. Classes of intervals, e.g., a day, can be defined by specifying only a duration.  A time interval has no gaps" ;
+	rdfs:subClassOf support:Time-Position ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:begins-at-time-point a owl:ObjectProperty ;
+	rdfs:label "begins at time point" ;
+	rdfs:domain support:Time-Interval ;
+	rdfs:range support:Time-Point ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:ends-at-time-point a owl:ObjectProperty ;
+	rdfs:label "ends at time point" ;
+	rdfs:domain support:Time-Interval ;
+	rdfs:range support:Time-Point ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:has-duration a owl:ObjectProperty ;
+	rdfs:label "has duration" ;
+	rdfs:domain support:Time-Interval ;
+	rdfs:range support:Duration ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Day a owl:Class ;
+	rdfs:label "Day" ;
+	rdfs:subClassOf support:Time-Interval , _:node17168lpjsx29 .
+
+_:node17168lpjsx29 a owl:Restriction ;
+	owl:onProperty support:has-duration ;
+	owl:hasValue support:twentyfour-hour-duration .
+
+support:Day rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Week a owl:Class ;
+	rdfs:label "Week" ;
+	rdfs:subClassOf support:Time-Interval , _:node17168lpjsx30 .
+
+_:node17168lpjsx30 a owl:Restriction ;
+	owl:onProperty support:has-duration ;
+	owl:hasValue support:seven-day-duration .
+
+support:Week rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Month a owl:Class ;
+	rdfs:label "Month" ;
+	rdfs:subClassOf support:Time-Interval ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Year a owl:Class ;
+	rdfs:label "Year" ;
+	rdfs:subClassOf support:Time-Interval , _:node17168lpjsx31 .
+
+_:node17168lpjsx31 a owl:Restriction ;
+	owl:onProperty support:has-duration ;
+	owl:hasValue support:twelve-month-duration .
+
+support:Year rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Duration a owl:Class ;
+	rdfs:label "Duration" ;
+	rdfs:comment "A measure of time, e.g., 5 hours" ;
+	rdfs:subClassOf support:Physical-Quantity , _:node17168lpjsx32 .
+
+_:node17168lpjsx32 a owl:Restriction ;
+	owl:onProperty support:has-unit-of-measure ;
+	owl:allValuesFrom support:Time-Measure .
+
+support:Duration rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:twentyfour-hour-duration a support:Duration ;
+	rdfs:label "24 hour duration" ;
+	support:has-unit-of-measure support:time-measure-hour ;
+	support:has-magnitude "24"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:seven-day-duration a support:Duration ;
+	rdfs:label "7 day duration" ;
+	support:has-unit-of-measure support:time-measure-day ;
+	support:has-magnitude "7"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:twentyeight-day-duration a support:Duration ;
+	rdfs:label "28 day duration" ;
+	support:has-unit-of-measure support:time-measure-day ;
+	support:has-magnitude "28"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:twentynine-day-duration a support:Duration ;
+	rdfs:label "29 day duration" ;
+	support:has-unit-of-measure support:time-measure-day ;
+	support:has-magnitude "29"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:thirty-day-duration a support:Duration ;
+	rdfs:label "30 day duration" ;
+	support:has-unit-of-measure support:time-measure-day ;
+	support:has-magnitude "30"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:thirtyone-day-duration a support:Duration ;
+	rdfs:label "31 day duration" ;
+	support:has-unit-of-measure support:time-measure-day ;
+	support:has-magnitude "31"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:twelve-month-duration a support:Duration ;
+	rdfs:label "12 month duration" ;
+	support:has-unit-of-measure support:time-measure-month ;
+	support:has-magnitude "12"^^xsd:decimal ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:Time-Measure a owl:Class ;
+	rdfs:label "Time Measure" ;
+	rdfs:comment "The class of all unit of measures used to measure time, e.g., minute, second, hour, etc." ;
+	rdfs:subClassOf support:Unit-Of-Measure ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:time-measure-second a support:Time-Measure ;
+	rdfs:label "second" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:time-measure-minute a support:Time-Measure ;
+	rdfs:label "minute" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:time-measure-hour a support:Time-Measure ;
+	rdfs:label "hour" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:time-measure-day a support:Time-Measure ;
+	rdfs:label "day" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:time-measure-month a support:Time-Measure ;
+	rdfs:label "month" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .
+
+support:time-measure-year a support:Time-Measure ;
+	rdfs:label "year" ;
+	rdfs:isDefinedBy <http://www.aktors.org/ontology/support> .

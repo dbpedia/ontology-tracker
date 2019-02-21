@@ -1,0 +1,472 @@
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix dqv:   <http://www.w3.org/ns/dqv#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix dqm:   <http://purl.org/dqm-vocabulary/v1/dqm#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix voaf:  <http://purl.org/vocommons/voaf#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dk:    <http://www.data-knowledge.org/dk/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wai:   <http://purl.org/wai#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+dk:DataFlow  a            rdfs:Class ;
+        rdfs:comment      "Zeigt die tatsächliche Verbindung und den Datenaustausch zwischen konkreten Applikationen an"@de , "Indicates the actual connection and data exchange between particular applications"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Datenfluss"@de , "Data Flow"@en ;
+        vann:example      "Datensatz2837 fließt vom zentralen Stammdatenspeicher zum ERP-System"@de , "Dataset2837 flows from Central master data repository to ERP system"@en .
+
+dk:BusinessObjectType
+        a                 rdfs:Class ;
+        rdfs:comment      "Konzeptuelle, unternehmensrelevante (Daten-) Einheit, welche eine kohärente Menge von Informationen über eine Gruppe realer oder virtueller Objekte darstellt"@de , "Conceptual (data) entity relevant to business that represents a coherent set of information about a group of real or virtual objects"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Business Object Type (BOT)"@en , "Geschäftsobjekttyp (BOT)"@de ;
+        dc:hasPart        dk:BusinessObjectTypeAttribute ;
+        dc:isPartOf       dk:BusinessObjectDomain ;
+        vann:example      "Customer, Employee, Bill of Material, Sales Region"@en , "Kunde, Angestellter, Materialliste, Vertriebsregion"@de .
+
+dk:DataObjectType  a      rdfs:Class ;
+        rdfs:comment      "Technical representation of a Business Object Type (BOT)"@en , "Technische Repräsentation eines Geschäftsobjekttyps (BOT)"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Data Object Type (DOT)"@en , "Datenobjekttyp (DOT)"@de ;
+        dc:hasPart        dk:DataObjectTypeAttribute ;
+        dc:isPartOf       dk:Application ;
+        vann:example      "Datenbanktabelle 'kna1'"@de , "Database table 'kna1'"@en .
+
+dk:ApplicationInterface
+        a                 rdfs:Class ;
+        rdfs:comment      "Technische Spezifikation einer Applikation, um Daten auszutauschen"@de , "Technical specification of an application to exchange data"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Applikationsschnittstelle"@de , "Application Interface"@en ;
+        dc:isPartOf       dk:Application ;
+        vann:example      "Der Web-Service des ERP-Systems"@de , "ERP system's web-service"@en .
+
+dk:Role  a                   rdfs:Class ;
+        rdfs:comment         "Abstrakte Definition einer allgemeinen Funktion und ihrer Ziele und Autoritäten"@de , "Abstract definition of a general function and its goals and authorities"@en ;
+        rdfs:isDefinedBy     dk: ;
+        rdfs:label           "Rolle"@de , "Role"@en ;
+        vann:example         "Datenkoordinator"@de , "Data coordinator"@en ;
+        owl:equivalentClass  wai:Role .
+
+dk:associatesWith  a      rdf:Property ;
+        rdfs:comment      "unspezifische Verknüpfung zwischen Entitäten"@de , "unspecified association between entities"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "ist verknüpft mit"@de , "associates with"@en ;
+        vann:example      "BO A ist verknüpft mit BO B"@de , "BO A is linked with BO B"@en .
+
+dk:BusinessObject  a      rdfs:Class ;
+        rdfs:comment      "Spezifische, individuelle Instanz eines Geschäftsobjekttyps (BOT)"@de , "Specific, individual instance of a Business Object Type (BOT)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Geschäftsobjekt (BO)"@de , "Business Object (BO)"@en ;
+        dc:hasPart        dk:BusinessObjectAttribute ;
+        vann:example      "Lieferant 'Fluid Supply Ltd'"@de , "Supplier 'Fluid Supply Ltd'"@en .
+
+dk:DataObjectTypeAttribute
+        a                 rdfs:Class ;
+        rdfs:comment      "Individuelles (atomares) Feld, um eine Informationseineit zu speichern"@de , "Individual (atomic) field to store a piece of information"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Datenobjekttypattribut (DOTA)"@de , "Data Object Type Attribute (DOTA)"@en ;
+        dc:isPartOf       dk:DataObjectType ;
+        vann:example      "Datenbankspalte 'stceg'"@de , "Database column 'stceg'"@en .
+
+dk:carries  a             rdf:Property ;
+        rdfs:comment      "Rollen und Organisationseinheiten können spezifische Verantwortungen tragen"@de , "Roles and Organizational Units can carry specific responsibilites"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "trägt"@de , "carries"@en ;
+        vann:example      "Datenmanager für Beschaffung trägt u.a. die Verantwortlichkeit 'BeschaffungsDatenVerantwortung' welche auf BOT 'Lieferant' und BOT 'Beschaffungsauftrag' verweist"@de , "Data manager for procurement carries responsibility 'ProcurementDataResponsibility' which refers to BOT 'supplier' and BOT 'procurement order'"@en .
+
+dk:participatesIn  a      rdf:Property ;
+        rdfs:comment      "Eine Person oder Organisationseinheit kann an Training teilnehmen"@de , "A person or organizational unit can participate in trainings"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "nimmt Teil an"@de , "participates in"@en ;
+        vann:example      "Hr. Reh nimmt an einer web-basierten Trainingssitzung zu den geschäftlichen Konsequenzen von schlechter Datenqualität teil"@de , "Mr.Doe attends a web-based training session on the business effects of poor data quality"@en .
+
+dk:DataManagementProcess
+        a                 rdfs:Class ;
+        rdfs:comment      "Abfolge von Tätigkeiten für die Datenpflege oder die Datenverwaltung"@de , "Sequence of activities for data maintenance or data governance"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Datenmanagementprozess"@de , "Data Management Process"@en ;
+        vann:example      "Erstellung von Kundenstammdaten"@de , "Creation of customer master data"@en .
+
+dk:Person  a                 rdfs:Class ;
+        rdfs:comment         "Individual of an organization assigned with certain roles"@en , "Individuum einer Organisation, welchem bestimmte Rollen zugewiesen werden"@de ;
+        rdfs:isDefinedBy     dk: ;
+        rdfs:label           "Person"@de , "Person"@en ;
+        dc:isPartOf          dk:OrganizationalUnit ;
+        vann:example         "Fr. Schmidt, Hr. Reh"@de , "Mrs. Smith, Mr. Doe"@en ;
+        owl:equivalentClass  vcard:Individual , foaf:Person .
+
+dk:ControlledVocabularyItem
+        a                 rdfs:Class ;
+        rdfs:comment      "Vordefinierter Wert eines Geschäftsobjektattributs (BOTA)"@de , "Pre-defined value for a Business Object Type Attribute (BOTA)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Wert eines kontrollierten Vokabulars (CVI)"@de , "Controlled Vocabulary Item (CVI)"@en ;
+        dc:isPartOf       dk:ControlledVocabulary ;
+        vann:example      "DE"@de , "DE"@en .
+
+dk:tracks  a              rdf:Property ;
+        rdfs:comment      "The change history keeps track of changes to instances"@en , "Die Änderungshistorie verfolgt Änderungen an Instanzen"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "tracks"@en , "verfolgt"@de ;
+        vann:example      "New name for organizational unit"@en , "Neuer FAQ-Eintrag"@de , "New FAQ entry"@en , "Neuer Name für Organisationseinheit"@de .
+
+dk:takes  a                     rdf:Property ;
+        rdfs:comment            "Personen können Rollen einnehmen"@de , "Persons can take Roles"@en ;
+        rdfs:isDefinedBy        dk: ;
+        rdfs:label              "nimmt an"@de , "takes"@en ;
+        vann:example            "Fr. Müller ist die Datenmanagerin für die Abteilung 'Beschaffung'"@de , "Mrs. Miller is the data manager for department 'procurement'"@en ;
+        owl:equivalentProperty  wai:plays .
+
+dk:processes  a           rdf:Property ;
+        rdfs:comment      "Änderungsanfragen (CRs) werden von Datenmanagementprozessen verarbeitet"@de , "Change requests are processed by DM processes"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "verarbeitet"@de , "processes"@en ;
+        vann:example      "CR 'zusätzliches Feld für zusammenhängende BOs' wird von DM Prozess 'Feldänderung' verarbeitet"@de , "CR 'additional field for related BOs' is processed by DM Process 'Field change'"@en .
+
+dk:DataObject  a          rdfs:Class ;
+        rdfs:comment      "Individuelle Instanz eines Datenobjekttyps (DOT), d.h. die technische Repräsentation eines Geschäftsobjekts (BO)"@de , "Individual record of a Data Object Type (DOT), i.e. the technical representation of a Business Object (BO)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Datenobjekt (DO)"@de , "Data Object (DO)"@en ;
+        dc:hasPart        dk:DataObjectAttribute ;
+        vann:example      "Datenbankeintrag zu 'Fluid Supply Ltd'"@de , "Database record of 'Fluid Supply Ltd'"@en .
+
+dk:TrainingOpportunity
+        a                 rdfs:Class ;
+        rdfs:comment      "Eine geplante Veranstaltung, an der eine Person teilnehmen kann"@de , "A planned event a person can participate in"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Trainingsmöglichkeit"@de , "Training Opportunity"@en ;
+        vann:example      "Web-basierte Übungssitzung"@de , "web-based training session"@en .
+
+dk:KpiDefinition  a       rdfs:Class ;
+        rdfs:comment      "Definiert eine Datenqualitäts-Leistungskennzahl basierend auf einer Menge von Geschäftsregeln"@de , "Defines a data quality (performance) measure based on a set of business rules"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "KPI-Definition"@de , "KPI Definition"@en ;
+        vann:example      "Anzahl der Kunden ohne Adresse oder Steuer-ID"@de , "Number of customers without address or tax ID"@en .
+
+dk:ValueList  a           rdfs:Class ;
+        rdfs:comment      "Liste mit vordefinierten Werten für ein Datenobjekttyp-Attribut (DOTA)"@de , "List with pre-defined values for a Data Object Type Attribute (DOTA)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Werteliste (VL)"@de , "Value List (VL)"@en ;
+        dc:hasPart        dk:ValueListItem ;
+        vann:example      "Incoterms, Ländercodes"@de , "Incoterms, country codes"@en .
+
+dk:uses  a                rdf:Property ;
+        rdfs:comment      "Geschäftsprozesse konsumieren oder nutzen BO/T/As oder BODs"@de , "Business Processes consume or use BO/T/As or BODs"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "nutzt"@de , "uses"@en ;
+        vann:example      "Geschäftsprozess 'Versand von Bestellung 02917' nutzt BO 'Kunde Example Co. Ltd.' und seine BOAs 'Name' und 'Adresse'"@de , "Business Process 'shipping of order 02917' uses BO 'customer Example Co. Ltd.' and its BOAs 'name' and 'address'"@en .
+
+dk:Report  a              rdfs:Class ;
+        rdfs:comment      "Menge von KPI-Messwerten, welche für einen bestimmten Zweck zusammengetragen wurden"@de , "Set of KPI measurements gathered for a particular purpose"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Bericht"@de , "Report"@en ;
+        vann:example      "Tabellenkalkulation mit Schaubildern"@de , "Spread sheet with charts"@en .
+
+dk:sends  a               rdf:Property ;
+        rdfs:comment      "Schnittstelle A sendet Daten"@de , "Interface A sends data"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "sendet"@de , "sends"@en ;
+        vann:example      "Stammdatenspeicher sendet Datensatz 324"@de , "Master data repository sends out dataset 324"@en .
+
+dk:KpiMeasurement  a         rdfs:Class ;
+        rdfs:comment         "Actual performance values measured at a particular time"@en , "Konkrete Leistungskennzahlen, zu einer bestimmten Zeit gemessen"@de ;
+        rdfs:isDefinedBy     dk: ;
+        rdfs:label           "KPI-Messwert"@de , "KPI Measurement"@en ;
+        vann:example         "75% are valid customer records"@en , "75% sind gültige Kundendaten"@de ;
+        owl:equivalentClass  dqm:DataQualityScore , dqv:QualityMeasurement .
+
+dk:setsBasisFor  a        rdf:Property ;
+        rdfs:comment      "Eine Geschäftsregel (BR) bietet die Grundlage für die Definition einer Leistungskennzahl (KPI Definition)"@de , "A Business Rule (BR) sets the basis for a KPI Definition"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "bietet Grundlage für"@de , "sets basis for"@en ;
+        vann:example      "BR: 'Steuer-ID muss vorhanden sein' bietet Grundlage für KPI-Definition: 'Anzahl von Kunden ohne Steuer-ID'"@de , "BR: 'Tax ID must be provided' sets basis for KPI Definition: 'Number of customers without tax ID'"@en .
+
+dk:Project  a             rdfs:Class ;
+        rdfs:comment      "Ein Projekt, welches Änderungen von Daten oder dem Datenmanagement zum Zweck hat"@de , "A project that implies changes to data or data management"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Projekt"@de , "Project"@en ;
+        rdfs:subClassOf   foaf:Project ;
+        dc:hasPart        dk:ProjectPlan ;
+        vann:example      "New distribution channel"@en , "Neuer Distributionskanal"@de .
+
+dk:ProjectPlan  a         rdfs:Class ;
+        rdfs:comment      "Zeitplan, der illustriert, wann eine bestimmte Maßnahme ergriffen wird"@de , "Schedule illustrating when a particular action is taken on something"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Projektplan"@de , "Project Plan"@en ;
+        dc:isPartOf       dk:Project ;
+        vann:example      "Auslieferung eines Prozesses oder einer Anwendung"@de , "Rollout of process or application"@en .
+
+dk:affects  a             rdf:Property ;
+        rdfs:comment      "Eine Änderungsanfrage betrifft einen Geschäftsobjekttypen (BOT)"@de , "A Change Request affects a Business Object Type"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "betrifft"@de , "affects"@en ;
+        vann:example      "Änderungsanfrage 'füge Feld 'Alter' zu Kunde hinzu' betrifft BOT 'Kunde'"@de , "Change Request 'add field 'age' to customer' affects BOT 'Customer'"@en .
+
+dk:Mapping  a             rdfs:Class ;
+        rdfs:comment      "Links Business Object Types (BOTs) and their attributes (BOTAs) to Data Object Types (DOTs) and Attributes (DOTAs); maps Controlled Vocabularies (CVs) to their equivalent Value Lists (VLs)"@en , "Specific migration relevant information for the transfer from conceptual data model to technical data model"@en , "Spezifische, migrationsrelevante Informationen für den Transfer von konzeptuellem Datenmodell zu technischem Datenmodell"@de , "Verbindet Geschäftsobjekttypen (BOTs) und deren Attribute (BOTAs) mit Datenobjekttypen (DOTs) und deren Attributen (DOTAs); bildet Kontrollierte Vokabulare (CVs) auf die äquivalenten Wertelisten (VLs) ab"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Zuordnung"@de , "Mapping"@en ;
+        vann:example      "Namemap weist DOT:kna1, BOT:name1 zu"@de , "Namemap assigns DOT:kna1, BOT:name1"@en .
+
+dk:definesIntegrityOf
+        a                 rdf:Property ;
+        rdfs:comment      "Eine Geschäftsregel (BR) definiert die Integrität von Geschäftsobjekten (BOs)"@de , "A Business Rule (BR) defines the integrity of Business Objects (BOs)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "definiert die Integrität von"@de , "defines integrity of"@en ;
+        vann:example      "BR: 'Steuer-ID muss vorhanden sein' definiert die Integrität von BOs des Typs 'Kunde'"@de , "BR: 'Tax ID must be provided' defines the integrity of BOs of Type 'customer'"@en .
+
+dk:DataLifecycle  a       rdfs:Class ;
+        rdfs:comment      "Definiert die Lebenszyklusphasen von BO/As und BOT/As"@de , "Defines the lifecycle stages of BO/As and BOT/As"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Datenlebenszyklus"@de , "Data Lifecycle"@en ;
+        vann:example      "Erstellt, bestätigt, aktiv, inaktiv"@de , "Created, approved, active, inactive"@en .
+
+dk:cooperatesWith  a      rdf:Property ;
+        rdfs:comment      "Organisationseinheiten und Rollen können kooperieren"@de , "Organizational Units and Roles can cooperate"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "kooperiert mit"@de , "cooperates with"@en ;
+        vann:example      "Datenschutzmanager kooperiert mit globalem Dateneigentümer"@de , "Privacy manager cooperates with global data owner"@en .
+
+dk:defines  a             rdf:Property ;
+        rdfs:comment      "Eine Leistungskennzahlen-Definition (KPI-Definition) definiert eine Leistungskennzahl (KPI)"@de , "KPI Definition defines a KPI Measurement"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "definiert"@de , "defines"@en ;
+        vann:example      "KPI-Definition: 'Anzahl von Kunden ohne Adresse oder Steuer-ID' definiert die Berechnung von KPI '75% sind valide Kundendaten'"@de , "KPI Definition: 'Number of customers without address or tax ID' defines how the KPI Measurement '75% are valid customer records' is calculated"@en .
+
+dk:measures  a            rdf:Property ;
+        rdfs:comment      "Leistungskennzahlen (KPIs) messen die Leistungswerte von BO/D/T/As oder DO/T/As"@de , "KPI Measurements measure the performance values of BO/D/T/As or DO/T/As"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "misst"@de , "measures"@en ;
+        vann:example      "KPI '75% der Kundendaten sind vollständig' misst die BOs 'Kunde 1', 'Kunde 2' und 'Kunde 3' und ihre DOs"@de , "KPI '75% of customer data is complete' measures BOs 'customer 1', 'customer 2' and 'customer 3' and their DOs"@en .
+
+dk:documents  a           rdf:Property ;
+        rdfs:comment      "Ergänzende Dokumentation dokumentiert verschiedene Modellbereiche"@de , "Supplementary documentation documents various model areas"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "documents"@en , "dokumentiert"@de ;
+        vann:example      "Video about how to initiate a project"@en , "Graphische Repräsentation von Datenflüssen"@de , "Wiki-Seite mit Best Practices"@de , "Graphic representation of data flows"@en , "Video darüber, wie man ein neues Projekt beginnt"@de , "Wiki-Page with best practices"@en , "Präsentationen von vergangenen Trainings"@de , "Presentations of past trainings"@en .
+
+dk:FAQ  a                 rdfs:Class ;
+        rdfs:comment      "Häufig gestellte Fragen"@de , "Frequently Asked Questions"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "FAQ"@de , "FAQ"@en ;
+        vann:example      "Was sind Stammdaten?"@de , "What is master data?"@en .
+
+dk:Example  a             rdfs:Class ;
+        rdfs:comment      "Instanzen eines BOT/BOTA, die gültige und ungültige Nutzung illustrieren"@de , "Illustrative instances of a BOT/BOTA to indicate valid / invalid use"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Beispiel"@de , "Example"@en ;
+        vann:example      "Beispiel für ungültige Rechtsform: 'Limtd'"@de , "Example for invalid legal form: 'Limtd'"@en .
+
+dk:BusinessProcess  a     rdfs:Class ;
+        rdfs:comment      "Abfolge von Tätigkeiten, die Daten konsumieren oder von ihnen abhängen (Datennutzungsperspektive)"@de , "Sequence of activities consuming or relying on data (data usage perspective)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Geschäftsprozess"@de , "Business Process"@en ;
+        vann:example      "Bestellung, Auslieferung, Rechnungsstellung"@de , "Ordering, delivering, invoicing"@en .
+
+dk:initiates  a           rdf:Property ;
+        rdfs:comment      "Ein Projekt oder ein Datenmanagementprozess initiiert eine Änderungsanfrage"@de , "A project or a Data Management Process initiates a change request"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "initiiert"@de , "initiates"@en ;
+        vann:example      "Projekt 'Verbesserung der Datendistribution' stellt Änderungsanfrage 'Füge neuen Distributionskanal X hinzu'"@de , "Project 'Improvement of data distribution' makes change request 'Add new distribution channel X'"@en .
+
+dk:     a                              voaf:Vocabulary , owl:Ontology ;
+        rdfs:comment                   "Initial vocabulary publication"@en , "Initiale Vokabularveröffentlichung"@de ;
+        rdfs:label                     "Das Data-Knowledge-Vokabular"@de , "The Data Knowledge Vocabulary"@en ;
+        rdfs:seeAlso                   <http://www.data-knowledge.org/dk/schema/rdf/latest/> , <http://www.data-knowledge.org/> ;
+        cc:licence                     <http://creativecommons.org/licenses/by-nc-sa/3.0/> ;
+        dc:creator                     "Erik Thordsen" , "Agatha Dabrowski" , "Martin Böhmer" ;
+        dc:description                 "The Data Knowledge Vocabulary allows for the linked data representation of data knowledge, structured according to the Data Knowledge Model"@en , "Das Data-Knowledge-Vokabular ermöglicht die Linked-Data-Repräsentation von Datenwissen, strukturiert entsprechend des Data-Knowledge-Modells"@de ;
+        dc:issued                      "2017-11-10" ;
+        dc:modified                    "2017-11-10" ;
+        dc:publisher                   <http://de.dbpedia.org/resource/Fraunhofer-Gesellschaft> ;
+        dc:rights                      "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)" ;
+        dc:title                       "The Data Knowledge Vocabulary"@en , "Das Data-Knowledge-Vokabular"@de ;
+        vann:preferredNamespacePrefix  "dk" ;
+        vann:preferredNamespaceUri     "http://www.data-knowledge.org/dk/" ;
+        voaf:classNumber               "37" ;
+        voaf:propertyNumber            "29" ;
+        owl:versionInfo                "1" .
+
+dk:isSentTo  a            rdf:Property ;
+        rdfs:comment      "Daten werden zu Schnittstelle B gesendet"@de , "Data is sent to Interface B"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "wird gesendet an"@de , "is sent to"@en ;
+        vann:example      "Datensatz 324 wird an ERP-System gesendet"@de , "Dataset 324 is sent to ERP system"@en .
+
+dk:includes  a            rdf:Property ;
+        rdfs:comment      "Berichte beinhalten BO/D/T/As oder DO/T/As"@de , "Reports include BO/D/T/As or DO/T/As"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "beinhaltet"@de , "includes"@en ;
+        vann:example      "Bericht 26365 beinhaltet BOT 'Kunde'"@de , "Report 26365 includes BOT 'Customer'"@en .
+
+dk:illustrates  a         rdf:Property ;
+        rdfs:comment      "Ein Beispiel illustriert ein BOT/A"@de , "An example illustrates a BOT/A"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "illustriert"@de , "illustrates"@en ;
+        vann:example      "Beispiel 'DE' für BOTA 'Land' verdeutlicht die korrekte Nutzung des BOTAs"@de , "Example 'DE' for BOTA 'country' indicates correct use of BOTA"@en .
+
+dk:represents  a          rdf:Property ;
+        rdfs:comment      "Verknüpfung von spezifischen Instanzen (BOs, DOs, BOAs, DOAs) zu konzeptuell kohärenten Mengen von Entitäten (BOTs, DOTs, BOTAs, DOTAs)"@de , "Connection from specific instances (BOs, DOs, BOAs, DOAs) to conceptually coherent sets of entities (BOTs, DOTs, BOTAs, DOTAs)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "repräsentiert"@de , "represents"@en ;
+        vann:example      "BOA 'Hr. Schmidt' repräsentiert BOTA 'Kundenname'; BO 'Kunde 2338' repräsentiert BOT 'Kunde'"@de , "BOA 'Mr. Smith' represents BOTA 'customer name'; BO 'Customer 2338' represents BOT 'Customer'"@en .
+
+dk:providesOverviewOf
+        a                 rdf:Property ;
+        rdfs:comment      "Ein Bericht bietet einen Überblick über gewisse Leistungskennzahlen (KPIs)"@de , "A Report provides an overview of certain KPI Measurements"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "bietet Überblick über"@de , "provides overview of"@en ;
+        vann:example      "Tabellenkalkulation mit Schaubildern, die verschiedene Qualitätsaspekte von Kundendaten zeigen"@de , "Spread sheet with charts showing various quality aspects of customer data"@en .
+
+dk:BusinessObjectDomain
+        a                 rdfs:Class ;
+        rdfs:comment      "Gruppierung kohärenter Geschäftsobjekttypen (BOTs), entweder aus Themen- oder Verwaltungssicht"@de , "Clusters of coherent Business Object Types (BOTs), either from a subject matter or management point of view"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Geschäftsobjektdomäne (BOD)"@de , "Business Object Domain (BOD)"@en ;
+        dc:hasPart        dk:BusinessObjectType ;
+        vann:example      "Geschäftspartner: Kunden- und Verkäuferdaten"@de , "Business partner: customer and vendor data"@en .
+
+dk:definesStatusOf  a     rdf:Property ;
+        rdfs:comment      "Lebenszyklusphasen definieren den Status von BO/T/As"@de , "Lifecycle stages define the status of BO/T/As"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "definiert den Status von"@de , "defines status of"@en ;
+        vann:example      "Lebenszyklusphase 'inaktiv' definiert Status von BO 'Kunde 7',\nLebenszyklusphase 'bestätigt' definiert Status von BOA 'Adresse Kunde 9',\nLebenszyklusphase 'erstellt' definiert Status von neuem BOTA 'Kunden-E-Mail-Adresse"@de , "Lifecycle stage 'inactive' defines status of BO 'customer 7',\nlifecycle stage 'approved' defines status of BOA 'customer 9 address',\nlifecycle stage 'created' defines status of new BOTA 'customer mail address'"@en .
+
+dk:answersQuestionAbout
+        a                 rdf:Property ;
+        rdfs:comment      "FAQ answer questions about various model areas"@en , "FAQ beantworten Fragen zu verschiedenen Modellbereichen"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "answers question about"@en , "beantwortet Fragen zu"@de ;
+        vann:example      "How much improvisation in data management processes is allowed?"@en , "What is a training opportunity?"@en , "Wo finde ich Hr. Reh?"@de , "What is Master Data?"@en , "Was ist ein Dateneigentümer?"@de , "What is a Data Owner?"@en , "Was ist eine Trainingsmöglichkeit?"@de , "Where do I find Mr. Doe?"@en , "Wie viel Improvisation ist in Datenmanagementprozessen erlaubt?"@de , "Was versteht man unter Stammdaten?"@de .
+
+dk:BusinessObjectTypeAttribute
+        a                 rdfs:Class ;
+        rdfs:comment      "Konzeptuell elementare Informationseinheit als Teil eines Geschäftsobjekttyps (BOT)"@de , "Conceptually elementary piece of information as part of a Business Object Type (BOT)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Geschäftsobjekttyp-Attribut (BOTA)"@de , "Business Object Type Attribute (BOTA)"@en ;
+        dc:isPartOf       dk:BusinessObjectType ;
+        vann:example      "Steuer-ID, Adresse"@de , "Tax ID, Address"@en .
+
+dk:refersTo  a            rdf:Property ;
+        rdfs:comment      "Ein Verweis von einem BOTA zu einem Kontrollierten Vokabular (CV) oder von einem DOTA zu einer Werteliste (VL)"@de , "A reference from a BOTA to a Controlled Vocabulary (CV) or from a DOTA to a Value List (VL)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "verweist auf"@de , "refers to"@en ;
+        vann:example      "BOTA 'Land' verweist auf eine fixe Werteliste von Ländercodes"@de , "BOTA 'country' refers to fixed controlled vocabulary of country codes"@en .
+
+dk:worksOn  a             rdf:Property ;
+        rdfs:comment      "Projekte arbeiten an Geschäftsobjekttypen (BOTs)"@de , "Projects work on Business Object Types"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "arbeitet an"@de , "works on"@en ;
+        vann:example      "Projekt 'Modernisierung von transportbezogenen Daten' arbeitet an BOTs 'Ladungssicherung', 'Sendung' und 'Transport'"@de , "Project 'Modernization of transport-related data' works on BOTs 'LoadSecuring','Packaging', 'Shipment' and 'Transport'"@en .
+
+dk:BusinessRule  a           rdfs:Class ;
+        rdfs:comment         "Defines the integrity of a single Business Object or across them"@en , "Legt die Integrität eines einzelnen Geschäftsobjekts oder zwischen Geschäftsobjekten fest"@de ;
+        rdfs:isDefinedBy     dk: ;
+        rdfs:label           "Business Rule"@en , "Geschäftsregel"@de ;
+        vann:example         "Tax ID must be provided"@en , "Steuer-ID muss vorhanden sein"@de ;
+        owl:equivalentClass  dqv:QualityPolicy , dqm:DataRequirement .
+
+dk:assigns  a             rdf:Property ;
+        rdfs:comment      "Eine spezifische Zuordnungs-Klasse (Mapping) weist verschiedene Repräsentationen des selben Konzeptes zu, dh. hinsichtlich einer konzeptuellen ggü. einer technischen Sicht (möglicherweise in verschiedenen Datenformaten, z.B. Java oder XML-Objekte). Zuordnungen können stattfinden zwischen:\n- BOTs und DOTs\n- BOs und DOs\n- VLs und CVs"@de , "A specific Mapping Class assigns various representations of the same concepts, i.e in a conceptual vs. technical view (possibly in different data formats, e.g. Java or XML objects). Mappings can take place between:\n- BOTs and DOTs\n- BOs and DOs \n- VLs and CVs"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "weist zu"@de , "assigns"@en ;
+        vann:example      "Zuordnungsklasse 'GlobaleStammdatenMapping' weist DOT 'MstrDat8' und BOT 'Globale Stammdaten' mit angefügten Nutzungskommentaren und Dokumentation zu"@de , "Mapping class 'GlobalMasterDataMapping' assigns DOT 'MstrDat8' and BOT 'Global Master Data' with usage comments and documentation added"@en .
+
+dk:OrganizationalUnit
+        a                 rdfs:Class ;
+        rdfs:comment      "Unit of the organizational structure (hierarchy), group of individuals"@en , "Einheit der Organisationsstruktur (Hierarchie), Gruppe von Individuen"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Organizational Unit"@en , "Organisationseinheit"@de ;
+        rdfs:subClassOf   foaf:Group , vcard:Group ;
+        dc:hasPart        dk:Person ;
+        vann:example      "Abteilung A"@de , "department A"@en .
+
+dk:ChangeHistory  a       rdfs:Class ;
+        rdfs:comment      "Informationen, welche es erlauben, die Entwicklung von Datendefinitionen, Prozessen, etc. nachzuverfolgen"@de , "Information that allows to track the development of data definitions, processes, etc."@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Änderungshistorie"@de , "Change History"@en ;
+        vann:example      "Feld 'Alter' zu Kunde hinzugefügt"@de , "Field 'age' added to customer"@en .
+
+dk:maintains  a           rdf:Property ;
+        rdfs:comment      "Spezifische Datenmanagementprozesse pflegen spezifische BO/T/As oder BODs"@de , "Specific Data Management Processes maintain specific BO/T/As or BODs"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "pflegt"@de , "maintains"@en ;
+        vann:example      "'Kundendatenkonsistenzmanagement, Gruppe 4' pflegt die Konsistenz zwischen den BOs 'Kunde A', 'Kunde B' und 'Kunde C'"@de , "'Customer data consistency management, group 4' maintains consistency between BOs 'customer A', 'customer B' and 'customer C'"@en .
+
+dk:Responsibility  a      rdfs:Class ;
+        rdfs:comment      "Specific description of a responsibility, including the particular scope, duration of accountability, measures to be taken and further information"@en , "Genaue Beschreibung einer Verantwortlichkeit, inkl. ihres genauen Zuständigkeitsbereiches, der Dauer der Zuständigkeit, zu ergreifenden Maßnahmen und weiteren Informationen"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Responsibility"@en , "Verantwortlichkeit"@de ;
+        vann:example      "Hr. Reh ist der Datenqualitätsverantwortliche für Datensatz x-325, er ist zuständig im Falle dass ein Kunde unzufrieden mit der Qualität ist, verantwortlich vom 01.01.2016 bis zum 31.12.2016, hat Maßnahme X, Y und Z zu ergreifen"@de , "Mr. Doe is the data quality responsible of Dataset x-325, he is accountable in case a customer is unsatisfied with the quality, responsible from 01/01/2016 to 31/12/2016, has to take measure X, Y and Z"@en , "Leiter des Projekts 'Neuer Datendistributionskanal' ist bis 6 Monate nach Veröffentlichung für die Ergebnisse des Projekts verantwortlich"@de , "Manager of project 'new data distribution channel' is responsible for this project's results until 6 months after rollout"@en .
+
+dk:Application  a         rdfs:Class ;
+        rdfs:comment      "An installed instance of an application that stores or processes data"@en , "Eine installierte Instanz einer Anwendung, welche Daten speichert oder verarbeitet"@de ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Applikation"@de , "Application"@en ;
+        dc:hasPart        dk:ApplicationInterface , dk:DataObjectType ;
+        vann:example      "Enterprise Resource Planning System (ERP)"@en , "Enterprise Resource Planning System (ERP)"@de .
+
+dk:ValueListItem  a       rdfs:Class ;
+        rdfs:comment      "Vordefinierter Wert für ein Datenobjekttyp-Attribut (DOTA)"@de , "Pre-defined value for a Data Object Type Attribute (DOTA)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Position einer Werteliste (VLI)"@de , "Value List Item (VLI)"@en ;
+        dc:isPartOf       dk:ValueList ;
+        vann:example      "DE"@de , "DE"@en .
+
+dk:SupplementaryDocumentation
+        a                 rdfs:Class ;
+        rdfs:comment      "Lern- oder Referenzmaterial für Datenmanagementoperationen"@de , "Material to learn or use as a reference for data management operations"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Ergänzende Dokumentation"@de , "Supplementary Documentation"@en ;
+        vann:example      "Konzepte, Präsentationen, Videos"@de , "Concepts, presentations, videos"@en .
+
+dk:ChangeRequest  a       rdfs:Class ;
+        rdfs:comment      "Detaillierte Beschreibung eines spezifischen Änderungsbedarfs, welcher sich aus Projekten oder dem operativen Ablauf ergibt"@de , "Detailed description of a specific change requirement, resulting from projects or operations"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Änderungsanfrage"@de , "Change Request"@en ;
+        vann:example      "Feld 'Alter' zu Geschäftsobjekttyp 'Kunde' hinzufügen"@de , "Add field 'age' to Business Object Type 'customer'"@en .
+
+dk:appliesTo  a           rdf:Property ;
+        rdfs:comment      "Vorschriften können für alle Arten von Instanzen gelten"@de , "Regulations can apply to all kinds of instances"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "applies to"@en , "gilt für"@de ;
+        vann:example      "Safety at work when executing specific tasks"@en , "Shipping regulations concerning BOT 'customer' with non-EU address"@en , "Arbeitssicherheit bei der Ausführung bestimmter Tätigkeiten"@de , "Interne Vorschriften bzgl. des Berichts-Designs"@de , "Versandvorschriften bezüglich BOT 'Kunde' mit Adresse außerhalb der EU"@de , "Internal regulations on Report design"@en .
+
+dk:Regulation  a          rdfs:Class ;
+        rdfs:comment      "Interne oder externe Verordnung, die das Datenmanagement beeinflusst"@de , "Internal or external regulatory driver influencing data management"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Vorschrift"@de , "Regulation"@en ;
+        vann:example      "Datenschutzrichtlinien"@de , "privacy policies"@en .
+
+dk:DataObjectAttribute
+        a                 rdfs:Class ;
+        rdfs:comment      "Eine Informationseinheit, welche Bestandteil eines Datenobjekts (DO) ist, d.h. die technische Repräsentation eines Geschäftsobjektattributs (BOA)"@de , "A piece of information being a part of a Data Object (DO), i.e. the technical representation of a Business Object Attribute (BOA)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Datenobjektattribut (DOA)"@de , "Data Object Attribute (DOA)"@en ;
+        dc:isPartOf       dk:DataObject ;
+        vann:example      "'DE-123456-789' als Wert der Datenbankspalte 'stceg' des Datenbankeintrags 'Fluid Supply Ltd'"@de , "'DE-123456-789' being the value of database column 'stceg' of record 'Fluid Supply Ltd'"@en .
+
+dk:responsibleFor  a      rdf:Property ;
+        rdfs:comment      "Spezifische Zuweisung einer Verantwortlichkeit für einen gewissen Bereich"@de , "Specific assignment of a responsibility for a particular scope"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "verantwortlich für"@de , "responsible for"@en ;
+        vann:example      "Datenmanager für Beschaffungsdaten ist verantwortlich für BOT 'Lieferant' und BOT 'Beschaffungsauftrag'"@de , "Data manager for procurement data is responsible for BOT 'supplier' and BOT 'procurement order'"@en .
+
+dk:ControlledVocabulary
+        a                 rdfs:Class ;
+        rdfs:comment      "Liste mit vordefinierten Werten für ein Geschäftsobjekt-Attribut (BOTA)"@de , "List with pre-defined values for a Business Object Type Attribute (BOTA)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Kontrolliertes Vokabular (CV)"@de , "Controlled Vocabulary (CV)"@en ;
+        dc:hasPart        dk:ControlledVocabularyItem ;
+        vann:example      "Incoterms, Ländercodes"@de , "Incoterms, country codes"@en .
+
+dk:BusinessObjectAttribute
+        a                 rdfs:Class ;
+        rdfs:comment      "Spezifische, individuelle Instanz eines Geschäftsobjekttyp-Attributs (BOTA)"@de , "Specific, individual instance of a Business Object Type Attribute (BOTA)"@en ;
+        rdfs:isDefinedBy  dk: ;
+        rdfs:label        "Geschäftsobjekt-Attribut (BOA)"@de , "Business Object Attribute (BOA)"@en ;
+        dc:isPartOf       dk:BusinessObject ;
+        vann:example      "Steuer-ID 'DE-123456-789'"@de , "Tax ID 'DE-123456-789'"@en .

@@ -1,0 +1,883 @@
+@prefix : <http://purl.org/spar/scoro/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl2: <http://purl.org/spar/scoro/owl:> .
+@prefix dcterms: <http://dublincore.org/documents/dcmi-terms/> .
+@prefix timeindexedsituation: <http://www.ontologydesignpatterns.org/cp/owl/timeindexedsituation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix pro: <http://purl.org/spar/pro/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix tvc: <http://www.essepuntato.it/2012/04/tvc/> .
+
+<http://purl.org/spar/scoro/> a owl:Ontology ;
+	owl:versionInfo "1.8.2"^^xsd:string ;
+	dc:date "2013-01-29"^^xsd:string ;
+	dc:creator "David Shotton"^^xsd:string ;
+	dc:contributor "Silvio Peroni"^^xsd:string ;
+	dc:description """Since roles have contexts and times that are important to take into account (for example, a person can be author of one paper and reviewer of another, while another person will be editor of a journal only for a defined period, not for ever), the SCORO ontology permit these contexts to be specified, using an ontological design pattern called the time-indexed value in context (TVC) (http://www.essepuntato.it/2012/04/tvc/) which is part of the PRO ontology (http://purl.org/spar/pro/) imported by SCORO. 
+ 
+This ontology design pattern permits one to construct the following RDF statements:
+       foaf:Agent pro:holdsRoleInTime [ a pro:RoleInTime pro:withRole pro:editor ] .
+
+Thus the domain of pro:withRole is not foaf:Agent, but rather an anonymous member of the class pro:RoleInTime, which itself is the range of the property pro:holdsRoleInTime, for which the domain is foaf:Agent. 
+
+The range of pro:withRole is the class pro:Role, and its sub-classes pro:PublishingRole, scoro:InvestigationalRole, scoro:OrganizationalRole, etc., whose members permit specific roles to be specified.  
+   
+This single step of indirection permits other contextual and temporal attributes (not shown here) to be specified for this member of the class pro:RoleInTime, putting that role into context.
+
+Exemplar usage: 
+
+fabio:Dataset  dcterms:contributor  [ rdf:type foaf:Organization ; 
+   foaf:name \"Met Office\" ;  
+   foaf:homepage <http://www.metoffice.gov.uk/>  ; 
+   pro:holdsRoleInTime [ a pro:RoleInTime 
+      pro:withRole  scoro:data-creator ]  ] .
+
+Exactly the same use of TVC and of individuals within the class scoro:Contribution and its sub-classes is used for scoro:withContribution, enabling contributions to be time-limited and given contexts."""^^xsd:dateTime ;
+	rdfs:comment """SCoRO is written in OWL 2 DL, and imports FOAF, the Friend of a Friend Ontology (http://xmlns.com/foaf/spec/) and PRO the Publishing Roles Ontology (http://purl.org/spar/pro/).   This ontology is available at http://purl.org/spar/scoro/, and uses the namespace prefix 'scoro'.
+
+It is designed to be used in conjunction with FRAPO, the Funding, Research Administration and Projects Ontology (http://purl.org/spar/frapo/), and with FaBiO, the FRBR-aligned Bibliographic Ontology (http://purl.org/spar/fabio/).
+
+A Web-based scholarly contributions report form based on this ontology, for use in creating metadata to describe authorship roles and scholarly contributions to journal articles and their underlying research, is available from http://purl.org/spar/scoro/**** (to be created).
+
+Alternatively, an Excel Scholarly Contributions Report Form based on this ontology, created using RightField (http://www.sysmo-db.org/rightfield) also for use in creating metadata to describe authorship roles and scholarly contributions to journal articles and their underlying research, is available from http://purl.org/spar/scoro/SCoRF.xls."""@en ;
+	dc:title "SCoRO, the Scholarly Contributions and Roles Ontology"@en ;
+	dc:description """SCoRO, the Scholarly Contributions and Roles Ontology, is an ontology for use by authors and publishers for describing the contributions that may be made and the roles that may be held by a person with respect to a journal article or other publication, and by research administrators for describing contributions and roles with respect to other aspects of scholarly research.
+
+In this ontology, the object properties (e.g. scoro:makesContribution) and the individuals within classes (e.g. scoro:conducts-experiments) are expressed in the present tense, as is conventional for ontologies, but should be taken as potentially referring to past, present or future roles and contributions."""@en ;
+	dc:rights "This work is distributed under a Creative Commons Attribution License (http://creativecommons.org/licenses/by/3.0/)."@en ;
+	owl:imports <http://purl.org/spar/pro> .
+
+dc:creator a owl:AnnotationProperty .
+
+:percentageFTE a owl:AnnotationProperty ;
+	rdfs:label "percentage full-time equivalent"@en ;
+	rdfs:comment "A data property permitting specification of the proportion of a person's full time activity that is dedicated to a particular role (e.g. for part-time employment, 50% FTE)."@en ;
+	rdfs:domain pro:RoleInTime .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+rdfs:seeAlso a owl:AnnotationProperty .
+
+dc:contributor a owl:AnnotationProperty .
+
+:withJobTitle a owl:AnnotationProperty ;
+	rdfs:label "with job title"@en ;
+	rdfs:comment "A data property connecting an agent's role in time to a job title that characterizes that role.  This data property complements the definition of that role in time specified by scoro:Role.  For example, for the scoro:OrganizationalRole 'Head of Department', the specific Job Title might be 'Linacre Professor of Zoology' or 'Regius Professor of Moral Philosophy'."@en ;
+	rdfs:domain pro:RoleInTime .
+
+dc:date a owl:AnnotationProperty .
+
+:isEqualToRoleInTIme a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:rights a owl:AnnotationProperty .
+
+:hasContributionContext a owl:ObjectProperty ;
+	rdfs:label "has contribution context"@en ;
+	rdfs:comment "A property relating a contribution situation to an entity representing the context for that situation."@en ;
+	rdfs:domain :ContributionSituation ;
+	rdfs:subPropertyOf tvc:withinContext .
+
+:isContributionIn a owl:ObjectProperty ;
+	rdfs:label "is contribution in"@en ;
+	rdfs:comment "The property relating the definition of a specific contribution to the contribution situation of an agent making that contribution."@en ;
+	rdfs:domain :Contribution ;
+	rdfs:range :ContributionSituation ;
+	owl:inverseOf :withContribution ;
+	rdfs:subPropertyOf timeindexedsituation:hasTimeIndexedSetting .
+
+:isEqualToContributionSituation a owl:ObjectProperty , owl:SymmetricProperty , owl:TransitiveProperty ;
+	rdfs:label "is equal to contribution situation"@en ;
+	rdfs:comment "This property allows the link of two contribution situations that are equals for particular aspects (i.e. for type of contribution, contribution effort and context)."@en ;
+	rdfs:range :ContributionSituation ;
+	rdfs:domain :ContributionSituation .
+
+:isEqualToRoleInTime a owl:ObjectProperty ;
+	rdfs:label "is equal to role in time"@en ;
+	rdfs:comment "This property allows the link of two roles in time as being equal, and is particularly useful for specifying that two principal authorship roles are equal."@en ;
+	rdfs:domain pro:RoleInTime ;
+	rdfs:range pro:RoleInTime .
+
+:isMadeBy a owl:ObjectProperty ;
+	rdfs:label "is made by"@en ;
+	rdfs:comment "A property relating a contribution situation that an agent makes, to that agent."@en ;
+	rdfs:domain :ContributionSituation ;
+	owl:inverseOf :makesContribution ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity ;
+	rdfs:range foaf:Agent .
+
+:isRelatedToContributionSituation a owl:ObjectProperty ;
+	rdfs:label "is related to contribution situation"@en ;
+	rdfs:comment "A property relating an entity to the contribution situation for which that entity provides the context."@en ;
+	rdfs:range :ContributionSituation ;
+	owl:inverseOf :hasContributionContext ;
+	rdfs:subPropertyOf timeindexedsituation:hasTimeIndexedSetting .
+
+:makesContribution a owl:ObjectProperty ;
+	rdfs:label "makes contribution"@en ;
+	rdfs:comment "An object property linking an agent to a contribution.  This is done via the indirection: foaf:Agent scoro:makesContribution [ a scoro:ContributionSituation ; scoro:withContribution scoro:Contribution ; scoro:withEffort scoro:ContributionEffort ] .  The ontology permits one to specify the time period over which a contribution is made, and the other contextual entities to which that agent's contribution relates."@en ;
+	rdfs:range :ContributionSituation ;
+	rdfs:subPropertyOf tvc:hasValue ;
+	rdfs:domain foaf:Agent .
+
+:withContribution a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "with contribution"@en ;
+	rdfs:comment "An object property connecting an agent's contribution situation to a definition of the contribution made by this agent, specified as an instance of the class scoro:Contribution or of one of its sub-classes."@en ;
+	rdfs:range :Contribution ;
+	rdfs:domain :ContributionSituation ;
+	rdfs:subPropertyOf tvc:withValue .
+
+:withEffort a owl:ObjectProperty ;
+	rdfs:label "with contribution effort"@en ;
+	rdfs:comment "An object property connecting an agent's contribution with respect to a particular entity to the amount of effort exerted by this agent in making that contribution, defined by individuals of the class scoro:ContributionEffort."@en ;
+	rdfs:range :ContributionEffort ;
+	rdfs:domain :ContributionSituation ;
+	rdfs:subPropertyOf timeindexedsituation:forEntity .
+
+tvc:hasValue a owl:ObjectProperty .
+
+tvc:withValue a owl:ObjectProperty .
+
+tvc:withinContext a owl:ObjectProperty .
+
+timeindexedsituation:forEntity a owl:ObjectProperty .
+
+timeindexedsituation:hasTimeIndexedSetting a owl:ObjectProperty .
+
+:hasORCID a owl:DatatypeProperty ;
+	rdfs:label "has ORCID"@en ;
+	rdfs:comment "A data property relating an individual to his/her Open Researcher and Contributor ID (ORCID), an alphanumeric identifier for individual scholars described at http://about.orcid.org/."@en ;
+	dc:description "owl:equivalentProperty <http://purl.org/spar/frapo/hasORCID> ."@en ;
+	rdfs:subPropertyOf :hasPersonalIdentifier ;
+	rdfs:domain foaf:Person .
+
+:hasPersonalIdentifier a owl:DatatypeProperty ;
+	rdfs:label "has personal identifier"@en ;
+	dc:description "owl:equivalentProperty <http://purl.org/spar/datacite/hasPersonalIdentifier> ."@en , "owl:equivalentProperty <http://purl.org/spar/frapo/hasPersonalIdentifier> ."@en ;
+	rdfs:comment "A data property specifying a unique and unambiguous identifier for an individual person within a given context, specified by the object property scoro:usesPersonalIdentifierScheme and an individual member of the class scoro:PersonalIdentifierScheme."@en ;
+	rdfs:domain foaf:Person .
+
+:percentageFTE a owl:DatatypeProperty .
+
+:withJobTitle a owl:DatatypeProperty .
+
+pro:Role a owl:Class .
+
+pro:RoleInTime a owl:Class .
+
+:AuthorshipContribution a owl:Class ;
+	rdfs:label "authorship contribution"@en ;
+	rdfs:subClassOf :Contribution ;
+	rdfs:comment "Defines the type or nature of a contribution made with respect to the authorship of a publication such as a journal article.  Individual members of this class are used to specify particular authorship contributions."@en .
+
+:AuthorshipRole a owl:Class ;
+	rdfs:label "authorship role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that a person might hold as an author of a publication or the creator of a work.  Individual members of this class are used to specify particular roles."@en .
+
+:ComputationalAgent a owl:Class ;
+	rdfs:label "computational agent"@en ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:comment "A computer system or software program whose action has an effect on external events, for example a laboratory robot that undertakes your experiments, or the financial control system that controls an institution's payrole, or that, following programmed business rules, prevents the principal investigator from placing an order for research equipment because there is insufficient money left in the project budget."@en .
+
+:Contribution a owl:Class ;
+	rdfs:label "contribution"@en ;
+	rdfs:subClassOf owl:Thing ;
+	owl:disjointWith :ContributionEffort ;
+	rdfs:comment "Defines the type or nature of a contribution made by an agent.  Individual members of this class or its sub-classes are used to specify particular contributions."@en .
+
+:ContributionEffort a owl:Class ;
+	rdfs:label "contribution effort"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "Defines the effort expended in making a contribution."@en .
+
+:ContributionSituation a owl:Class ;
+	rdfs:label "contribution situation"@en ;
+	rdfs:subClassOf tvc:ValueInTime , _:node17ru5mbl8x1 .
+
+_:node17ru5mbl8x1 a owl:Restriction ;
+	owl:onProperty :withContribution ;
+	owl:someValuesFrom :Contribution .
+
+:ContributionSituation dc:description """A contribution situation describes always:
+- a particular contribution C
+- a particular agent A making contribution C
+- a particular time interval T in which A makes C (optional)
+- a particular contribution effort E 
+- one or more entities (e.g. an investigation or data) that defines a context for C contributed by A. (At least one contextual entity should be specified for a particular contribution)."""@en ;
+	rdfs:comment "The situation an agent has of making a contribution to realizing a goal or completing a task relating to a scholarly activity or entity such as journal article.  The type or nature of the contribution is defined by the object of the object property scoro:withContribution, which is an individual in the class scoro:Contribution or one of its sub-classes.  The entity to which the contribution relates is specified using the object property scoro:relatesToEntity or one of its sub-properties, and the effort expended in making that contribution is specified using the object property scoro:withContributionEffort."@en .
+
+:DataRole a owl:Class ;
+	rdfs:label "data role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that an agent might hold with respect to data.  Individual members of this class are used to specify particular roles."@en .
+
+:EducationalRole a owl:Class ;
+	rdfs:label "educational role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that an agent might hold with respect to an educational organization or activity.  Individual members of this class are used to specify particular educational roles."@en .
+
+:ExperimentalContribution a owl:Class ;
+	rdfs:label "experimental contribution"@en ;
+	rdfs:subClassOf :Contribution ;
+	rdfs:comment "Defines the type or nature of a practical or experimental contribution made to the research.  Individual members of this class are used to specify particular contributions."@en .
+
+:FinancialRole a owl:Class ;
+	rdfs:label "financial role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that an agent might hold with respect to academic and project finance.  Individual members of this class are used to specify particular roles."@en .
+
+:IntellectualContribution a owl:Class ;
+	rdfs:label "intellectual contribution"@en ;
+	rdfs:subClassOf :Contribution ;
+	rdfs:comment "Defines the type or nature of an intellectual contribution made to the research described in a journal article.  Individual members of this class are used to specify particular contributions."@en .
+
+:InvestigationRole a owl:Class ;
+	rdfs:label "investigation role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that an agent might hold with respect to an investigation.  Individual members of this class are used to specify particular roles."@en .
+
+:OrganizationalContribution a owl:Class ;
+	rdfs:label "organizational contribution"@en ;
+	rdfs:subClassOf :Contribution ;
+	rdfs:comment "Defines the type or nature of an organizational or administrative contribution.  Individual members of this class are used to specify particular contributions."@en .
+
+:OrganizationalRole a owl:Class ;
+	rdfs:label "organizational role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that an agent might hold with respect to an organization and its administration, particularly within an academic context.  Individual members of this class are used to specify particular roles."@en .
+
+:ProjectRole a owl:Class ;
+	rdfs:label "project role"@en ;
+	rdfs:subClassOf pro:Role ;
+	rdfs:comment "A role that an agent might hold with respect to a project.  Individual members of this class are used to specify particular roles."@en .
+
+tvc:ValueInTime a owl:Class .
+
+foaf:Agent a owl:Class .
+
+foaf:Person a owl:Class ;
+	rdfs:label "person"@en .
+
+pro:author a owl:NamedIndividual , :AuthorshipRole .
+
+:access-provider a owl:NamedIndividual , :DataRole ;
+	rdfs:label "access provider"@en ;
+	rdfs:comment "The role of an agent who provides access to a resource, for example an online data repository."@en .
+
+:accountant a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "accountant"@en ;
+	rdfs:comment "The role held by a person whose job is to manage financial accounts, for example the accounts of an organization, or of a particular funded project or activity of that organization."@en .
+
+:administrator a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "administrator"@en ;
+	rdfs:comment "The role held by an agent responsible for the day-to-day management and running of an organization or activity."@en .
+
+:affiliate a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "affiliate"@en ;
+	dc:description """The affiliation of a person to an organization or institution can be specified by using the property pro:relatesToEntity, as shown in the following example:
+
+foaf:Person scoro:holdsOrganizationalRole [ pro:withRole pro:affiliate ; pro:relatesToEntity _:aff ] .
+
+_:aff a foaf:Organization ; vcard:extended-address 'Department of Zoology, University of Oxford, United Kingdom' ."""@en ;
+	rdfs:comment "The role an agent has of being affiliated to some organization or institution in a context of some entity or activity, for example a document, a project or an internship."@en .
+
+:agent a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "agent"@en ;
+	rdfs:comment "An agent that acts on behalf of another agent."@en .
+
+:analyses-data a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "analyses data"@en ;
+	rdfs:comment "The contribution of data analysis.  This might include statistical analysis, bioinformatics analysis, or image analysis."@en .
+
+:approves-final-manuscript a owl:NamedIndividual , :AuthorshipContribution ;
+	rdfs:label "approves final manuscript"@en ;
+	rdfs:comment "The contribution of approving the final version of the manuscript, prior to submission for publication."@en .
+
+:article-guarantor a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "article guarantor"@en ;
+	rdfs:comment "The role of a person who takes responsibility for the integrity of the work as a whole, from the inception of the research investigation to the published research article."@en .
+
+:auditor a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "auditor"@en ;
+	rdfs:comment "The role held by a person who conducts a formal audit of financial accounts."@en .
+
+:builds-and-or-maintains-instruments a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "builds and/or maintains instruments"@en ;
+	rdfs:comment "The contribution of building instruments, equipment or scientific apparatus and/or maintaining the same in a workable condition for use in experiments."@en .
+
+:chief-executive-officer a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "CEO"@en , "chief executive officer"@en ;
+	rdfs:comment "The role held by a person who is the chief executive officer of an organization, responsible for directing and managing the business of that organization."@en .
+
+:chief-scientist a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "chief scientist"@en ;
+	rdfs:comment "A senior scientist who takes a leadership role in an organization or group."@en .
+
+:chief-technology-officer a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "CTO"@en , "chief technology officer"@en ;
+	rdfs:comment "The role held by a person who is the chief technology officer of an organization, responsible for directing and managing technical developments for that organization."@en .
+
+:claimant a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "claimant"@en ;
+	rdfs:comment "The role held by a person making a financial claim, for example for refund of travel expenses from a project grant."@en .
+
+:co-applicant a owl:NamedIndividual , :ProjectRole ;
+	rdfs:label "co-applicant"@en ;
+	rdfs:comment "The role a person has of being a co-applicant on the grant application to obtain funding to fund an endeavour such as a research project."@en .
+
+:co-investigator a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "co-investigator"@en ;
+	rdfs:comment "The role a person has of being a co-investigator for a research investigation."@en .
+
+:collaborator a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "collaborator"@en ;
+	rdfs:comment "The role a person, typically from another research group or institution, who collaborates with the team undertaking a research investigation."@en .
+
+:collects-data a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "collects data"@en ;
+	rdfs:comment "The contribution of making experimental observations and collecting data, for example using a telescope, a microscope or an analytical instrument."@en .
+
+:college-fellow a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "college fellow"@en ;
+	rdfs:comment "The role held by an academic as a senior member of a college."@en .
+
+:college-head a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "college head"@en ;
+	rdfs:comment "The role held by a senior academic who heads a college and acts as its CEO.  Among the many alternative titles give to this role, the most common are President or Master of the college."@en .
+
+:computer-programmer a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "computer programmer"@en ;
+	rdfs:comment "The role a person has of being someone who develops computer software."@en .
+
+:conceives-project a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "conceives project"@en ;
+	rdfs:comment """The contribution of conceiving the research project in the first place.  
+
+Note that an individual other than the lead applicant and the co-applicants on a grant application may make considerable contributions to conceiving a research project, but may be prevented from being a formal applicant by reason of affiliation or status (e.g. as a non-academic partner, or a research student)."""@en .
+
+:consortium-author a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "consortium author"@en ;
+	rdfs:comment "The authorship role of an organisation or consortium that has contributed collectively to the work described in the publication and is named in the list of authors, e.g. 'Wellcome Trust Case Control Consortium' or 'Malaria Genomic Epidemiology Network'.  (The members of such a group should be separately listed elsewhere in the document)."@en .
+
+:consultant a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "consultant"@en ;
+	rdfs:comment "The role a person has of being a consultant who is providing expertise or services."@en .
+
+:contact-person a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "contact person"@en ;
+	rdfs:comment "The role of a person who serves as the primary contact and information provider for third parties wishing to find out more about an organization or an activity."@en .
+
+:contractor a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "contractor"@en ;
+	rdfs:comment "The role held by an agent who enters into a contract to undertake specified work or to supply specified services in return for payment."@en .
+
+:controls-project-finances a owl:NamedIndividual , :OrganizationalContribution ;
+	rdfs:label "controls project finances"@en ;
+	rdfs:comment "The contribution of controlling the financial aspects of the research project, including authorizing expenditure, creating and managing budgets, and submitting financial reports to the funding agency."@en .
+
+:corresponding-author a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "corresponding author"@en ;
+	rdfs:comment "The role an author has of being the corresponding author of the document, with whom editors and readers should correspond concerning it."@en .
+
+:creates-novel-organisms-or-cells a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "creates novel organisms or cells"@en ;
+	rdfs:comment "The contribution of creating novel organisms (e.g. mouse mutants) or cells (e.g. tranformed cell lines), either for use in the research, or as a research output of use to others."@en .
+
+:creates-novel-reagents a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "creates novel reagents"@en ;
+	rdfs:comment "The contribution of creating novel physical or chemical compounds, or molecular biology constructs, either for use in the research, or as a research output of use to others."@en .
+
+:creates-software a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "creates software"@en ;
+	rdfs:comment "The contribution of creating computer software, including software for experimental control, analytical tools, mathematical model and computational simulations for use in the research, or of creating an IT service (e.g. a bioinformatics database or Web service) of use to others."@en .
+
+:curator a owl:NamedIndividual , :DataRole ;
+	rdfs:label "curator"@en ;
+	rdfs:comment "The role of an agent that documents, cares for and manages collections of objects (for example in a museum) or of data (as in a data repository or database).  [A data curator is a curator who specializes in digital data, while a librarian is a type of curator specializing in textual publications.]"@en .
+
+:data-creator a owl:NamedIndividual , :DataRole ;
+	rdfs:label "data creator"@en ;
+	rdfs:comment "The role a person has of being a creator or originator of new data."@en .
+
+:data-curator a owl:NamedIndividual , :DataRole ;
+	rdfs:label "data curator"@en ;
+	rdfs:comment "The role a person has of being a data curator, responsible for long-term preservation of data, for example those arising from the research project."@en .
+
+:data-manager a owl:NamedIndividual , :DataRole ;
+	rdfs:label "data manager"@en ;
+	rdfs:comment "The role a person has of being a data manager, responsible for day-to-day management and back-up of data, for example those arising from the research project."@en .
+
+:data-publisher a owl:NamedIndividual , :DataRole ;
+	rdfs:label "data publisher"@en ;
+	rdfs:comment "The role of an agent who publishes data."@en .
+
+:data-user a owl:NamedIndividual , :DataRole ;
+	rdfs:label "data user"@en ;
+	rdfs:comment "The role a person has of being a user or re-user of existing data."@en .
+
+:departmental-administrator a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "departmental administrator"@en ;
+	rdfs:comment "The role held by a person who is the administrator of a department within a larger organization, for example of a university academic department."@en .
+
+:designs-experiments a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "designs experiments"@en ;
+	rdfs:comment "The contribution of experimental design and planning."@en .
+
+:develops-methodology a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "develops methodology"@en ;
+	rdfs:comment "The contribution of developing experimental methodology that enables research."@en .
+
+:director a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "director"@en ;
+	rdfs:comment "The role held by a person who is in charge of an organization or activity, for example a research institute or a dramatic performance."@en .
+
+:embargo-controller a owl:NamedIndividual , :DataRole ;
+	rdfs:label "embargo controller"@en ;
+	rdfs:comment "The role of the person who has responsibility for setting and lifting embargos that restrict access to a dataset (or a document) for a specified period of time."@en .
+
+:employee a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "employee"@en ;
+	rdfs:comment "The role held by a person employed for wages or a salary by an organization, to undertake work for that organization."@en .
+
+:employer a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "employer"@en ;
+	rdfs:comment "The role held by an agent that employs one or more people to undertake work on that agent's behalf."@en .
+
+:ensures-regulatory-compliance a owl:NamedIndividual , :OrganizationalContribution ;
+	rdfs:label "ensures regulatory compliance"@en ;
+	rdfs:comment "The contribution of ensuring regulatory compliance for the research undertaken, for example in obtaining informed consent from patients, approval from research ethics or radiation safety committees, or a license for animal experimentation."@en .
+
+:faculty-member a owl:NamedIndividual , :EducationalRole ;
+	rdfs:label "faculty member"@en ;
+	rdfs:comment "The role of an academic employed to undertake research and teaching within a university department, school or institute."@en .
+
+:financial-controller a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "financial controller"@en ;
+	rdfs:comment "The role held by an agent of controlling the finances, for example the finances of an organization, a building project or a research project.  This role extends to the control of or the authorisation of expenditure from a budget, and may be undertaken by a computational agent."@en .
+
+:formulates-research-questions a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "formulates research questions"@en ;
+	rdfs:comment "The contribution of formulating the questions to be answered and the hypotheses to be tested by the research to be undertaken."@en .
+
+:funder a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "funder"@en ;
+	rdfs:comment "The role held by an agent of providing funds, for example for a research project."@en .
+
+:funding-recipient a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "funding recipient"@en ;
+	rdfs:comment "The role held by an agent who is the official recipient of funding, for example the university of which a funded research project leader is a member."@en .
+
+:head-of-department a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "head of department"@en ;
+	rdfs:comment "The role held by a person who is the chief executive officer of a department within a larger organization, for example a senior academic who is head of a university academic department."@en .
+
+:illustrator a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "illustrator"@en ;
+	rdfs:comment "The role a person has of being an illustrator of, or for, some entity."@en .
+
+:interprets-results a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "interprets results"@en ;
+	rdfs:comment "The contribution of interpretation of experimental results."@en .
+
+:inventor a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "inventor"@en ;
+	rdfs:comment "The role a person has of being the inventor or some entity (for example a computer algorithm, or an experimental procedure)."@en .
+
+:lead-applicant a owl:NamedIndividual , :ProjectRole ;
+	rdfs:label "lead applicant"@en ;
+	rdfs:comment "The role a person has of being the lead applicant on the grant application to obtain funding to fund an endeavour such as a research project."@en .
+
+:leads-investigation a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "leads investigation"@en ;
+	rdfs:comment """The contribution of providing intellectual leadership and direction for the research.  
+
+Note that an individual other than the principal investigator and the co-investigators may make considerable leadership contributions to a research investigation."""@en .
+
+:maintains-IT-Infrastructure a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "maintains IT infrastructure"@en ;
+	rdfs:comment "The contribution of maintaining the IT infrastructure required for the research."@en .
+
+:maintains-organisms-or-cells a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "maintains organisms or cell cultures"@en ;
+	rdfs:comment """The contribution of maintaining multicellular organisms (plants, animals or fungi) or cell cultures used as experimental subjects, and of breeding these where appropriate.  
+
+[Note that there may be occasions when it is inappropriate to acknowledge such contributions, for fear of personal reprisals on the individuals involved from animal rights activists]."""@en .
+
+:maintains-research-facility a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "maintains research facility"@en ;
+	rdfs:comment "The contribution of managing and operating a research facility, for example a confocal microscopy facility."@en .
+
+:major-effort a owl:NamedIndividual , :ContributionEffort ;
+	rdfs:label "contributed major effort"@en ;
+	rdfs:comment "The contributor provided a major effort towards achieving this contribution.  (It would be unusual for more than three contributors to be described as providing major effort towards achieving any particular contribution)."@en .
+
+:manager a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "manager"@en ;
+	rdfs:comment "The role held by a person responsible for managing the day-to-day activities of an activity, enterprise or organization."@en .
+
+:manages-project a owl:NamedIndividual , :OrganizationalContribution ;
+	rdfs:label "manages project"@en ;
+	rdfs:comment """The contribution of project management.  
+
+Note that an individual other than the person holding the formal role of project manager may make considerable contributions to the management of a research project."""@en .
+
+:member a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "member"@en ;
+	rdfs:comment "The role held by an agent of belonging to a group or organization."@en .
+
+:minor-effort a owl:NamedIndividual , :ContributionEffort ;
+	rdfs:label "contributed minor effort"@en ;
+	rdfs:comment "The contributor provided a minor effort towards achieving this contribution."@en .
+
+:non-academic-staff-member a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "non-academic staff member"@en ;
+	rdfs:comment "The role of a person employed within a university department, school or institute who is not a member of the academic faculty."@en .
+
+:obtains-and-or-prepares-specimens a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "obtains and/or prepared specimens"@en ;
+	rdfs:comment "The contribution of obtaining and/or preparing specimens in a manner requiring research expertise or skill, for example collecting and preparing fossils, or preparing electron microscope specimens for examination."@en .
+
+:organizer a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "organizer"@en ;
+	rdfs:comment "The role held by an agent who organizes something, such as a conference, a private meeting or a public event."@en .
+
+:owner a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "owner"@en ;
+	rdfs:comment "The role held by an agent who is the owner of something with actual or potential financial value, for example a building, a piece of equipment, the copyright of a document, or the intellectual property rights relating to an idea or discovery."@en .
+
+:participant a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "participant"@en ;
+	rdfs:comment "The role held by an agent who takes part in something, for example a conference, a private meeting or a public event."@en .
+
+:partner a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "partner"@en ;
+	rdfs:comment "The role held by a person who is a partner with one or more other people in an organization, project, endeavour, activity or sphere of common interest."@en .
+
+:patent-holder a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "patent holder"@en ;
+	rdfs:comment """The role held by an agent who holds a patent.
+
+[See also http://purl.org/spar/scoro/rights-holder and http://purl.org/spar/pro/copyright-owner]."""@en .
+
+:performs-experiments a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "performs experiments"@en ;
+	rdfs:comment "The contribution of performing experiments."@en .
+
+:photographer a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "photographer"@en ;
+	rdfs:comment "The role a person has of being a photographer of, or for, some entity."@en .
+
+:possessor a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "possessor"@en ;
+	rdfs:comment "The role held by an agent as possessor or owner of some entity such as an address or a telephone number."@en .
+
+:postdoctoral-researcher a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "postdoctoral researcher"@en ;
+	rdfs:comment "The role a person has of being a post-doctoral researcher involved in a research investigation."@en .
+
+:postgraduate-student a owl:NamedIndividual , :EducationalRole ;
+	rdfs:label "postgraduate student"@en ;
+	rdfs:comment "The role of a person registerd for a graduate (masters or doctoral) degree at a university."@en .
+
+:prepares-illustrations a owl:NamedIndividual , :AuthorshipContribution ;
+	rdfs:label "prepares illustrations"@en ;
+	rdfs:comment "The contribution of selecting the data and preparing the figures and tables presenting these data for inclusion in the publication."@en .
+
+:prepares-supplementary-information a owl:NamedIndividual , :AuthorshipContribution ;
+	rdfs:label "prepares supplementary information"@en ;
+	rdfs:comment "The contribution of preparing the supplementary information files submitted with the manuscript."@en .
+
+:principal-author a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "principal author"@en ;
+	rdfs:comment """The role an author has of being the principal or primary author of the document, who has contributed most to the work described.  
+
+(In some communities, but not all, the principal author is named first in the author list.  Two or more authors can have the role of principal author if they contributed equally to the work.  This role should not be employed in communities in which no primacy of authorship is asserted, but where all authors are deemed to have made an equal contribution to the work.)"""@en .
+
+:principal-investigator a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "principal investigator"@en ;
+	rdfs:comment "The role a person has of being the principal investigator for a research investigation."@en .
+
+:processes-data a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "processs data"@en ;
+	rdfs:comment "The contribution of processing, cleaning, assembling, condensing or refining the data."@en .
+
+:programme-manager a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "programme manager"@en ;
+	rdfs:comment "The role held by a person who is in charge of a programme of related activities or projects, for example on behalf of a funding agency."@en .
+
+:project-leader a owl:NamedIndividual , :ProjectRole ;
+	rdfs:label "project leader"@en ;
+	rdfs:comment "The role a person or an institution has of being project leader for a project such as a research project."@en .
+
+:project-manager a owl:NamedIndividual , :ProjectRole ;
+	rdfs:label "project manager"@en ;
+	rdfs:comment "The role a person has of being project manager for a project such as a research project."@en .
+
+:project-member a owl:NamedIndividual , :ProjectRole ;
+	rdfs:label "project member"@en ;
+	rdfs:comment "The role a person has of being a member of a project such as a research project."@en .
+
+:project-student a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "project student"@en ;
+	rdfs:comment "The role a person has of being a project student, namely someone engaged in an undergraduate research project as part of studying for an undergraduate degree at a university, whose research will be presented in an undergraduate research project report in part fulfilment of the requirements of that degree."@en .
+
+:provides-administrative-support a owl:NamedIndividual , :OrganizationalContribution ;
+	rdfs:label "provides administrative support"@en ;
+	rdfs:comment "The contribution of providing administrative support for the research project."@en .
+
+:provides-advice a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "provides advice"@en ;
+	rdfs:comment "The contribution of providing advice to facilitate the research, while not actively participating in the work."@en .
+
+:provides-exising-data a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provides existing data"@en ;
+	rdfs:comment "The contribution of providing pre-existing data for re-use in the research."@en .
+
+:provides-patients a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provides patients"@en ;
+	rdfs:comment "The contribution of providing access to medical or veterinary patients, to make possible the research."@en .
+
+:provides-reagents-specimens-or-materials a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provides reagents, specimens or materials"@en ;
+	rdfs:comment "The contribution of providing reagents, specimens or materials, including living organisms and cells, for example those not readily obtainable from commercial sources, to make possible the research."@en .
+
+:provides-service a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provided service"@en ;
+	rdfs:comment "The contribution of providing a research service, for example a DNA sequencing service or a custom peptide synthesis service."@en .
+
+:provides-software a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provides software"@en ;
+	rdfs:comment "The contribution of providing software to facilitate the research, while not actively participating in the work."@en .
+
+:provides-technical-support a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provides technical support"@en ;
+	rdfs:comment "The contribution of providing technical support that facilitates research."@en .
+
+:provides-tools-equipment-or-facilities a owl:NamedIndividual , :ExperimentalContribution ;
+	rdfs:label "provides tools, equipment or facilities"@en ;
+	rdfs:comment "The contribution of providing tools, equipment or facilities for the research, while not actively participating in the work."@en .
+
+:publishes-data a owl:NamedIndividual , :AuthorshipContribution ;
+	rdfs:label "publishes data"@en ;
+	rdfs:comment """The contribution of publishing in a public database or data repository data arising from the research.  
+
+Note that this activity is distinct from that of publishing a journal article containing a selection of these data."""@en .
+
+:purchaser a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "purchaser"@en ;
+	rdfs:comment "The role held by an agent of making purchases of goods or services, the cost of which is typically charged to a particular academic budget, for example a project manager placing an order to purchase equipment funded from a research grant."@en .
+
+:registrar a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "registrar"@en ;
+	rdfs:comment "The role held by an agent responsible for maintaining official records, for example the records of student enrollment and academic standing held by a college or university, or the records of securities owned by a financial institution."@en .
+
+:repository-manager a owl:NamedIndividual , :DataRole ;
+	rdfs:label "repository manager"@en ;
+	rdfs:comment "The role a person has of being a manager of a repository where entities are given secure long-term storage, typically digital repository for information objects, for example a data repository."@en .
+
+:research-assistant a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "research assistant"@en ;
+	rdfs:comment "The role a person has of being a research assistant involved in a research investigation."@en .
+
+:research-student a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "research student"@en ;
+	rdfs:comment "The role a person has of being a research student, namely someone engaged in research as part of studying for a higher degree at a university or research institute, whose research will be presented in a thesis in part fulfilment of the requirements of that degree."@en .
+
+:researcher a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "researcher"@en ;
+	rdfs:comment "The role a person has of being a researcher involved in a research investigation."@en .
+
+:revises-manuscript a owl:NamedIndividual , :AuthorshipContribution ;
+	rdfs:label "revises manuscript"@en ;
+	rdfs:comment "The contribution of critically reviewing and revising drafts of the manuscript of the research paper."@en .
+
+:rights-holder a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "rights holder"@en ;
+	rdfs:comment """The role held by an agent who holds the legal rights to a project or activity and its products and outcomes, for example the exploitation, licensing and intellectual property rights.  
+
+[See also http://purl.org/spar/scoro/patent-holder and http://purl.org/spar/pro/copyright-owner]."""@en .
+
+:scholar a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "scholar"@en ;
+	rdfs:comment "The role of an academic who undertakes scholarly activities, including research investigations.  This role is particularly used to describe endeavours in the arts and humanites that are frequently undertaken without financial support from a particular funded project dedicated to these scholarly activities."@en .
+
+:secures-funding a owl:NamedIndividual , :OrganizationalContribution ;
+	rdfs:label "secures funding"@en ;
+	rdfs:comment """The contribution of securing funding for the research project.  
+
+Note that an individual other than the lead applicant and the co-applicants on a grant application may make contributions to securing funding for a research project, for example by assisting in writing the grant application."""@en .
+
+:senior-author a owl:NamedIndividual , :AuthorshipRole ;
+	rdfs:label "senior author"@en ;
+	rdfs:comment "The role an author has of being the senior author of the document."@en .
+
+:service-engineer a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "service engineer"@en ;
+	rdfs:comment "The role held by a person who services, maintains and repairs equipment, facilities or technical infrastructure."@en .
+
+:solo-effort a owl:NamedIndividual , :ContributionEffort ;
+	rdfs:label "contributed all the effort"@en ;
+	rdfs:comment "The contributor was the only person who provided effort in achieving this contribution, which was entirely due to this contributor."@en .
+
+:spokesperson a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "spokesperson"@en ;
+	rdfs:comment "The role held by a person who makes statements on behalf of another individual, a group, a project or an institution"@en .
+
+:sponsor a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "sponsor"@en ;
+	rdfs:comment """The role held by an agent that provides funds or support for something such as a project or activity, often in return for access to the exploitable commercial potential associated with that project or activity, for example through advertising.
+
+[Note: there are also several other non-financial meaning of 'sponsor'.]"""@en .
+
+:stakeholder a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "stakeholder"@en ;
+	rdfs:comment "The role held by an agent with an interest or concern in something, for example the creation of a new university."@en .
+
+:sub-contractor a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "sub-contractor"@en ;
+	rdfs:comment "The role held by an agent who enters into a contract to take over part of another contractor's obligation to undertake specified work or supply specified services in return for payment."@en .
+
+:successor a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "successor"@en ;
+	rdfs:comment "The relationship held by an entity that succeeds another, for example a new electron microscope that replaces an out-dated one, a research project that follows on from a preceding project, or a faculty member who succeeds a colleague as head of department."@en .
+
+:supervises-colleagues a owl:NamedIndividual , :OrganizationalContribution ;
+	rdfs:label "Supervises, mentors or trains colleagues"@en ;
+	rdfs:comment "The contribution of supervising, mentoring, instructing or training colleagues, particularly junior research assistants and research students, in aspects of the research or its methodologies."@en .
+
+:supervisor a owl:NamedIndividual , :EducationalRole ;
+	rdfs:label "supervisor"@en ;
+	rdfs:comment "The role of a person who supervises the research activities of a student during that student's research project undertaken as part of a degree course at a university."@en .
+
+:supplier a owl:NamedIndividual , :FinancialRole ;
+	rdfs:label "supplier"@en ;
+	rdfs:comment "The role held by an agent of providing goods or services in exchange for payment."@en .
+
+:technician a owl:NamedIndividual , :InvestigationRole ;
+	rdfs:label "technician"@en ;
+	rdfs:comment "The role a person has of being a technician, providing technical assistance in some endeavour such as a research investigation."@en .
+
+:undergraduate-student a owl:NamedIndividual , :EducationalRole ;
+	rdfs:label "undergraduate student"@en ;
+	rdfs:comment "The role of a person registerd for an undergraduate degree at a university."@en .
+
+:undertakes-modelling a owl:NamedIndividual , :IntellectualContribution ;
+	rdfs:label "undertakes modelling"@en ;
+	rdfs:comment "The contribution of design, implementation and analysis of mathematical models or computer simulations."@en .
+
+:vice-chancellor a owl:NamedIndividual , :OrganizationalRole ;
+	rdfs:label "vice-chancellor"@en ;
+	rdfs:comment "The role held by the chief executive officer of a university, responsible for directing and managing its business and academic activities."@en .
+
+:web-master a owl:NamedIndividual , :DataRole ;
+	rdfs:label "web-master"@en ;
+	rdfs:comment "The role of a person responsible for maintaining a web site and its content."@en .
+
+:workpackage-leader a owl:NamedIndividual , :ProjectRole ;
+	rdfs:label "workpackage leader"@en ;
+	rdfs:comment "The role a person or institution has of being leader for a workpackage within a project such as a research project."@en .
+
+:writes-manuscript-draft a owl:NamedIndividual , :AuthorshipContribution ;
+	rdfs:label "writes manuscript draft"@en ;
+	rdfs:comment "The contribution of writing the initial draft of the manuscript of the research paper."@en .
+
+_:node17ru5mbl8x2 a owl:AllDisjointClasses ;
+	owl:members _:node17ru5mbl8x3 .
+
+_:node17ru5mbl8x3 rdf:first :AuthorshipContribution ;
+	rdf:rest _:node17ru5mbl8x4 .
+
+_:node17ru5mbl8x4 rdf:first :ExperimentalContribution ;
+	rdf:rest _:node17ru5mbl8x5 .
+
+_:node17ru5mbl8x5 rdf:first :IntellectualContribution ;
+	rdf:rest _:node17ru5mbl8x6 .
+
+_:node17ru5mbl8x6 rdf:first :OrganizationalContribution ;
+	rdf:rest rdf:nil .
+
+_:node17ru5mbl8x7 a owl:AllDisjointClasses ;
+	owl:members _:node17ru5mbl8x8 .
+
+_:node17ru5mbl8x8 rdf:first :AuthorshipRole ;
+	rdf:rest _:node17ru5mbl8x9 .
+
+_:node17ru5mbl8x9 rdf:first :DataRole ;
+	rdf:rest _:node17ru5mbl8x10 .
+
+_:node17ru5mbl8x10 rdf:first :FinancialRole ;
+	rdf:rest _:node17ru5mbl8x11 .
+
+_:node17ru5mbl8x11 rdf:first :InvestigationRole ;
+	rdf:rest _:node17ru5mbl8x12 .
+
+_:node17ru5mbl8x12 rdf:first :OrganizationalRole ;
+	rdf:rest _:node17ru5mbl8x13 .
+
+_:node17ru5mbl8x13 rdf:first :ProjectRole ;
+	rdf:rest rdf:nil .
+
+_:node17ru5mbl8x14 a owl:AllDifferent ;
+	owl:distinctMembers _:node17ru5mbl8x15 .
+
+_:node17ru5mbl8x15 rdf:first :article-guarantor ;
+	rdf:rest rdf:nil .
+
+:ContributionSituation rdfs:subClassOf _:node17ru5mbl8x16 .
+
+_:node17ru5mbl8x16 a owl:Restriction ;
+	owl:onProperty :withContribution ;
+	owl:someValuesFrom :Contribution .
+
+_:node17ru5mbl8x17 a owl:AllDisjointClasses ;
+	owl:members _:node17ru5mbl8x18 .
+
+_:node17ru5mbl8x18 rdf:first :AuthorshipContribution ;
+	rdf:rest _:node17ru5mbl8x19 .
+
+_:node17ru5mbl8x19 rdf:first :ExperimentalContribution ;
+	rdf:rest _:node17ru5mbl8x20 .
+
+_:node17ru5mbl8x20 rdf:first :IntellectualContribution ;
+	rdf:rest _:node17ru5mbl8x21 .
+
+_:node17ru5mbl8x21 rdf:first :OrganizationalContribution ;
+	rdf:rest rdf:nil .
+
+_:node17ru5mbl8x22 a owl:AllDisjointClasses ;
+	owl:members _:node17ru5mbl8x23 .
+
+_:node17ru5mbl8x23 rdf:first :AuthorshipRole ;
+	rdf:rest _:node17ru5mbl8x24 .
+
+_:node17ru5mbl8x24 rdf:first :DataRole ;
+	rdf:rest _:node17ru5mbl8x25 .
+
+_:node17ru5mbl8x25 rdf:first :FinancialRole ;
+	rdf:rest _:node17ru5mbl8x26 .
+
+_:node17ru5mbl8x26 rdf:first :InvestigationRole ;
+	rdf:rest _:node17ru5mbl8x27 .
+
+_:node17ru5mbl8x27 rdf:first :OrganizationalRole ;
+	rdf:rest _:node17ru5mbl8x28 .
+
+_:node17ru5mbl8x28 rdf:first :ProjectRole ;
+	rdf:rest rdf:nil .
+
+_:node17ru5mbl8x29 a owl:AllDifferent ;
+	owl:distinctMembers _:node17ru5mbl8x30 .
+
+_:node17ru5mbl8x30 rdf:first :article-guarantor ;
+	rdf:rest rdf:nil .

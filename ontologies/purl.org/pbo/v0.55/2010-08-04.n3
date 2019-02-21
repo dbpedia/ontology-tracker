@@ -1,0 +1,217 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix pbo: <http://purl.org/ontology/pbo/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix co: <http://purl.org/ontology/co/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix olo: <http://purl.org/ontology/olo/core#> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/ontology/pbo/core#> a owl:Ontology ;
+	dc:creator <http://foaf.me/zazi#me> ;
+	dc:date "2010-08-04T17:33:52+01:00"^^xsd:dateTime ;
+	dc:description """The Play Back Ontology specification provides basic concepts and properties 
+for describing concepts that are related to the play back domain, e.g. an playlist, play back count and skip counter 
+on/ for the Semantic Web. This document contains a RDF description of the Play Back Ontology."""@en ;
+	dc:title "The Play Back Ontology"@en ;
+	owl:imports <http://purl.org/NET/c4dm/event.owl> , <http://purl.org/ontology/bibo/> , <http://purl.org/ontology/olo/core> , <http://www.w3.org/2003/06/sw-vocab-status/ns> , <http://purl.org/vocab/frbr/core> , <http://purl.org/ontology/co/core> , <http://purl.org/dc/elements/1.1/> ;
+	owl:versionInfo "0.55"^^xsd:decimal .
+
+pbo:FixedPlaylist a owl:Class ;
+	rdfs:comment """A (sub) playlist of a fixed length and a fixed order. This concept should be used to express static relations, 
+e.g. \"those three music tracks must always be played in a row\"."""@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Fixed Playlist"@en ;
+	rdfs:subClassOf pbo:Playlist ;
+	vs:term_status "testing"@en .
+
+pbo:MediaActionCounter a owl:Class ;
+	rdfs:comment "A media action counter. Media actions are for example play back or skip events."^^xsd:string ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Media Action Counter"@en ;
+	rdfs:subClassOf co:Counter ;
+	vs:term_status "unstable"@en .
+
+pbo:PlayBackCounter a owl:Class ;
+	rdfs:comment "A play back counter, e.g. to count the playback of a media object."^^xsd:string ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Play Back Counter"@en ;
+	rdfs:subClassOf pbo:MediaActionCounter ;
+	vs:term_status "unstable"@en .
+
+pbo:Playlist a owl:Class ;
+	rdfs:comment "A playlist of specific media items, e.g. music tracks, videos or slides."@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Playlist"@en ;
+	rdfs:subClassOf olo:OrderedList , bibo:Document ;
+	vs:term_status "unstable"@en .
+
+pbo:PlaylistSlot a owl:Class ;
+	rdfs:comment """A playlist slot. It could contain e.g. a music track, a video or a slide, and maybe related with some 
+additional properties. However, it could maybe also included a \"sub\" playlist, e.g. to keep a fixed sequence of some tracks."""@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Playlist Slot"@en ;
+	rdfs:subClassOf olo:Slot .
+
+_:node171h363bkx1 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty pbo:playlist_item .
+
+pbo:PlaylistSlot rdfs:subClassOf _:node171h363bkx1 ;
+	vs:term_status "testing"@en .
+
+pbo:SkipCounter a owl:Class ;
+	rdfs:comment "A skip counter, e.g. to count skip events of a media object."^^xsd:string ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Skip Counter"^^xsd:string ;
+	rdfs:subClassOf pbo:MediaActionCounter ;
+	vs:term_status "unstable"^^xsd:string .
+
+pbo:SkipEvent a owl:Class ;
+	rdfs:comment "A specific skip event of something."^^xsd:string ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "Skip Event"^^xsd:string ;
+	rdfs:subClassOf co:ScrobbleEvent ;
+	vs:term_status "testing"^^xsd:string .
+
+pbo:media_object a owl:ObjectProperty ;
+	rdfs:comment "Associates a media object to its related counter."@en ;
+	rdfs:domain pbo:MediaActionCounter ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "has media object"@en .
+
+_:node171h363bkx2 a owl:Class .
+
+_:node171h363bkx3 rdf:first bibo:Document ;
+	rdf:rest _:node171h363bkx4 .
+
+_:node171h363bkx4 rdf:first frbr:Endeavour ;
+	rdf:rest rdf:nil .
+
+_:node171h363bkx2 owl:unionOf _:node171h363bkx3 .
+
+pbo:media_object rdfs:range _:node171h363bkx2 ;
+	rdfs:subPropertyOf co:object ;
+	vs:term_status "unstable"@en .
+
+pbo:media_scrobble_object a owl:ObjectProperty ;
+	rdfs:comment "A media specific scrobble object, e.g. a music track or a video."@en ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "has media scrobble object"@en .
+
+_:node171h363bkx5 a owl:Class .
+
+_:node171h363bkx6 rdf:first bibo:Document ;
+	rdf:rest _:node171h363bkx7 .
+
+_:node171h363bkx7 rdf:first frbr:Endeavour ;
+	rdf:rest rdf:nil .
+
+_:node171h363bkx5 owl:unionOf _:node171h363bkx6 .
+
+pbo:media_scrobble_object rdfs:range _:node171h363bkx5 ;
+	rdfs:subPropertyOf co:scrobble_object ;
+	vs:term_status "testing"@en .
+
+pbo:playlist a owl:ObjectProperty ;
+	rdfs:comment "Associates a playlist to something."@en ;
+	rdfs:domain owl:Thing ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "has playlist"@en ;
+	rdfs:range pbo:Playlist ;
+	vs:term_status "testing"@en .
+
+pbo:playlist_item a owl:ObjectProperty ;
+	rdfs:comment """A specific playlist item, e.g. a music track, video or slides. The range types of this property must be 
+based on bibo:Document or frbr:Endeavour (to keep it somehow media based)."""@en ;
+	rdfs:domain pbo:PlaylistSlot ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "has playlist item"@en .
+
+_:node171h363bkx8 a owl:Class .
+
+_:node171h363bkx9 rdf:first bibo:Document ;
+	rdf:rest _:node171h363bkx10 .
+
+_:node171h363bkx10 rdf:first frbr:Endeavour ;
+	rdf:rest rdf:nil .
+
+_:node171h363bkx8 owl:unionOf _:node171h363bkx9 .
+
+pbo:playlist_item rdfs:range _:node171h363bkx8 ;
+	rdfs:subPropertyOf olo:item .
+
+_:node171h363bkx11 a owl:ObjectProperty ;
+	rdfs:label "is playlist item of"@en .
+
+pbo:playlist_item owl:inverseOf _:node171h363bkx11 ;
+	vs:term_status "unstable"@en .
+
+pbo:playlist_slot a owl:ObjectProperty ;
+	rdfs:comment "A specific slot in a playlist."@en ;
+	rdfs:domain pbo:Playlist ;
+	rdfs:label "has playlist slot"@en ;
+	rdfs:range pbo:PlaylistSlot ;
+	rdfs:subPropertyOf olo:slot ;
+	vs:term_status "testing"@en .
+
+pbo:skip_time a owl:ObjectProperty ;
+	rdfs:comment "The moment, when someone skipped the media object, e.g. an instant of a timeline of an audio signal."^^xsd:string ;
+	rdfs:domain pbo:SkipEvent ;
+	rdfs:isDefinedBy <http://purl.org/ontology/pbo/core#> ;
+	rdfs:label "has skip time"^^xsd:string ;
+	rdfs:range time:TemporalEntity ;
+	rdfs:subPropertyOf <http://purl.org/NET/c4dm/event.owl#factor> ;
+	vs:term_status "testing"^^xsd:string .
+
+_:node171h363bkx12 a owl:Restriction ;
+	owl:minCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty pbo:playlist_item .
+
+pbo:PlaylistSlot rdfs:subClassOf _:node171h363bkx12 .
+
+_:node171h363bkx13 a owl:Class .
+
+_:node171h363bkx14 rdf:first bibo:Document ;
+	rdf:rest _:node171h363bkx15 .
+
+_:node171h363bkx15 rdf:first frbr:Endeavour ;
+	rdf:rest rdf:nil .
+
+_:node171h363bkx13 owl:unionOf _:node171h363bkx14 .
+
+pbo:media_object rdfs:range _:node171h363bkx13 .
+
+_:node171h363bkx16 a owl:Class .
+
+_:node171h363bkx17 rdf:first bibo:Document ;
+	rdf:rest _:node171h363bkx18 .
+
+_:node171h363bkx18 rdf:first frbr:Endeavour ;
+	rdf:rest rdf:nil .
+
+_:node171h363bkx16 owl:unionOf _:node171h363bkx17 .
+
+pbo:media_scrobble_object rdfs:range _:node171h363bkx16 .
+
+_:node171h363bkx19 a owl:Class .
+
+_:node171h363bkx20 rdf:first bibo:Document ;
+	rdf:rest _:node171h363bkx21 .
+
+_:node171h363bkx21 rdf:first frbr:Endeavour ;
+	rdf:rest rdf:nil .
+
+_:node171h363bkx19 owl:unionOf _:node171h363bkx20 .
+
+pbo:playlist_item rdfs:range _:node171h363bkx19 .
+
+_:node171h363bkx22 a owl:ObjectProperty ;
+	rdfs:label "is playlist item of"@en .
+
+pbo:playlist_item owl:inverseOf _:node171h363bkx22 .

@@ -1,0 +1,133 @@
+@prefix :      <http://guava.iis.sinica.edu.tw/r4r/> .
+@prefix dc:    <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix r4r:   <http://guava.iis.sinica.edu.tw/r4r/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+r4r:hasProvenance  a      owl:ObjectProperty ;
+        rdfs:domain       r4r:RRObject ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/hasprovenance"^^xsd:anyURI ;
+        rdfs:label        "hasProvenance" ;
+        rdfs:range        r4r:Provenance ;
+        r4r:Definition    "It is used for relating subclass of RRObject to its provenance information when RRPolicy is not ready to use. It is used as the basic relation description for resource publication." .
+
+<http://guava.iis.sinica.edu.tw/r4r>
+        a                owl:Ontology ;
+        dc:contributor   "Jason Guan-Shuo Mai" ;
+        dc:creator       "Andrea Wei-Ching Huang" , "Tyng-Ruey Chuang" ;
+        dc:description   "R4R is a light-weight ontology for representing general relationships of resource for publication and reusing. It asserts that a certain reusing context occurred and determined by its two basic relations, namely, isPackagedWith and isCitedBy. The isPackagedWith relation declares the resource is ready to be reused by incorporating License and Provenance information. The Cites relation is an exceptional to isCitedBy which occurs only two related objects cite each other at the same time. Five resource objects including article, data, code, provenance and license are major class concepts to represent in this ontology. \n\nThe namespace for all R4R terms is http://guava.iis.sinica.edu.tw/r4r/" ;
+        dc:title         "Relations for Reusing (R4R) Ontology" ;
+        owl:versionInfo  "2014-09-10T14:05:16+08:00"^^xsd:dateTime .
+
+r4r:cites  a                      owl:ObjectProperty ;
+        rdfs:domain               r4r:RRObject ;
+        rdfs:isDefinedBy          "http://guava.iis.sinica.edu.tw/r4r/cites"^^xsd:anyURI ;
+        rdfs:label                "cites" ;
+        r4r:Definition            "Any resource (A) is referenced by any other resource (B) only when the publication time of A is equal to B. .cites. is used to describe this relation. When it is used as the basic relation description for resource publication, r4r:Cites can be used to describe relations between article, data, or code of RRObject. When it is used for reusing context, r4r:Cites relates any resource that reuses RRObject for citation, and the reusing context is enriched by the packaging of RRPolicy." ;
+        owl:propertyDisjointWith  r4r:isCitedBy .
+
+r4r:Provenance  a         owl:Class ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/provenance"^^xsd:anyURI ;
+        rdfs:label        "Provenance" ;
+        rdfs:subClassOf   r4r:RRPolicy ;
+        r4r:Definition    "metadata, metadata about metadata, or version information. Descriptive metadata can be represented as part of the Provenance." .
+
+r4r:Code  a                  owl:Class ;
+        rdfs:isDefinedBy     "http://guava.iis.sinica.edu.tw/r4r/code"^^xsd:anyURI ;
+        rdfs:label           "Code" ;
+        rdfs:subClassOf      r4r:RRObject ;
+        r4r:Definition       "Any collection of computer instructions is written in human-readable computer language, and served for programming and executing the Data of RRObject." ;
+        owl:equivalentClass  r4r:Data .
+
+r4r:License  a            owl:Class ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/license"^^xsd:anyURI ;
+        rdfs:label        "License" ;
+        rdfs:subClassOf   r4r:RRPolicy ;
+        r4r:Definition    "The authorization of the use and reuse of the referred resource, as well as the document recording that authorization." .
+
+rdfs:Resource  a          owl:Class ;
+        rdfs:isDefinedBy  "http://www.w3.org/TR/rdf-schema/"^^xsd:anyURI ;
+        rdfs:label        "rdfs:Resource" .
+
+r4r:Article  a            owl:Class ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/article"^^xsd:anyURI ;
+        rdfs:label        "Article" ;
+        rdfs:subClassOf   r4r:RRObject ;
+        r4r:Definition    "An object is presented mainly as textual form but not exclusively. It is not limited for representing research publications only, and may be presented in a variety of article formats such as: blog articles, encyclopedia articles (a primary division of encyclopedia content; Wikipedia entry pages), Usenet or web forum articles, even non-textual based resources like spoken articles (articles produced in the forms of video clips and audio recordings such as Vlogs/Video blogs, podcasts and audiobooks) are such cases." .
+
+<http://www.w3.org/TR/owl-time/#Temporal>
+        a                 owl:Class ;
+        rdfs:isDefinedBy  "http://www.w3.org/TR/owl-time/"^^xsd:anyURI ;
+        rdfs:label        "time:Temporal" .
+
+r4r:locateAt  a             owl:ObjectProperty ;
+        rdfs:domain         r4r:RRObject ;
+        rdfs:isDefinedBy    "http://www.w3.org/TR/rdf-schema/#ch_resource" ;
+        rdfs:label          "locateAt" ;
+        rdfs:range          rdfs:Resource ;
+        rdfs:subPropertyOf  owl:topObjectProperty ;
+        r4r:Definition      "It is used to relate a machine-readable representation of the RRObject's identification, such as DOI, URI, URL, etc. It is used as the basic relation description for resource publication and reusing. A complete R4R resource representation (RRObject isPackagedWith RRPolicy) shares the same property, r4r:locateAt with RRObject." .
+
+r4r:hasLicense  a         owl:ObjectProperty ;
+        rdfs:domain       r4r:RRObject ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/haslicense"^^xsd:anyURI ;
+        rdfs:label        "hasLicense" ;
+        rdfs:range        r4r:License ;
+        r4r:Definition    "It declares the use of license information for RRObject and its subclass when RRPolicy is not ready to use. It is used as the basic relation description for resource publication." .
+
+r4r:isPackagedWith  a     owl:ObjectProperty ;
+        rdfs:domain       r4r:RRPolicy ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/ispackagedwith"^^xsd:anyURI ;
+        rdfs:label        "isPackagedWith" ;
+        rdfs:range        r4r:RRObject ;
+        r4r:Definition    "It is used for relating RRObject and RRPolicy for accomplishing a particular component, RRPolicy. This relation is served for the reusing context." .
+
+r4r:RRPolicy  a              owl:Class ;
+        rdfs:isDefinedBy     "http://guava.iis.sinica.edu.tw/r4r/rrpolicy"^^xsd:anyURI ;
+        rdfs:label           "RRPolicy" ;
+        r4r:Definition       "Any mechanism designed for relating to RRObject for reusing purposes is defined as a Reusing Related Policy (RRPolicy). RRPolicy is free to be extended for more issues such as security and trust for its subclasses concepts." ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      r4r:isPackagedWith ;
+                               owl:someValuesFrom  r4r:RRObject
+                             ] .
+
+r4r:isPartOf  a           owl:TransitiveProperty , owl:ObjectProperty ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/ispartof"^^xsd:anyURI ;
+        rdfs:label        "isPartOf" ;
+        r4r:Definition    "It describes partial relationships with temporal and spatial constraints, and carries with it some characteristics such as being transitive. A isPartOf B only if A and B share the same time and location. Data can be part of data; code can be part of code or data; data like keywords or sentences can also be described as part of the Article; metadata can be part of provenance as long as two objects carry partial and transitive relations." .
+
+r4r:RRObject  a              owl:Class ;
+        rdfs:isDefinedBy     "http://guava.iis.sinica.edu.tw/r4r/rrobject"^^xsd:anyURI ;
+        rdfs:label           "RRObject" ;
+        r4r:Definition       "Any resource served as a component for publication and reusing is defined as a Reusing Related Object (RRObject). It can be a knowledge unit for research purposes, or any resource that has relations similar to the relations between article, data and code." ;
+        owl:disjointWith     r4r:RRPolicy ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onClass               rdfs:Resource ;
+                               owl:onProperty            r4r:locateAt ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] ;
+        owl:equivalentClass  [ a                         owl:Restriction ;
+                               owl:onClass               <http://www.w3.org/TR/owl-time/#Temporal> ;
+                               owl:onProperty            r4r:hasTime ;
+                               owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                             ] .
+
+r4r:hasTime  a            owl:ObjectProperty ;
+        rdfs:domain       r4r:RRObject ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/hastime\n"^^xsd:anyURI ;
+        rdfs:label        "hasTime" ;
+        rdfs:range        <http://www.w3.org/TR/owl-time/#Temporal> ;
+        r4r:Definition    "It describes the creation time of the RRObject. It is used as the basic relation description for resource publication and reusing. A complete R4R resource representation (RRObject isPackagedWith RRPolicy) shares the same property, r4r:locateAt with RRObject." .
+
+r4r:isCitedBy  a          owl:ObjectProperty ;
+        rdfs:domain       r4r:RRObject ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/iscitedby"^^xsd:anyURI ;
+        rdfs:label        "isCitedBy" .
+
+r4r:Data  a               owl:Class ;
+        rdfs:isDefinedBy  "http://guava.iis.sinica.edu.tw/r4r/data"^^xsd:anyURI ;
+        rdfs:label        "Data" ;
+        rdfs:subClassOf   r4r:RRObject ;
+        r4r:Definition    "Data is presented in a structure form such as dataset, algorithms, models, metadata schema or ontologies. There are other forms of data, for instance, tables, figures or nanopublication. Other text based supplement materials like review, comments, and feedbacks are also included." .

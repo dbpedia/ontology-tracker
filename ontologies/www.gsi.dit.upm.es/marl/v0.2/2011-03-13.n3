@@ -1,0 +1,148 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix xsp: <http://www.owl-ontologies.com/2005/08/07/xsp.owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix marl: <http://purl.org/marl/ns#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/marl/ns> a owl:Ontology ;
+	rdfs:seeAlso "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Marl is an ontology designed to use for publishing the results of the opinion mining process in a form of structured data on the Web. The goal is to unify the access the numerical approximation of the opinion concept and allow extensive reasoning and search over multiple resources from different content providers."@en ;
+	owl:versionInfo "0.2"^^xsd:string ;
+	rdfs:label "Marl Opinion Ontology"@en .
+
+marl:AggregatedOpinion a owl:Class ;
+	rdfs:comment "The same as Opinion class but indicates that the properties of this class aggregate all the opinions specified in the \"extractedFrom\" source. Optionally, if the aggregatesOpinion property is used this class could be created to aggregate only certain opinions (e.g. in a text about political scene it there could be many AggregatedOpinion classes each with opinions per different politician)."@en ;
+	rdfs:label "AggregatedOpinion"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:subClassOf marl:Opinion .
+
+marl:Opinion a owl:Class ;
+	rdfs:label "Opinion"@en ;
+	rdfs:comment "Describes the concept of opinion expressed in a certain text."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string .
+
+marl:Polarity a owl:Class ;
+	rdfs:comment "Class that represents the opinion polarity. Use instances to express if the polarity is positive, neutral or negative."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:label "Polarity"@en .
+
+marl:describesObjectPart a owl:ObjectProperty ;
+	rdfs:label "describesObjectPart"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:domain marl:Opinion ;
+	rdfs:comment "Indicates a particular element or part of the object that the opinion refers to (eg. laptop screen or camera battery)."@en .
+
+marl:aggregatesOpinion a owl:ObjectProperty ;
+	rdfs:range marl:Opinion ;
+	rdfs:label "aggregatesOpinion"@en ;
+	rdfs:comment "Indicates that the polarity described with the class is a calculation (eg. sum) of other opinions polarity (eg. aggregated opinion about the movie derived from many sentiments expressed in one text)."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:domain marl:AggregatedOpinion .
+
+marl:hasOpinion a owl:ObjectProperty ;
+	rdfs:label "hasOpinion"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Indicates that a certain text has a subjective opinion expressed in it."@en ;
+	rdfs:range marl:Opinion ;
+	owl:inverseOf marl:extractedFrom .
+
+marl:extractedFrom a owl:ObjectProperty ;
+	owl:inverseOf marl:hasOpinion ;
+	rdfs:label "extractedFrom"@en ;
+	rdfs:domain marl:Opinion ;
+	rdfs:comment "Indicates the text from which the opinion has been extracted."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string .
+
+marl:hasPolarity a owl:ObjectProperty ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Indicates if the opinion is positive/negative or neutral. Use instances of class marl:Polarity."@en ;
+	rdfs:label "hasPolarity"@en ;
+	rdfs:range marl:Polarity ;
+	rdfs:domain marl:Opinion .
+
+marl:describesFeature a owl:ObjectProperty ;
+	rdfs:label "describesFeature"@en ;
+	rdfs:comment "Indicates a feature of an object or object part that the opinion refers to (eg. laptop battery life or laptop battery size etc.)."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:domain marl:Opinion .
+
+marl:describesObject a owl:ObjectProperty ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:domain marl:Opinion ;
+	rdfs:label "describesObject"@en ;
+	rdfs:comment "Indicates the object that the opinion refers to."@en .
+
+marl:polarityValue a owl:DatatypeProperty ;
+	rdfs:comment "A numerical representation of the polarity value. The recommended use is by specifying % by using a real number from 0..1. In case this is not feasible in a given solution use minOpinionValue and maxOpinionValue to provide additional information."@en ;
+	rdfs:label "polarityValue"@en ;
+	rdfs:domain marl:Opinion ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string .
+
+marl:opinionCount a owl:DatatypeProperty ;
+	rdfs:label "opinionCount"@en ;
+	rdfs:domain marl:AggregatedOpinion ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Amount of all aggregated opinions."@en .
+
+marl:positiveOpinionsCount a owl:DatatypeProperty ;
+	rdfs:comment "Amount of positive opinions aggregated."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:label "positiveOpinionCount"@en ;
+	rdfs:domain marl:AggregatedOpinion .
+
+marl:negativeOpinionCount a owl:DatatypeProperty ;
+	rdfs:label "negativeOpinionCount"@en ;
+	rdfs:domain marl:AggregatedOpinion ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Amount of negative opinions aggregated."@en .
+
+marl:minPolarityValue a owl:DatatypeProperty ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Lowest possible numerical value of the opinion."@en ;
+	rdfs:domain marl:Opinion ;
+	rdfs:label "minPolarityValue"@en .
+
+marl:neutralOpinionCount a owl:DatatypeProperty ;
+	rdfs:domain marl:AggregatedOpinion ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "Amount of neutral opinions aggregated."@en ;
+	rdfs:label "neutralOpinionCount"@en .
+
+marl:opinionText a owl:DatatypeProperty ;
+	rdfs:label "opinionText"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment """The exact text extract that expresses the opinion. This can be used when entity/text pointed by extractedFrom contains many opinions. 
+
+For example extractedFrom can point to a comment that contains many opinions about a movie, each opinion should have a separate marl:Opinion and optionally an opinionText  property to indicate the specific text fragment of the comment."""@en ;
+	rdfs:domain marl:Opinion .
+
+marl:algorithmConfidence a owl:DatatypeProperty ;
+	rdfs:label "algorithmConfidence"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:comment "A numerical value that describe how much the algorithm was confident of the assessment of the opinion (eg. how much the opinion matches a gives object/product)."@en ;
+	rdfs:domain marl:Opinion .
+
+marl:maxPolarityValue a owl:DatatypeProperty ;
+	rdfs:comment "Maximal possible numerical value for the opinion."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string ;
+	rdfs:label "algorithmConfidence"@en ;
+	rdfs:domain marl:Opinion .
+
+marl:Positive a marl:Polarity ;
+	rdfs:comment "Positive polarity"@en ;
+	rdfs:label "Positive"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string .
+
+marl:Negative a marl:Polarity ;
+	rdfs:label "Negative"@en ;
+	rdfs:comment "Negative polarity."@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string .
+
+marl:Neutral a marl:Polarity ;
+	rdfs:comment "Neutral polarity"@en ;
+	rdfs:label "Neutral"@en ;
+	rdfs:isDefinedBy "http://purl.org/marl/ns"^^xsd:string .

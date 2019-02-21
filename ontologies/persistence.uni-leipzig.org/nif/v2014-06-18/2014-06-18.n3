@@ -1,0 +1,660 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix skosxl: <http://www.w3.org/2008/05/skos-xl#> .
+@prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#> .
+@prefix marl: <http://purl.org/marl/ns#> .
+@prefix fise: <http://fise.iks-project.eu/ontology/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> a owl:Ontology ;
+	<http://purl.org/vocab/vann/preferredNamespacePrefix> "nif" ;
+	<http://purl.org/vocab/vann/preferredNamespaceUri> "http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#" ;
+	<http://purl.org/vocab/vann/changes> <https://github.com/NLP2RDF/persistence.uni-leipzig.org/commits/master/ontologies/nif-core> ;
+	owl:versionInfo "Versioning done on resource level. See https://github.com/NLP2RDF/ontologies/blob/master/nif-core/nif-core.ttl" ;
+	dcterms:license <http://creativecommons.org/licenses/by/3.0/> , <http://www.apache.org/licenses/LICENSE-2.0> ;
+	dcterms:title "NIF 2.0 Core Ontology"@en ;
+	rdfs:label "NIF 2.0 Core Ontology"@en ;
+	rdfs:isDefinedBy <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core.ttl> , <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core-inf.ttl> , <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core-val.ttl> ;
+	rdfs:comment "The NLP Interchange Format (NIF) is an RDF/OWL-based format that aims to achieve interoperability between Natural Language Processing (NLP) tools, language resources and annotations. NIF consists of specifications, ontologies and software, which are combined under the version identifier \"2.0\", but are versioned individually. This ontology is developed by the NLP2RDF project (http://nlp2rdf.org) and provided as part of NIF 2.0 under CC-BY license as well as Apache 2.0. The ontology contains seven core URIs (String, RFC5147String, Context, isString, referenceContext, beginIndex, endIndex) that provide the foundation  to express NLP annotations effectively in RDF."@en ;
+	dc:creator "Sebastian Hellmann" ;
+	dc:contributor "Martin Brümmer" , "Navid Nourbakhsh" ;
+	dc:publisher "AKSW, University Leipzig" ;
+	dc:rights "This ontology is licensed under Apache 2.0 (http://www.apache.org/licenses/LICENSE-2.0) and CC-BY (http://creativecommons.org/licenses/by/3.0/)"@en ;
+	dc:description """For a more concise description about NIF, we refer the reader to the ISWC 2013 in Use paper: Integrating NLP using Linked Data by Sebastian Hellmann, Jens Lehmann, Sören Auer, and Martin Brümmer available at: http://svn.aksw.org/papers/2013/ISWC_NIF/public.pdf Also the NLP2RDF project page (http://nlp2rdf.org) provides more general documentation and pointers.
+    The NIF 2.0 Core Ontology (http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#) provides classes and properties to describe the relations between substrings, text, documents by assigning URIs to strings. These URIs can then be used as subjects in RDF triples and therefore they can be annotated easily. The NIF 2.0 Core Specification defines how such URIs are created and used: http://persistence.uni-leipzig.org/nlp2rdf/specification/core.html and it makes sense to read this document first, so you can understand the definitions in this ontology better. 
+    
+    The main class in this ontology is nif:String, which is the class of all words over the alphabet of Unicode characters (sometimes called Σ∗). We built NIF upon the Unicode Normalization Form C, as this follows the recommendation of the RDF standard for rdf:Literal. Indices are to be counted in code units as is common in most programming language and SPARQL engines ( see 17.4.3.2 STRLEN and 17.4.3.3 SUBSTR on http://www.w3.org/TR/sparql11-query/). 
+    
+    Each URI Scheme (nif:URIScheme) used to address strings is a subclass of nif:String and puts further restrictions over the syntax of the URIs.  For example, instances of type nif:RFC5147String have to adhere to the Syntax and Semantics of RFC 5147 (http://tools.ietf.org/html/rfc5147). Users of NIF can create their own URI schemes by subclassing nif:String and providing documentation on the Web in the rdfs:comment field.
+    
+    Another important  subclass of nif:String is the nif:Context OWL class. This class is assigned to the whole string of the text (i.e. all characters). The purpose of an individual of this class is special, because the string of this individual is used to calculate the indices for all substrings. Therefore, all substrings have to have a relation nif:referenceContext pointing to an instance of nif:Context. Furthermore, the datatype property nif:isString can be used to include the reference text as a literal within the RDF as is required for the web service scenario. An example of NIF Core can be seen on the top left of the example Figure.  
+	
+	Ontology models
+	This ontology is split in different complimentary parts:
+	* a terminological model (containing rdfs:comment, rdfs:label, rdfs:subClassOf, rdfs:subPropertyOf, rdfs:range and rdfs:domain statements)
+	* an inference model (containing owl:TransitiveProperty, owl:hasKey), see nif-core-inf.ttl
+	* a validation model (containing owl:FunctionalProperty, owl:DisjointWith), see nif-core-val.ttl
+	* a Stanford profile model (containing a more complex structure)
+	An overview is given at the bottom of: http://persistence.uni-leipzig.org/nlp2rdf/ 
+
+	Feedback
+	If you'd like to leave feedback, please open an issue on GitHub (https://github.com/NLP2RDF/ontologies/issues) and read the README (https://github.com/NLP2RDF/ontologies#readme) or write an email to the mailing list: http://lists.informatik.uni-leipzig.de/mailman/listinfo/nlp2rdf
+
+	Versioning process is explained here: http://persistence.uni-leipzig.org/nlp2rdf/specification/version.html Changelog is written to rdfs:comment (resource level versioning).
+"""@en , <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core-ontology_web.png> .
+
+nif:String a owl:Class ;
+	owl:versionInfo "1.0.2" ;
+	rdfs:label "String"@en ;
+	rdfs:comment """Individuals of this class are a string, i.e. Unicode characters, who have been given a URI and are used in the subject of an RDF statement.  
+    This class is abstract and should not be serialized. 
+    
+    NIF-Stanbol (nif-stanbol.ttl):
+    subclassOf nifs:Annotation because it \"annotates\" strings for example with begin and end index. The class is similar to fise:TextAnnotation
+    
+    Changelog
+    * 1.0.1. improved documentation
+    * 1.0.2. merged inf and val model
+    """@en .
+
+_:node18qmd1rpox10 rdf:first nif:referenceContext ;
+	rdf:rest _:node18qmd1rpox11 .
+
+_:node18qmd1rpox11 rdf:first nif:beginIndex ;
+	rdf:rest _:node18qmd1rpox12 .
+
+_:node18qmd1rpox12 rdf:first nif:endIndex ;
+	rdf:rest rdf:nil .
+
+nif:String owl:hasKey _:node18qmd1rpox10 .
+
+_:node18qmd1rpox13 a owl:Restriction ;
+	owl:onProperty nif:referenceContext ;
+	owl:someValuesFrom nif:Context .
+
+nif:String rdfs:subClassOf _:node18qmd1rpox13 .
+
+_:node18qmd1rpox14 a owl:Restriction ;
+	owl:onProperty nif:referenceContext ;
+	owl:allValuesFrom nif:Context .
+
+nif:String owl:subClassOf _:node18qmd1rpox14 .
+
+nif:Context a owl:Class ;
+	owl:versionInfo "1.0.2" ;
+	rdfs:label "Context"@en ;
+	rdfs:comment """The string that serves as a context for its substrings.  The Unicode String given in the nif:isString property must be used to calculate the begin and endIndex for all nif:Strings that have a nif:referenceContext property to this URI. For further information, see http://svn.aksw.org/papers/2013/ISWC_NIF/public.pdf 
+    
+    Changelog
+    * 1.0.1. improved documentation
+    * 1.0.2. merged inf model
+    """@en ;
+	rdfs:subClassOf nif:String .
+
+_:node18qmd1rpox15 a owl:Restriction ;
+	owl:onProperty nif:referenceContext ;
+	owl:hasSelf "true"^^xsd:boolean .
+
+nif:Context rdfs:subClassOf _:node18qmd1rpox15 .
+
+nif:referenceContext a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "1.0.0" ;
+	rdfs:label "reference context"@en ;
+	rdfs:comment """Links a URI of a string to its reference context of type nif:Context.  The reference context determines the calculation of begin and end index
+    Each String that is not an instance of nif:Context MUST have exactly one reference context. 
+    
+    Inferences (nif-core-inf.ttl): 
+    Instances of nif:Context do have itself as reference context, this is inferred automatically, MAY be materialized, as well.  
+    
+    OWL validation (nif-core-val.ttl): 
+    This property is functional.
+    
+    Changelog:
+    * 1.0.0: Introduced stable version.
+    * 1.0.1: merged val model
+    """@en ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:Context .
+
+nif:isString a owl:DatatypeProperty , owl:FunctionalProperty ;
+	owl:versionInfo "1.0.2" ;
+	rdfs:label "is string"@en ;
+	rdfs:comment """The reference text as rdf:Literal for this nif:Context resource.  
+    NIF requires that the reference text (i.e. the context) is always included in the RDF as an rdf:Literal.
+    Note, that the isString property is *the* place to keep the string itself in RDF.
+    All other nif:Strings and nif:URISchemes relate to the text of this property to calculate character position and indices. 
+    
+    Changelog
+    * 1.0.0: Introduced stable version.
+    * 1.0.1 improved documentation
+    * 1.0.2: merged val+inf
+    """@en ;
+	rdfs:subPropertyOf nif:anchorOf ;
+	rdfs:domain nif:Context .
+
+nif:beginIndex a owl:DatatypeProperty , owl:FunctionalProperty ;
+	owl:versionInfo "1.0.1" ;
+	rdfs:label "begin index"@en ;
+	rdfs:comment """The begin index of a character range as defined in http://tools.ietf.org/html/rfc5147#section-2.2.1 and http://tools.ietf.org/html/rfc5147#section-2.2.2, measured as the gap between two characters, starting to count from 0 (the position before the first character of a text). 
+    Example: Index \"2\" is the postion between \"Mr\" and \".\"  in \"Mr. Sandman\".
+    Note: RFC 5147 is re-used for the definition of character ranges. RFC 5147 is assuming a text/plain MIME type. NIF builds upon Unicode and is content agnostic. 
+    Requirement (1): This property has the same value the \"Character position\" of RFC 5147 and it MUST therefore be castable to xsd:nonNegativeInteger, i.e. it MUST not have negative values.  
+    Requirement (2): The index of the subject string MUST be calculated relative to the nif:referenceContext of the subject. If available, this is the rdf:Literal of the nif:isString property.
+    
+    Changelog: 
+    * 1.0.0: Introduced stable version.
+    * 1.0.1: merged val+inf, added range
+    """ ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:domain nif:String .
+
+nif:endIndex a owl:DatatypeProperty , owl:FunctionalProperty ;
+	owl:versionInfo "1.0.2" ;
+	rdfs:label "end index"@en ;
+	rdfs:comment """The end index of a character range as defined in http://tools.ietf.org/html/rfc5147#section-2.2.1 and http://tools.ietf.org/html/rfc5147#section-2.2.2, measured as the gap between two characters, starting to count from 0 (the position before the first character of a text). 
+    Example: Index \"2\" is the postion between \"Mr\" and \".\"  in \"Mr. Sandman\".
+    Note: RFC 5147 is re-used for the definition of character ranges. RFC 5147 is assuming a text/plain MIME type. NIF builds upon Unicode and is content agnostic. 
+    Requirement (1): This property has the same value the \"Character position\" of RFC 5147 and it must therefore be an xsd:nonNegativeInteger .  
+    Requirement (2): The index of the subject string MUST be calculated relative to the nif:referenceContext of the subject. If available, this is the rdf:Literal of the nif:isString property.""" ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:domain nif:String .
+
+nif:anchorOf a owl:DatatypeProperty ;
+	owl:versionInfo "1.0.0" ;
+	rdfs:label "anchor of"@en ;
+	rdfs:comment "The string, which the URI is representing as an RDF Literal. Some use cases require this property, as it is necessary for certain sparql queries. " ;
+	rdfs:domain nif:String .
+
+nif:RFC5147String a owl:Class ;
+	owl:versionInfo "1.1.0" ;
+	rdfs:label "RFC 5147 String"@en ;
+	rdfs:comment """cf. http://tools.ietf.org/html/rfc5147 URIs of this class have to conform with the syntax of RFC 5147 in a way that the end on a valid identifier, if you remove the prefix. Note that unlike RFC 5147 NIF does not requrire '#' URIs. So valid URIs are http://example.org#char=0,28 , http://example.org/whatever/char=0,28 , http://example.org/nif?char=0,28
+    Changelog:
+    * 1.1.0 changed subclass to CString .
+    * 1.1.1 typo in rdfs:label and extension of comment
+    """ ;
+	rdfs:subClassOf nif:CString .
+
+nif:ContextHashBasedString a owl:Class ;
+	owl:versionInfo "1.0.0" ;
+	rdfs:label "Context Hash Based String"@en ;
+	rdfs:comment " cf. https://www.google.de/search?q=Linked-Data+Aware+URI+Schemes+for+Referencing+Text" ;
+	rdfs:subClassOf nif:URIScheme .
+
+_:node18qmd1rpox16 a owl:AllDisjointClasses ;
+	owl:members nif:RFC5147String , nif:ContextHashBasedString , nif:OffsetBasedString , nif:CStringInst .
+
+nif:annotation a owl:ObjectProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "annotation"@en ;
+	rdfs:comment "\n      see Towards Web-Scale Collaborative Knowledge Extraction  http://svn.aksw.org/papers/2012/PeoplesWeb/public_preprint.pdf‎ page 21 .\n      Changelog:\n      * 0.1.1 Fixed page number\n    "@en .
+
+nif:literalAnnotation a owl:DatatypeProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "literalAnnotation"@en ;
+	rdfs:comment "\n      see Towards Web-Scale Collaborative Knowledge Extraction  http://svn.aksw.org/papers/2012/PeoplesWeb/public_preprint.pdf‎ page 21 .\n      Changelog:\n      * 0.1.1 Fixed page number\n    "@en .
+
+nif:classAnnotation a owl:AnnotationProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "classAnnotation"@en ;
+	rdfs:comment "\n      see Towards Web-Scale Collaborative Knowledge Extraction  http://svn.aksw.org/papers/2012/PeoplesWeb/public_preprint.pdf‎ page 12 .\n      Changelog:\n      * 0.1.1 Fixed page number\n    "@en .
+
+nif:inter a owl:ObjectProperty ;
+	owl:versionInfo "0.2.0" ;
+	rdfs:label "inter"@en ;
+	rdfs:comment """
+		This object property models a relation between two nif:Strings. The name \"inter\" is kept generic and can be used to express any kind of relation in between (inter) two nif:Strings. Extensions can create rdfs:subPropertyOf for \"head\", \"dependent\", nif:substring and nif:nextWord.  
+		
+		Changelog: 
+		* 0.1.0 initial commit of property \"dependency\"
+		* 0.2.0 changed name to \"inter\" which is more general than \"dependency\".
+    """@en ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String .
+
+nif:ContextCollection a owl:Class ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "Context Collection"@en ;
+	rdfs:comment """A collection of contexts used to create an unordered set of context via the nif:hasContext property. This can be compared to a document collection, but here it is a collection of nif:Context and therefore a collection of annotated strings, not documents. 
+    
+    Open Issues
+    Investigate ordered collections
+    
+    Changelog
+    * 0.1.1 improved documentation
+    """@en .
+
+nif:hasContext a owl:ObjectProperty ;
+	owl:versionInfo "0.2.0" ;
+	rdfs:label "has context"@en ;
+	rdfs:comment """Links a nif:ContextCollection to its contexts. 
+    
+    Changelog
+    * 0.2.0. renamed property since a lot of people where too confused by nif:context
+    """@en ;
+	rdfs:domain nif:ContextCollection ;
+	rdfs:range nif:Context .
+
+nif:URIScheme a owl:Class ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "URI Scheme"@en ;
+	rdfs:comment """A URI Scheme for NIF, subclasses need to define guidelines on the URI Scheme as well as the text it refers to. This class is just to keep some order, and should not be serialized. 
+    
+    This is an abstract class and should not be serialized. 
+    
+    Changelog:
+    * 0.1.1 changed comment
+    """@en ;
+	rdfs:subClassOf nif:String .
+
+nif:CString a owl:Class ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "Consecutive String"@en ;
+	rdfs:comment """A URI Scheme for NIF which is able to refer to a single, consecutive string in a context. Note that any scheme subclassing this class, requires the existence of beginIndex, endIndex and referenceContext . 
+    This is an abstract class and should not be serialized. 
+    """@en .
+
+_:node18qmd1rpox17 a owl:Restriction ;
+	owl:onProperty nif:endIndex ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+nif:CString rdfs:subClassOf _:node18qmd1rpox17 .
+
+_:node18qmd1rpox18 a owl:Restriction ;
+	owl:onProperty nif:beginIndex ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+nif:CString rdfs:subClassOf _:node18qmd1rpox18 , nif:URIScheme .
+
+nif:Structure a owl:Class ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "Structure"@en ;
+	rdfs:comment """A structure is a more or less arbitrary label for a partitioning of a string. We do not follow a strict approach for what a word, phrase, sentence, title, paragraph is. These labels enable the definition processes for tool chains, e.g. tool analyses nif:Paragraph and calculates term frequency. 
+    
+    This is an abstract class and should not be serialized. 
+    
+    Changelog
+    0.1.1 not to be serialized comment
+    """ ;
+	rdfs:subClassOf nif:String .
+
+nif:sourceUrl a owl:ObjectProperty ;
+	owl:versionInfo "0.2.0" ;
+	rdfs:label "source URL"@en ;
+	rdfs:comment """The URL the context was extracted from, e.g. the blog or news article url. Doesn't matter whether it is HTML or XML or plain text. rdfs:range is foaf:Document.  Subproperty of prov:hadPrimarySource. In case the string comes from another NIF String and gives the exact provenance, please use nif:wasConvertedFrom or a subProperty thereof.
+    Changelog:
+    * 0.2.0 added subPropertyOf prov:hadPrimarySource
+    * 0.2.1 clarification
+    """@en ;
+	rdfs:subPropertyOf prov:hadPrimarySource ;
+	rdfs:domain nif:Context .
+
+nif:wasConvertedFrom a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "was converted from"@en ;
+	rdfs:comment """This property should be used, when mapping one nif:String or nif:Context to another and is often confused with nif:sourceUrl. 
+    While nif:sourceUrl is built on PROV-O and is used to link the nif:Context to the document URL for provenance information, nif:convertedFrom is more precise and pinpoints exact locations where a certain NIF String \"wasConvertedFrom\".
+    nif:wasConvertedFrom is therefore used to provide *exact* provenance during a conversion process, e.g. when removing tags from XHTML and then linking XPath URIs to NIF index based URIs (e.g.  RFC 5147 with char=x,y). An example of the usage of this property can be found here: http://www.w3.org/TR/its20/#conversion-to-nif
+    
+    Example 
+    # \"Dublin\"
+<http://example.com/myitsservice?informat=html&intype=url&input=http://example.com/doc.html&char=11,17> 
+ nif:wasConvertedFrom
+ <http://example.com/myitsservice?informat=html&intype=url&input=http://example.com/doc.html&xpath=/html/body[1]/h2[1]/span[1]/text()[1]>.
+    """@en ;
+	rdfs:subPropertyOf prov:wasDerivedFrom ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String .
+
+nif:broaderContext a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "broader Context"@en ;
+	rdfs:comment "This property should be used to express that one Context is contained in another Context, e.g. several sentences of a document are modelled indivudally and refer to the broader context of the whole document."@en ;
+	rdfs:domain nif:Context ;
+	rdfs:range nif:Context .
+
+nif:narrowerContext a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "narrower Context"@en ;
+	rdfs:comment "The inverse of nif:narrowerContext"@en ;
+	rdfs:domain nif:Context ;
+	rdfs:range nif:Context .
+
+nif:before a owl:DatatypeProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "before"@en ;
+	rdfs:comment "For each string you can include a snippet (e.g. 10-40 characters of text), that occurs immediately before the subject string." ;
+	rdfs:domain nif:String .
+
+nif:after a owl:DatatypeProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "after"@en ;
+	rdfs:comment "For each string you can include a snippet (e.g. 10-40 characters of text), that occurs immediately after the subject string." ;
+	rdfs:domain nif:String .
+
+nif:head a owl:DatatypeProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "head"@en ;
+	rdfs:comment "\n      The first few chars of the nif:anchorOf. Typically used if the nif:anchorOf\n      is to long for inclusion as RDF literal.\n    "@en ;
+	rdfs:domain nif:String .
+
+nif:tail owl:versionInfo "0.1.0" ;
+	rdfs:label "tail"@en ;
+	rdfs:comment "\n      The last few chars of the nif:anchorOf. Typically used if the nif:anchorOf\n      is to long for inclusion as RDF literal.\n    "@en ;
+	rdfs:domain nif:String .
+
+nif:contextAsLiteral owl:versionInfo "0.1.0" ;
+	rdfs:label "contextAsLiteral"@en ;
+	rdfs:comment "\n      The string that the nif:anchorOf is embedded in. FILTER ( strlen (nif:referenceContext [ nif:isString ] ) ) \n    "@en ;
+	rdfs:domain nif:String .
+
+nif:OffsetBasedString a owl:Class ;
+	owl:versionInfo "1.1.0" ;
+	rdfs:label "Offset-based String"@en ;
+	rdfs:comment """cf. Linked-Data Aware URI Schemes for Referencing Text Fragments by Sebastian Hellmann, Jens Lehmann und Sören Auer in EKAW 2012 http://jens-lehmann.org/files/2012/ekaw_nif.pdf
+	
+	requires the existence of begin, endIndex and referenceContext
+	
+	Changelog: 
+	* 1.0.0 originally a plain text string was attached to this uri scheme, but this was removed later, because of complaints and complexity. 
+	* 1.1.0 subclassing of nif:CString
+    """@en ;
+	rdfs:subClassOf nif:CString .
+
+nif:CStringInst a owl:Class ;
+	owl:versionInfo "0.0.0" ;
+	rdfs:label "Consecutive String Instantiation"@en ;
+	rdfs:comment "An abitrary URI (e.g. a URN) for an arbitrary string of the context. This is roughly the same as TextAnnotations are currently implemented in Stanbol."@en ;
+	rdfs:subClassOf nif:CString .
+
+nif:Word a owl:Class ;
+	owl:versionInfo "0.2.2" ;
+	rdfs:label "Word"@en ;
+	rdfs:comment "\n    The Word class represents strings that are tokens or words. A string is a Word, if it is a word. We don't nitpic about whether it is a a pronoun, a name, a punctuation mark or an apostrophe or whether it is separated by white space from another Word or something else. The string 'He enters the room.' for example has 5 words. Words are assigned by a tokenizer NIF Implementation. Single word phrases might be tagged as nif:Word and nif:Phrase. \n    \n    Example 1: \"The White House\" are three Words separated by whitespace\n        \n    Comment 1: We adopted the definition style from foaf:Person, see here: http://xmlns.com/foaf/spec/#term_Person We are well aware that the world out there is much more complicated, but we are ignorant about it, for the following reasons:\n    Comment 2:  \n    \n    1. NIF has a client-server and the client has the ability to dictate the tokenization to the server (i.e. the NIF Implementation) by sending properly tokenized NIF annotated with nif:Word. All NIF Implementations are supposed to honor and respect the current assignment of the Word class. Thus the client should decide which NIF Implementation should create the tokenization. Therefore this class is not descriptive, but prescriptive.\n    2. The client may choose to send an existing tokenization to a NIF Implementation, with the capability to change (for better or for worse) the tokenization. \n    \n    \n   \n    The class has not been named 'Token' as the NLP definition of 'token' is descriptive (and not well-defined), while the assignment of what is a Word and what not is prescriptive, e.g. \"can't\" could be described as one, two or three tokens or defined as being one, two or three words. For further reading, we refer the reader to: By all these lovely tokens... Merging conflicting tokenizations by Christian Chiarcos, Julia Ritz, and Manfred Stede. Language Resources and Evaluation 46(1):53-74 (2012) or the short form: http://www.aclweb.org/anthology/W09-3005\n    There the task at hand is to merge two tokenization T_1 and T_2 which is normally not the case in the NIF world as tokenization is prescribed, i.e. given as a baseline (Note that this ideal state might not be achieved by all implementations.)\n    \n    Changelog:\n    * 0.1.1 fixed spelling\n    * 0.2.1 added a proper definition.\n    * 0.2.3 added examples and clarifications\n    "@en ;
+	rdfs:subClassOf nif:Structure .
+
+nif:Phrase a owl:Class ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "Phrase"@en ;
+	rdfs:comment """A nif:Phrase can be a nif:String, that is a chunk of several words or a word itself (e.g. a NounPhrase as a Named Entity). The term is underspecified and can be compatible with many defintitions of phrase. Please subClass it to specify the meaning (e.g. for Chunking or Phrase Structure Grammar). Example: ((My dog)(also)(likes)(eating (sausage))) 
+    Changelog:
+    * 0.1.1 fixed spelling
+    """ ;
+	rdfs:subClassOf nif:Structure .
+
+nif:Sentence a owl:Class ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "Sentence"@en ;
+	rdfs:comment "\n    A sentence.\n    Changelog:\n    * 0.1.1 fixed spelling, added language tag\n    "@en ;
+	rdfs:subClassOf nif:Structure .
+
+nif:Paragraph a owl:Class ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "Paragraph"@en ;
+	rdfs:comment "\n    A paragraph.\n    Changelog:\n    * 0.1.1 fixed spelling, added language tag\n    "@en ;
+	rdfs:subClassOf nif:Structure .
+
+nif:Title a owl:Class ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "Title"@en ;
+	rdfs:comment "\n    A title within a text.\n    Changelog:\n    * 0.1.1 fixed spelling, added language tag\n    "@en ;
+	rdfs:subClassOf nif:Structure .
+
+nif:subString a owl:ObjectProperty ;
+	owl:inverseOf nif:superString ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "sub string"@en ;
+	rdfs:comment "This property together with nif:subString, nif:superString, and their transitive extension can be used to express that one string is contained in another one. Examples: \"a\" nif:subString \"apple\" , \"apple\" nif:subString \"apple\".  The transitivity axioms are included in nif-core-inf.ttl and need to be included separately to keep a low reasoning profile. They are modeled after skos:broader and skos:broaderTransitive"@en ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String ;
+	rdfs:subPropertyOf nif:subStringTrans .
+
+nif:subStringTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "transitive version of subString"@en ;
+	rdfs:comment """transitive version of subString
+    
+    Inferences (nif-core-inf.ttl): 
+    Transitive definition kept in a different ontology
+    
+    Changelog:
+    * 0.1.0: Initial version
+    * 0.1.1: merged inf
+    """@en ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String .
+
+nif:superString a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "super String"@en ;
+	rdfs:comment "see nif:subString"@en ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String ;
+	rdfs:subPropertyOf nif:superStringTrans .
+
+nif:superStringTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "transitive version of superString"@en ;
+	rdfs:comment "see nif:subStringTrans" ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String .
+
+nif:nextSentence a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment """This property (and nif:previousSentence, nif:nextWord, nif:previousWord and their transitive extension) can be used to make resources of nif:Sentence and nif:Word traversable, it can not be assumed that no gaps or whitespaces between sentences or words exist, i.e. string adjacency is not mandatory. The transitivity axioms are included in nif-core-inf.ttl and need to be included separately to keep a low reasoning profile. They are modeled after skos:broader and skos:broaderTransitive
+    """@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Sentence ;
+	owl:inverseOf nif:previousSentence ;
+	rdfs:subPropertyOf nif:nextSentenceTrans .
+
+nif:nextSentenceTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Sentence .
+
+nif:previousSentence a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Sentence ;
+	rdfs:subPropertyOf nif:previousSentenceTrans .
+
+nif:previousSentenceTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Sentence .
+
+nif:word a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "has word"@en ;
+	rdfs:comment "This property links sentences to their words."@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Word .
+
+nif:firstWord a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "has first word"@en ;
+	rdfs:comment """This property links sentences to their first word.
+    Changelog:
+    * 0.1.1 merged inf+val
+    """@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Word ;
+	rdfs:subPropertyOf nif:word .
+
+nif:lastWord a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "0.1.2" ;
+	rdfs:label "has last word"@en ;
+	rdfs:comment """This property links sentences to their last word.
+	 Changelog:
+	 * 0.1.1 fixed label
+	 * 0.1.2 merged inf+val
+    """@en ;
+	rdfs:domain nif:Sentence ;
+	rdfs:range nif:Word ;
+	rdfs:subPropertyOf nif:word .
+
+nif:sentence a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:comment "This property links words to their sentence." ;
+	rdfs:domain nif:Word ;
+	owl:inverseOf nif:word ;
+	rdfs:range nif:Sentence .
+
+nif:nextWord a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Word ;
+	rdfs:range nif:Word ;
+	owl:inverseOf nif:previousWord ;
+	rdfs:subPropertyOf nif:nextWordTrans .
+
+nif:nextWordTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Word ;
+	rdfs:range nif:Word .
+
+nif:previousWord a owl:ObjectProperty , owl:FunctionalProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Word ;
+	rdfs:range nif:Word ;
+	rdfs:subPropertyOf nif:previousWordTrans .
+
+nif:previousWordTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:comment "see nif:nextSentence"@en ;
+	rdfs:domain nif:Word ;
+	rdfs:range nif:Word .
+
+nif:lemma a owl:DatatypeProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "lemma"@en ;
+	rdfs:comment "The lemma(s) of the nif:String."@en ;
+	rdfs:domain nif:String ;
+	rdfs:range xsd:string .
+
+nif:stem a owl:DatatypeProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "stem"@en ;
+	rdfs:comment "The stem(s) of the nif:String."@en ;
+	rdfs:domain nif:String ;
+	rdfs:range xsd:string .
+
+nif:oliaLink a owl:ObjectProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "OLiA link"@en ;
+	rdfs:comment """This property links a string to a URI from one of the OLiA Annotation model, e.g. http://purl.org/olia/penn.owl#NNP 
+   
+    Changelog
+    0.1.1 - added subproperty of nif:annotation as per http://svn.aksw.org/papers/2012/PeoplesWeb/public_preprint.pdf‎ page 21 
+    """@en ;
+	rdfs:domain nif:String ;
+	rdfs:subPropertyOf nif:annotation .
+
+nif:oliaCategory a owl:AnnotationProperty ;
+	owl:versionInfo "0.1.3" ;
+	rdfs:label "OLiA Category"@en ;
+	rdfs:comment """This property links a string URI to classes of the OLiA Reference model. It provides a direct link for querying, thus it is a redundant optimization. 
+    Changelog:
+    0.1.1 - added subproperty of nif:classAnnotation as per http://svn.aksw.org/papers/2012/PeoplesWeb/public_preprint.pdf‎ page 21 
+    0.1.2 - removed domain axiom for annotationproperty
+    0.1.3 - improved documentation
+    """@en ;
+	rdfs:subPropertyOf nif:classAnnotation .
+
+nif:oliaConf a owl:DatatypeProperty ;
+	owl:versionInfo "0.2.0" ;
+	rdfs:label "Confidence of OLiA tag" ;
+	rdfs:comment """The confidence is relative to the tool and can be between 0.0 and 1.0, it is for nif:oliaLink and therefore also for nif:oliaCategory.
+    Changelog:
+    0.2.0 merged confidence for category and link
+    """@en ;
+	rdfs:range xsd:decimal ;
+	rdfs:domain nif:String .
+
+nif:oliaProv a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "Provenance of OLiA tag" ;
+	rdfs:comment "Links to the URI describing the provenance"@en ;
+	rdfs:range xsd:decimal ;
+	rdfs:domain nif:String .
+
+nif:posTag a owl:DatatypeProperty ;
+	owl:versionInfo "discouraged" ;
+	rdfs:label "Part of speech tag"@en ;
+	rdfs:comment "To include the pos tag as it comes out of the NLP tool as RDF Literal. This property is discouraged to use alone, please use oliaLink and oliaCategory.  We included it, because some people might still want it and will even create their own property, if the string variant is missing " ;
+	rdfs:domain nif:String ;
+	rdfs:range xsd:string .
+
+nif:ContextOccurrence a owl:Class .
+
+nif:NormalizedContextOccurrence a owl:Class .
+
+nif:CollectionOccurrence a owl:Class .
+
+nif:NormalizedCollectionOccurrence a owl:Class .
+
+nif:category rdfs:label "category" ;
+	owl:versionInfo "0.2.0" ;
+	rdfs:comment """A simple annotation for machine learning purposes. The object can be anything, e.g. the literal \"A. PRESS: Reportage\" from Brown or any URI.  
+	ChangeLog:
+	* 0.2.0 changed nif:class to nif:category due to conflict with Java 
+	"""@en ;
+	a owl:AnnotationProperty .
+
+nif:taMsClassRef a owl:AnnotationProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "most specific class reference"@en ;
+	rdfs:comment "This property marks the most specific class from itsrdf:taClassRef. The rule is: from the set S of itsrdf:taClassRef attached to this resource taMscRef points to the one that does not have any subclasses in the set S except itself. So if taClassRef is owl:Thing, dbo:Agent, dbo:Person, dbp:Actor taMsClassRef is dbo:Actor "@en .
+
+nif:dependency a owl:ObjectProperty ;
+	owl:versionInfo "0.1.0" ;
+	rdfs:label "dependency"@en ;
+	rdfs:comment """
+		A dependency relation pointing from gov to dep.
+		Changelog: 
+		* 0.1.0 initial commit of property \"dependency\"
+		* 0.1.1 made the property subproperty of dependencyTrans
+    """@en ;
+	rdfs:subPropertyOf nif:dependencyTrans ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String .
+
+nif:dependencyTrans a owl:ObjectProperty , owl:TransitiveProperty ;
+	owl:versionInfo "0.1.1" ;
+	rdfs:label "transitive version of dependency"@en ;
+	rdfs:comment """
+		Changelog: 
+		* 0.1.0 initial commit of property
+		* 0.1.1 merged inf model
+    """@en ;
+	rdfs:subPropertyOf nif:inter ;
+	rdfs:domain nif:String ;
+	rdfs:range nif:String .
+
+nif:sentimentValue a owl:DatatypeProperty ;
+	owl:versionInfo "0.0.0" ;
+	rdfs:label "sentiment value" ;
+	rdfs:comment "Between -1 negative and 1 positive "@en ;
+	rdfs:domain nif:String ;
+	rdfs:range xsd:decimal .
+
+nif:opinion a owl:ObjectProperty ;
+	owl:versionInfo "0.0.0" ;
+	owl:inverseOf marl:extractedFrom ;
+	rdfs:label "opinion" ;
+	rdfs:comment "This property is used to link to a marl:Opinion. We have not investigated marl, so it might be replaced. http://marl.gi2mo.org/?page_id=1#overview . InverseOf marl:extractedFrom"@en ;
+	rdfs:domain nif:String ;
+	rdfs:range marl:Opinion .

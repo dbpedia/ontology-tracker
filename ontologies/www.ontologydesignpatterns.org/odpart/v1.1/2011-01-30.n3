@@ -1,0 +1,81 @@
+@prefix : <http://www.ontologydesignpatterns.org/cp/owl/participation.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix cpannotationschema: <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.ontologydesignpatterns.org/cp/owl/participation.owl> a owl:Ontology ;
+	rdfs:label "participation"^^rdf:PlainLiteral ;
+	owl:versionInfo """1.1
+- Improved annotation
+1.0 
+- Created by Aldo Gangemi and Valentina Presutti"""^^xsd:string , "1.1 added rdfs:isDefinedBy for all named entities"^^xsd:string ;
+	cpannotationschema:scenarios "Aldo Gangemi participated in the premiere of La Dolce Vita."^^xsd:string ;
+	cpannotationschema:relatedCPs """Co-participation allows to model the relation between two objects that 
+par ticipate in a same event (implicitly); n-ary participation allows to model par ticipation over different dimensions e.g., temporal, spatial, etc., as well as explicitly relate more than one object to the same event; object role, n-ary classiﬁcation are examples of CPs that can be composed with this CP."""^^xsd:string ;
+	cpannotationschema:hasConsequences """It is possible to model whatever relation between objects and events. Using cardinality restrictions appropriately allows to limit the number of participants, e.g. 'life of' is a specialization of this pattern that requires a functional object property (cardinality 1. . .1).
+This is a non-temporal version of the particpation relation. If we need a time-indexed relation, use http://ontologydesignpatterns.owl/cp/owl/timeindexedparticipation.owl"""^^xsd:string ;
+	rdfs:comment """The basic participation pattern, without temporal indexing. 
+It clones equivalent elements from DOLCE-UltraLite."""^^rdf:PlainLiteral ;
+	cpannotationschema:relatedCPs "Time indexed participation"^^rdf:PlainLiteral ;
+	cpannotationschema:hasIntent "To represent participation of an object in an event."^^xsd:string ;
+	cpannotationschema:coversRequirements "Which objects do participate in this event? Which events do this object participate in?"^^xsd:string ;
+	cpannotationschema:extractedFrom "http://ontologydesignpatterns.org/ont/dul/DUL.owl"^^rdf:PlainLiteral ;
+	owl:imports <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl> .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+cpannotationschema:hasConsequences a owl:AnnotationProperty .
+
+cpannotationschema:scenarios a owl:AnnotationProperty .
+
+cpannotationschema:extractedFrom a owl:AnnotationProperty .
+
+rdfs:isDefinedBy a owl:AnnotationProperty .
+
+cpannotationschema:coversRequirements a owl:AnnotationProperty .
+
+cpannotationschema:hasIntent a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+cpannotationschema:relatedCPs a owl:AnnotationProperty .
+
+:hasParticipant a owl:ObjectProperty ;
+	rdfs:label "has participant"@en ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> ;
+	rdfs:domain :Event ;
+	rdfs:range :Object ;
+	owl:inverseOf :isParticipantIn .
+
+:isParticipantIn a owl:ObjectProperty ;
+	rdfs:label "is participant in"@en ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> ;
+	rdfs:range :Event ;
+	rdfs:domain :Object .
+
+:Event a owl:Class ;
+	rdfs:label "Event"@en ;
+	rdfs:subClassOf _:node1791smt4tx3 .
+
+_:node1791smt4tx3 a owl:Restriction ;
+	owl:onProperty :hasParticipant ;
+	owl:someValuesFrom :Object .
+
+:Event owl:disjointWith :Object ;
+	rdfs:comment "Any physical, social, or mental process, event, or state." ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> .
+
+:Object a owl:Class ;
+	rdfs:label "Object"@en ;
+	rdfs:subClassOf _:node1791smt4tx4 .
+
+_:node1791smt4tx4 a owl:Restriction ;
+	owl:onProperty :isParticipantIn ;
+	owl:someValuesFrom :Event .
+
+:Object rdfs:comment "Any physical, social, or mental object, or substance" ;
+	rdfs:isDefinedBy <http://www.ontologydesignpatterns.org/cp/owl/participation.owl> .

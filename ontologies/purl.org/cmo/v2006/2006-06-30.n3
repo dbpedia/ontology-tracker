@@ -1,0 +1,197 @@
+@prefix bfo2: <http://www.ifomis.org/bfo/1.1#> .
+@prefix : <http://purl.org/twc/ontologies/cmo.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix snap: <http://www.ifomis.org/bfo/1.1/snap#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix bfo: <http://purl.org/twc/ontologies/cmo.owl#http://ontology.buffalo.edu/bfo/> .
+
+<http://purl.org/twc/ontologies/cmo.owl> a owl:Ontology ;
+	owl:imports <http://purl.obolibrary.org/obo/iao.owl> , <http://www.w3.org/TR/skos-reference/skos-owl1-dl.rdf> .
+
+obo:IAO_0000136 a owl:ObjectProperty .
+
+:hasPrimaryConcept a owl:ObjectProperty ;
+	rdfs:label "has primary concept" ;
+	rdfs:subPropertyOf skos:broadMatch .
+
+:hasQualifier a owl:ObjectProperty ;
+	rdfs:label "has qualifying concept" ;
+	rdfs:subPropertyOf skos:broadMatch .
+
+:hasQuality a owl:ObjectProperty ;
+	rdfs:label "has quality" ;
+	rdfs:comment "A conceptual type can have qualities that describe it." ;
+	rdfs:range :Quality ;
+	rdfs:domain :Type ;
+	rdfs:subPropertyOf skos:relatedMatch .
+
+:hasRole a owl:ObjectProperty ;
+	rdfs:label "has role" ;
+	rdfs:domain :Relation ;
+	rdfs:range :Type ;
+	rdfs:subPropertyOf skos:relatedMatch .
+
+:hasRoleIn a owl:ObjectProperty ;
+	rdfs:label "has role in relation" ;
+	rdfs:range :Relation ;
+	rdfs:domain :Type ;
+	owl:inverseOf :hasRole ;
+	rdfs:subPropertyOf skos:relatedMatch .
+
+:hasSourceRole a owl:ObjectProperty ;
+	rdfs:label "has source role" ;
+	rdfs:domain :Relation ;
+	rdfs:range :Type ;
+	rdfs:subPropertyOf :hasRole .
+
+:hasSourceRoleIn a owl:ObjectProperty ;
+	rdfs:label "has source role in relation" ;
+	rdfs:range :Relation ;
+	rdfs:domain :Type ;
+	rdfs:subPropertyOf :hasRoleIn ;
+	owl:inverseOf :hasSourceRole .
+
+:hasTargetRole a owl:ObjectProperty ;
+	rdfs:label "has target role" ;
+	rdfs:domain :Relation ;
+	rdfs:range :Type ;
+	rdfs:subPropertyOf :hasRole .
+
+:hasTargetRoleIn a owl:ObjectProperty ;
+	rdfs:label "has target role in relation" ;
+	rdfs:range :Relation ;
+	rdfs:domain :Type ;
+	rdfs:subPropertyOf :hasRoleIn ;
+	owl:inverseOf :hasTargetRole .
+
+:qualityOf a owl:ObjectProperty ;
+	rdfs:label "is quality of" ;
+	rdfs:domain :Quality ;
+	rdfs:range :Type ;
+	owl:inverseOf :hasQuality ;
+	rdfs:subPropertyOf skos:relatedMatch .
+
+:representedBy a owl:ObjectProperty ;
+	rdfs:label "represented by" ;
+	rdfs:comment "Things in the real world can be represented by concepts. This is a link between the concepts and the things those concepts represent. Things, including sets of things, are represented by concepts." ;
+	rdfs:domain bfo2:Entity ;
+	rdfs:range skos:Concept .
+
+:represents a owl:ObjectProperty ;
+	rdfs:label "represents" ;
+	rdfs:comment "Things in the real world can be represented by concepts. This is a link from the concepts and the things those concepts represent. Concepts represent things." ;
+	rdfs:subPropertyOf obo:IAO_0000136 ;
+	owl:inverseOf :representedBy ;
+	rdfs:range bfo2:Entity ;
+	rdfs:domain skos:Concept .
+
+:representsUniversal a owl:ObjectProperty , owl:IrreflexiveProperty ;
+	rdfs:label "represents universal" ;
+	rdfs:comment "Concepts represent universals in the world." ;
+	rdfs:range :Universal ;
+	rdfs:subPropertyOf :represents .
+
+:valuesCanBe a owl:ObjectProperty ;
+	rdfs:label "values can be" ;
+	rdfs:domain :Quality ;
+	rdfs:range skos:Concept ;
+	rdfs:subPropertyOf skos:relatedMatch .
+
+skos:broadMatch a owl:ObjectProperty .
+
+skos:broader a owl:ObjectProperty .
+
+skos:broaderTransitive a owl:ObjectProperty ;
+	owl:propertyChainAxiom _:node17168lq94x7 .
+
+_:node17168lq94x7 rdf:first skos:exactMatch ;
+	rdf:rest _:node17168lq94x8 .
+
+_:node17168lq94x8 rdf:first skos:broader ;
+	rdf:rest rdf:nil .
+
+skos:exactMatch a owl:ObjectProperty .
+
+skos:relatedMatch a owl:ObjectProperty .
+
+obo:IAO_0000030 a owl:Class .
+
+:Quality a owl:Class ;
+	rdfs:label "Quality" ;
+	rdfs:subClassOf skos:Concept ;
+	rdfs:comment "The conceputal representation of anything that is a property (a thing that is inherent in an entity, like eye color) or an attribute (a thing that has been assigned, or attributed, to an entity, like name or identification number)." .
+
+:Relation a owl:Class ;
+	rdfs:label "Relation" ;
+	rdfs:subClassOf skos:Concept ;
+	rdfs:comment "A concept representing the relationship between two independent entities." .
+
+:Type a owl:Class ;
+	rdfs:label "Type" ;
+	rdfs:subClassOf skos:Concept ;
+	rdfs:comment "An abstract or general idea inferred or derived from specific instances, representing a set of those instances." .
+
+:Universal a owl:Class ;
+	rdfs:label "Universal" ;
+	rdfs:subClassOf snap:IndependentContinuant , _:node17168lq94x9 .
+
+_:node17168lq94x9 a owl:Restriction ;
+	owl:onProperty :representedBy ;
+	owl:onClass skos:Concept ;
+	owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger .
+
+:Universal rdfs:comment """Entities that describe the objects, processes, qualities, states, 
+etc. in reality (for example on the side of the patient); (from http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf)""" ;
+	rdfs:seeAlso <http://purl.org/twc/ontologies/cmo.owl#http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf> .
+
+:UniversalClass a owl:Class ;
+	rdfs:label "Universal Class" ;
+	rdfs:subClassOf :Universal , _:node17168lq94x10 .
+
+_:node17168lq94x10 a owl:Restriction ;
+	owl:onProperty :representedBy ;
+	owl:onClass :Type ;
+	owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger .
+
+:UniversalClass rdfs:comment """Universal (natural) sets of objects, processes, qualities, states, 
+etc. in reality (for example on the side of the patient); (from http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf)""" ;
+	rdfs:seeAlso <http://purl.org/twc/ontologies/cmo.owl#http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf> .
+
+:UniversalQuality a owl:Class ;
+	rdfs:label "Universal Quality" ;
+	rdfs:subClassOf :Universal , _:node17168lq94x11 .
+
+_:node17168lq94x11 a owl:Restriction ;
+	owl:onProperty :representedBy ;
+	owl:onClass :Quality ;
+	owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger .
+
+:UniversalQuality rdfs:seeAlso "Qualities in reality. (from http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf)" , <http://purl.org/twc/ontologies/cmo.owl#http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf> .
+
+:UniversalRelation a owl:Class ;
+	rdfs:label "Universal Relation" ;
+	rdfs:subClassOf :Universal , _:node17168lq94x12 .
+
+_:node17168lq94x12 a owl:Restriction ;
+	owl:onProperty :representedBy ;
+	owl:onClass :Relation ;
+	owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger .
+
+:UniversalRelation rdfs:comment "Relationships in reality. (from http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf)" ;
+	rdfs:seeAlso <http://purl.org/twc/ontologies/cmo.owl#http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf> .
+
+bfo2:Entity a owl:Class .
+
+snap:IndependentContinuant a owl:Class .
+
+owl:Thing a owl:Class .
+
+skos:Concept a owl:Class ;
+	rdfs:subClassOf obo:IAO_0000030 .
+
+<http://purl.org/twc/ontologies/cmo.owl#http://ontology.buffalo.edu/bfo/Terminology_for_Ontologies.pdf> a owl:Thing .

@@ -1,0 +1,106 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix olo: <http://purl.org/ontology/olo/core#> .
+@prefix event: <http://purl.org/NET/c4dm/event.owl#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix base: <http://purl.org/ontology/stories/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/ontology/stories/> a owl:Ontology ;
+	rdfs:label "Stories Ontology"@en ;
+	owl:versionInfo "Revision: 1" .
+
+base:Story a owl:Class ;
+	rdfs:label "Story"@en ;
+	rdfs:comment "A story that may be told, contain other stories, and have a sequence of events."@en .
+
+base:subject a owl:ObjectProperty ;
+	rdfs:label "subject"@en ;
+	rdfs:comment "The subject(s) of the story. e.g. characters, events, skos concepts."@en ;
+	rdfs:domain base:Story .
+
+base:sub_story a owl:ObjectProperty ;
+	rdfs:label "sub_story"@en ;
+	rdfs:comment "A story which is contained within this story. For example, a TV episode may contain stories for different characters, or one overarching story may contain several other smaller stories."@en ;
+	rdfs:domain base:Story ;
+	rdfs:range base:Story .
+
+base:events a owl:ObjectProperty ;
+	rdfs:label "event"@en ;
+	rdfs:comment "An ordered list of Events within this story."@en ;
+	rdfs:domain base:Story ;
+	rdfs:range base:EventList .
+
+base:contextualises a owl:ObjectProperty ;
+	rdfs:label "contextualises"@en ;
+	rdfs:domain base:Story ;
+	rdfs:range base:Interpretation .
+
+base:Interpretation a owl:Class ;
+	rdfs:label "Interpretation"@en ;
+	rdfs:comment "An interpretation of something in the context of a story, given some supporting material. This is the viewpoint of the interpretation's creator, and may assert statements about the item."@en .
+
+base:interprets a owl:ObjectProperty ;
+	rdfs:label "interprets"@en ;
+	rdfs:comment "The thing which is interpreted by this interpretation."@en ;
+	rdfs:domain base:Interpretation .
+
+base:asserts a owl:ObjectProperty ;
+	rdfs:label "asserts"@en ;
+	rdfs:comment "The Assertion which is asserted by this interpretation."@en ;
+	rdfs:domain base:Interpretation ;
+	rdfs:range base:Assertion .
+
+base:EventList a owl:Class ;
+	rdfs:label "EventList"@en ;
+	rdfs:comment "Provides a means to create an ordered list of events that occur within a story - effectively a pairing of an Event and a numeric position."@en ;
+	rdfs:subClassOf olo:OrderedList .
+
+base:slot a owl:ObjectProperty ;
+	rdfs:label "slot"@en ;
+	rdfs:subPropertyOf olo:slot ;
+	rdfs:domain base:EventList ;
+	rdfs:range base:EventSlot .
+
+base:EventSlot a owl:Class ;
+	rdfs:label "EventSlot"@en ;
+	rdfs:comment "Places an Event in an EventList, with index and neighbouring Event information."@en ;
+	rdfs:subClassOf olo:Slot .
+
+base:item a owl:ObjectProperty ;
+	rdfs:label "item"@en ;
+	rdfs:subPropertyOf olo:item ;
+	rdfs:domain base:EventSlot ;
+	rdfs:range event:Event .
+
+base:Assertion a owl:Class ;
+	rdfs:label "Assertion"@en ;
+	rdfs:comment "Contains a set of statements in the form of an RDF graph, thus allowing for interpretations to assert beliefs about the state of the system."@en .
+
+base:facts a owl:ObjectProperty ;
+	rdfs:label "facts" ;
+	rdfs:comment "Facts asserted by this assertion, in the form of an RDF graph." ;
+	rdfs:domain base:Assertion .
+
+base:supports a owl:ObjectProperty ;
+	rdfs:label "supports"@en ;
+	rdfs:comment "A Thing which supports an Interpretation (e.g. a supporting document, Event, etc)."@en ;
+	rdfs:range base:Interpretation .
+
+base:tells a owl:ObjectProperty ;
+	rdfs:label "tells"@en ;
+	rdfs:comment "A story told by this Thing. The Thing could be a photograph which has a story attached to it, a person, a country, a monument, etc."@en ;
+	rdfs:range base:Story .
+
+base:describes a owl:ObjectProperty ;
+	rdfs:label "describes"@en ;
+	rdfs:comment "A Thing which describes an Event. This could be a Media Fragment, an Image, etc."@en ;
+	rdfs:range event:Event ;
+	owl:inverseOf base:describedBy .
+
+base:describedBy a owl:ObjectProperty ;
+	rdfs:label "describedBy"@en ;
+	rdfs:comment "The inverse of describes, this is an Event describedBy a Thing (e.g. a programme, photo)"@en ;
+	rdfs:domain event:Event .

@@ -1,0 +1,688 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dctypes: <http://purl.org/dc/dcmitype/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ogc: <http://www.opengis.net/ont/geosparql#> .
+@prefix pdok_pdok: <http://data.pdok.nl/def/pdok#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix gml: <http://www.opengis.net/ont/gml#> .
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+@prefix bag_beg: <http://bag.basisregistraties.overheid.nl/id/begrip/> .
+@prefix bag_bag: <http://bag.basisregistraties.overheid.nl/def/bag#> .
+@prefix bag: <http://bag.basisregistraties.overheid.nl/def/> .
+@prefix bag_nen5825: <http://bag.basisregistraties.overheid.nl/def/nen5825#> .
+@prefix bag_nen5825_beg: <http://bag.basisregistraties.overheid.nl/nen5825/id/begrip/> .
+
+#################################################################
+#
+#    Ontology
+#
+#    Note: Namen van classes en properties zoveel mogelijk al
+#          afgestemd op het IMBAG 2.0
+#
+#################################################################
+
+bag:bag a owl:Ontology ;
+  rdfs:label "Basisregistraties adressen en gebouwen vocabulaire"@nl
+.
+
+#################################################################
+#    BAG-object
+#################################################################
+bag_bag:BAG-object a owl:Class ;
+  rdfs:label "BAG-object"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Object
+.
+
+# In BAG 2.0 wordt dit een NEN3610 ID ding
+bag_bag:identificatiecode a owl:DatatypeProperty  ;
+  rdfs:label "identificatiecode"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Identificatiecode_Ligplaats ,
+          bag_beg:Identificatiecode_Nummeraanduiding ,
+          bag_beg:Identificatiecode_OpenbareRuimte ,
+          bag_beg:Identificatiecode_Pand ,
+          bag_beg:Identificatiecode_Standplaats ,
+          bag_beg:Identificatiecode_Verblijfsobject ,
+          bag_beg:Identificatiecode_Woonplaats ;
+  rdfs:domain bag_bag:BAG-object ;
+.
+
+bag_bag:status a owl:ObjectProperty ;
+  rdfs:label "status"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Status
+.
+
+
+
+#################################################################
+#    AdresseerbaarObject
+#################################################################
+bag_bag:AdresseerbaarObject a owl:Class ;
+  rdfs:label "Adresseerbaar object"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:AdresseerbaarObject ;
+  rdfs:subClassOf bag_bag:BAG-object
+.
+
+bag_bag:hoofdadres a owl:ObjectProperty ;
+  rdfs:label "hoofdadres"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Hoofdadres ;
+  rdfs:domain bag_bag:AdresseerbaarObject ;
+  rdfs:range bag_bag:Nummeraanduiding
+.
+
+bag_bag:nevenadres a owl:ObjectProperty ;
+  rdfs:label "nevenadres"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Nevenadres ;
+  rdfs:domain bag_bag:AdresseerbaarObject ;
+  rdfs:range bag_bag:Nummeraanduiding
+.
+
+#################################################################
+#    Woonplaats
+#################################################################
+bag_bag:Woonplaats a owl:Class ;
+  rdfs:label "Woonplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Woonplaats ;
+  rdfs:subClassOf
+    bag_bag:BAG-object ,
+    ogc:Feature
+.
+
+bag_bag:naamWoonplaats a owl:DatatypeProperty ;
+  rdfs:label "naam woonplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Naam_Woonplaats ;
+  rdfs:domain bag_bag:Woonplaats
+.
+
+bag_bag:geometrieWoonplaats a owl:ObjectProperty ;
+  rdfs:subPropertyOf ogc:hasGeometry ;
+  rdfs:label "geometrie woonplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Geometrie ;
+  rdfs:domain bag_bag:Woonplaats
+.
+
+#################################################################
+#    OpenbareRuimte
+#################################################################
+bag_bag:OpenbareRuimte a owl:Class ;
+  rdfs:label "Openbare ruimte"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:OpenbareRuimte ;
+  rdfs:subClassOf bag_bag:BAG-object
+.
+
+bag_bag:naamOpenbareRuimte a owl:DatatypeProperty ;
+  rdfs:label "naam openbare ruimte"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Naam_OpenbareRuimte ;
+  rdfs:domain bag_bag:OpenbareRuimte
+.
+
+#bag_nen5825:verkorteNaam a owl:DatatypeProperty ;
+#  rdfs:label "verkorte naam"@nl ;
+#  dcterms:subject bag_nen5825_beg:VerkorteNaamOpenbareRuimte
+#  rdfs:domain bag_bag:OpenbareRuimte ;
+#.
+
+bag_bag:bijbehorendeWoonplaats a owl:ObjectProperty ;
+  rdfs:label "bijbehorende woonplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject
+    bag_beg:Woonplaats_OpenbareRuimte ,
+    bag_beg:Woonplaats_Nummeraanduiding
+.
+
+bag_bag:Weg a owl:Class ;
+  rdfs:label "Weg"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Weg ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+bag_bag:Water a owl:Class ;
+  rdfs:label "Water"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Water ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+bag_bag:Spoorbaan a owl:Class ;
+  rdfs:label "Spoorbaan"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Spoorbaan ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+bag_bag:Terrein a owl:Class ;
+  rdfs:label "Terrein"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Terrein ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+bag_bag:Kunstwerk a owl:Class ;
+  rdfs:label "Kunstwerk"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Kunstwerk ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+bag_bag:LandschappelijkGebied a owl:Class ;
+  rdfs:label "Landschappelijk gebied"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:LandschappelijkGebied ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+bag_bag:AdministratiefGebied a owl:Class ;
+  rdfs:label "Administratief gebied"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:RegistratiefGebied ;
+  rdfs:subClassOf bag_bag:OpenbareRuimte
+.
+
+
+#################################################################
+#    Pand
+#################################################################
+bag_bag:Pand a owl:Class ;
+  rdfs:label "Pand"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Pand ;
+  rdfs:subClassOf
+    bag_bag:BAG-object ,
+    ogc:Feature
+.
+
+bag_bag:oorspronkelijkBouwjaar a owl:DatatypeProperty ;
+  rdfs:label "oorspronkelijk bouwjaar"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Bouwjaar ;
+  rdfs:domain bag_bag:Pand
+.
+
+bag_bag:geometriePand a owl:ObjectProperty ;
+  rdfs:subPropertyOf ogc:hasGeometry ;
+  rdfs:label "geometrie pand"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Geometrie ;
+  rdfs:domain bag_bag:Pand
+.
+
+#################################################################
+#    Nummeraanduiding
+#
+#
+#################################################################
+bag_bag:Nummeraanduiding a owl:Class ;
+  rdfs:label "Nummeraanduiding"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Nummeraanduiding ;
+  rdfs:subClassOf bag_bag:BAG-object
+.
+
+bag_bag:huisletter a owl:DatatypeProperty ;
+  rdfs:label "huisletter"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Huisletter ;
+  rdfs:domain bag_bag:Nummeraanduiding
+.
+
+bag_bag:huisnummer a owl:DatatypeProperty ;
+  rdfs:label "huisnummer"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Huisnummer ;
+  rdfs:domain bag_bag:Nummeraanduiding
+.
+
+bag_bag:huisnummertoevoeging a owl:DatatypeProperty ;
+  rdfs:label "huisnummertoevoeging"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Huisnummertoevoeging ;
+  rdfs:domain bag_bag:Nummeraanduiding
+.
+
+bag_bag:postcode a owl:DatatypeProperty ;
+  rdfs:label "postcode"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Postcode ;
+  rdfs:domain bag_bag:Nummeraanduiding
+.
+
+bag_bag:bijbehorendeOpenbareRuimte a owl:ObjectProperty ;
+  rdfs:label "bijbehorende openbare ruimte"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:OpenbareRuimte_Nummeraanduiding ;
+  rdfs:domain bag_bag:Nummeraanduiding
+.
+
+
+#################################################################
+#    Ligplaats
+#################################################################
+bag_bag:Ligplaats a owl:Class ;
+  rdfs:label "Ligplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Ligplaats ;
+  rdfs:subClassOf
+    bag_bag:AdresseerbaarObject ,
+    ogc:Feature
+.
+
+bag_bag:geometrieLigplaats a owl:ObjectProperty ;
+  rdfs:subPropertyOf ogc:hasGeometry ;
+  rdfs:label "geometrie ligplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Geometrie ;
+  rdfs:domain bag_bag:Ligplaats
+.
+
+#################################################################
+#    Standplaats
+#################################################################
+bag_bag:Standplaats a owl:Class ;
+  rdfs:label "Standplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Standplaats ;
+  rdfs:subClassOf
+    bag_bag:AdresseerbaarObject ,
+    ogc:Feature
+.
+
+bag_bag:geometrieStandplaats a owl:ObjectProperty ;
+  rdfs:subPropertyOf ogc:hasGeometry ;
+  rdfs:label "geometrie standplaats"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Geometrie ;
+  rdfs:domain bag_bag:Standplaats
+.
+
+#################################################################
+#    Verblijfsobject
+#################################################################
+bag_bag:Verblijfsobject a owl:Class ;
+  rdfs:label "Verblijfsobject"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Verblijfsobject ;
+  rdfs:subClassOf
+    bag_bag:AdresseerbaarObject ,
+    ogc:Feature
+.
+
+bag_bag:geometrieVerblijfsobject a owl:ObjectProperty ;
+  rdfs:subPropertyOf ogc:hasGeometry ;
+  rdfs:label "geometrie verblijfsobject"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Geometrie ;
+  rdfs:domain bag_bag:Verblijfsobject
+.
+
+bag_bag:oppervlakte a owl:DatatypeProperty ;
+  rdfs:label "oppervlakte"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Oppervlakte ;
+  rdfs:domain bag_bag:Verblijfsobject
+.
+
+bag_bag:pandrelatering a owl:ObjectProperty ;
+  rdfs:label "pandrelatering"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Pandrelatering ;
+  rdfs:domain bag_bag:Verblijfsobject ;
+  rdfs:range bag_bag:Pand
+.
+
+#################################################################
+#    Verblijfsobject sub classes
+#################################################################
+
+bag_bag:VerblijfsobjectWoonfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met woonfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Woonfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectBijeenkomstfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met bijeenkomstfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Bijeenkomstfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectCelfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met celfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Celfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectGezondheidszorgfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met gezondheidszorgfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Gezondheidszorgfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectIndustriefunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met industriefunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Industriefunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectKantoorfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met kantoorfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Kantoorfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectLogiesfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met logiesfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Logiesfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectOnderwijsfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met onderwijsfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Onderwijsfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectSportfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met sportfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Sportfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectWinkelfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met winkelfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Winkelfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+bag_bag:VerblijfsobjectOverigeGebruiksfunctie a owl:Class ;
+  rdfs:label "Verblijfsobject met overige gebruiksfunctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:OverigeGebruiksfunctie ;
+  rdfs:subClassOf bag_bag:Verblijfsobject
+.
+
+#################################################################
+#    Metadata based on PROV-O
+#################################################################
+
+#################################################################
+#    Voorkomen
+#################################################################
+
+bag_bag:Voorkomen a owl:Class ;
+  rdfs:label "Voorkomen"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Voorkomen ;
+  rdfs:subClassOf 
+    prov:Entity, 
+    sd:Graph
+.
+
+bag_bag:beginGeldigheid a owl:DatatypeProperty ;
+  rdfs:label "begin geldigheid"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Ingangsdatum ;
+  rdfs:domain  bag_bag:Voorkomen
+.
+
+bag_bag:eindGeldigheid a owl:DatatypeProperty ;
+  rdfs:label "eind geldigheid"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Einddatum ;
+  rdfs:domain  bag_bag:Voorkomen
+.
+
+# These properties are not used currently, but may be in the future
+#bag_bag:tijdstipRegistratie a owl:DatatypeProperty ;
+#  rdfs:subPropertyOf prov:generatedAtTime ;
+#  rdfs:label "tijdstip registratie"@nl ;
+#  rdfs:isDefinedBy bag:bag ;
+#  dcterms:subject bag_beg:TijdstipRegistratie ;
+#  rdfs:domain  bag_bag:Voorkomen
+#.
+
+#bag_bag:eindRegistratie a owl:DatatypeProperty ;
+#  rdfs:subPropertyOf prov:invalidatedAtTime ;
+#  rdfs:label "eind registratie"@nl ;
+#  rdfs:isDefinedBy bag:bag ;
+#  dcterms:subject bag_beg:EindRegistratie ;
+#  rdfs:domain  bag_bag:Voorkomen
+#.
+
+bag_bag:aanduidingInactief a owl:DatatypeProperty ;
+  rdfs:label "aanduiding inactief"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:AanduidingRecordInactief ;
+  rdfs:domain bag_bag:Voorkomen
+.
+
+bag_bag:aanduidingCorrectie a owl:DatatypeProperty ;
+  rdfs:label "aanduiding correctie"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:AanduidingRecordCorrectie ;
+  rdfs:domain bag_bag:Voorkomen
+.
+
+bag_bag:geconstateerd a owl:DatatypeProperty ;
+  rdfs:label "geconstateerd"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Geconstateerd ;
+  rdfs:domain bag_bag:Voorkomen
+.
+
+bag_bag:inOnderzoek a owl:DatatypeProperty ;
+  rdfs:label "in onderzoek"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:InOnderzoek ;
+  rdfs:domain bag_bag:Voorkomen
+.
+
+bag_bag:bron a owl:ObjectProperty ;
+  rdfs:subPropertyOf prov:wasDerivedFrom ;
+  rdfs:label "bron"@nl ;
+  dcterms:subject bag_beg:Bronrelatering ;
+  rdfs:domain bag_bag:Voorkomen ;
+  rdfs:range bag_bag:Brondocument
+.
+
+#################################################################
+#    Brondocument
+#################################################################
+
+bag_bag:Brondocument a owl:Class ;
+  rdfs:label "Brondocument"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Brondocument ;
+  rdfs:subClassOf prov:Entity
+.
+
+bag_bag:documentdatum a owl:DatatypeProperty ;
+  rdfs:label "documentdatum"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Documentdatum ;
+  rdfs:domain bag_bag:Brondocument
+.
+
+bag_bag:documentnummer a owl:DatatypeProperty ;
+  rdfs:label "documentnummer"@nl ;
+  rdfs:isDefinedBy bag:bag ;
+  dcterms:subject bag_beg:Documentnummer ;
+  rdfs:domain bag_bag:Brondocument
+.
+
+#################################################################
+#    External classes and properties
+#################################################################
+
+prov:Entity a owl:Class ;
+  rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+# These properties are not used currently, but may be in the future
+#prov:generatedAtTime a owl:DatatypeProperty ;
+#  rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+#prov:invalidatedAtTime a owl:DatatypeProperty ;
+#  rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+prov:wasDerivedFrom a owl:ObjectProperty ;
+  rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+ogc:Feature a owl:Class ;
+  rdfs:isDefinedBy ogc: .
+ogc:Geometry a owl:Class ;
+  rdfs:isDefinedBy ogc: .
+ogc:hasGeometry a owl:ObjectProperty ;
+  rdfs:isDefinedBy ogc: .
+gml:Point a owl:Class ;
+  rdfs:isDefinedBy gml: ;
+  rdfs:subClassOf ogc:Geometry .
+gml:Surface a owl:Class ;
+  rdfs:isDefinedBy gml: ;
+  rdfs:subClassOf ogc:Geometry .
+gml:MultiSurface a owl:Class ;
+  rdfs:isDefinedBy gml: ;
+  rdfs:subClassOf ogc:Geometry .
+sd:Graph a owl:Class ;
+  rdfs:isDefinedBy sd: .
+
+#################################################################
+# definitions
+#################################################################
+
+bag_bag:Voorkomen rdfs:comment "Een voorkomen van een object is de combinatie van gegevens over een object dat geldig is in een bepaalde periode."@nl .
+
+bag_bag:Brondocument rdfs:comment "Een brondocument is een document waarin rechtsfeiten en andere voor de registraties relevante feiten zijn neergelegd."@nl .
+
+bag_bag:Ligplaats rdfs:comment "Een ligplaats is een door het bevoegde gemeentelijke orgaan als zodanig aangewezen plaats in het water al dan niet aangevuld met een op de oever aanwezig terrein of een gedeelte daarvan, die bestemd is voor het permanent afmeren van een voor woon-, bedrijfsmatige of recreatieve doeleinden geschikt vaartuig"@nl .
+
+bag_bag:Nummeraanduiding rdfs:comment "Een nummeraanduiding is een door het bevoegde gemeentelijke orgaan als zodanig toegekende aanduiding van een verblijfsobject, een standplaats of een ligplaats. Het is het samenstel van huisnummer, huisletter en huisnummertoevoeging."@nl .
+
+bag_bag:OpenbareRuimte rdfs:comment "Een openbare ruimte is een door het bevoegde gemeentelijke orgaan als zodanig aangewezen en van een naam voorziene buitenruimte die binnen één woonplaats is gelegen."@nl .
+
+bag_bag:Weg rdfs:comment "Gebaand gedeelte voor het wegverkeer en vliegverkeer te land."@nl .
+
+bag_bag:Water rdfs:comment "Grondoppervlak in principe bedekt met water."@nl .
+
+bag_bag:LandschappelijkGebied rdfs:comment "Definitie ontbreekt"@nl .
+
+bag_bag:Terrein rdfs:comment "Door een fysiek voorkomen gekarakteriseerd zichtbaar begrensd stuk grond."@nl .
+
+bag_bag:Kunstwerk rdfs:comment "Civiel-technisch werk voor de infrastructuur van wegen, water, spoorbanen, waterkeringen en/of leidingen en niet bedoeld voor permanent menselijk verblijf."@nl .
+
+bag_bag:AdministratiefGebied rdfs:comment "Op basis van wet- of regelgeving afgebakend gebied dat als eenheid geldt van politiek/bestuurlijke verantwoordelijkheid of voor bedrijfsvoering."@nl .
+
+bag_bag:Spoorbaan rdfs:comment "Gebaand gedeelte voor het verkeer over rails."@nl .
+
+bag_bag:Pand rdfs:comment "Een pand is een kleinste bij de totstandkoming functioneel en bouwkundig-constructief zelfstandige eenheid die direct en duurzaam met de aarde is verbonden en betreedbaar en afsluitbaar is"@nl .
+
+bag_bag:Verblijfsobject rdfs:comment "Een verblijfsobject is een kleinste binnen één of meer panden gelegen en voor woon-, bedrijfsmatige, of recreatieve doeleinden geschikte eenheid van gebruik die ontsloten wordt via een eigen afsluitbare toegang vanaf de openbare weg, een erf of een gedeelde verkeersruimte, onderwerp kan zijn van goederenrechtelijke rechtshandelingen en in functioneel opzicht zelfstandig is"@nl .
+
+bag_bag:VerblijfsobjectWoonfunctie rdfs:comment "Gebruiksfunctie voor het wonen."@nl .
+
+bag_bag:VerblijfsobjectWinkelfunctie rdfs:comment "Gebruiksfunctie voor het verhandelen van materialen, goederen of diensten."@nl .
+
+bag_bag:VerblijfsobjectGezondheidszorgfunctie rdfs:comment "Gebruiksfunctie voor medisch onderzoek, verpleging, verzorging of behandeling."@nl .
+
+bag_bag:VerblijfsobjectKantoorfunctie rdfs:comment "Gebruiksfunctie voor administratie."@nl .
+
+bag_bag:VerblijfsobjectBijeenkomstfunctie rdfs:comment "Gebruiksfunctie voor het samenkomen van mensen voor kunst, cultuur, godsdienst, communicatie, kinderopvang, het verstrekken van consumpties voor het gebruik ter plaatse en het aanschouwen van sport."@nl .
+
+bag_bag:VerblijfsobjectOverigeGebruiksfunctie rdfs:comment "Niet in dit lid benoemde gebruiksfunctie voor activiteiten waarbij het verblijven van mensen een ondergeschikte rol speelt."@nl .
+
+bag_bag:VerblijfsobjectOnderwijsfunctie rdfs:comment "Gebruiksfunctie voor het geven van onderwijs."@nl .
+
+bag_bag:VerblijfsobjectLogiesfunctie rdfs:comment "Gebruiksfunctie voor het bieden van recreatief verblijf of tijdelijk onderdak aan mensen."@nl .
+
+bag_bag:VerblijfsobjectSportfunctie rdfs:comment "Gebruiksfunctie voor het beoefenen van sport."@nl .
+
+bag_bag:VerblijfsobjectCelfunctie rdfs:comment "Gebruiksfunctie voor dwangverblijf van mensen."@nl .
+
+bag_bag:Standplaats rdfs:comment "Een standplaats is een door het bevoegde gemeentelijke orgaan als zodanig aangewezen terrein of gedeelte daarvan dat bestemd is voor het permanent plaatsen van een niet direct en niet duurzaam met de aarde verbonden en voor woon-, bedrijfsmatige, of recreatieve doeleinden geschikte ruimte"@nl .
+
+bag_bag:Woonplaats rdfs:comment "Een woonplaats is een door het bevoegde gemeentelijke orgaan als zodanig aangewezen en van een naam voorzien gedeelte van het grondgebied van de gemeente"@nl .
+
+bag_bag:BAG-object rdfs:comment "Een object is een woonplaats, openbare ruimte, nummeraanduiding, pand, verblijfsobject, standplaats of ligplaats"@nl .
+
+bag_bag:AdresseerbaarObject rdfs:comment "Een adresseerbaar object is een object waaraan adressen ingevolge de basisregistratie adressen kunnen worden toegekend: een verblijfsobject, standplaats of ligplaats."@nl .
+
+bag_bag:VerblijfsobjectIndustriefunctie rdfs:comment "Gebruiksfunctie voor het bedrijfsmatig bewerken of opslaan van materialen en goederen, of voor agrarische doeleinden."@nl .
+
+bag_bag:bron rdfs:comment "De relatie naar het brondocument dat ten grondslag ligt aan het voorkomen van een object."@nl .
+
+bag_bag:hoofdadres rdfs:comment "Een hoofdadres is het primaire adres van een adresseerbaar object"@nl .
+
+bag_bag:geometrieLigplaats rdfs:comment "Geometrie is een authentiek gegeven van een ruimtelijk object in de vorm van één of meerdere coordinaten."@nl .
+
+bag_bag:status rdfs:comment "De fase in de levenscyclus van een BAG object."@nl .
+
+bag_bag:bijbehorendeOpenbareRuimte rdfs:comment "Openbare ruimte van een nummeraanduiding is de openbare ruimte waaraan een adresseerbaar object is gelegen en aan welk object de nummeraanduiding is gerelateerd"@nl .
+
+bag_bag:bijbehorendeWoonplaats rdfs:comment "Een woonplaats van een nummeraanduiding is de woonplaats waarbinnen het object waaraan de nummeraanduiding is toegekend gelegen is indien die woonplaats afwijkt van de woonplaats waarbinnen de openbare ruimte waaraan de nummeraanduiding is gerelateerd gelegen is."@nl , "De woonplaats openbare ruimte is een unieke aanduiding van de woonplaats waarbinnen een openbare ruimte is gelegen."@nl .
+
+bag_bag:geometriePand rdfs:comment "Geometrie is een authentiek gegeven van een ruimtelijk object in de vorm van één of meerdere coordinaten."@nl .
+
+bag_bag:geometrieVerblijfsobject rdfs:comment "Geometrie is een authentiek gegeven van een ruimtelijk object in de vorm van één of meerdere coordinaten."@nl .
+
+bag_bag:pandrelatering rdfs:comment "De unieke aanduidingen van de panden waarvan het verblijfsobject onderdeel uitmaakt."@nl .
+
+bag_bag:nevenadres rdfs:comment "Een nevenadres is een aanvullend adres voor een verblijfsobject in het geval dat sprake is van meerdere ingangen aan verschillende straten."@nl .
+
+bag_bag:geometrieStandplaats rdfs:comment "Geometrie is een authentiek gegeven van een ruimtelijk object in de vorm van één of meerdere coordinaten."@nl .
+
+bag_bag:geometrieWoonplaats rdfs:comment "Geometrie is een authentiek gegeven van een ruimtelijk object in de vorm van één of meerdere coordinaten."@nl .
+
+bag_bag:geconstateerd rdfs:comment "Geconstateerd is een aanduiding waarmee kan worden aangegeven dat een object in de registratie is opgenomen als gevolg van een feitelijke constatering, zonder dat er op het moment van opname sprake was van een regulier brondocument voor deze opname."@nl .
+
+bag_bag:aanduidingInactief rdfs:comment "Voorkomens van objecten met een begindatum in de toekomst die zijn gemuteerd. Ze maken daarmee geen onderdeel meer uit van de levenscyclus."@nl .
+
+bag_bag:beginGeldigheid rdfs:comment "Een ingangsdatum is een niet-authentiek gegeven dat de begindatum aangeeft van een periode waarin een voorkomen een wijziging heeft ondergaan."@nl .
+
+bag_bag:inOnderzoek rdfs:comment "In onderzoek is een aanduiding waarmee wordt aangegeven dat een onderzoek wordt uitgevoerd naar de juistheid van een of meer gegevens van een object."@nl .
+
+bag_bag:aanduidingCorrectie rdfs:comment "Een inactief voorkomen als gevolg van synchronisatie tussen bronhouder en de Landelijke Voorziening BAG."@nl .
+
+bag_bag:documentdatum rdfs:comment "De datum waarop het brondocument is vastgesteld, op basis waarvan een opname, mutatie of een verwijdering van gegevens ten aanzien van een object heeft plaatsgevonden."@nl .
+
+bag_bag:documentnummer rdfs:comment "De unieke aanduiding van de vindplaats van een document binnen een organisatie."@nl .
+
+bag_bag:identificatiecode rdfs:comment "Een identificatiecode van een ligplaats is een authentiek gegeven en een unieke aanduiding van de ligplaats."@nl , "Een identificatiecode van een nummeraanduiding is een authentiek gegeven en een unieke aanduiding van de nummeraanduiding."@nl , "Een identificatiecode van een openbare ruimte is een authentiek gegeven en een unieke aanduiding van de openbare ruimte."@nl , "Een identificatiecode van een pand is een authentiek gegeven en een unieke aanduiding van het pand."@nl , "Een identificatiecode van een standplaats is een authentiek gegeven en een unieke aanduiding van de standplaats."@nl , "Een identificatiecode van een verblijfsobject is een authentiek gegeven en een unieke aanduiding van het verblijfsobject."@nl , "Een identificatiecode van een woonplaats is een authentiek gegeven zoals opgenomen in de landelijke woonplaatsentabel"@nl .
+
+bag_bag:eindGeldigheid rdfs:comment "De einddatum van de geldigheid van een bepaalde combinatie van gegevens."@nl .
+
+bag_bag:huisnummertoevoeging rdfs:comment "Een huisnummertoevoeging is een authentiek gegeven met betrekking tot een nummeraanduiding. Het is de toevoeging aan de nummering van een adresseerbaar object."@nl .
+
+bag_bag:postcode rdfs:comment "De postcode is een coderingssystematiek zoals ontwikkeld en beheerd door PostNL. Een postcode is een niet-authentiek gegeven met betrekking tot een nummeraanduiding"@nl .
+
+bag_bag:huisnummer rdfs:comment "Een huisnummer is een authentiek gegeven met betrekking tot een nummeraanduiding. Het is de nummering van een adresseerbaar object."@nl .
+
+bag_bag:huisletter rdfs:comment "Een huisletter is een authentiek gegeven met betrekking tot een nummeraanduiding. Het is de lettering van een adresseerbaar object"@nl .
+
+bag_bag:naamOpenbareRuimte rdfs:comment "De naam van een openbare ruimte is de door het bevoegde gemeentelijke orgaan aan een openbare ruimte toegekende benaming en een authentiek gegeven"@nl .
+
+bag_bag:oorspronkelijkBouwjaar rdfs:comment "Een bouwjaar is een authentiek gegeven met betrekking tot het jaar dat een pand bouwkundig gereed is of wordt opgeleverd."@nl .
+
+bag_bag:oppervlakte rdfs:comment "Een oppervlakte is de gebruiksoppervlakte van een verblijfsobject en een authentiek gegeven"@nl .
+
+bag_bag:naamWoonplaats rdfs:comment "De naam van een woonplaats is de door het bevoegde gemeentelijke orgaan aan een woonplaats toegekende benaming en een authentiek gegeven"@nl .
+

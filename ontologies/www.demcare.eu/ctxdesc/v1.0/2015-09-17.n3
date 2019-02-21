@@ -1,0 +1,91 @@
+@prefix :      <http://www.demcare.eu/ontologies/contextdescriptor.owl#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix DUL:   <http://www.loa-cnr.it/ontologies/DUL.owl#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix ctxdesc: <http://www.demcare.eu/ontologies/contextdescriptor.owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+
+<http://www.demcare.eu/ontologies/contextdescriptor.owl>
+        a                              owl:Ontology ;
+        rdfs:comment                   "The ontology provides the vocabulary to annotate complex (high-level) activity classes with low-level observations for complex activity recognition.\n\nDocumentation regarding the ontology vocabulary can be found at http://www.demcare.eu/ontologies/ctxdesc.html"@en ;
+        rdfs:seeAlso                   "http://www.demcare.eu/" ;
+        cc:license                     <http://creativecommons.org/licenses/by/3.0/> ;
+        dc:creator                     "Georgios Meditskos"@en ;
+        dc:date                        "2015-09-17" ;
+        dc:description                 "OWL pattern for describing activity models as abstract dependencies among classes."@en ;
+        dc:description                 <https://dl.dropboxusercontent.com/u/15715767/pattern.png> ;
+        dc:rights                      "This ontology is licensed under Creative Commons CC BY 3.0 It is developed in the framework of the Dem@Care project (http://www.demcare.eu/) and supported by the Information Technologies Institute (http://www.iti.gr) of the Centre for Research and Technology Hellas."@en ;
+        dc:title                       "Context Descriptor Pattern"@en ;
+        vann:preferredNamespacePrefix  "ctxdesc"@en ;
+        owl:imports                    <http://www.loa-cnr.it/ontologies/DUL.owl> , <http://xmlns.com/foaf/0.1/> ;
+        owl:versionIRI                 <http://www.demcare.eu/ontologies/contextdescriptor.owl/1.0> ;
+        owl:versionInfo                1.0 .
+
+ctxdesc:ContextDescriptor
+        a                owl:Class ;
+        rdfs:comment     "A ContextDescriptor instance is a container class that allows the definition of relationships (dependencies) among ontology classes. \n\nThe goal is to define relations among classes, therefore, the proposed ontology treats classes as instances, allowing property assertions to be made among domain concepts. Intuitively, the ontology can be thought of as a conceptual (meta) layer that can be placed on top of any domain activity ontology. This way, instances of the ContextDescriptor are used to link domain activities (describes property) with one or more lower-level conceptualisations through dependency property assertions.\n\nThe pattern has been used for building human activity models by defining the dependencies between low-level observations and high-level activities. \n\nFor more details, please see the relevant paper: \nGeorgios Meditskos, Efstratios Kontopoulos, Ioannis Kompatsiaris, \"Knowledge-driven Activity Recognition and Segmentation Using Context Connections\", International Semantic Web Conference (ISWC), pp. 260-275, Riva del Garda, Trento, Italy, 19-23 October 2014 "@en ;
+        rdfs:label       "Context Descriptor"@en ;
+        rdfs:subClassOf  DUL:Situation ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:onProperty      ctxdesc:dependency ;
+                           owl:someValuesFrom  owl:Class
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onDataRange           xsd:float ;
+                           owl:onProperty            ctxdesc:threshold ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               owl:Class ;
+                           owl:onProperty            ctxdesc:describes ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] .
+
+[ a                      owl:Axiom ;
+  rdfs:comment           "The model allows annotated classes to inherit the context dependencies of the superclasses through this property chain axiom."@en ;
+  owl:annotatedProperty  owl:propertyChainAxiom ;
+  owl:annotatedSource    ctxdesc:dependency ;
+  owl:annotatedTarget    ( ctxdesc:describes rdfs:subClassOf ctxdesc:isDescribedBy ctxdesc:dependency )
+] .
+
+ctxdesc:dependency  a           owl:ObjectProperty ;
+        rdfs:comment            "This property is used for denoting the dependencies of a particular ontology class.\n\nThe model also allows annotated classes to inherit the context dependencies of the superclasses through property chain axiom (OWL 2 RL Profile)."@en ;
+        rdfs:domain             ctxdesc:ContextDescriptor ;
+        rdfs:label              "dependency"@en ;
+        rdfs:range              owl:Class ;
+        rdfs:seeAlso            ctxdesc:ContextDescriptor ;
+        rdfs:subPropertyOf      DUL:isSettingFor ;
+        owl:propertyChainAxiom  ( ctxdesc:describes rdfs:subClassOf ctxdesc:isDescribedBy ctxdesc:dependency ) .
+
+ctxdesc:threshold  a  owl:DatatypeProperty ;
+        rdfs:comment  "This property can be used to assign a threshold to the context descriptor of a certain complex activity, specifying a minimum value of confidence (plausability)."@en ;
+        rdfs:domain   ctxdesc:ContextDescriptor ;
+        rdfs:label    "threshold"@en ;
+        rdfs:range    xsd:float .
+
+owl:Class  a    owl:Class .
+
+ctxdesc:describes  a        owl:ObjectProperty ;
+        rdfs:comment        "This property is used for defining the higher level class of the ContextDescriptor"@en ;
+        rdfs:domain         ctxdesc:ContextDescriptor ;
+        rdfs:label          "describes"@en ;
+        rdfs:range          owl:Class ;
+        rdfs:seeAlso        ctxdesc:isDescribedBy , ctxdesc:ContextDescriptor ;
+        rdfs:subPropertyOf  DUL:isSettingFor ;
+        owl:inverseOf       ctxdesc:isDescribedBy .
+
+ctxdesc:isDescribedBy
+        a             owl:ObjectProperty ;
+        rdfs:label    "is described by"@en ;
+        rdfs:seeAlso  ctxdesc:describes .
+
+rdfs:subClassOf  a  owl:ObjectProperty .
+
+vann:preferredNamespacePrefix
+        a       owl:AnnotationProperty .

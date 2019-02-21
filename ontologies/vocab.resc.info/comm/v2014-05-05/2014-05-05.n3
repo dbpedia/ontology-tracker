@@ -1,0 +1,80 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix v: <http://www.w3.org/2006/vcard/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix comm: <http://vocab.resc.info/communication#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+
+<http://vocab.resc.info/communication> a owl:Ontology ;
+	dc:title "Vocabulary related to incident communication" ;
+	dc:description "This vocabulary is intended to describe all the aspects which are needed to communicate incident related information for fire department services" ;
+	dc:modified "2014-05-16"^^xsd:date ;
+	vann:preferredNamespaceUri "http://vocab.resc.info/communication#" ;
+	vann:preferredNamespacePrefix "comm" ;
+	foaf:page <http://vocab.resc.info/communication.html> ;
+	dc:creator comm:bart .
+
+comm:bart a foaf:Person ;
+	foaf:nick "bart" .
+
+comm:DispatchMessage a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "DispatchMessage" ;
+	rdfs:comment "Resources of this class describe messages sent by a dispatch to individual units" ;
+	rdfs:subClassOf rdfs:Class , sem:Event .
+
+comm:Unit a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Unit" ;
+	rdfs:comment "A Unit which can be send to a incident" ;
+	rdfs:subClassOf rdfs:Resource .
+
+comm:Classification a rdfs:Class , owl:Class ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Classification" ;
+	rdfs:comment "The classification of the incident" ;
+	rdfs:subClassOf rdfs:Class .
+
+comm:incidentAddress a rdf:Property ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Incident address" ;
+	rdfs:comment "The address where the incident was reported" ;
+	rdfs:domain comm:DispatchMessage ;
+	rdfs:range v:Address ;
+	rdfs:subPropertyOf sem:hasPlace .
+
+comm:incidentLocation a rdf:Property ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Location" ;
+	rdfs:comment "The location in geo format where incident is reported" ;
+	rdfs:domain comm:DispatchMessage ;
+	rdfs:range geo:SpatialThing ;
+	rdfs:subPropertyOf sem:hasPlace .
+
+comm:dispatchedTo a rdf:Property ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Dispatched to" ;
+	rdfs:comment "the adress on the P2000 pager network where the message was sent to" ;
+	rdfs:domain comm:DispatchMessage ;
+	rdfs:range sem:Place ;
+	rdfs:subPropertyOf sem:hasPlace .
+
+comm:unit a rdf:Property ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Unit" ;
+	rdfs:comment "Unit sent to the incident" ;
+	rdfs:domain comm:DispatchMessage ;
+	rdfs:range comm:Unit ;
+	rdfs:subPropertyOf sem:hasActor .
+
+comm:classificationType a rdf:Property , owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://vocab.resc.info/communication> ;
+	rdfs:label "Type" ;
+	rdfs:comment "The type of classification" ;
+	rdfs:domain comm:Classification ;
+	rdfs:range rdfs:Literal .

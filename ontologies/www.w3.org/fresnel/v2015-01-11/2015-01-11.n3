@@ -1,0 +1,663 @@
+@prefix :      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix f:     <http://www.w3.org/2004/09/fresnel#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+f:PropertyValueStyle  a   owl:Class ;
+        rdfs:comment      "Abstract superclass of all property value display styles."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Property value display style"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource ;
+        rdfs:subClassOf   [ a          owl:Restriction ;
+                            owl:oneOf  ( f:uri f:replacedResource f:image )
+                          ] .
+
+f:contentBefore  a        owl:DatatypeProperty ;
+        rdfs:comment      "Content that should be displayed before the content of the current box."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:FormatDescription ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "content before"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:instanceLensDomain  a   owl:ObjectProperty ;
+        rdfs:comment      "The lens is usable for the specified set of instances."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Lens ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "instance lens domain"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        rdfs:Resource .
+
+f:primaryClasses  a       owl:ObjectProperty ;
+        rdfs:comment      "Specifies the classes that should be considered primaries, or first class results; secondary resources not matching the primaries will only be shown as sublenses.  The range is a list of resource selectors."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Group ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "primaryClasses"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:ClassList .
+
+f:contentLast  a          owl:DatatypeProperty ;
+        rdfs:comment      "Content that should be displayed after the content of the last element in a list of boxes; takes over the last :contentAfter element in case of a conflict."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:FormatDescription ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "content last"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:valueStyle  a           owl:DatatypeProperty ;
+        rdfs:comment      "Attaching a symbol appropriate for styling the values of a property (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Format f:Group )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "value style"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:FormatDescriptionNoSubstitution
+        a                 owl:Class ;
+        rdfs:comment      "Description of fresnel:Format content separators only; contentNoValue will not be recognized in conjunction with this class."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Format Description No Substitution"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   f:FormatDescription .
+
+f:hideProperties  a       owl:ObjectProperty ;
+        rdfs:comment      "List of all properties which should be hidden.  Must be used together with 'fresnel:showProperties fresnel:allProperties.'"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Lens ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "hide properties"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( f:ConvenienceToken rdf:Property f:HidePropertyList )
+                          ] .
+
+f:contentAfter  a         owl:DatatypeProperty ;
+        rdfs:comment      "Content that should be displayed before the content of the current box."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:FormatDescription ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "content after"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:Lens  a                 owl:Class ;
+        rdfs:comment      "Lens for viewing RDF data."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Lens"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:Group ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:group
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   [ a            owl:Class ;
+                                                  owl:unionOf  ( f:Group f:Format )
+                                                ] ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:use
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   [ a            owl:Class ;
+                                                  owl:unionOf  ( f:ShowPropertyList rdf:Property f:PropertySet )
+                                                ] ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:showProperties
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   [ a            owl:Class ;
+                                                  owl:unionOf  ( f:HidePropertyList rdf:Property )
+                                                ] ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:hideProperties
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:Purpose ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:purpose
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:instanceLensDomain
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:resourceStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:classLensDomain
+                          ] .
+
+f:Format  a               owl:Class ;
+        rdfs:comment      "A Fresnel format class for displaying RDF data; the domain property can be only one of :formatDomain, :classFormatDomain, :instanceFormatDomain."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Format Class"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   rdfs:Class ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:classFormatDomain
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:Purpose ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:purpose
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   [ a            owl:Class ;
+                                                  owl:unionOf  ( rdf:Property f:PropertySet )
+                                                ] ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:propertyFormatDomain
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:valueStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:propertyStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:Group ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:group
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:label
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   rdfs:Resource ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:instanceFormatDomain
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:labelStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionNoSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:valueFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionNoSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:resourceFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:labelFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:propertyFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:PropertyValueStyle ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:value
+                          ] ;
+        owl:disjointWith  f:Lens .
+
+f:property  a         owl:ObjectProperty ;
+        rdfs:comment  "The RDF property, which is described."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain   f:PropertyDescription ;
+        rdfs:label    "property"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range    rdf:Property .
+
+f:image  a                f:PropertyValueStyle ;
+        rdfs:comment      "Show the property value as an image, such as PNG or JPEG ."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Image"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:defaultLens  a          f:Purpose ;
+        rdfs:comment      "Provides the browser with a starting point which lens to show."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Default Lens"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:PropertyDescription
+        a                owl:Class ;
+        rdfs:comment     "More detailed description of the property, e.g. for specifing sublenses or merging properties."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:label       "Property Description"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf  rdfs:Resource ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:allValuesFrom   [ a            owl:Class ;
+                                                 owl:unionOf  ( f:Group f:Format )
+                                               ] ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      f:use
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      f:depth
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      f:sublens
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:allValuesFrom   rdf:Property ;
+                           owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                           owl:onProperty      f:property
+                         ] .
+
+f:instanceFormatDomain
+        a             owl:ObjectProperty ;
+        rdfs:comment  "The Format should be applied to this set of instances."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain   f:Format ;
+        rdfs:label    "instance format domain"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range    rdfs:Resource .
+
+f:labelLens  a            f:Purpose ;
+        rdfs:comment      "Lens for providing a label for a resource."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Label Lens"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:use   a             owl:ObjectProperty ;
+        rdfs:comment  "Explicit definition of fresnel:Group containing formats that should be used to render the lens or sublens."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( f:PropertyDescription f:Lens )
+                      ] ;
+        rdfs:label    "use"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range    [ a            owl:Class ;
+                        owl:unionOf  ( f:Group f:Format )
+                      ] .
+
+f:resourceStyle  a        owl:DatatypeProperty ;
+        rdfs:comment      "Attaching a symbol appropriate for styling a resource.  resourceStyle is ignored if not used with :classFormatDomain or :instanceFormatDomain."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Lens f:Group )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "resource style"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:replacedResource  a     f:PropertyValueStyle ;
+        rdfs:comment      "Any kind of retrievable resource like an image, audio or video that should be displayed as property value.  The browser should try retrieve the resource and show it instead of the property value URI.  The browser has to negotiate an appropriate media type with the server using HTTP content negotiation."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Replaced Resource"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:HidePropertyList  a     owl:Class ;
+        rdfs:comment      "This is a convenience class for the OWL specification of Fresnel."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Hide Property List"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdf:List ;
+        rdfs:subClassOf   [ a                  owl:Restriction , owl:Class ;
+                            owl:allValuesFrom  [ owl:unionOf  ( f:HidePropertyList ()
+                                               ) ] ;
+                            owl:onProperty     rdf:rest
+                          ] ;
+        rdfs:subClassOf   [ a                  owl:Restriction , owl:Class ;
+                            owl:allValuesFrom  rdf:Property ;
+                            owl:onProperty     rdf:first
+                          ] ;
+        owl:disjointWith  f:ShowPropertyList .
+
+f:purpose  a              owl:ObjectProperty ;
+        rdfs:comment      "Specifies a purpose for which a lens or format might be appropriate."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Lens f:Format f:Group )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "purpose"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:Purpose .
+
+f:ConvenienceToken  a     owl:Class ;
+        rdfs:comment      "Abstract class for expressing shorthands a browser must understand how to expand."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Convenience Token"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource .
+
+f:group  a                owl:ObjectProperty ;
+        rdfs:comment      "Specifies the format group to which a format or a lens belongs."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Format f:Lens )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "group"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:Group .
+
+f:contentFirst  a         owl:DatatypeProperty ;
+        rdfs:comment      "Content that should be displayed before the content of the first element in a list of boxes; takes over the first :contentBefore element in case of a conflict."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:FormatDescription ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "content first"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:propertyFormat  a       owl:ObjectProperty ;
+        rdfs:comment      "Assign content formatting to a set of properties (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Group f:Format )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "property format"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:FormatDescriptionSubstitution .
+
+f:LabellingFormat  a      owl:Class ;
+        rdfs:comment      "Abstract superclass of all labelling formats."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Labelling Format"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource ;
+        rdfs:subClassOf   [ a          owl:Restriction ;
+                            owl:oneOf  ( f:show f:none )
+                          ] .
+
+f:resourceFormat  a       owl:ObjectProperty ;
+        rdfs:comment      "Assign content formatting to a set of resources (only works in conjunction with classFormatDomain and instanceFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Group f:Format )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "resource format"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:FormatDescriptionNoSubstitution .
+
+f:propertyStyle  a        owl:DatatypeProperty ;
+        rdfs:comment      "Attaching a symbol appropriate for styling properties (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Format f:Group )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "property style"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:ConvienceProperty  a    owl:Class ;
+        rdfs:comment      "Abstract class of pseudo properties."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Convenience Property"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   f:ConvenienceToken .
+
+f:value  a                owl:ObjectProperty ;
+        rdfs:comment      "Specifies how a property value is displayed (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Format ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "property value"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:PropertyValueStyle .
+
+f:ShowPropertyList  a     owl:Class ;
+        rdfs:comment      "This is a convenience class for the OWL specification of Fresnel."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Show Property List"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdf:List ;
+        rdfs:subClassOf   [ a                  owl:Restriction , owl:Class ;
+                            owl:allValuesFrom  [ owl:unionOf  ( f:ShowPropertyList ()
+                                               ) ] ;
+                            owl:onProperty     rdf:rest
+                          ] ;
+        rdfs:subClassOf   [ a                  owl:Restriction , owl:Class ;
+                            owl:allValuesFrom  [ owl:unionOf  ( rdf:Property f:PropertyDescription f:ConvenienceToken ) ] ;
+                            owl:onProperty     rdf:first
+                          ] ;
+        owl:disjointWith  f:HidePropertyList .
+
+f:allProperties  a        f:PropertySet ;
+        rdfs:comment      "Set of all properties of the current instance, which have not be explicitly named before."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "All Properties"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:labelFormat  a          owl:ObjectProperty ;
+        rdfs:comment      "Assign content formatting to a set of labels (theoretically, this does not make much sense, but it does round out the set of formatting properties; only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Group f:Format )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "label format"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:FormatDescriptionSubstitution .
+
+f:depth  a            owl:DatatypeProperty ;
+        rdfs:comment  "Closure mechanism, if lenses are recursively used; the recursive depth limit."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain   f:PropertyDescription ;
+        rdfs:label    "depth"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range    <http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+
+f:valueFormat  a          owl:ObjectProperty ;
+        rdfs:comment      "Assign content formatting to a set of values (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Group f:Format )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "value format"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        f:FormatDescriptionNoSubstitution .
+
+f:propertyFormatDomain
+        a                 owl:ObjectProperty ;
+        rdfs:comment      "The Format should be used for the specified properties."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Format ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "property format domain"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( rdf:Property f:PropertySet )
+                          ] .
+
+f:labelStyle  a           owl:DatatypeProperty ;
+        rdfs:comment      "Attaching a symbol appropriate for styling labels (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  ( f:Format f:Group )
+                          ] ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "label style"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:none  a                 f:LabellingFormat ;
+        rdfs:comment      "Do not show any label for the property."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "none"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:FormatDescriptionSubstitution
+        a                 owl:Class ;
+        rdfs:comment      "Description of fresnel:Format content separators and content replacement if values are missing."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Format Description Substitution"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   f:FormatDescription ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:contentNoValue
+                          ] .
+
+f:ClassList  a            owl:Class ;
+        rdfs:comment      "This is a convenience class for the OWL specification of Fresnel (an rdf:List of resource selectors only)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:subClassOf   rdf:List ;
+        rdfs:subClassOf   [ a                  owl:Restriction , owl:Class ;
+                            owl:allValuesFrom  [ owl:unionOf  ( f:ClassList ()
+                                               ) ] ;
+                            owl:onProperty     rdf:rest
+                          ] ;
+        rdfs:subClassOf   [ a                  owl:Restriction , owl:Class ;
+                            owl:allValuesFrom  rdfs:Class ;
+                            owl:onProperty     rdf:first
+                          ] .
+
+f:PropertySet  a          owl:Class ;
+        rdfs:comment      "Abstract class of property sets."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Property Set"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   f:ConvenienceToken .
+
+f:Group  a                owl:Class ;
+        rdfs:comment      "A Fresnel Group is used for grouping formats and lenses together."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Group"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:valueStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:propertyFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:resourceStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:propertyStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionNoSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:resourceFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:labelStyle
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:ClassList ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:primaryClasses
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionNoSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:valueFormat
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   f:FormatDescriptionSubstitution ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:labelFormat
+                          ] ;
+        owl:disjointWith  f:Format , f:Lens .
+
+f:contentNoValue  a       owl:DatatypeProperty ;
+        rdfs:comment      "Content that should be displayed if the current property is missing."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:FormatDescriptionSubstitution ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "content no value"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        <http://www.w3.org/2001/XMLSchema#string> .
+
+f:Purpose  a              owl:Class ;
+        rdfs:comment      "Propose in which a specific lens might be appropriate."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Purpose"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource .
+
+f:member  a               f:ConvienceProperty ;
+        rdfs:comment      "A special token to indicate the relationship between any RDF container or collection (rdf:List) and its member items.  Do not use as anything other than an individual."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "member"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:FormatDescription  a    owl:Class ;
+        rdfs:comment      "Description of fresnel:Format content separators; super class, not to be used directly."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Format Description"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:subClassOf   rdfs:Resource ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:contentLast
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:contentFirst
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:contentAfter
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:allValuesFrom   <http://www.w3.org/2001/XMLSchema#string> ;
+                            owl:maxCardinality  "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:minCardinality  "0"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> ;
+                            owl:onProperty      f:contentBefore
+                          ] .
+
+f:showProperties  a       owl:ObjectProperty ;
+        rdfs:comment      "List of all properties which should be shown."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Lens ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "show properties"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        [ a            owl:Class ;
+                            owl:unionOf  ( rdf:Property f:PropertyDescription f:ConvenienceToken f:ShowPropertyList )
+                          ] .
+
+f:classFormatDomain  a  owl:ObjectProperty ;
+        rdfs:comment  "The Format should be applied to instances of this class."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain   f:Format ;
+        rdfs:label    "class format domain"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range    rdfs:Class .
+
+f:externalLink  a         f:PropertyValueStyle ;
+        rdfs:comment      "Show the property value as a dereferenceable URL."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "External Link"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:show  a                 f:LabellingFormat ;
+        rdfs:comment      "Show the RDFS Label of the property. This is the default and doesn't have to be declared."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "Show Label"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:sublens  a          owl:ObjectProperty ;
+        rdfs:comment  "Sublens which should be used for displaying property values."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain   f:PropertyDescription ;
+        rdfs:label    "sublens"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range    f:Lens .
+
+f:uri   a                 f:PropertyValueStyle ;
+        rdfs:comment      "Show the property value as an URI."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "URI"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:label  a                owl:ObjectProperty ;
+        rdfs:comment      "Specifies how a property is labelled (only works in conjunction with propertyFormatDomain)."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Format ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "label"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+f:classLensDomain  a      owl:ObjectProperty ;
+        rdfs:comment      "Specifies that the lens is usable for the specified class and its subclasses."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:domain       f:Lens ;
+        rdfs:isDefinedBy  <http://www.w3.org/2004/09/fresnel> ;
+        rdfs:label        "class lens domain"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        rdfs:range        rdfs:Class .
+
+<http://www.w3.org/2004/09/fresnel>
+        a                owl:Ontology ;
+        dc:creator       "Stefano Mazzocchi <stefanom@mit.edu>"^^<http://www.w3.org/2001/XMLSchema#string> , "Ryan Lee <ryanlee@w3.org>"^^<http://www.w3.org/2001/XMLSchema#string> , "Emmanuel Pietriga <emmanuel.pietriga@inria.fr>"^^<http://www.w3.org/2001/XMLSchema#string> , "Chris Bizer <chris@bizer.de>"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        dc:date          "2005-03-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+        dc:description   "OWL Full vocabulary for defining lenses and formats on RDF models."^^<http://www.w3.org/2001/XMLSchema#string> ;
+        dc:format        "RDF"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        dc:identifier    f: ;
+        dc:title         "Fresnel Lens and Format Core Vocabulary"^^<http://www.w3.org/2001/XMLSchema#string> ;
+        owl:versionInfo  "$Id$"^^<http://www.w3.org/2001/XMLSchema#string> .

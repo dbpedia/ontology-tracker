@@ -1,0 +1,115 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/> a owl:Ontology ;
+	dc:contributor "Danny Ayers" , "Seth Russell" ;
+	dc:creator "Richard Newman" ;
+	dc:description "An ontology that describes tags, as used in the popular del.icio.us and Flickr systems, and allows for relationships between tags to be described."@en ;
+	dc:title "Tag ontology"@en ;
+	dct:issued "2005-03-23" ;
+	dct:modified "2005-05-19" , "2005-11-27" , "2005-12-21" ;
+	:label "An ontology for tags."@en ;
+	foaf:maker <http://www.holygoat.co.uk/foaf.rdf#RichardNewman> .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/RestrictedTagging> a owl:Class ;
+	:comment "A Tagging which has precisely one associated resource, and one associated tag."@en ;
+	:label "restricted tagging"@en ;
+	:subClassOf <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> , _:node17168m4gbx3 .
+
+_:node17168m4gbx3 a owl:Restriction ;
+	owl:cardinality "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	owl:onProperty <http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedResource> .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/RestrictedTagging> :subClassOf _:node17168m4gbx4 .
+
+_:node17168m4gbx4 a owl:Restriction ;
+	owl:cardinality "1"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	owl:onProperty <http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag> .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> a owl:Class ;
+	:label "Tag"@en ;
+	:subClassOf skos:Concept ;
+	skos:definition "A natural-language concept which is used to annotate another resource."@en .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> a owl:Class ;
+	:comment "A reified class which defines an instance of a tagging by an agent of a resource with one or more tags."@en ;
+	:label "tagging"@en ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/associatedTag> a owl:ObjectProperty ;
+	:comment "The object is a Tag which plays a role in the subject Tagging."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> ;
+	:label "associated tag" ;
+	:range <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/equivalentTag> a owl:ObjectProperty ;
+	:comment "The two tags are asserted to be equivalent --- that is, that whenever one is associated with a resource, the other tag can be logically inferred to also be associated. Be very careful with this. I'm not sure if this should be a subproperty of owl:sameAs."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:label "equivalent tag"@en ;
+	:range <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:subPropertyOf owl:sameAs ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/isTagOf> a owl:ObjectProperty ;
+	:comment "Indicates that the subject tag applies to the object resource. This does not assert by who, when, or why the tagging occurred. For that information, use a reified Tagging resource."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:label "is tag of"@en ;
+	owl:inverseOf <http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedWithTag> .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/name> a owl:DatatypeProperty ;
+	:comment "The name of a tag. Note that we can't relate this to skos:prefLabel because we cannot guarantee that tags have unique labels in a given conceptual scheme. Or can we?"@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:label "tag name"@en ;
+	:subPropertyOf dc:title , :label .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/relatedTag> a owl:ObjectProperty ;
+	:comment "The two tags are asserted as being related. This might be symmetric, but it certainly isn't transitive."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:label "related tag"@en ;
+	:range <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:subPropertyOf skos:semanticRelation ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/tag> a owl:ObjectProperty ;
+	:comment "The relationship between a resource and a Tagging. Note, of course, that this allows us to tag tags and taggings themselves..."@en ;
+	:label "tag"@en ;
+	:range <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/tagName> a owl:DatatypeProperty ;
+	:comment "The name of a tag. Note that we can't relate this to skos:prefLabel because we cannot guarantee that tags have unique labels in a given conceptual scheme. Or can we? DEPRECATED 2005-05-19: redundant 'tag'."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:label "tag name"@en ;
+	:subPropertyOf dc:title , :label .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedBy> a owl:ObjectProperty ;
+	:comment "The object plays the role of the tagger in the subject Tagging."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> ;
+	:label "tagged by"@en ;
+	:range foaf:Agent ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedOn> a owl:DatatypeProperty ;
+	:comment "The subject Tagging occurred at the subject time and date."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> ;
+	:label "tagged on"@en ;
+	:subPropertyOf dc:date ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedResource> a owl:ObjectProperty ;
+	:comment "The object is a resource which plays a role in the subject Tagging."@en ;
+	:domain <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tagging> ;
+	:label "tagged resource"@en ;
+	vs:term_status "testing" .
+
+<http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedWithTag> a owl:ObjectProperty ;
+	:comment "Indicates that the subject has been tagged with the object tag. This does not assert by who, when, or why the tagging occurred. For that information, use a reified Tagging resource."@en ;
+	:label "tagged with tag"@en ;
+	:range <http://www.holygoat.co.uk/owl/redwood/0.1/tags/Tag> ;
+	:subPropertyOf skos:subject .

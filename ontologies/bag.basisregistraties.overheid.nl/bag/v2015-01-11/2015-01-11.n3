@@ -1,0 +1,395 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix :      <http://lod.geodan.nl/vocab/bag#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix qudt-quantity: <http://qudt.org/vocab/quantity#> .
+@prefix locn:  <http://www.w3.org/ns/locn#> .
+@prefix qudt:  <http://qudt.org/1.1/vocab/unit#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix geosparql: <http://www.opengis.net/ont/geosparql#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+:nummeraanduiding  a  rdf:Property ;
+        rdfs:comment  "related address."@en , "Gerelateerde nummeraanduiding."@nl ;
+        rdfs:domain   :Nummeraanduidingmutatie ;
+        rdfs:label    "address"@en , "nummeraanduiding"@nl ;
+        rdfs:range    :Nummeraanduiding .
+
+:correctie  a         rdf:Property ;
+        rdfs:comment  "A sequence number to identify inactive mutations with the same start time."@en , "Een volgnummer ter unieke identificatie van de inactieve mutaties met een gelijk begintijdstip."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "correction"@en , "correctie"@nl ;
+        rdfs:range    xsd:integer .
+
+:begindatum  a        rdf:Property ;
+        rdfs:comment  "The start of the time period in which object data have been changed."@en , "De begintijd van een periode waarin een of meer gegevens die worden bijgehouden over een object een wijziging hebben ondergaan."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "start date"@en , "begindatum"@nl ;
+        rdfs:range    xsd:dateTime .
+
+:Ligplaatsmutatie  a     rdfs:Class ;
+        rdfs:comment     "A mutation of the data on a berth."@en , "Een mutatie van de gegevens van een ligplaats."@nl ;
+        rdfs:label       "berth mutation"@en , "ligplaatsmutatie"@nl ;
+        rdfs:subClassOf  :Adresseerbaarobjectmutatie , dcterms:Location ;
+        skos:broader     :Ligplaats .
+
+:lastKnown  a         rdf:Property ;
+        rdfs:comment  "This indicates that this mutation is the most recent active mutation of an object."@en , "Van alle mutaties van een object is dit binnen de dataset meest recente actieve mutatie."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "last known mutation"@en , "laast bekende mutatie"@nl ;
+        rdfs:range    xsd:boolean .
+
+:Standplaatsmutatie  a   rdfs:Class ;
+        rdfs:comment     "A mutation of the data on a static caravan site."@en , "Een mutatie van de gegevens van een ligplaats."@nl ;
+        rdfs:label       "static caravan site mutation"@en , "standplaatsmutatie"@nl ;
+        rdfs:subClassOf  :Adresseerbaarobjectmutatie , dcterms:Location ;
+        skos:broader     :Standplaats .
+
+:officieel  a         rdf:Property ;
+        rdfs:comment  "This shows whether an object is registered because of a field observation."@en , "Een aanduiding waarmee kan worden aangegeven dat een object in de registratie is opgenomen als gevolg van een feitelijke constatering, zonder dat er op het moment van opname sprake was van een regulier brondocument voor de opname."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "official"@en , "officieel"@nl ;
+        rdfs:range    xsd:boolean .
+
+:AdresseerbaarObject  a  skos:Concept , rdfs:Class ;
+        rdfs:comment     "A spatial object that can be identified by an address."@en , "Een ruimtelijk object dat een adres heeft. Een adresseerbaar object heeft 1 hoofdadres, en 0 of meer nevenadressen. Een nevenadres kan worden toegekend indien een verblijfsobject meerdere toegangen heeft aan verschillende straten."@nl ;
+        rdfs:label       "addressable object"@en , "adresseerbaar object"@nl ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/brk/id/concept/Adresseerbaarobject> ;
+        rdfs:subClassOf  geosparql:SpatialObject , dcterms:Location .
+
+:openbareRuimte  a    rdf:Property ;
+        rdfs:comment  "related public space."@en , "Gerelateerde openbare ruimte."@nl ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( :Openbareruimtemutatie :Nummeraanduidingmutatie )
+                      ] ;
+        rdfs:label    "public space"@en , "openbare ruimte"@nl ;
+        rdfs:range    :OpenbareRuimte .
+
+:geometrie  a               rdf:Property ;
+        rdfs:comment        "The two dimensional representation of the extent of the object."@en , "De tweedimensionele geometrische representatie van de omtrek van het object."@nl ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( :Woonplaatsmutatie :Pandmutatie :Verblijfsobjectmutatie :Ligplaatsmuatie :Standplaatsmutatie )
+                            ] ;
+        rdfs:label          "geometry"@en , "geometrie"@nl ;
+        rdfs:range          geosparql:wktLiteral ;
+        rdfs:subPropertyOf  locn:geometry .
+
+:pandstatus  a        rdf:Property ;
+        rdfs:comment  "the phase of development of a buiding."@en , "De fase van de levensloop van de pand."@nl ;
+        rdfs:domain   :Pandmutatie ;
+        rdfs:label    "status of a building"@en , "status van een pand"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Pand in gebruik (niet ingemeten)" "Niet gerealiseerd pand" "Pand in gebruik" "Bouwvergunning verleend" "Bouw gestart" "Pand gesloopt" "Sloopvergunning verleend" "Pand buiten gebruik" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Pandstatus-Pand> .
+
+:inOnderzoek  a       rdf:Property ;
+        rdfs:comment  "This property shows whether the data of an object are being investigated."@en , "Een aanduiding waarmee wordt aangegeven dat een onderzoek wordt uitgevoerd naar de juistheid van gegevens van het object."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "investigated"@en , "inonderzoek"@nl ;
+        rdfs:range    xsd:boolean .
+
+:openbareruimtenaam  a      rdf:Property ;
+        rdfs:comment        "Een door het bevoegde gemeentelijke orgaan toegekende benaming van een openbare ruimte."@nl , "The name assigned by the municipal authority to a public space."@en ;
+        rdfs:domain         :Openbareruimtemutatie ;
+        rdfs:label          "name of a public space"@en , "openbareruimtenaam"@nl ;
+        rdfs:range          xsd:string ;
+        rdfs:seeAlso        <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Naam_Openbare_ruimte-Openbare_ruimte> ;
+        rdfs:subPropertyOf  locn:thoroughfare , locn:geographicName .
+
+:postcode  a                rdf:Property ;
+        rdfs:comment        "The number of an address."@en , "De nummering van een geadresseerd object."@nl ;
+        rdfs:domain         :Nummeraanduidingmutatie ;
+        rdfs:label          "post code"@en , "postcode"@nl ;
+        rdfs:range          xsd:string ;
+        rdfs:seeAlso        <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Postcode-Nummeraanduiding> ;
+        rdfs:subPropertyOf  locn:postCode .
+
+<http://lod.geodan.nl/vocab/bag>
+        a                    owl:Ontology ;
+        rdfs:label           "Vocabulary for the Dutch base registry of buildings and addresses (BAG)."@en , "Vocabularium voor de Basisregistratie Adressen en Gebouwen (BAG)."@nl ;
+        dc:created           "2013-11-05"^^xsd:date ;
+        dc:creator           <http://lod.geodan.nl/org/frans_knibbe> ;
+        dc:date              "2014-03-11"^^xsd:date ;
+        dc:publisher         <http://lod.geodan.nl/org/geodan> ;
+        dcterms:description  "Vocabulary for the Dutch base registry of buildings and addresses (BAG)."@en , "Vocabularium voor de Basisregistratie Adressen en Gebouwen (BAG)."@nl ;
+        dcterms:modified     "2014-06-03"^^xsd:date , "2014-10-09"^^xsd:date , "2014-09-19"^^xsd:date , "2014-06-04"^^xsd:date , "2014-10-10"^^xsd:date , "2014-05-12"^^xsd:date , "2014-10-16"^^xsd:date ;
+        dcterms:spatial      <http://dbpedia.org/resource/Netherlands> .
+
+:verkorteNaam  a            rdf:Property ;
+        rdfs:comment        "An abbreviated version of the name."@en , "Een verkorte versie van de naam."@nl ;
+        rdfs:domain         :Openbareruimtemutatie ;
+        rdfs:label          "abbreviated name"@en , "verkorte naam"@nl ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  locn:geographicName .
+
+:nummeraanduidingstatus
+        a             rdf:Property ;
+        rdfs:comment  "the phase of development of an address."@en , "De fase van de levensloop van de nummeraanduiding."@nl ;
+        rdfs:domain   :Nummeraanduidingmutatie ;
+        rdfs:label    "status of an address"@en , "status van een nummeraanduiding"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Naamgeving ingetrokken" "Naamgeving uitgegeven" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Nummeraanduidingstatus-Nummeraanduiding> .
+
+:Ligplaats  a            rdfs:Class , skos:Concept ;
+        rdfs:comment     "Een formeel door de gemeenteraad als zodanig aangewezen plaats in het water, al dan niet aangevuld met een op de oever aanwezig terrein of een gedeelte daarvan, dat bestemd is voor het permanent afmeren van een voor woon-, bedrijfsmatige- of recreatieve doeleinden geschikt vaartuig."@nl , "The official place where a boat is permanently moored."@en ;
+        rdfs:label       "berth"@en , "ligplaats"@nl ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/bag/id/concept/Ligplaats> ;
+        rdfs:subClassOf  dcterms:Location , :AdresseerbaarObject ;
+        skos:narrower    :Ligplaatsmutatie .
+
+:openbareruimtetype  a  rdf:Property ;
+        rdfs:comment  "The type of public space."@en , "Het soort openbare ruimte."@nl ;
+        rdfs:domain   :Openbareruimtemutatie ;
+        rdfs:label    "type of public space"@en , "type openbare ruimte"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Terrein" "Landschappelijk gebied" "Water" "Weg" "Kunstwerk" "Administratief gebied" "Spoorbaan" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Type_Openbare_ruimte-Openbare_ruimte> .
+
+:nevenadres  a        rdf:Property ;
+        rdfs:comment  "An additonal address of an object."@en , "Een nevenadres van een object."@nl ;
+        rdfs:domain   :Adresseerbaarobjectmutatie ;
+        rdfs:label    "additional address"@en , "nevenadres"@nl ;
+        rdfs:range    :Nummeraanduiding .
+
+:Nummeraanduiding  a     skos:Concept , rdfs:Class ;
+        rdfs:comment     "The address assigned by the official municipal authority."@en , "Een door het bevoegde gemeentelijke orgaan toegekende aanduiding van een verblijfsobject, een standplaats of een ligplaats."@nl ;
+        rdfs:label       "address"@en , "nummeraanduiding"@nl ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/bag/id/concept/Nummeraanduiding> ;
+        rdfs:subClassOf  locn:Address ;
+        skos:narrower    :Nummeraanduidingmutatie .
+
+:pand   a             rdf:Property ;
+        rdfs:comment  "Related building."@en , "Gerelateerd pand."@nl ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( :Verblijfsobjectmutatie :Pandmutatie )
+                      ] ;
+        rdfs:label    "building"@en , "pand"@nl ;
+        rdfs:range    :Pand ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Pandrelatering-Verblijfsobject> .
+
+:Pand   a                skos:Concept , rdfs:Class ;
+        rdfs:comment     "The smallest unit of a building with functional or constructional independence that has a direct and permanent connection with the earth and is possible to enter and close. "@en , "De kleinste bij de totstandkoming functioneel en bouwkundig-constructief zelfstandige eenheid die direct en duurzaam met de aarde is verbonden en betreedbaar en afsluitbaar is."@nl ;
+        rdfs:label       "building"@en , "pand"@nl ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/bag/id/concept/Pand> ;
+        rdfs:subClassOf  dcterms:Location ;
+        skos:narrower    :Pandmutatie .
+
+:Nummeraanduidingmutatie
+        a                rdfs:Class ;
+        rdfs:comment     "A mutation of the data on an address."@en , "Een mutatie van de gegevens van een nummeraanduiding."@nl ;
+        rdfs:label       "mutation of an address"@en , "nummeraanduidingmutatie"@nl ;
+        rdfs:subClassOf  :Mutatie , locn:Address ;
+        skos:broader     :Nummeraanduiding .
+
+:plaatsstatus  a      rdf:Property ;
+        rdfs:comment  "the phase of development of a berth or a static caravan site."@en , "De fase van de levensloop van de ligplaats of standplaats."@nl ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( :Ligplaatsmutatie :Standplaatsmutatie )
+                      ] ;
+        rdfs:label    "status of berth or static caravan site"@en , "status van een ligplaats of standplaats"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Plaats ingetrokken" "Plaats aangewezen" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Standplaatsstatus-Standplaats> , <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Ligplaatsstatus-Ligplaats> .
+
+:woonplaatsnaam  a          rdf:Property ;
+        rdfs:comment        "The name assigned by the municipal authority to a city, town or village of residence."@en , "Een door het bevoegde gemeentelijke orgaan toegekende benaming van een woonplaats."@nl ;
+        rdfs:domain         :Woonplaatsmutatie ;
+        rdfs:label          "name of a city, town or village of residence"@en , "woonplaatsnaam"@nl ;
+        rdfs:seeAlso        <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Woonplaatsnaam-Woonplaats> ;
+        rdfs:subPropertyOf  locn:postName , locn:geographicName .
+
+:OpenbareRuimte  a       skos:Concept , rdfs:Class ;
+        rdfs:comment     "An officialy named public space, usually a street or a square."@en , "Een door het bevoegde gemeentelijke orgaan aangewezen en van een naam voorziene buitenruimte die binnen één woonplaats is gelegen, bijvoorbeeld een straat of een plein."@nl ;
+        rdfs:label       "openbare ruimte"@nl , "public space"@en ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/bag/id/concept/Openbare_ruimte> ;
+        rdfs:subClassOf  geosparql:SpatialObject , dcterms:Location ;
+        skos:narrower    :Openbareruimtemutatie .
+
+:openbareruimtestatus
+        a             rdf:Property ;
+        rdfs:comment  "the phase of development of the public space."@en , "De fase van de levensloop van de openbare ruimte."@nl ;
+        rdfs:domain   :Openbareruimtemutatie ;
+        rdfs:label    "status of a public space"@en , "status van een openbare ruimte"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Naamgeving ingetrokken" "Naamgeving uitgegeven" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Status_Openbare_ruimte-Openbare_ruimte> .
+
+:identificatie  a     rdf:Property ;
+        rdfs:comment  "The unique identifier of an object in the BAG."@en , "De unieke identificatie van een object binnen de BAG. Woonplaatsen hebben een unieke woonplaatscode van vier cijfers. Alle overige objecten hebben een unieke identificatie van het formaat GGGGTTNNNNNNNNNN, waarbij GGGG staat voor de gemeentecode van de gemeente die het object als eerste heeft opgevoerd. Bij een gemeentelijke herindeling blijft de identificatie van de objecten binnen die gemeente ongewijzigd. TT staat voor de objecttypecode. Die is 01 voor een verblijfsobject, 02 voor een ligplaats, 03 voor een standplaats, 10 voor een pand, 20 voor een nummeraanduiding, 30 voor een openbare ruimte en 40 voor een woonplaats.  NNNNNNNNNN is een binnen een gemeente uniek tiencijferig nummer."@nl ;
+        rdfs:domain   :OpenbareRuimte , :Pand , :Woonplaats , :Adresseerbaarobject , :Nummeraanduiding ;
+        rdfs:label    "identificatie"@nl , "identifier"@en ;
+        rdfs:range    xsd:integer .
+
+:hoofdadres  a        rdf:Property ;
+        rdfs:comment  "The main address of an object."@en , "Het hoofdadres van een object."@nl ;
+        rdfs:domain   :Adresseerbaarobjectmutatie ;
+        rdfs:label    "main address"@en , "hoofdadres"@nl ;
+        rdfs:range    :Nummeraanduiding .
+
+:documentnummer  a    rdf:Property ;
+        rdfs:comment  "The unique identifier of the document on which a mutation is based."@en , "De unieke aanduiding van het brondocument op basis waarvan een opname of mutatie van gegevens heeft plaatsgevonden."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "document number"@en , "documentnummer"@nl ;
+        rdfs:range    xsd:string .
+
+:einddatum  a         rdf:Property ;
+        rdfs:comment  "The end of the time period in which object data have been changed."@en , "De eindtijd van een periode waarin een of meer gegevens die worden bijgehouden over een object een wijziging hebben ondergaan."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "end date"@en , "einddatum"@nl ;
+        rdfs:range    xsd:dateTime .
+
+:Pandmutatie  a          rdfs:Class ;
+        rdfs:comment     "A mutation of the data on a building."@en , "Een mutatie van de gegevens van een pand."@nl ;
+        rdfs:label       "mutation of a building"@en , "pandmutatie"@nl ;
+        rdfs:subClassOf  :Mutatie , dcterms:Location ;
+        skos:broader     :Pand .
+
+:Verblijfsobjectmutatie
+        a                rdfs:Class ;
+        rdfs:comment     "A mutation of the data on a residential object."@en , "Een mutatie van de gegevens van een verblijfsobject."@nl ;
+        rdfs:label       "mutation of an residential object"@en , "verblijfsobjectmutatie"@nl ;
+        rdfs:subClassOf  :Adresseerbaarobjectmutatie , dcterms:Location ;
+        skos:broader     :Verblijfsobject .
+
+:woonplaatsstatus  a  rdf:Property ;
+        rdfs:comment  "the phase of development of a city, town or village of residence."@en , "De fase van de levensloop van de woonplaats."@nl ;
+        rdfs:domain   :Woonplaatsmutatie ;
+        rdfs:label    "status of a city, town or village of residence"@en , "status van een woonplaats"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Woonplaats ingetrokken" "Woonplaats aangewezen" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Woonplaatsstatus-Woonplaats> .
+
+:Standplaats  a          rdfs:Class , skos:Concept ;
+        rdfs:comment     "Een formeel door de gemeenteraad als zodanig aangewezen terrein of een gedeelte daarvan, dat bestemd is voor het permanent plaatsen van een niet direct en duurzaam met de aarde verbonden en voor woon -, bedrijfsmatige - of recreatieve doeleinden geschikte ruimte."@nl , "An officially assigned site for the placement of a construction without a direct and permanent connection with the earth."@en ;
+        rdfs:label       "standplaats"@nl , "static caravan site"@en ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/bag/id/concept/Standplaats> ;
+        rdfs:subClassOf  dcterms:Location , :AdresseerbaarObject ;
+        skos:narrower    :Standplaatsmutatie .
+
+:Openbareruimtemutatie
+        a                rdfs:Class ;
+        rdfs:comment     "A mutation of the data on a public space."@en , "Een mutatie van de gegevens van een openbare ruimte."@nl ;
+        rdfs:label       "mutation of a public space"@en , "openbareruimtemutatie"@nl ;
+        rdfs:subClassOf  :Mutatie , dcterms:Location ;
+        skos:broader     :OpenbareRuimte .
+
+:huisnummertoevoeging
+        a                   rdf:Property ;
+        rdfs:comment        "Any extra letters or digits needed to identify the address."@en , "Die letters of tekens die noodzakelijk zijn om, naast huisnummer en -letter, het adres aan te duiden."@nl ;
+        rdfs:domain         :Nummeraanduidingmutatie ;
+        rdfs:label          "house number extension"@en , "huisnummertoevoeging"@nl ;
+        rdfs:range          xsd:string ;
+        rdfs:seeAlso        <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Huisnummertoevoeging-Nummeraanduiding> ;
+        rdfs:subPropertyOf  locn:locatorDesignator .
+
+:actief  a            rdf:Property ;
+        rdfs:comment  "An active mutation is part of the actual development of an object."@en , "Als een mutatie actief is maakt zij deel uit van de levensloop van een object."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "active"@en , "actief"@nl ;
+        rdfs:range    xsd:boolean .
+
+:documentdatum  a     rdf:Property ;
+        rdfs:comment  "The date of the document on which a mutation is based."@en , "De datum van vaststelling van het brondocument op basis waarvan een opname of mutatie van gegevens heeft plaatsgevonden."@nl ;
+        rdfs:domain   :Mutatie ;
+        rdfs:label    "document date"@en , "documentdatum"@nl ;
+        rdfs:range    xsd:date .
+
+:Verblijfsobject  a      skos:Concept , rdfs:Class ;
+        rdfs:comment     "De kleinste binnen één of meerdere panden gelegen en voor woon-, bedrijfsmatige, of recreatieve doeleinden geschikte eenheid van gebruik die ontsloten wordt via een eigen toegang vanaf de openbare weg, een erf of een gedeelde verkeersruimte en die onderwerp kan zijn van goederenrechtelijke rechtshandelingen."@nl , "The smallest unit of space within one or more buildings, intended for residential, business or recreation purposes and having its own access from a public space or private courtyard."@en ;
+        rdfs:label       "residential object"@en , "verblijfsobject"@nl ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/brk/id/concept/Verblijfsobject> ;
+        rdfs:subClassOf  dcterms:Location , :AdresseerbaarObject ;
+        skos:narrower    :Verblijfsobjectmutatie .
+
+:woonplaats  a        rdf:Property ;
+        rdfs:comment  "related city, town or village of residence."@en , "Gerelateerde woonplaats."@nl ;
+        rdfs:domain   [ a            owl:Class ;
+                        owl:unionOf  ( :Woonplaatsmutatie :Openbareruimtemutatie )
+                      ] ;
+        rdfs:label    "city, town or village of residence"@en , "woonplaats"@nl ;
+        rdfs:range    :Woonplaats .
+
+:huisletter  a              rdf:Property ;
+        rdfs:comment        "A letter (a-z, A-Z) added to a house number."@en , "Een door het bevoegde gemeentelijke orgaan ten aanzien van een adresseerbaar object toegekende toevoeging aan een huisnummer in de vorm van een alfabetisch teken (a-z, A-Z)."@nl ;
+        rdfs:domain         :Nummeraanduidingmutatie ;
+        rdfs:label          "house letter"@en , "huisletter"@nl ;
+        rdfs:range          xsd:string ;
+        rdfs:seeAlso        <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Huisletter-Nummeraanduiding> ;
+        rdfs:subPropertyOf  locn:locatorDesignator .
+
+:gebruiksdoel  a      rdf:Property ;
+        rdfs:comment  "The functional purpose of a residential object."@en , "Het gebruiksdoel van een verblijfsobject."@nl ;
+        rdfs:domain   :Verblijfsobjectmutatie ;
+        rdfs:label    "purpose"@en , "gebruiksdoel"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "winkelfunctie" "celfunctie" "kantoorfunctie" "industriefunctie" "logiesfunctie" "sportfunctie" "gezondheidszorgfunctie" "bijeenkomstfunctie" "onderwijsfunctie" "woonfunctie" "overige gebruiksfunctie" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Gebruiksdoel_verblijfsobject-Verblijfsobject> .
+
+:oppervlakte  a        rdf:Property ;
+        rdfs:comment   "De oppervlakte gemeten volgens de specificaties in NEN 2580."@nl , "De area according to measurement specified in standard NEN 2580."@en ;
+        rdfs:domain    :Verblijfsobjectmutatie ;
+        rdfs:label     "oppervlakte (vierkante meter)"@nl , "area (square meter)"@en ;
+        rdfs:range     xsd:integer ;
+        rdfs:seeAlso   <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Oppervlakte_verblijfsobject-Verblijfsobject> ;
+        qudt:quantity  qudt-quantity:Area ;
+        qudt:unit      qudt:SquareMeter .
+
+:Woonplaats  a           skos:Concept , rdfs:Class ;
+        rdfs:comment     "An officialy named part of a municipality, used to indicate a place of residence."@en , "Een door het bevoegde gemeentelijke orgaan aangewezen en van een naam voorzien gedeelte van het grondgebied van de gemeente."@nl ;
+        rdfs:label       "city, town or village of residence"@en , "woonplaats"@nl ;
+        rdfs:seealso     <http://data.stelselvanbasisregistraties.nl/bag/id/concept/Woonplaats> ;
+        rdfs:subClassOf  dcterms:Location , geosparql:SpatialObject ;
+        skos:narrower    :Woonplaatsmutatie .
+
+:bouwjaar  a          rdf:Property ;
+        rdfs:comment  "De year in which the building was ready."@en , "Het jaar waarin het pand gereed kwam."@nl ;
+        rdfs:domain   :Pandmutatie ;
+        rdfs:label    "built year"@en , "bouwjaar"@nl ;
+        rdfs:range    xsd:gYear ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Oorspronkelijke_bouwjaar_pand-Pand> .
+
+:Mutatie  a           skos:Concept , rdfs:Class ;
+        rdfs:comment  "A mutation is a change in the set of properties of an object that is registered in the BAG. The first set of properties is also considered a mutation."@en , "Een mutatie is een verandering van de gegevens van een object dat in de  Basisregistratie Adressen en Gebouwen (BAG) wordt bijgehouden. De eerste registratie van gegevens wordt ook als mutatie gezien."@nl ;
+        rdfs:label    "mutation"@en , "mutatie"@nl .
+
+:Woonplaatsmutatie  a    rdfs:Class ;
+        rdfs:comment     "A mutation of the data on a city, town or village of residence."@en , "Een mutatie van de gegevens van een woonplaats."@nl ;
+        rdfs:label       "mutation of a city, town or village of residence"@en , "woonplaatsmutatie"@nl ;
+        rdfs:subClassOf  :Mutatie , dcterms:Location ;
+        skos:broader     :Woonplaats .
+
+:verblijfsobjectstatus
+        a             rdf:Property ;
+        rdfs:comment  "the phase of development of the residential object."@en , "De fase van de levensloop van het verblijfsobject."@nl ;
+        rdfs:domain   :Verblijfsobjectmutatie ;
+        rdfs:label    "status of a residential object"@en , "status van een verblijfsobject"@nl ;
+        rdfs:range    [ a          rdfs:Datatype ;
+                        owl:oneOf  ( "Verblijfsobject buiten gebruik" "Verblijfsobject in gebruik (niet ingemeten)" "Niet gerealiseerd verblijfsobject" "Verblijfsobject ingetrokken" "Verblijfsobject gevormd" "Verblijfsobject in gebruik" )
+                      ] ;
+        rdfs:seeAlso  <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Verblijfsobjectstatus-Verblijfsobject> .
+
+:Adresseerbaarobjectmutatie
+        a                rdfs:Class ;
+        rdfs:comment     "A mutation of the data on an addressable object."@en , "Een mutatie van de gegevens van een adresseerbaar object."@nl ;
+        rdfs:label       "addressable object mutation"@en , "adresseerbaarobjectmutatie"@nl ;
+        rdfs:subClassOf  :Mutatie , dcterms:Location ;
+        skos:broader     :AdresseerbaarObject .
+
+:huisnummer  a              rdf:Property ;
+        rdfs:comment        "The number of an address."@en , "De nummering van een geadresseerd object."@nl ;
+        rdfs:domain         :Nummeraanduidingmutatie ;
+        rdfs:label          "house number"@en , "huisnummer"@nl ;
+        rdfs:range          xsd:integer ;
+        rdfs:seeAlso        <http://data.stelselvanbasisregistraties.nl/bag/id/gegevenselement/Huisnummer-Nummeraanduiding> ;
+        rdfs:subPropertyOf  locn:locatorDesignator .

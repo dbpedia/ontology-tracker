@@ -1,0 +1,2252 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.essepuntato.it/2008/12/pattern#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.essepuntato.it/2008/12/pattern> a owl:Ontology ;
+	rdfs:label "pattern ontology"@en ;
+	owl:versionInfo "1.4"^^xsd:string ;
+	dc:creator "Angelo Di Iorio"^^xsd:string , "Fabio Vitali"^^xsd:string , "Silvio Peroni"^^xsd:string ;
+	dc:date "2012-05-21" ;
+	rdfs:comment "An ontology defining formally patterns for segmenting a document into atomic components, in order to be manipulated independently and re-flowed in different contexts."@en ;
+	dc:title """The Pattern Ontology
+Describing documents by means of their structural components"""@en ;
+	dc:description """The idea of using patterns to produce reusable and high-quality assets is not new in the literature. Software engineers, architects (as Alexander who first introduced this term) and designers very often use – or rather reuse – patterns to handle problems which recur over and over. Patterns have also been studied to modularize and customize web ontologies (http://ontologydesignpatterns.org). They guarantee the flexibility and maintainability of concepts and solutions in several heterogeneous scenarios.
+
+We've been investigating patterns for XML documents for some time. The overall goal of this research is to understand how the structure of digital documents can be segmented into atomic components, that can be manipulated independently and re-flowed in different contexts. Instead of defining a large number of complex and diversified structures, we have identified a small number of structures/patterns that are sufficient to express what most users need. Our idea is that a low number of patterns are enough to capture the most relevant document structures."""@en ;
+	owl:priorVersion <http://dwellonit.svn.sourceforge.net/viewvc/dwellonit/StructuralPattern/Pattern-1_3.owl> ;
+	owl:incompatibleWith <http://dwellonit.svn.sourceforge.net/viewvc/dwellonit/StructuralPattern/Pattern-1_3.owl> .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+:contains a owl:ObjectProperty ;
+	rdfs:label "contains"@en ;
+	rdfs:comment "A structured element contains another generic element."@en ;
+	rdfs:domain :Structured ;
+	owl:inverseOf :isContainedBy .
+
+:containsAsHeader a owl:ObjectProperty ;
+	rdfs:label "contains as header"@en ;
+	rdfs:comment "A structured element contains another generic element as part of its header."@en ;
+	rdfs:subPropertyOf :contains ;
+	owl:inverseOf :isContainedByAsHeader .
+
+:isContainedBy a owl:ObjectProperty ;
+	rdfs:label "is contained by"@en ;
+	rdfs:comment "An element that is contained by another structured element."@en .
+
+:isContainedByAsHeader a owl:ObjectProperty ;
+	rdfs:label "is contained by as header"@en ;
+	rdfs:comment "An element is contained by another structured element as part of its header."@en ;
+	rdfs:subPropertyOf :isContainedBy .
+
+:canContainHeterogeneousElements a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "can contain heterogeneous elements"@en ;
+	rdfs:comment "A hierarchical-based entity contains al least two entities having different names."@en ;
+	rdfs:domain :Structured ;
+	rdfs:range xsd:boolean .
+
+:canContainHomogeneousElements a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "can contain homogeneous elements"@en ;
+	rdfs:comment "A hierarchical-based entity contains al least two entities that share the same name."@en ;
+	rdfs:domain :Structured ;
+	rdfs:range xsd:boolean .
+
+:hasName a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:label "has name"@en ;
+	rdfs:comment "The name of a particular element."@en ;
+	rdfs:range xsd:string .
+
+:Atom a owl:Class ;
+	rdfs:label "atom element"@en ;
+	owl:equivalentClass _:node179bpkoc1x1 .
+
+_:node179bpkoc1x1 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x2 .
+
+_:node179bpkoc1x2 rdf:first :Flat ;
+	rdf:rest _:node179bpkoc1x4 .
+
+_:node179bpkoc1x4 rdf:first _:node179bpkoc1x3 .
+
+_:node179bpkoc1x3 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x5 .
+
+_:node179bpkoc1x5 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x6 .
+
+_:node179bpkoc1x6 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x7 .
+
+_:node179bpkoc1x7 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x4 rdf:rest rdf:nil .
+
+:Atom rdfs:subClassOf _:node179bpkoc1x8 .
+
+_:node179bpkoc1x8 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x9 .
+
+_:node179bpkoc1x9 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x10 .
+
+_:node179bpkoc1x10 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x11 .
+
+_:node179bpkoc1x11 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Atom owl:disjointWith :Field ;
+	rdfs:comment "This class is defined to describe literal text that is part of the document body. Moreover, similarly to Inline, elements following the Atom pattern can only be contained within block or inline elements (and consequently they also cannot be used as root elements of documents). It can contain textual content and no other elements."@en .
+
+:Block a owl:Class ;
+	rdfs:label "block element"@en ;
+	owl:equivalentClass _:node179bpkoc1x12 .
+
+_:node179bpkoc1x12 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x13 .
+
+_:node179bpkoc1x13 rdf:first :Mixed ;
+	rdf:rest _:node179bpkoc1x15 .
+
+_:node179bpkoc1x15 rdf:first _:node179bpkoc1x14 .
+
+_:node179bpkoc1x14 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x16 .
+
+_:node179bpkoc1x16 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x17 .
+
+_:node179bpkoc1x17 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x18 .
+
+_:node179bpkoc1x18 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x15 rdf:rest rdf:nil .
+
+:Block rdfs:subClassOf _:node179bpkoc1x19 .
+
+_:node179bpkoc1x19 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x20 .
+
+_:node179bpkoc1x20 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x21 .
+
+_:node179bpkoc1x21 rdf:first :Atom ;
+	rdf:rest _:node179bpkoc1x22 .
+
+_:node179bpkoc1x22 rdf:first :Inline ;
+	rdf:rest _:node179bpkoc1x23 .
+
+_:node179bpkoc1x23 rdf:first :Milestone ;
+	rdf:rest _:node179bpkoc1x24 .
+
+_:node179bpkoc1x24 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+:Block owl:disjointWith :Inline ;
+	rdfs:comment "This class organise the document content as a sequence of nestable elements and text nodes. In particular, elements following this pattern can contain text and other elements compliant with the patterns Inline, Atom, Milestones and Popup, which will be introduced in the following. Furthermore, it is a requirement that block elements are contained only by container and popup elements"@en .
+
+:Bucket a owl:Class ;
+	rdfs:label "bucket element"@en ;
+	rdfs:subClassOf :NonTextual , :Structured ;
+	owl:disjointWith :Marker ;
+	rdfs:comment "The class of elements that can contain other elements but no text nodes."@en .
+
+:Container a owl:Class ;
+	rdfs:label "container element"@en ;
+	owl:equivalentClass _:node179bpkoc1x25 .
+
+_:node179bpkoc1x25 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x26 .
+
+_:node179bpkoc1x26 rdf:first :Bucket ;
+	rdf:rest _:node179bpkoc1x28 .
+
+_:node179bpkoc1x28 rdf:first _:node179bpkoc1x27 .
+
+_:node179bpkoc1x27 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x29 .
+
+_:node179bpkoc1x29 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x30 .
+
+_:node179bpkoc1x30 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x31 .
+
+_:node179bpkoc1x31 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x28 rdf:rest rdf:nil .
+
+:Container rdfs:subClassOf _:node179bpkoc1x32 .
+
+_:node179bpkoc1x32 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x33 .
+
+_:node179bpkoc1x33 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x34 .
+
+_:node179bpkoc1x34 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x35 .
+
+_:node179bpkoc1x35 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x36 .
+
+_:node179bpkoc1x36 rdf:first :Field ;
+	rdf:rest _:node179bpkoc1x37 .
+
+_:node179bpkoc1x37 rdf:first :Meta ;
+	rdf:rest rdf:nil .
+
+:Container owl:disjointWith :Popup ;
+	rdfs:comment "This class concerns the structural organization of a document. Elements following this pattern contain no textual content and contain only elements compliant with the patterns: Meta, Field, Block and any subtype of Container. It is disjointed with the pattern Popup, although they share the same content model."@en .
+
+:Field a owl:Class ;
+	rdfs:label "field element"@en ;
+	owl:equivalentClass _:node179bpkoc1x38 .
+
+_:node179bpkoc1x38 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x39 .
+
+_:node179bpkoc1x39 rdf:first :Flat ;
+	rdf:rest _:node179bpkoc1x41 .
+
+_:node179bpkoc1x41 rdf:first _:node179bpkoc1x40 .
+
+_:node179bpkoc1x40 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x42 .
+
+_:node179bpkoc1x42 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x43 .
+
+_:node179bpkoc1x43 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x44 .
+
+_:node179bpkoc1x44 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x41 rdf:rest rdf:nil .
+
+:Field rdfs:comment "This class is defined to describe literal metadata or text that is not really part of the document body, contrarily to its disjointed sibling Atom. Its main difference with Meta is that Field can contain textual content."@en .
+
+:Flat a owl:Class ;
+	rdfs:label "flat element"@en ;
+	rdfs:subClassOf :NonStructured , :Textual ;
+	owl:disjointWith :Mixed ;
+	rdfs:comment "The class of elements that can contain text nodes but no elements."@en .
+
+:HeadedContainer a owl:Class ;
+	rdfs:label "headed-container element"@en ;
+	rdfs:subClassOf _:node179bpkoc1x45 .
+
+_:node179bpkoc1x45 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x46 .
+
+_:node179bpkoc1x46 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x48 .
+
+_:node179bpkoc1x48 rdf:first _:node179bpkoc1x47 .
+
+_:node179bpkoc1x47 a owl:Restriction ;
+	owl:onProperty :containsAsHeader ;
+	owl:allValuesFrom :Block .
+
+_:node179bpkoc1x48 rdf:rest rdf:nil .
+
+:HeadedContainer rdfs:comment "This class describes container elements whose content model need to begin with one or more block elements (the heading), specified through the property containsAsHeader."@en .
+
+:Inline a owl:Class ;
+	rdfs:label "inline element"@en ;
+	owl:equivalentClass _:node179bpkoc1x49 .
+
+_:node179bpkoc1x49 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x50 .
+
+_:node179bpkoc1x50 rdf:first :Mixed ;
+	rdf:rest _:node179bpkoc1x52 .
+
+_:node179bpkoc1x52 rdf:first _:node179bpkoc1x51 .
+
+_:node179bpkoc1x51 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x53 .
+
+_:node179bpkoc1x53 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x54 .
+
+_:node179bpkoc1x54 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x55 .
+
+_:node179bpkoc1x55 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x52 rdf:rest rdf:nil .
+
+:Inline rdfs:subClassOf _:node179bpkoc1x56 .
+
+_:node179bpkoc1x56 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x57 .
+
+_:node179bpkoc1x57 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x58 .
+
+_:node179bpkoc1x58 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x59 .
+
+_:node179bpkoc1x59 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Inline rdfs:subClassOf _:node179bpkoc1x60 .
+
+_:node179bpkoc1x60 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x61 .
+
+_:node179bpkoc1x61 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x62 .
+
+_:node179bpkoc1x62 rdf:first :Atom ;
+	rdf:rest _:node179bpkoc1x63 .
+
+_:node179bpkoc1x63 rdf:first :Inline ;
+	rdf:rest _:node179bpkoc1x64 .
+
+_:node179bpkoc1x64 rdf:first :Milestone ;
+	rdf:rest _:node179bpkoc1x65 .
+
+_:node179bpkoc1x65 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+:Inline rdfs:comment """This class has the same use and content model of the pattern Block, but differing primarily because a) inline elements can contain other elements compliant with the same pattern while block elements cannot, and b) inline elements must always be contained by other block or inline elements and by no other type of element.
+
+These constraints also imply that inline elements cannot be used as root elements of documents and that the class Block is disjoint with the class Inline (i.e., a markup element cannot be a block and an inline at the same time)."""@en .
+
+:Marker a owl:Class ;
+	rdfs:label "marker element"@en ;
+	rdfs:subClassOf :NonStructured , :NonTextual ;
+	rdfs:comment "The class of elements that can contain neither text nodes nor elements."@en .
+
+:Meta a owl:Class ;
+	rdfs:label "meta element"@en ;
+	owl:equivalentClass _:node179bpkoc1x66 .
+
+_:node179bpkoc1x66 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x67 .
+
+_:node179bpkoc1x67 rdf:first :Marker ;
+	rdf:rest _:node179bpkoc1x69 .
+
+_:node179bpkoc1x69 rdf:first _:node179bpkoc1x68 .
+
+_:node179bpkoc1x68 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x70 .
+
+_:node179bpkoc1x70 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x71 .
+
+_:node179bpkoc1x71 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x72 .
+
+_:node179bpkoc1x72 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x69 rdf:rest rdf:nil .
+
+:Meta owl:disjointWith :Milestone ;
+	rdfs:comment "This class describes elements that contain neither other elements nor textual content. Contrarily to the pattern Milestone, which was meant to describe markup elements that impact the document because of their location, the main feature of its disjoint sibling is the mere existence, independently from the position it has within the document. Meta elements convey metadata information about the document or part of it, independently of where they are. Thus, meta elements can be contained only within container elements."@en .
+
+:Milestone a owl:Class ;
+	rdfs:label "milestone element"@en ;
+	owl:equivalentClass _:node179bpkoc1x73 .
+
+_:node179bpkoc1x73 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x74 .
+
+_:node179bpkoc1x74 rdf:first :Marker ;
+	rdf:rest _:node179bpkoc1x76 .
+
+_:node179bpkoc1x76 rdf:first _:node179bpkoc1x75 .
+
+_:node179bpkoc1x75 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x77 .
+
+_:node179bpkoc1x77 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x78 .
+
+_:node179bpkoc1x78 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x79 .
+
+_:node179bpkoc1x79 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x76 rdf:rest rdf:nil .
+
+:Milestone rdfs:subClassOf _:node179bpkoc1x80 .
+
+_:node179bpkoc1x80 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x81 .
+
+_:node179bpkoc1x81 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x82 .
+
+_:node179bpkoc1x82 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x83 .
+
+_:node179bpkoc1x83 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Milestone rdfs:comment """This class describe elements that contain neither other elements nor textual content. Moreover, similarly to Inline, elements following the Milestone pattern can only be contained within block or inline elements (and consequently they also cannot be used as root elements of documents).
+
+The distinctive characteristic of the pattern Milestone is the location it assumes within the document."""@en .
+
+:Mixed a owl:Class ;
+	rdfs:label "mixed element"@en ;
+	rdfs:subClassOf :Structured , :Textual ;
+	rdfs:comment "The class of elements that can contain other elements and text nodes."@en .
+
+:NonStructured a owl:Class ;
+	rdfs:label "non-structured element"@en ;
+	owl:equivalentClass _:node179bpkoc1x84 .
+
+_:node179bpkoc1x84 a owl:Class ;
+	owl:complementOf :Structured .
+
+:NonStructured rdfs:subClassOf :Pattern ;
+	owl:disjointWith :Structured ;
+	rdfs:comment "The class of elements that cannot contain other elements."@en .
+
+:NonTextual a owl:Class ;
+	rdfs:label "non-textual element"@en ;
+	owl:equivalentClass _:node179bpkoc1x85 .
+
+_:node179bpkoc1x85 a owl:Class ;
+	owl:complementOf :Textual .
+
+:NonTextual rdfs:subClassOf :Pattern ;
+	owl:disjointWith :Textual ;
+	rdfs:comment "The class of elements that cannot have textual content in their content models."@en .
+
+:Pattern a owl:Class ;
+	rdfs:label "pattern-based element"@en ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment """A structural pattern is an atomic component of a document, that is able to capture a recurrent and well knwon structure of a document.
+
+Any entity belonging to this class is compliant with exactly one structural pattern."""@en .
+
+:Popup a owl:Class ;
+	rdfs:label "popup element"@en ;
+	owl:equivalentClass _:node179bpkoc1x86 .
+
+_:node179bpkoc1x86 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x87 .
+
+_:node179bpkoc1x87 rdf:first :Bucket ;
+	rdf:rest _:node179bpkoc1x89 .
+
+_:node179bpkoc1x89 rdf:first _:node179bpkoc1x88 .
+
+_:node179bpkoc1x88 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x90 .
+
+_:node179bpkoc1x90 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x91 .
+
+_:node179bpkoc1x91 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x92 .
+
+_:node179bpkoc1x92 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x89 rdf:rest rdf:nil .
+
+:Popup rdfs:subClassOf _:node179bpkoc1x93 .
+
+_:node179bpkoc1x93 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x94 .
+
+_:node179bpkoc1x94 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x95 .
+
+_:node179bpkoc1x95 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x96 .
+
+_:node179bpkoc1x96 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x97 .
+
+_:node179bpkoc1x97 rdf:first :Field ;
+	rdf:rest _:node179bpkoc1x98 .
+
+_:node179bpkoc1x98 rdf:first :Meta ;
+	rdf:rest rdf:nil .
+
+:Popup rdfs:subClassOf _:node179bpkoc1x99 .
+
+_:node179bpkoc1x99 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x100 .
+
+_:node179bpkoc1x100 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x101 .
+
+_:node179bpkoc1x101 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x102 .
+
+_:node179bpkoc1x102 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Popup rdfs:comment "This class defines bucket elements that are only present within block and inline elements. Popup elements are used whenever complex structures need to be placed within content elements such as paragraphs."@en .
+
+:Record a owl:Class ;
+	rdfs:label "record element"@en ;
+	owl:equivalentClass _:node179bpkoc1x103 .
+
+_:node179bpkoc1x103 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x104 .
+
+_:node179bpkoc1x104 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x106 .
+
+_:node179bpkoc1x106 rdf:first _:node179bpkoc1x105 .
+
+_:node179bpkoc1x105 a owl:Restriction ;
+	owl:onProperty :canContainHeterogeneousElements ;
+	owl:hasValue "true"^^xsd:boolean .
+
+_:node179bpkoc1x106 rdf:rest _:node179bpkoc1x108 .
+
+_:node179bpkoc1x108 rdf:first _:node179bpkoc1x107 .
+
+_:node179bpkoc1x107 a owl:Restriction ;
+	owl:onProperty :canContainHomogeneousElements ;
+	owl:hasValue "false"^^xsd:boolean .
+
+_:node179bpkoc1x108 rdf:rest rdf:nil .
+
+:Record rdfs:comment "This class describes container elements that can only contain heterogeneous and non repeatable elements."@en .
+
+:Structured a owl:Class ;
+	rdfs:label "structured element"@en ;
+	rdfs:subClassOf :Pattern ;
+	rdfs:comment "The class of elements that can contain other elements."@en .
+
+:Table a owl:Class ;
+	rdfs:label "table element"@en ;
+	owl:equivalentClass _:node179bpkoc1x109 .
+
+_:node179bpkoc1x109 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x110 .
+
+_:node179bpkoc1x110 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x112 .
+
+_:node179bpkoc1x112 rdf:first _:node179bpkoc1x111 .
+
+_:node179bpkoc1x111 a owl:Restriction ;
+	owl:onProperty :canContainHeterogeneousElements ;
+	owl:hasValue "false"^^xsd:boolean .
+
+_:node179bpkoc1x112 rdf:rest _:node179bpkoc1x114 .
+
+_:node179bpkoc1x114 rdf:first _:node179bpkoc1x113 .
+
+_:node179bpkoc1x113 a owl:Restriction ;
+	owl:onProperty :canContainHomogeneousElements ;
+	owl:hasValue "true"^^xsd:boolean .
+
+_:node179bpkoc1x114 rdf:rest rdf:nil .
+
+:Table rdfs:comment "This class describes container elements that must contain only homogeneous elements (but they can be repeated)."@en .
+
+:Textual a owl:Class ;
+	rdfs:label "textual element"@en ;
+	rdfs:subClassOf :Pattern ;
+	rdfs:comment "The class of elements that can have textual content in their content models."@en .
+
+owl:Thing a owl:Class .
+
+_:node179bpkoc1x115 a owl:AllDisjointClasses ;
+	owl:members _:node179bpkoc1x116 .
+
+_:node179bpkoc1x116 rdf:first :HeadedContainer ;
+	rdf:rest _:node179bpkoc1x117 .
+
+_:node179bpkoc1x117 rdf:first :Record ;
+	rdf:rest _:node179bpkoc1x118 .
+
+_:node179bpkoc1x118 rdf:first :Table ;
+	rdf:rest rdf:nil .
+
+:x a swrl:Variable .
+
+:s a swrl:Variable .
+
+:y a swrl:Variable .
+
+:z a swrl:Variable .
+
+:g a swrl:Variable .
+
+<urn:swrl#p> a swrl:Variable .
+
+<urn:swrl#x> a swrl:Variable .
+
+<urn:swrl#y> a swrl:Variable .
+
+<urn:swrl#s> a swrl:Variable .
+
+:p a swrl:Variable .
+
+:t a swrl:Variable .
+
+_:node179bpkoc1x119 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x120 .
+
+_:node179bpkoc1x120 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x121 .
+
+_:node179bpkoc1x121 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x119 swrl:body _:node179bpkoc1x122 .
+
+_:node179bpkoc1x122 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x123 .
+
+_:node179bpkoc1x123 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x122 rdf:rest _:node179bpkoc1x124 .
+
+_:node179bpkoc1x124 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x125 .
+
+_:node179bpkoc1x125 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x124 rdf:rest _:node179bpkoc1x126 .
+
+_:node179bpkoc1x126 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x127 .
+
+_:node179bpkoc1x127 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x128 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x129 .
+
+_:node179bpkoc1x129 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x130 .
+
+_:node179bpkoc1x130 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "true"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHeterogeneousElements ;
+	swrl:argument1 :p .
+
+_:node179bpkoc1x128 swrl:body _:node179bpkoc1x131 .
+
+_:node179bpkoc1x131 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x132 .
+
+_:node179bpkoc1x132 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x133 .
+
+_:node179bpkoc1x133 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :p ;
+	swrl:argument2 :y .
+
+_:node179bpkoc1x132 rdf:rest _:node179bpkoc1x134 .
+
+_:node179bpkoc1x134 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x135 .
+
+_:node179bpkoc1x135 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x136 .
+
+_:node179bpkoc1x136 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x137 .
+
+_:node179bpkoc1x137 a swrl:BuiltinAtom ;
+	swrl:builtin swrlb:notEqual ;
+	swrl:arguments _:node179bpkoc1x138 .
+
+_:node179bpkoc1x138 rdf:first :s ;
+	rdf:rest _:node179bpkoc1x139 .
+
+_:node179bpkoc1x139 rdf:first :t ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x135 rdf:first _:node179bpkoc1x140 .
+
+_:node179bpkoc1x140 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :t ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x134 rdf:first _:node179bpkoc1x141 .
+
+_:node179bpkoc1x141 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x131 rdf:first _:node179bpkoc1x142 .
+
+_:node179bpkoc1x142 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :p ;
+	swrl:argument2 :x .
+
+_:node179bpkoc1x143 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x144 .
+
+_:node179bpkoc1x144 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x145 .
+
+_:node179bpkoc1x145 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x143 swrl:body _:node179bpkoc1x146 .
+
+_:node179bpkoc1x146 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x147 .
+
+_:node179bpkoc1x147 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x148 .
+
+_:node179bpkoc1x148 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x149 .
+
+_:node179bpkoc1x149 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :x ;
+	swrl:argument2 :z .
+
+_:node179bpkoc1x148 rdf:rest _:node179bpkoc1x150 .
+
+_:node179bpkoc1x150 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x151 .
+
+_:node179bpkoc1x151 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :z .
+
+_:node179bpkoc1x147 rdf:first _:node179bpkoc1x152 .
+
+_:node179bpkoc1x152 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :x ;
+	swrl:argument2 :y .
+
+_:node179bpkoc1x146 rdf:first _:node179bpkoc1x153 .
+
+_:node179bpkoc1x153 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x154 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x155 .
+
+_:node179bpkoc1x155 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x156 .
+
+_:node179bpkoc1x156 a swrl:ClassAtom ;
+	swrl:classPredicate :Inline ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x155 rdf:rest _:node179bpkoc1x157 .
+
+_:node179bpkoc1x157 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x158 .
+
+_:node179bpkoc1x158 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x157 rdf:rest _:node179bpkoc1x159 .
+
+_:node179bpkoc1x159 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x160 .
+
+_:node179bpkoc1x160 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x154 swrl:head _:node179bpkoc1x161 .
+
+_:node179bpkoc1x161 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x162 .
+
+_:node179bpkoc1x162 a swrl:ClassAtom ;
+	swrl:classPredicate :Inline ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x163 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x164 .
+
+_:node179bpkoc1x164 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x165 .
+
+_:node179bpkoc1x165 a swrl:ClassAtom ;
+	swrl:classPredicate :Field ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x163 swrl:body _:node179bpkoc1x166 .
+
+_:node179bpkoc1x166 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x167 .
+
+_:node179bpkoc1x167 a swrl:ClassAtom ;
+	swrl:classPredicate :Field ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x166 rdf:rest _:node179bpkoc1x168 .
+
+_:node179bpkoc1x168 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x169 .
+
+_:node179bpkoc1x169 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x168 rdf:rest _:node179bpkoc1x170 .
+
+_:node179bpkoc1x170 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x171 .
+
+_:node179bpkoc1x171 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x172 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x173 .
+
+_:node179bpkoc1x173 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x174 .
+
+_:node179bpkoc1x174 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 <urn:swrl#p> ;
+	swrl:argument2 <urn:swrl#x> .
+
+_:node179bpkoc1x173 rdf:rest _:node179bpkoc1x175 .
+
+_:node179bpkoc1x175 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x176 .
+
+_:node179bpkoc1x176 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x177 .
+
+_:node179bpkoc1x177 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x178 .
+
+_:node179bpkoc1x178 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 <urn:swrl#s> ;
+	swrl:argument1 <urn:swrl#y> .
+
+_:node179bpkoc1x176 rdf:first _:node179bpkoc1x179 .
+
+_:node179bpkoc1x179 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 <urn:swrl#s> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node179bpkoc1x175 rdf:first _:node179bpkoc1x180 .
+
+_:node179bpkoc1x180 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 <urn:swrl#p> ;
+	swrl:argument2 <urn:swrl#y> .
+
+_:node179bpkoc1x172 swrl:head _:node179bpkoc1x181 .
+
+_:node179bpkoc1x181 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x182 .
+
+_:node179bpkoc1x182 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "true"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHomogeneousElements ;
+	swrl:argument1 <urn:swrl#p> .
+
+_:node179bpkoc1x183 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x184 .
+
+_:node179bpkoc1x184 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x185 .
+
+_:node179bpkoc1x185 a swrl:ClassAtom ;
+	swrl:classPredicate :Record ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x183 swrl:head _:node179bpkoc1x186 .
+
+_:node179bpkoc1x186 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x187 .
+
+_:node179bpkoc1x187 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "false"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHomogeneousElements ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x188 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x189 .
+
+_:node179bpkoc1x189 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x190 .
+
+_:node179bpkoc1x190 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x191 .
+
+_:node179bpkoc1x191 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x192 .
+
+_:node179bpkoc1x192 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x190 rdf:first _:node179bpkoc1x193 .
+
+_:node179bpkoc1x193 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x189 rdf:first _:node179bpkoc1x194 .
+
+_:node179bpkoc1x194 a swrl:ClassAtom ;
+	swrl:classPredicate :Container ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x188 swrl:head _:node179bpkoc1x195 .
+
+_:node179bpkoc1x195 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x196 .
+
+_:node179bpkoc1x196 a swrl:ClassAtom ;
+	swrl:classPredicate :Container ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x197 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x198 .
+
+_:node179bpkoc1x198 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x199 .
+
+_:node179bpkoc1x199 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "false"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHeterogeneousElements ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x197 swrl:body _:node179bpkoc1x200 .
+
+_:node179bpkoc1x200 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x201 .
+
+_:node179bpkoc1x201 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x202 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x203 .
+
+_:node179bpkoc1x203 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x204 .
+
+_:node179bpkoc1x204 a swrl:ClassAtom ;
+	swrl:classPredicate :Meta ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x202 swrl:body _:node179bpkoc1x205 .
+
+_:node179bpkoc1x205 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x206 .
+
+_:node179bpkoc1x206 a swrl:ClassAtom ;
+	swrl:classPredicate :Meta ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x205 rdf:rest _:node179bpkoc1x207 .
+
+_:node179bpkoc1x207 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x208 .
+
+_:node179bpkoc1x208 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x207 rdf:rest _:node179bpkoc1x209 .
+
+_:node179bpkoc1x209 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x210 .
+
+_:node179bpkoc1x210 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x211 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x212 .
+
+_:node179bpkoc1x212 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x213 .
+
+_:node179bpkoc1x213 a swrl:ClassAtom ;
+	swrl:classPredicate :Record ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x211 swrl:body _:node179bpkoc1x214 .
+
+_:node179bpkoc1x214 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x215 .
+
+_:node179bpkoc1x215 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x216 .
+
+_:node179bpkoc1x216 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x217 .
+
+_:node179bpkoc1x217 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x215 rdf:first _:node179bpkoc1x218 .
+
+_:node179bpkoc1x218 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x214 rdf:first _:node179bpkoc1x219 .
+
+_:node179bpkoc1x219 a swrl:ClassAtom ;
+	swrl:classPredicate :Record ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x220 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x221 .
+
+_:node179bpkoc1x221 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x222 .
+
+_:node179bpkoc1x222 a swrl:ClassAtom ;
+	swrl:classPredicate :Textual ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x220 swrl:body _:node179bpkoc1x223 .
+
+_:node179bpkoc1x223 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x224 .
+
+_:node179bpkoc1x224 a swrl:ClassAtom ;
+	swrl:classPredicate :Pattern ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x223 rdf:rest _:node179bpkoc1x225 .
+
+_:node179bpkoc1x225 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x226 .
+
+_:node179bpkoc1x226 a swrl:ClassAtom ;
+	swrl:classPredicate :Textual ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x225 rdf:rest _:node179bpkoc1x227 .
+
+_:node179bpkoc1x227 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x228 .
+
+_:node179bpkoc1x228 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x229 .
+
+_:node179bpkoc1x229 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 :g ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x227 rdf:first _:node179bpkoc1x230 .
+
+_:node179bpkoc1x230 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 :g ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x231 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x232 .
+
+_:node179bpkoc1x232 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x233 .
+
+_:node179bpkoc1x233 a swrl:ClassAtom ;
+	swrl:classPredicate :Milestone ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x231 swrl:body _:node179bpkoc1x234 .
+
+_:node179bpkoc1x234 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x235 .
+
+_:node179bpkoc1x235 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x236 .
+
+_:node179bpkoc1x236 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x235 rdf:rest _:node179bpkoc1x237 .
+
+_:node179bpkoc1x237 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x238 .
+
+_:node179bpkoc1x238 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x234 rdf:first _:node179bpkoc1x239 .
+
+_:node179bpkoc1x239 a swrl:ClassAtom ;
+	swrl:classPredicate :Milestone ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x240 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x241 .
+
+_:node179bpkoc1x241 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x242 .
+
+_:node179bpkoc1x242 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x243 .
+
+_:node179bpkoc1x243 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x242 rdf:rest _:node179bpkoc1x244 .
+
+_:node179bpkoc1x244 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x245 .
+
+_:node179bpkoc1x245 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x241 rdf:first _:node179bpkoc1x246 .
+
+_:node179bpkoc1x246 a swrl:ClassAtom ;
+	swrl:classPredicate :Block ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x240 swrl:head _:node179bpkoc1x247 .
+
+_:node179bpkoc1x247 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x248 .
+
+_:node179bpkoc1x248 a swrl:ClassAtom ;
+	swrl:classPredicate :Block ;
+	swrl:argument1 :y .
+
+:Atom owl:equivalentClass _:node179bpkoc1x249 .
+
+_:node179bpkoc1x249 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x250 .
+
+_:node179bpkoc1x250 rdf:first :Flat ;
+	rdf:rest _:node179bpkoc1x252 .
+
+_:node179bpkoc1x252 rdf:first _:node179bpkoc1x251 .
+
+_:node179bpkoc1x251 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x253 .
+
+_:node179bpkoc1x253 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x254 .
+
+_:node179bpkoc1x254 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x255 .
+
+_:node179bpkoc1x255 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x252 rdf:rest rdf:nil .
+
+:Atom rdfs:subClassOf _:node179bpkoc1x256 .
+
+_:node179bpkoc1x256 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x257 .
+
+_:node179bpkoc1x257 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x258 .
+
+_:node179bpkoc1x258 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x259 .
+
+_:node179bpkoc1x259 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Block owl:equivalentClass _:node179bpkoc1x260 .
+
+_:node179bpkoc1x260 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x261 .
+
+_:node179bpkoc1x261 rdf:first :Mixed ;
+	rdf:rest _:node179bpkoc1x263 .
+
+_:node179bpkoc1x263 rdf:first _:node179bpkoc1x262 .
+
+_:node179bpkoc1x262 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x264 .
+
+_:node179bpkoc1x264 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x265 .
+
+_:node179bpkoc1x265 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x266 .
+
+_:node179bpkoc1x266 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x263 rdf:rest rdf:nil .
+
+:Block rdfs:subClassOf _:node179bpkoc1x267 .
+
+_:node179bpkoc1x267 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x268 .
+
+_:node179bpkoc1x268 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x269 .
+
+_:node179bpkoc1x269 rdf:first :Atom ;
+	rdf:rest _:node179bpkoc1x270 .
+
+_:node179bpkoc1x270 rdf:first :Inline ;
+	rdf:rest _:node179bpkoc1x271 .
+
+_:node179bpkoc1x271 rdf:first :Milestone ;
+	rdf:rest _:node179bpkoc1x272 .
+
+_:node179bpkoc1x272 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+:Container owl:equivalentClass _:node179bpkoc1x273 .
+
+_:node179bpkoc1x273 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x274 .
+
+_:node179bpkoc1x274 rdf:first :Bucket ;
+	rdf:rest _:node179bpkoc1x276 .
+
+_:node179bpkoc1x276 rdf:first _:node179bpkoc1x275 .
+
+_:node179bpkoc1x275 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x277 .
+
+_:node179bpkoc1x277 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x278 .
+
+_:node179bpkoc1x278 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x279 .
+
+_:node179bpkoc1x279 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x276 rdf:rest rdf:nil .
+
+:Container rdfs:subClassOf _:node179bpkoc1x280 .
+
+_:node179bpkoc1x280 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x281 .
+
+_:node179bpkoc1x281 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x282 .
+
+_:node179bpkoc1x282 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x283 .
+
+_:node179bpkoc1x283 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x284 .
+
+_:node179bpkoc1x284 rdf:first :Field ;
+	rdf:rest _:node179bpkoc1x285 .
+
+_:node179bpkoc1x285 rdf:first :Meta ;
+	rdf:rest rdf:nil .
+
+:Field owl:equivalentClass _:node179bpkoc1x286 .
+
+_:node179bpkoc1x286 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x287 .
+
+_:node179bpkoc1x287 rdf:first :Flat ;
+	rdf:rest _:node179bpkoc1x289 .
+
+_:node179bpkoc1x289 rdf:first _:node179bpkoc1x288 .
+
+_:node179bpkoc1x288 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x290 .
+
+_:node179bpkoc1x290 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x291 .
+
+_:node179bpkoc1x291 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x292 .
+
+_:node179bpkoc1x292 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x289 rdf:rest rdf:nil .
+
+:HeadedContainer rdfs:subClassOf _:node179bpkoc1x293 .
+
+_:node179bpkoc1x293 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x294 .
+
+_:node179bpkoc1x294 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x296 .
+
+_:node179bpkoc1x296 rdf:first _:node179bpkoc1x295 .
+
+_:node179bpkoc1x295 a owl:Restriction ;
+	owl:onProperty :containsAsHeader ;
+	owl:allValuesFrom :Block .
+
+_:node179bpkoc1x296 rdf:rest rdf:nil .
+
+:Inline owl:equivalentClass _:node179bpkoc1x297 .
+
+_:node179bpkoc1x297 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x298 .
+
+_:node179bpkoc1x298 rdf:first :Mixed ;
+	rdf:rest _:node179bpkoc1x300 .
+
+_:node179bpkoc1x300 rdf:first _:node179bpkoc1x299 .
+
+_:node179bpkoc1x299 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x301 .
+
+_:node179bpkoc1x301 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x302 .
+
+_:node179bpkoc1x302 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x303 .
+
+_:node179bpkoc1x303 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x300 rdf:rest rdf:nil .
+
+:Inline rdfs:subClassOf _:node179bpkoc1x304 .
+
+_:node179bpkoc1x304 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x305 .
+
+_:node179bpkoc1x305 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x306 .
+
+_:node179bpkoc1x306 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x307 .
+
+_:node179bpkoc1x307 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Inline rdfs:subClassOf _:node179bpkoc1x308 .
+
+_:node179bpkoc1x308 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x309 .
+
+_:node179bpkoc1x309 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x310 .
+
+_:node179bpkoc1x310 rdf:first :Atom ;
+	rdf:rest _:node179bpkoc1x311 .
+
+_:node179bpkoc1x311 rdf:first :Inline ;
+	rdf:rest _:node179bpkoc1x312 .
+
+_:node179bpkoc1x312 rdf:first :Milestone ;
+	rdf:rest _:node179bpkoc1x313 .
+
+_:node179bpkoc1x313 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+:Meta owl:equivalentClass _:node179bpkoc1x314 .
+
+_:node179bpkoc1x314 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x315 .
+
+_:node179bpkoc1x315 rdf:first :Marker ;
+	rdf:rest _:node179bpkoc1x317 .
+
+_:node179bpkoc1x317 rdf:first _:node179bpkoc1x316 .
+
+_:node179bpkoc1x316 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x318 .
+
+_:node179bpkoc1x318 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x319 .
+
+_:node179bpkoc1x319 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x320 .
+
+_:node179bpkoc1x320 rdf:first :Popup ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x317 rdf:rest rdf:nil .
+
+:Milestone owl:equivalentClass _:node179bpkoc1x321 .
+
+_:node179bpkoc1x321 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x322 .
+
+_:node179bpkoc1x322 rdf:first :Marker ;
+	rdf:rest _:node179bpkoc1x324 .
+
+_:node179bpkoc1x324 rdf:first _:node179bpkoc1x323 .
+
+_:node179bpkoc1x323 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x325 .
+
+_:node179bpkoc1x325 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x326 .
+
+_:node179bpkoc1x326 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x327 .
+
+_:node179bpkoc1x327 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x324 rdf:rest rdf:nil .
+
+:Milestone rdfs:subClassOf _:node179bpkoc1x328 .
+
+_:node179bpkoc1x328 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x329 .
+
+_:node179bpkoc1x329 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x330 .
+
+_:node179bpkoc1x330 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x331 .
+
+_:node179bpkoc1x331 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:NonStructured owl:equivalentClass _:node179bpkoc1x332 .
+
+_:node179bpkoc1x332 a owl:Class ;
+	owl:complementOf :Structured .
+
+:NonTextual owl:equivalentClass _:node179bpkoc1x333 .
+
+_:node179bpkoc1x333 a owl:Class ;
+	owl:complementOf :Textual .
+
+:Popup owl:equivalentClass _:node179bpkoc1x334 .
+
+_:node179bpkoc1x334 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x335 .
+
+_:node179bpkoc1x335 rdf:first :Bucket ;
+	rdf:rest _:node179bpkoc1x337 .
+
+_:node179bpkoc1x337 rdf:first _:node179bpkoc1x336 .
+
+_:node179bpkoc1x336 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:allValuesFrom _:node179bpkoc1x338 .
+
+_:node179bpkoc1x338 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x339 .
+
+_:node179bpkoc1x339 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x340 .
+
+_:node179bpkoc1x340 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x337 rdf:rest rdf:nil .
+
+:Popup rdfs:subClassOf _:node179bpkoc1x341 .
+
+_:node179bpkoc1x341 a owl:Restriction ;
+	owl:onProperty :contains ;
+	owl:allValuesFrom _:node179bpkoc1x342 .
+
+_:node179bpkoc1x342 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x343 .
+
+_:node179bpkoc1x343 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x344 .
+
+_:node179bpkoc1x344 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x345 .
+
+_:node179bpkoc1x345 rdf:first :Field ;
+	rdf:rest _:node179bpkoc1x346 .
+
+_:node179bpkoc1x346 rdf:first :Meta ;
+	rdf:rest rdf:nil .
+
+:Popup rdfs:subClassOf _:node179bpkoc1x347 .
+
+_:node179bpkoc1x347 a owl:Restriction ;
+	owl:onProperty :isContainedBy ;
+	owl:someValuesFrom _:node179bpkoc1x348 .
+
+_:node179bpkoc1x348 a owl:Class ;
+	owl:unionOf _:node179bpkoc1x349 .
+
+_:node179bpkoc1x349 rdf:first :Block ;
+	rdf:rest _:node179bpkoc1x350 .
+
+_:node179bpkoc1x350 rdf:first :Inline ;
+	rdf:rest rdf:nil .
+
+:Record owl:equivalentClass _:node179bpkoc1x351 .
+
+_:node179bpkoc1x351 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x352 .
+
+_:node179bpkoc1x352 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x354 .
+
+_:node179bpkoc1x354 rdf:first _:node179bpkoc1x353 .
+
+_:node179bpkoc1x353 a owl:Restriction ;
+	owl:onProperty :canContainHeterogeneousElements ;
+	owl:hasValue "true"^^xsd:boolean .
+
+_:node179bpkoc1x354 rdf:rest _:node179bpkoc1x356 .
+
+_:node179bpkoc1x356 rdf:first _:node179bpkoc1x355 .
+
+_:node179bpkoc1x355 a owl:Restriction ;
+	owl:onProperty :canContainHomogeneousElements ;
+	owl:hasValue "false"^^xsd:boolean .
+
+_:node179bpkoc1x356 rdf:rest rdf:nil .
+
+:Table owl:equivalentClass _:node179bpkoc1x357 .
+
+_:node179bpkoc1x357 a owl:Class ;
+	owl:intersectionOf _:node179bpkoc1x358 .
+
+_:node179bpkoc1x358 rdf:first :Container ;
+	rdf:rest _:node179bpkoc1x360 .
+
+_:node179bpkoc1x360 rdf:first _:node179bpkoc1x359 .
+
+_:node179bpkoc1x359 a owl:Restriction ;
+	owl:onProperty :canContainHeterogeneousElements ;
+	owl:hasValue "false"^^xsd:boolean .
+
+_:node179bpkoc1x360 rdf:rest _:node179bpkoc1x362 .
+
+_:node179bpkoc1x362 rdf:first _:node179bpkoc1x361 .
+
+_:node179bpkoc1x361 a owl:Restriction ;
+	owl:onProperty :canContainHomogeneousElements ;
+	owl:hasValue "true"^^xsd:boolean .
+
+_:node179bpkoc1x362 rdf:rest rdf:nil .
+
+_:node179bpkoc1x363 a owl:AllDisjointClasses ;
+	owl:members _:node179bpkoc1x364 .
+
+_:node179bpkoc1x364 rdf:first :HeadedContainer ;
+	rdf:rest _:node179bpkoc1x365 .
+
+_:node179bpkoc1x365 rdf:first :Record ;
+	rdf:rest _:node179bpkoc1x366 .
+
+_:node179bpkoc1x366 rdf:first :Table ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x367 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x368 .
+
+_:node179bpkoc1x368 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x369 .
+
+_:node179bpkoc1x369 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x367 swrl:body _:node179bpkoc1x370 .
+
+_:node179bpkoc1x370 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x371 .
+
+_:node179bpkoc1x371 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x370 rdf:rest _:node179bpkoc1x372 .
+
+_:node179bpkoc1x372 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x373 .
+
+_:node179bpkoc1x373 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x372 rdf:rest _:node179bpkoc1x374 .
+
+_:node179bpkoc1x374 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x375 .
+
+_:node179bpkoc1x375 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x376 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x377 .
+
+_:node179bpkoc1x377 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x378 .
+
+_:node179bpkoc1x378 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "true"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHeterogeneousElements ;
+	swrl:argument1 :p .
+
+_:node179bpkoc1x376 swrl:body _:node179bpkoc1x379 .
+
+_:node179bpkoc1x379 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x380 .
+
+_:node179bpkoc1x380 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x381 .
+
+_:node179bpkoc1x381 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :p ;
+	swrl:argument2 :y .
+
+_:node179bpkoc1x380 rdf:rest _:node179bpkoc1x382 .
+
+_:node179bpkoc1x382 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x383 .
+
+_:node179bpkoc1x383 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x384 .
+
+_:node179bpkoc1x384 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x385 .
+
+_:node179bpkoc1x385 a swrl:BuiltinAtom ;
+	swrl:builtin swrlb:notEqual ;
+	swrl:arguments _:node179bpkoc1x386 .
+
+_:node179bpkoc1x386 rdf:first :s ;
+	rdf:rest _:node179bpkoc1x387 .
+
+_:node179bpkoc1x387 rdf:first :t ;
+	rdf:rest rdf:nil .
+
+_:node179bpkoc1x383 rdf:first _:node179bpkoc1x388 .
+
+_:node179bpkoc1x388 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :t ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x382 rdf:first _:node179bpkoc1x389 .
+
+_:node179bpkoc1x389 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x379 rdf:first _:node179bpkoc1x390 .
+
+_:node179bpkoc1x390 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :p ;
+	swrl:argument2 :x .
+
+_:node179bpkoc1x391 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x392 .
+
+_:node179bpkoc1x392 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x393 .
+
+_:node179bpkoc1x393 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x391 swrl:body _:node179bpkoc1x394 .
+
+_:node179bpkoc1x394 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x395 .
+
+_:node179bpkoc1x395 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x396 .
+
+_:node179bpkoc1x396 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x397 .
+
+_:node179bpkoc1x397 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :x ;
+	swrl:argument2 :z .
+
+_:node179bpkoc1x396 rdf:rest _:node179bpkoc1x398 .
+
+_:node179bpkoc1x398 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x399 .
+
+_:node179bpkoc1x399 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :z .
+
+_:node179bpkoc1x395 rdf:first _:node179bpkoc1x400 .
+
+_:node179bpkoc1x400 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 :x ;
+	swrl:argument2 :y .
+
+_:node179bpkoc1x394 rdf:first _:node179bpkoc1x401 .
+
+_:node179bpkoc1x401 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x402 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x403 .
+
+_:node179bpkoc1x403 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x404 .
+
+_:node179bpkoc1x404 a swrl:ClassAtom ;
+	swrl:classPredicate :Inline ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x403 rdf:rest _:node179bpkoc1x405 .
+
+_:node179bpkoc1x405 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x406 .
+
+_:node179bpkoc1x406 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x405 rdf:rest _:node179bpkoc1x407 .
+
+_:node179bpkoc1x407 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x408 .
+
+_:node179bpkoc1x408 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x402 swrl:head _:node179bpkoc1x409 .
+
+_:node179bpkoc1x409 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x410 .
+
+_:node179bpkoc1x410 a swrl:ClassAtom ;
+	swrl:classPredicate :Inline ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x411 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x412 .
+
+_:node179bpkoc1x412 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x413 .
+
+_:node179bpkoc1x413 a swrl:ClassAtom ;
+	swrl:classPredicate :Field ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x411 swrl:body _:node179bpkoc1x414 .
+
+_:node179bpkoc1x414 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x415 .
+
+_:node179bpkoc1x415 a swrl:ClassAtom ;
+	swrl:classPredicate :Field ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x414 rdf:rest _:node179bpkoc1x416 .
+
+_:node179bpkoc1x416 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x417 .
+
+_:node179bpkoc1x417 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x416 rdf:rest _:node179bpkoc1x418 .
+
+_:node179bpkoc1x418 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x419 .
+
+_:node179bpkoc1x419 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x420 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x421 .
+
+_:node179bpkoc1x421 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x422 .
+
+_:node179bpkoc1x422 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 <urn:swrl#p> ;
+	swrl:argument2 <urn:swrl#x> .
+
+_:node179bpkoc1x421 rdf:rest _:node179bpkoc1x423 .
+
+_:node179bpkoc1x423 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x424 .
+
+_:node179bpkoc1x424 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x425 .
+
+_:node179bpkoc1x425 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x426 .
+
+_:node179bpkoc1x426 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 <urn:swrl#s> ;
+	swrl:argument1 <urn:swrl#y> .
+
+_:node179bpkoc1x424 rdf:first _:node179bpkoc1x427 .
+
+_:node179bpkoc1x427 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 <urn:swrl#s> ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node179bpkoc1x423 rdf:first _:node179bpkoc1x428 .
+
+_:node179bpkoc1x428 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate :contains ;
+	swrl:argument1 <urn:swrl#p> ;
+	swrl:argument2 <urn:swrl#y> .
+
+_:node179bpkoc1x420 swrl:head _:node179bpkoc1x429 .
+
+_:node179bpkoc1x429 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x430 .
+
+_:node179bpkoc1x430 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "true"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHomogeneousElements ;
+	swrl:argument1 <urn:swrl#p> .
+
+_:node179bpkoc1x431 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x432 .
+
+_:node179bpkoc1x432 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x433 .
+
+_:node179bpkoc1x433 a swrl:ClassAtom ;
+	swrl:classPredicate :Record ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x431 swrl:head _:node179bpkoc1x434 .
+
+_:node179bpkoc1x434 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x435 .
+
+_:node179bpkoc1x435 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "false"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHomogeneousElements ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x436 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x437 .
+
+_:node179bpkoc1x437 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x438 .
+
+_:node179bpkoc1x438 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x439 .
+
+_:node179bpkoc1x439 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x440 .
+
+_:node179bpkoc1x440 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x438 rdf:first _:node179bpkoc1x441 .
+
+_:node179bpkoc1x441 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x437 rdf:first _:node179bpkoc1x442 .
+
+_:node179bpkoc1x442 a swrl:ClassAtom ;
+	swrl:classPredicate :Container ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x436 swrl:head _:node179bpkoc1x443 .
+
+_:node179bpkoc1x443 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x444 .
+
+_:node179bpkoc1x444 a swrl:ClassAtom ;
+	swrl:classPredicate :Container ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x445 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x446 .
+
+_:node179bpkoc1x446 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x447 .
+
+_:node179bpkoc1x447 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 "false"^^xsd:boolean ;
+	swrl:propertyPredicate :canContainHeterogeneousElements ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x445 swrl:body _:node179bpkoc1x448 .
+
+_:node179bpkoc1x448 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x449 .
+
+_:node179bpkoc1x449 a swrl:ClassAtom ;
+	swrl:classPredicate :Table ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x450 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x451 .
+
+_:node179bpkoc1x451 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x452 .
+
+_:node179bpkoc1x452 a swrl:ClassAtom ;
+	swrl:classPredicate :Meta ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x450 swrl:body _:node179bpkoc1x453 .
+
+_:node179bpkoc1x453 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x454 .
+
+_:node179bpkoc1x454 a swrl:ClassAtom ;
+	swrl:classPredicate :Meta ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x453 rdf:rest _:node179bpkoc1x455 .
+
+_:node179bpkoc1x455 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x456 .
+
+_:node179bpkoc1x456 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x455 rdf:rest _:node179bpkoc1x457 .
+
+_:node179bpkoc1x457 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x458 .
+
+_:node179bpkoc1x458 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x459 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x460 .
+
+_:node179bpkoc1x460 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x461 .
+
+_:node179bpkoc1x461 a swrl:ClassAtom ;
+	swrl:classPredicate :Record ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x459 swrl:body _:node179bpkoc1x462 .
+
+_:node179bpkoc1x462 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x463 .
+
+_:node179bpkoc1x463 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x464 .
+
+_:node179bpkoc1x464 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x465 .
+
+_:node179bpkoc1x465 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x463 rdf:first _:node179bpkoc1x466 .
+
+_:node179bpkoc1x466 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x462 rdf:first _:node179bpkoc1x467 .
+
+_:node179bpkoc1x467 a swrl:ClassAtom ;
+	swrl:classPredicate :Record ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x468 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x469 .
+
+_:node179bpkoc1x469 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x470 .
+
+_:node179bpkoc1x470 a swrl:ClassAtom ;
+	swrl:classPredicate :Textual ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x468 swrl:body _:node179bpkoc1x471 .
+
+_:node179bpkoc1x471 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x472 .
+
+_:node179bpkoc1x472 a swrl:ClassAtom ;
+	swrl:classPredicate :Pattern ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x471 rdf:rest _:node179bpkoc1x473 .
+
+_:node179bpkoc1x473 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x474 .
+
+_:node179bpkoc1x474 a swrl:ClassAtom ;
+	swrl:classPredicate :Textual ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x473 rdf:rest _:node179bpkoc1x475 .
+
+_:node179bpkoc1x475 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x476 .
+
+_:node179bpkoc1x476 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x477 .
+
+_:node179bpkoc1x477 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 :g ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x475 rdf:first _:node179bpkoc1x478 .
+
+_:node179bpkoc1x478 a swrl:DatavaluedPropertyAtom ;
+	swrl:argument2 :g ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x479 a swrl:Imp ;
+	swrl:head _:node179bpkoc1x480 .
+
+_:node179bpkoc1x480 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x481 .
+
+_:node179bpkoc1x481 a swrl:ClassAtom ;
+	swrl:classPredicate :Milestone ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x479 swrl:body _:node179bpkoc1x482 .
+
+_:node179bpkoc1x482 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x483 .
+
+_:node179bpkoc1x483 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x484 .
+
+_:node179bpkoc1x484 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x483 rdf:rest _:node179bpkoc1x485 .
+
+_:node179bpkoc1x485 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x486 .
+
+_:node179bpkoc1x486 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x482 rdf:first _:node179bpkoc1x487 .
+
+_:node179bpkoc1x487 a swrl:ClassAtom ;
+	swrl:classPredicate :Milestone ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x488 a swrl:Imp ;
+	swrl:body _:node179bpkoc1x489 .
+
+_:node179bpkoc1x489 a swrl:AtomList ;
+	rdf:rest _:node179bpkoc1x490 .
+
+_:node179bpkoc1x490 a swrl:AtomList ;
+	rdf:first _:node179bpkoc1x491 .
+
+_:node179bpkoc1x491 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x490 rdf:rest _:node179bpkoc1x492 .
+
+_:node179bpkoc1x492 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x493 .
+
+_:node179bpkoc1x493 a swrl:DatavaluedPropertyAtom ;
+	swrl:propertyPredicate :hasName ;
+	swrl:argument2 :s ;
+	swrl:argument1 :y .
+
+_:node179bpkoc1x489 rdf:first _:node179bpkoc1x494 .
+
+_:node179bpkoc1x494 a swrl:ClassAtom ;
+	swrl:classPredicate :Block ;
+	swrl:argument1 :x .
+
+_:node179bpkoc1x488 swrl:head _:node179bpkoc1x495 .
+
+_:node179bpkoc1x495 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node179bpkoc1x496 .
+
+_:node179bpkoc1x496 a swrl:ClassAtom ;
+	swrl:classPredicate :Block ;
+	swrl:argument1 :y .

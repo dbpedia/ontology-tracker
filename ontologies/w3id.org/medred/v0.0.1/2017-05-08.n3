@@ -1,0 +1,262 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix p-plan: <http://purl.org/net/p-plan#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix j.1:   <http://purl.org/vocab/vann/> .
+@prefix j.0:   <http://purl.org/vocommons/voaf#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix disco: <http://rdf-vocabulary.ddialliance.org/discovery#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix medred: <http://w3id.org/medred/medred#> .
+
+medred:items  a           owl:ObjectProperty ;
+        rdfs:comment      "The items property represents a relationship between an Instrument and its constitutent ItemList"@en ;
+        rdfs:domain       [ a            owl:Class ;
+                            owl:unionOf  [ a          rdf:List ;
+                                           rdf:first  medred:Instrument ;
+                                           rdf:rest   [ a          rdf:List ;
+                                                        rdf:first  medred:Item ;
+                                                        rdf:rest   ()
+                                                      
+                                                      ]
+                                         ]
+                          ] ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "items"@en ;
+        rdfs:range        medred:ItemList ;
+        rdfs:seeAlso      medred:ItemList .
+
+medred:Question  a        owl:Class ;
+        rdfs:comment      "A Question is an Instrument item consisting of an inquiry or query to a subject"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Question"@en ;
+        rdfs:subClassOf   disco:Question , medred:Item .
+
+medred:ofSection  a         owl:ObjectProperty ;
+        rdfs:comment        "It establishes a relationship between an Item and a Section"@en ;
+        rdfs:domain         medred:Item ;
+        rdfs:isDefinedBy    medred: ;
+        rdfs:label          "ofSection"@en ;
+        rdfs:range          medred:Section ;
+        rdfs:seeAlso        medred:Section ;
+        rdfs:subPropertyOf  p-plan:isStepOfPlan .
+
+medred:Item  a            owl:Class ;
+        rdfs:comment      "An Item is a step of an Instrument"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Item"@en ;
+        rdfs:subClassOf   p-plan:Step ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      dcterms:title ;
+                            owl:someValuesFrom  xsd:string
+                          ] .
+
+medred:CaseReportForm
+        a                 owl:Class ;
+        rdfs:comment      "A CaseReportForm is a tool used for a clinical study to collect data from each participating subject"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "CaseReportForm"@en ;
+        rdfs:subClassOf   medred:Instrument .
+
+medred:hasValue  a   owl:DatatypeProperty ;
+        rdfs:domain  medred:Choice ;
+        rdfs:range   rdfs:Literal .
+
+rdf:first  a    owl:ObjectProperty .
+
+medred:Choice  a          owl:Class ;
+        rdfs:comment      "Each Choice corresponds to a possible answer to a given Question"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Choice"@en ;
+        rdfs:seeAlso      medred:ChoiceList .
+
+rdf:List  a     owl:Class .
+
+medred:Questionnaire  a   owl:Class ;
+        rdfs:comment      "A Questionnaire is an Instrument that consists fo different questions made to the subject"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Questionnaire"@en ;
+        rdfs:subClassOf   medred:Instrument .
+
+medred:dataType  a          owl:ObjectProperty ;
+        rdfs:comment        "The dataType estalbishes a relationship between a Variable and the datatype of its data item"@en ;
+        rdfs:domain         p-plan:Variable ;
+        rdfs:isDefinedBy    medred: ;
+        rdfs:label          "dataType"@en ;
+        rdfs:range          rdfs:Datatype ;
+        rdfs:subPropertyOf  owl:topObjectProperty .
+
+j.0:Vocabulary  a  owl:Class .
+
+dcterms:title  a  owl:DatatypeProperty .
+
+medred:ofInstrument  a      owl:ObjectProperty ;
+        rdfs:comment        "It establishes a relationships between an Item and an Instrument"@en ;
+        rdfs:domain         medred:Item ;
+        rdfs:isDefinedBy    medred: ;
+        rdfs:label          "ofInstrument"@en ;
+        rdfs:range          medred:Instrument ;
+        rdfs:seeAlso        medred:Instrument ;
+        rdfs:subPropertyOf  p-plan:isStepOfPlan .
+
+rdf:nil  a      owl:NamedIndividual .
+
+medred:instrument  a      owl:ObjectProperty ;
+        rdfs:comment      "The instrument establishes a relationship between a Study and an Instrument"@en ;
+        rdfs:domain       medred:Study ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "instrument"@en ;
+        rdfs:range        medred:Instrument ;
+        rdfs:seeAlso      medred:Instrument .
+
+medred:Observation  a    owl:Class ;
+        rdfs:subClassOf  p-plan:Entity .
+
+medred:calculation  a  owl:DatatypeProperty ;
+        rdfs:domain  medred:Operation ;
+        rdfs:label   "calculation"@en .
+
+medred:ChoiceList  a         owl:Class ;
+        rdfs:comment         "The ChoiceList corresponds to a list of Choice items for a given Question"@en ;
+        rdfs:isDefinedBy     medred: ;
+        rdfs:label           "ChoiceList"@en ;
+        rdfs:subClassOf      rdf:List ;
+        rdfs:subClassOf      [ a                  owl:Restriction ;
+                               owl:allValuesFrom  medred:Choice ;
+                               owl:onProperty     rdf:first
+                             ] ;
+        rdfs:subClassOf      [ a                  owl:Restriction ;
+                               owl:allValuesFrom  [ a            owl:Class ;
+                                                    owl:unionOf  [ a          rdf:List ;
+                                                                   rdf:first  medred:ChoiceList ;
+                                                                   rdf:rest   [ a          rdf:List ;
+                                                                                rdf:first  [ a          owl:Class ;
+                                                                                             owl:oneOf  [ a          rdf:List ;
+                                                                                                          rdf:first  ()
+                                                                                                           ;
+                                                                                                          rdf:rest   ()
+                                                                                                        
+                                                                                                        ]
+                                                                                           ] ;
+                                                                                rdf:rest   ()
+                                                                              
+                                                                              ]
+                                                                 ]
+                                                  ] ;
+                               owl:onProperty     rdf:rest
+                             ] ;
+        owl:equivalentClass  [ a                   owl:Restriction ;
+                               owl:onProperty      [ owl:inverseOf  medred:choices ] ;
+                               owl:someValuesFrom  medred:Question
+                             ] .
+
+medred:Study  a           owl:Class ;
+        rdfs:comment      "A Study is a medical research investigation composed of several instruments"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Study"@en ;
+        rdfs:seeAlso      disco:Study ;
+        rdfs:subClassOf   disco:Study , prov:Entity .
+
+medred:validationShape
+        a            owl:ObjectProperty ;
+        rdfs:domain  medred:Item ;
+        rdfs:range   sh:PropertyShape .
+
+medred:  a                            owl:Ontology , j.0:Vocabulary , owl:NamedIndividual ;
+        rdfs:comment                  "Cette ontologie a été conçue pour representer des Instruments pour l'aquisition de données cliniques, dans le contexte du projet MedRed project (https://www.hevs.ch/en/rad-institutes/institute-of-information-systems/projects/medical-research-data-acquisition-platform-14092)"@fr , "This ontology aims to model generic Medical Data Acquisition Instruments, which can be interoperable across different clinical data management systems. The ontology is developed in the context of the MedRed project (https://www.hevs.ch/en/rad-institutes/institute-of-information-systems/projects/medical-research-data-acquisition-platform-14092)"@en , "Esta ontología has sido diseñada para representar Instrumentos de captura de datos clínicos, dentro del contexto del proyecto MedRed (https://www.hevs.ch/en/rad-institutes/institute-of-information-systems/projects/medical-research-data-acquisition-platform-14092)"@es ;
+        dc:publisher                  <http://aislab.hevs.ch/> ;
+        dcterms:creator               <http://jeanpi.org> , <http://w3id.org/people/jpcik/me> ;
+        dcterms:description           "This ontology aims to model generic Medical Data Acquisition Instruments, which can be interoperable across different clinical data management systems. The ontology is developed in the context of the MedRed project (https://www.hevs.ch/en/rad-institutes/institute-of-information-systems/projects/medical-research-data-acquisition-platform-14092)"@en , "Esta ontología has sido diseñada para representar Instrumentos de captura de datos clínicos, dentro del contexto del proyecto MedRed (https://www.hevs.ch/en/rad-institutes/institute-of-information-systems/projects/medical-research-data-acquisition-platform-14092)"@es , "Cette ontologie a été conçue pour representer des Instruments pour l'aquisition de données cliniques, dans le contexte du projet MedRed project (https://www.hevs.ch/en/rad-institutes/institute-of-information-systems/projects/medical-research-data-acquisition-platform-14092)"@fr ;
+        dcterms:issued                "2017-04-01"^^xsd:date ;
+        dcterms:license               <http://purl.org/NET/rdflicense/cc-by4.0> ;
+        dcterms:modified              "2017-04-25"^^xsd:date ;
+        dcterms:publisher             <http://w3id.org/hes-so/aislab> ;
+        dcterms:rights                "Copyright © 2017 HES-SO Valais-Wallis" ;
+        dcterms:title                 "MedRed ontology: clinical data acquisition model"@en , "Ontología MedRed: modelo de adquisición de datos clínicos"@es , "MedRed ontologie: modèle d'aquisition de données cliniques"@fr ;
+        j.1:preferredNamespacePrefix  "medred" ;
+        j.1:preferredNamespaceUri     "http://w3id.org/medred/medred#" ;
+        owl:imports                   sh: , <http://rdf-vocabulary.ddialliance.org/discovery> , p-plan: ;
+        owl:versionInfo               "0.0.1" .
+
+medred:varName  a    owl:DatatypeProperty ;
+        rdfs:domain  p-plan:Variable ;
+        rdfs:label   "varName"@en ;
+        rdfs:range   xsd:string .
+
+rdf:rest  a     owl:ObjectProperty .
+
+medred:Operation  a       owl:Class ;
+        rdfs:comment      "An Operation is an Instrument item that results of a computation, or generated form other items"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Operation"@en ;
+        rdfs:subClassOf   medred:Item .
+
+medred:Information  a     owl:Class ;
+        rdfs:comment      "Information corresponds to an instrument item that holds an information for the subject"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Information"@en ;
+        rdfs:subClassOf   medred:Item .
+
+rdfs:Datatype  a  owl:Class .
+
+medred:Instrument  a      owl:Class ;
+        rdfs:comment      "An Instrument represents a data acquisition tool for a medical study, e.g. a questionnaire, survey, assessment, etc."@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Instrument"@en ;
+        rdfs:subClassOf   disco:Instrument , prov:Plan .
+
+medred:ItemList  a        owl:Class ;
+        rdfs:comment      "The ItemList is a list of Item elements"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "ItemList"@en ;
+        rdfs:subClassOf   rdf:List ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  medred:Item ;
+                            owl:onProperty     rdf:first
+                          ] ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a            owl:Class ;
+                                                 owl:unionOf  [ a          rdf:List ;
+                                                                rdf:first  medred:ItemList ;
+                                                                rdf:rest   [ a          rdf:List ;
+                                                                             rdf:first  [ a          owl:Class ;
+                                                                                          owl:oneOf  [ a          rdf:List ;
+                                                                                                       rdf:first  ()
+                                                                                                        ;
+                                                                                                       rdf:rest   ()
+                                                                                                     
+                                                                                                     ]
+                                                                                        ] ;
+                                                                             rdf:rest   ()
+                                                                           
+                                                                           ]
+                                                              ]
+                                               ] ;
+                            owl:onProperty     rdf:rest
+                          ] .
+
+medred:studyName  a         owl:DatatypeProperty ;
+        rdfs:domain         medred:Study ;
+        rdfs:label          "studyName"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  dcterms:title .
+
+medred:choices  a         owl:ObjectProperty ;
+        rdfs:comment      "A relation between an Instrument question, and the list of possible Choice elements"@en ;
+        rdfs:domain       medred:Question ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "choices"@en ;
+        rdfs:range        medred:ChoiceList ;
+        rdfs:seeAlso      medred:Choice .
+
+medred:Section  a         owl:Class ;
+        rdfs:comment      "A Section is an Instrument item that regroups a subset of Items"@en ;
+        rdfs:isDefinedBy  medred: ;
+        rdfs:label        "Section"@en ;
+        rdfs:subClassOf   p-plan:MultiStep , medred:Item .
+
+medred:dataValue  a  owl:DatatypeProperty ;
+        rdfs:domain  medred:Observation .

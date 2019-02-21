@@ -1,0 +1,537 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wot:   <http://xmlns.com/wot/0.1/> .
+@prefix bibtex: <http://purl.org/net/nknouf/ns/bibtex#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix units: <http://zeitkunst.org/fontomri/0.01/units.owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+bibtex:hasAddress  a  owl:DatatypeProperty ;
+        rdfs:comment  "Usually the address of the publisher or other type of institution. For major publishing houses, van Leunen recommends omitting the information entirely. For small publishers, on the other hand, you can help the reader by giving the complete address."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has address"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasISBN  a     owl:DatatypeProperty ;
+        rdfs:comment  "The International Standard Book Number."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has ISBN"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasNote  a     owl:DatatypeProperty ;
+        rdfs:comment  "Any additional information that can help the reader. The first word should be capitalized."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has note"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:pageChapterData
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A generic property to hold page and/or chapter data."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "page and/or chapter data"@en .
+
+bibtex:humanCreator  a  owl:DatatypeProperty ;
+        rdfs:comment  "A generic human creator category, necessary in order to contain both author and editor."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "human creator"@en ;
+        rdfs:range    xsd:string .
+
+dc:identifier  a  owl:AnnotationProperty .
+
+bibtex:hasLanguage  a  owl:DatatypeProperty ;
+        rdfs:comment  "The language the document is in."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has language"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:Incollection  a   owl:Class ;
+        rdfs:comment     "A part of a book having its own title."@en ;
+        rdfs:label       "Incollection"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasPublisher
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasBooktitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+dc:subject  a   owl:AnnotationProperty .
+
+bibtex:hasCopyright  a  owl:DatatypeProperty ;
+        rdfs:comment  "Copyright information."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has copyright"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasSeries  a   owl:DatatypeProperty ;
+        rdfs:comment  "The name of a series or set of books. When citing an entire book, the the title field gives its title and an optional series field gives the name of a series or multi-volume set in which the book is published."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has series"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasChapter  a        owl:DatatypeProperty ;
+        rdfs:comment        "A chapter (or section or whatever) number."@en ;
+        rdfs:domain         bibtex:Entry ;
+        rdfs:label          "has chapter"@en ;
+        rdfs:range          xsd:nonNegativeInteger ;
+        rdfs:subPropertyOf  bibtex:pageChapterData .
+
+<http://purl.org/net/nknouf/ns/bibtex>
+        a                owl:Ontology ;
+        rdfs:comment     "Possible ontology to describe bibTeX entries." ;
+        rdfs:label       "bibtex ontology" ;
+        dc:creator       "Nick Knouf <nknouf@mit.edu>" ;
+        dc:date          "2003-12-29" ;
+        dc:description   "Transformation of bibTeX into an OWL ontology" ;
+        dc:identifier    "http://zeitkunst.org/bibtex/0.2/bibtex.owl"^^xsd:anyURI ;
+        dc:subject       "fMRI, ontology, fMRI analysis" ;
+        dc:title         "bibtex.owl: an ontology for bibTeX entries" ;
+        owl:versionInfo  "0.2" .
+
+bibtex:hasAuthor  a         owl:DatatypeProperty ;
+        rdfs:comment        "The name(s) of the author(s), in the format described in the LaTeX book."@en ;
+        rdfs:domain         bibtex:Entry ;
+        rdfs:label          "has author"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  bibtex:humanCreator ;
+        dc:description      "This is tricky due to the fact that order is not (generally) preserved in RDF documents.  The problem arises when you want to have an author list where the order is _extremely_ important.  How shall we do that?  Perhaps we want to define \"hasPrimaryAuthor\", \"hasSecondaryAuthor\", \"hasTertiaryAuthor\", and \"hasRemainingAuthors\", or something of that sort.  This will be have to given more thought." .
+
+bibtex:hasEditor  a         owl:DatatypeProperty ;
+        rdfs:comment        "Name(s) of editor(s), typed as indicated in the LaTeX book. If there is also an author field, then the editor field gives the editor of the book or collection in which the reference appears."@en ;
+        rdfs:domain         bibtex:Entry ;
+        rdfs:label          "has editor"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  bibtex:humanCreator ;
+        dc:description      "Again, the same issues that arose with the \"hasAuthor\" property apply here." .
+
+bibtex:hasJournal  a    owl:DatatypeProperty ;
+        rdfs:comment    "A journal name. Abbreviations are provided for many journals; see the Local Guide"@en ;
+        rdfs:domain     bibtex:Entry ;
+        rdfs:label      "has journal"@en ;
+        rdfs:range      xsd:string ;
+        dc:description  "This could optionally be an object property, whereby the range would refer to an external set of journal instances, thus providing standardized abbreviations for different bibliographic styles." .
+
+bibtex:hasMonth  a    owl:DatatypeProperty ;
+        rdfs:comment  "The month in which the work was published or, for an unpublished work, in which it was written. You should use the standard three-letter abbreviation, as described in Appendix B.1.3 of the LaTeX book."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has month"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:Book  a           owl:Class ;
+        rdfs:comment     "A book with an explicit publisher."@en ;
+        rdfs:label       "Book"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasPublisher
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           dc:description      "One thing to figure out is whether or not this tells us what we want; that is, does this imply that we must have at least one property of humanCreator, which could be either hasAuthor or hasEditor?" ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:humanCreator
+                         ] .
+
+bibtex:hasISSN  a     owl:DatatypeProperty ;
+        rdfs:comment  "The International Standard Serial Number. Used to identify a journal."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has ISSN"@en ;
+        rdfs:range    xsd:string .
+
+dc:description  a  owl:AnnotationProperty .
+
+dcterms:abstract  a  owl:AnnotationProperty .
+
+dc:source  a    owl:AnnotationProperty .
+
+dc:creator  a     owl:AnnotationProperty ;
+        dc:title  "Nicholas Knouf" .
+
+bibtex:Article  a        owl:Class ;
+        rdfs:comment     "An article from a journal or magazine."@en ;
+        rdfs:label       "Article"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasJournal
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+bibtex:hasVolume  a   owl:DatatypeProperty ;
+        rdfs:comment  "The volume of a journal or multivolume book."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has volume"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+bibtex:hasBooktitle  a  owl:DatatypeProperty ;
+        rdfs:comment  "Title of a book, part of which is being cited. See the LaTeX book for how to type titles. For book entries, use the title field instead."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has booktitle"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasYear  a     owl:DatatypeProperty ;
+        rdfs:comment  "The year of publication or, for an unpublished work, the year it was written. Generally it should consist of four numerals, such as 1984, although the standard styles can handle any year whose last four nonpunctuation characters are numerals, such as '(about 1984)'."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has year"@en ;
+        rdfs:range    xsd:nonNegativeInteger .
+
+bibtex:hasCrossref  a  owl:DatatypeProperty ;
+        rdfs:comment  "The database key of the entry being cross referenced."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has crossref"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:Mastersthesis  a  owl:Class ;
+        rdfs:comment     "A Master's thesis."@en ;
+        rdfs:label       "Mastersthesis"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasSchool
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+bibtex:hasInstitution
+        a               owl:DatatypeProperty ;
+        rdfs:comment    "The sponsoring institution of a technical report."@en ;
+        rdfs:domain     bibtex:Entry ;
+        rdfs:label      "has institution"@en ;
+        rdfs:range      xsd:string ;
+        dc:description  "This could be an object property that refers to an external set of institution instances." .
+
+bibtex:Techreport  a     owl:Class ;
+        rdfs:comment     "A report published by a school or other institution, usually numbered within a series."@en ;
+        rdfs:label       "Techreport"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasInstitution
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+bibtex:hasOrganization
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "The organization that sponsors a conference or that publishes a manual."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has organization"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasAbstract  a  owl:DatatypeProperty ;
+        rdfs:comment  "An abstract of the work."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has abstract"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasPrice  a    owl:DatatypeProperty ;
+        rdfs:comment  "The price of the document."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has price"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasAnnotation  a  owl:DatatypeProperty ;
+        rdfs:comment  "An annotation. It is not used by the standard bibliography styles, but may be used by others that produce an annotated bibliography."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has annotation"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:howPublished  a  owl:DatatypeProperty ;
+        rdfs:comment  "How something strange has been published. The first word should be capitalized."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "how published"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasPublisher  a  owl:DatatypeProperty ;
+        rdfs:comment    "The publisher's name."@en ;
+        rdfs:domain     bibtex:Entry ;
+        rdfs:label      "has publisher"@en ;
+        rdfs:range      xsd:string ;
+        dc:description  "This is a case where an ObjectProperty might be a better choice, where the range is some set of publisher names defined in another ontology.  That would allow all of the metadata for the publisher to be incorporated as needed." .
+
+bibtex:hasSchool  a     owl:DatatypeProperty ;
+        rdfs:comment    "The name of the school where a thesis was written."@en ;
+        rdfs:domain     bibtex:Entry ;
+        rdfs:label      "has school"@en ;
+        rdfs:range      xsd:string ;
+        dc:description  "As with \"hasPublisher\", this could be an ObjectProperty that refers to an external set of school instances." .
+
+bibtex:Inproceedings  a  owl:Class ;
+        rdfs:comment     "An article in a conference proceedings."@en ;
+        rdfs:label       "Inproceedings"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasBooktitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+bibtex:Inbook  a         owl:Class ;
+        rdfs:comment     "A part of a book, which may be a chapter (or section or whatever) and/or a range of pages. "@en ;
+        rdfs:label       "Inbook"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasPublisher
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:pageChapterData
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           dc:description      "One thing to figure out is whether or not this tells us what we want; that is, does this imply that we must have at least one property of humanCreator, which could be either hasAuthor or hasEditor?" ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:humanCreator
+                         ] .
+
+bibtex:hasContents  a  owl:DatatypeProperty ;
+        rdfs:comment  "A Table of Contents."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has contents"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasNumber  a   owl:DatatypeProperty ;
+        rdfs:comment  "The number of a journal, magazine, technical report, or of a work in a series. An issue of a journal or magazine is usually identified by its volume and number; the organization that issues a technical report usually gives it a number; and sometimes books are given numbers in a named series."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has number"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasKey  a      owl:DatatypeProperty ;
+        rdfs:comment  "The key for a particular bibTeX entry.  Note that the rdf:ID for each Entry instance could be the bibTeX key as well, possibly making this property redundant."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has key"@en ;
+        rdfs:range    xsd:string .
+
+dc:date  a      owl:AnnotationProperty .
+
+bibtex:hasMrnumber  a  owl:DatatypeProperty ;
+        rdfs:comment  "The Mathematical Reviews number."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has mrnumber"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:Conference  a         owl:Class ;
+        rdfs:comment         "The same as INPROCEEDINGS, included for Scribe compatibility."@en ;
+        rdfs:label           "Conference"@en ;
+        rdfs:subClassOf      bibtex:Entry ;
+        owl:equivalentClass  bibtex:Inproceedings .
+
+bibtex:Booklet  a        owl:Class ;
+        rdfs:comment     "A work that is printed and bound, but without a named publisher or sponsoring institution."@en ;
+        rdfs:label       "Booklet"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] .
+
+bibtex:hasAffiliation
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "The authors affiliation."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has affiliation"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasLCCN  a     owl:DatatypeProperty ;
+        rdfs:comment  "The Library of Congress Call Number."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has LCCN"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasLocation  a  owl:DatatypeProperty ;
+        rdfs:comment  "A location associated with the entry, such as the city in which a conference took place."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has location"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasType  a     owl:DatatypeProperty ;
+        rdfs:comment  "The type of a technical report--for example, \"Research Note\"."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has type"@en ;
+        rdfs:range    xsd:string .
+
+dcterms:bibliographicCitation
+        a       owl:AnnotationProperty .
+
+bibtex:Manual  a         owl:Class ;
+        rdfs:comment     "Technical documentation."@en ;
+        rdfs:label       "Manual"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] .
+
+bibtex:Entry  a       owl:Class ;
+        rdfs:comment  "Base class for all entries"@en ;
+        rdfs:label    "Entry"@en .
+
+bibtex:Phdthesis  a      owl:Class ;
+        rdfs:comment     "A PhD thesis."@en ;
+        rdfs:label       "Phdthesis"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasSchool
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+bibtex:hasEdition  a  owl:DatatypeProperty ;
+        rdfs:comment  "The edition of a book--for example, \"Second\". This should be an ordinal, and should have the first letter capitalized, as shown here; the standard styles convert to lower case when necessary."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has edition"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasURL  a      owl:DatatypeProperty ;
+        rdfs:comment  "The WWW Universal Resource Locator that points to the item being referenced. This often is used for technical reports to point to the ftp or web site where the postscript source of the report is located."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has URL"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:Misc  a           owl:Class ;
+        rdfs:comment     "Use this type when nothing else fits."@en ;
+        rdfs:label       "Misc"@en ;
+        rdfs:subClassOf  bibtex:Entry .
+
+bibtex:hasTitle  a    owl:DatatypeProperty ;
+        rdfs:comment  "The work's title, typed as explained in the LaTeX book."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has title"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasPages  a          owl:DatatypeProperty ;
+        rdfs:comment        "One or more page numbers or range of numbers, such as 42-111 or 7,41,73-97 or 43+ (the `+' in this last example indicates pages following that don't form a simple range). To make it easier to maintain Scribe-compatible databases, the standard styles convert a single dash (as in 7-33) to the double dash used in TeX to denote number ranges (as in 7-33)."@en ;
+        rdfs:domain         bibtex:Entry ;
+        rdfs:label          "has pages"@en ;
+        rdfs:range          xsd:string ;
+        rdfs:subPropertyOf  bibtex:pageChapterData .
+
+bibtex:Unpublished  a    owl:Class ;
+        rdfs:comment     "A document having an author and title, but not formally published."@en ;
+        rdfs:label       "Unpublished"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasNote
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasAuthor
+                         ] .
+
+bibtex:Proceedings  a    owl:Class ;
+        rdfs:comment     "The proceedings of a conference."@en ;
+        rdfs:label       "Proceedings"@en ;
+        rdfs:subClassOf  bibtex:Entry ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasYear
+                         ] ;
+        rdfs:subClassOf  [ a                   owl:Restriction ;
+                           owl:minCardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty      bibtex:hasTitle
+                         ] .
+
+dc:title  a     owl:AnnotationProperty .
+
+bibtex:hasKeywords  a  owl:DatatypeProperty ;
+        rdfs:comment  "Key words used for searching or possibly for annotation."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has keywords"@en ;
+        rdfs:range    xsd:string .
+
+bibtex:hasSize  a     owl:DatatypeProperty ;
+        rdfs:comment  "The physical dimensions of a work."@en ;
+        rdfs:domain   bibtex:Entry ;
+        rdfs:label    "has size"@en ;
+        rdfs:range    xsd:string .

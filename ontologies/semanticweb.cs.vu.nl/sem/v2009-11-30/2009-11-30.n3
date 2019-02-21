@@ -1,0 +1,346 @@
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix ex:    <http://example.org/test/> .
+@prefix lode:  <http://linkedevents.org/ontology/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix cidoc: <http://www8.informatik.uni-erlangen.de/IMMD8/Services/cidoc-crm/erlangen-crm_090330_5_0_1.owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cs:    <http://www.kulttuurisampo.fi/ebkr/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:  <http://www.w3.org/2006/time> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix dolce: <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#> .
+@prefix sumo:  <http://www.ontologyportal.org/translations/SUMO.owl.txt#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix eo:    <http://purl.org/NET/c4dm/event.owl#> .
+@prefix cyc:   <http://sw.opencyc.org/2009/04/07/concept/en/> .
+@prefix sem:   <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+sem:Time  a              owl:Class ;
+        rdfs:comment     "Time contains symbolic representations of when an Event took place. Time instances do not necessarily need to have a timestamp associated with them. The Time class exists to represent semantics of time, e.g. that one thing happens before another, even though the exact timestamps are unknown." ;
+        rdfs:label       "Time" ;
+        rdfs:subClassOf  sem:Core ;
+        skos:broadMatch  time:TemporalEntity .
+
+dolce:PhysicalRegion  rdfs:isDefinedBy  dolce: .
+
+sem:Temporary  a         owl:Class ;
+        rdfs:comment     "Temporaries are properties that only hold during a certain Time, which is either indicated with the sem:hasTime property to an instance of sem:Time, or with the sem:hasTimeStamp property to some timestamp(s)." ;
+        rdfs:label       "Temporary" ;
+        rdfs:subClassOf  sem:Constraint .
+
+sem:Place  a              owl:Class ;
+        rdfs:comment      "Places are locations where an Event happens. They do not need to be physical places and hence do not necessarily need coordinates. Neither do they need to have any significance apart from them being the location of an Event." ;
+        rdfs:label        "Place" ;
+        rdfs:subClassOf   sem:Core ;
+        skos:closeMatch   dcterms:Location , sumo:GeographicArea , cidoc:E53.Place , cyc:EnduringThing-Localized ;
+        skos:narrowMatch  dolce:PhysicalRegion , wgs84:SpatialThing .
+
+sem:type  a                 owl:ObjectProperty ;
+        rdfs:comment        "Type is the super property of the properties that are used to indicate the type of a Core instance, eventType, actorType, placeType, timeType; and of roleType. Types can be both classes and individuals, cf. OWL 2 punning." ;
+        rdfs:label          "type property" ;
+        rdfs:range          sem:Type ;
+        rdfs:subPropertyOf  rdf:type ;
+        skos:closeMatch     dc:type ;
+        skos:relatedMatch   cs:quality .
+
+cidoc:E55.Type  rdfs:isDefinedBy  cidoc: .
+
+sumo:IntentionalProcess
+        rdfs:isDefinedBy  sumo: .
+
+sem:Type  a              owl:Class ;
+        rdfs:comment     "The SEM Type class contains all types of Core instances. These can be either individuals of classes themselves. This class is meant to be extended for each application domain." ;
+        rdfs:label       "Type" ;
+        skos:closeMatch  cidoc:E55.Type , dolce:AbstractRegion .
+
+sem:hasSubType  a      owl:ObjectProperty ;
+        rdfs:comment   "Has sub type is used to state that a type falls under another type. This is a generic aggregation relation that is used to generalize over various hierarchical relations that can exist between types." ;
+        rdfs:domain    sem:Type ;
+        rdfs:label     "has subtype" ;
+        rdfs:range     sem:Type ;
+        owl:inverseOf  sem:subTypeOf .
+
+cs:place  rdfs:isDefinedBy  cs: .
+
+dctype:Event  rdfs:isDefinedBy  dctype: .
+
+sem:Core  a           owl:Class ;
+        rdfs:comment  "The SEM Core class contains all entities that make up the context of an event: Events, Actors, Places, Times. This class is meant to be extended for each application domain." ;
+        rdfs:label    "Core" .
+
+sumo:Agent  rdfs:isDefinedBy  sumo: .
+
+dc:type  rdfs:isDefinedBy  dc: .
+
+dctype:PhysicalObject
+        rdfs:isDefinedBy  dctype: .
+
+eo:Event  rdfs:isDefinedBy  eo: .
+
+cidoc:E5.Event  rdfs:isDefinedBy  cidoc: .
+
+sem:RoleType  a          owl:Class ;
+        rdfs:comment     "EventType contains all resources that are used to classify Roles, e.g. receiver." ;
+        rdfs:label       "Role type" ;
+        rdfs:subClassOf  sem:Type .
+
+lode:Event  rdfs:isDefinedBy  lode: .
+
+sem:roleType  a             owl:ObjectProperty ;
+        rdfs:comment        "Has role type is used to assign a role type to a Role property constraint. This role is a subspecification of the eventProperty which it constrains. For example, if an Event hasActor an Actor and this property is given a Role Constraint, then roleType can be used to assign a role to the participation of the Actor in the Event indicated by hasActor." ;
+        rdfs:domain         sem:Role ;
+        rdfs:label          "has role type" ;
+        rdfs:range          sem:RoleType ;
+        rdfs:subPropertyOf  sem:type .
+
+dcterms:Agent  rdfs:isDefinedBy  dcterms: .
+
+cs:time  rdfs:isDefinedBy  cs: .
+
+lode:inSpace  rdfs:isDefinedBy  lode: .
+
+sem:eventProperty  a  owl:ObjectProperty ;
+        rdfs:comment  "Event properties connect Events to other SEM Core entities." ;
+        rdfs:label    "event property" .
+
+sem:View  a              owl:Class ;
+        rdfs:comment     "Views are properties that only hold according to a certain Authority." ;
+        rdfs:label       "View" ;
+        rdfs:subClassOf  sem:Constraint .
+
+eo:Factor  rdfs:isDefinedBy  eo: .
+
+sem:EventType  a         owl:Class ;
+        rdfs:comment     "EventType contains all resources that are used to classify Events, e.g. meeting." ;
+        rdfs:label       "Event type" ;
+        rdfs:subClassOf  sem:Type .
+
+cyc:Agent-Generic  rdfs:isDefinedBy  cyc: .
+
+dcterms:AgentClass  rdfs:isDefinedBy  dcterms: .
+
+sem:Event  a             owl:Class ;
+        rdfs:comment     "Events are things that happen. This comprises everything from historical events to web site sessions and mythical journeys. Event is the central class of SEM." ;
+        rdfs:label       "Event" ;
+        rdfs:subClassOf  sem:Core ;
+        skos:broadMatch  eo:Event , lode:Event ;
+        skos:closeMatch  cidoc:E5.Event , dolce:perdurant , cyc:Situation , dctype:Event , sumo:Process .
+
+time:TemporalEntity  rdfs:isDefinedBy  time: .
+
+sem:hasTimeStamp  a      owl:DatatypeProperty ;
+        rdfs:comment     "Has timestamp is used to put time indicators on any individual. It is the most common way to state when an Event took place. There are subproperties of hasTimeStamp to represent time intervals and uncertain time intervals. If the exact moment is not known, but it is necessary to specify a certain time, use hasTime instead. All of these properties are also used to indicate the time at which a property under the Temporary Constraint is valid." ;
+        rdfs:label       "has timestamp" ;
+        skos:closeMatch  cs:time .
+
+lode:involved  rdfs:isDefinedBy  lode: .
+
+cyc:Role  rdfs:isDefinedBy  cyc: .
+
+sem:ActorType  a         owl:Class ;
+        rdfs:comment     "EventType contains all resources that are used to classify Actors, e.g. person" ;
+        rdfs:label       "Actor type" ;
+        rdfs:subClassOf  sem:Type .
+
+sem:hasEndTimeStamp  a      owl:DatatypeProperty ;
+        rdfs:comment        "Has end timestamp is used to indicate the end of a time interval. Omitting the hasEndTimeStamp while stating a hasBeginTimeStamp is interpreted as an open ended interval." ;
+        rdfs:label          "has end timestamp" ;
+        rdfs:subPropertyOf  sem:hasTimeStamp .
+
+sem:PlaceType  a         owl:Class ;
+        rdfs:comment     "EventType contains all resources that are used to classify Places, e.g. river." ;
+        rdfs:label       "Place type" ;
+        rdfs:subClassOf  sem:Type .
+
+sem:hasBeginTimeStamp
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "Has begin timestamp is used to indicate the beginning of a time interval. Omitting the hasBeginTimeStamp while stating a hasEndTimeStamp is interpreted as an open ended interval." ;
+        rdfs:label          "has begin timestamp" ;
+        rdfs:subPropertyOf  sem:hasTimeStamp .
+
+sem:Actor  a             owl:Class ;
+        rdfs:comment     "Actors are entities that take part in an Event, either actively or passively. Actors do not necessarily have to be sentient. They can also be objects. Actors are a thing, animate or inanimate, physical or non-physical.\n" ;
+        rdfs:label       "Actor" ;
+        rdfs:subClassOf  sem:Core , sem:Authority ;
+        skos:broadMatch  cyc:SomethingExisting , dolce:endurant ;
+        skos:closeMatch  foaf:Agent , dcterms:AgentClass , cyc:Agent-Generic , dcterms:Agent , sumo:Agent , cidoc:E39.Actor .
+
+lode:atTime  rdfs:isDefinedBy  lode: .
+
+sem:Role  a                owl:Class ;
+        rdfs:comment       "Roles are properties with a subspecified function or position indicated by a RoleType in the scope of an Event. For example, the sem:hasActor property can be subspecified with the RoleType attacker, to denote that the type of participation of the Actor in the scope of the Event is \"attacker\". The sem:hasPlace property can be subspecified with the RoleType origin, to denote that within the scope of the Event it is the origin." ;
+        rdfs:label         "Role" ;
+        rdfs:subClassOf    sem:Constraint ;
+        skos:relatedMatch  sumo:IntentionalProcess , dolce:region , cyc:Role .
+
+cidoc:E19.Physical_Object
+        rdfs:isDefinedBy  cidoc: .
+
+cidoc:E53.Place  rdfs:isDefinedBy  cidoc: .
+
+sem:timeType  a             owl:ObjectProperty ;
+        rdfs:comment        "Has time type is used to assign a type to a time individual." ;
+        rdfs:domain         sem:Time ;
+        rdfs:label          "has time type" ;
+        rdfs:range          sem:TimeType ;
+        rdfs:subPropertyOf  sem:type .
+
+sem:hasEarliestBeginTimeStamp
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "Has earliest begin timestamp is used to indicate the earliest possible starting time of an uncertain time interval." ;
+        rdfs:label          "has earliest begin timestamp" ;
+        rdfs:subPropertyOf  sem:hasBeginTimeStamp .
+
+sem:hasPlace  a             owl:ObjectProperty ;
+        rdfs:comment        "Has place is used to state in which Place(s) an Event happened. Coordinates can be attached to the Place with the W3C Geospatial Vocabulary (http://www.w3.org/2005/Incubator/geo/XGR-geo-20071023/)." ;
+        rdfs:label          "has Place" ;
+        rdfs:range          sem:Place ;
+        rdfs:subPropertyOf  sem:eventProperty ;
+        skos:exactMatch     cs:place ;
+        skos:narrowMatch    lode:inSpace .
+
+sem:eventType  a            owl:ObjectProperty ;
+        rdfs:comment        "Has event type is used to assign a type to an event." ;
+        rdfs:domain         sem:Event ;
+        rdfs:label          "has event type" ;
+        rdfs:range          sem:EventType ;
+        rdfs:subPropertyOf  sem:type .
+
+cyc:SomethingExisting
+        rdfs:isDefinedBy  cyc: .
+
+sem:hasTime  a              owl:ObjectProperty ;
+        rdfs:comment        "Has time is used to indicate at which time an Event took place or when a property under the Temporary Constraint is valid. Has time points to a symbolic representation of time, which allows semantic relations between time resources. (see http://www.w3.org/TR/owl-time/)" ;
+        rdfs:label          "has Time" ;
+        rdfs:range          sem:Time ;
+        rdfs:subPropertyOf  sem:eventProperty ;
+        skos:broadMatch     lode:atTime .
+
+sem:subEventOf  a     owl:ObjectProperty ;
+        rdfs:comment  "Inverse property of hasSubEvent" ;
+        rdfs:label    "subevent of" .
+
+eo:sub_event  rdfs:isDefinedBy  eo: .
+
+sem:Authority  a      owl:Class ;
+        rdfs:comment  "Authorities are entities that state SEM properties. Their nature is not specified. They can symbolize people, organizations, sources of information, etc." ;
+        rdfs:label    "Authority" .
+
+dolce:perdurant  rdfs:isDefinedBy  dolce: .
+
+sumo:Object  rdfs:isDefinedBy  sumo: .
+
+sem:hasSubEvent  a          owl:ObjectProperty ;
+        rdfs:comment        "Has subevent connects an Event to other Events that belong to it. This is a very generic property that does not mean the subevents fully define the superconcept or that there is any causal relationship." ;
+        rdfs:domain         sem:Event ;
+        rdfs:label          "has subevent" ;
+        rdfs:range          sem:Event ;
+        rdfs:subPropertyOf  sem:eventProperty ;
+        owl:inverseOf       sem:subEventOf ;
+        skos:exactMatch     eo:sub_event .
+
+wgs84:SpatialThing  rdfs:isDefinedBy  wgs84: .
+
+dcterms:PhysicalResource
+        rdfs:isDefinedBy  dcterms: .
+
+sem:actorType  a            owl:ObjectProperty ;
+        rdfs:comment        "Has actor type is used to assign a type to an actor." ;
+        rdfs:domain         sem:Actor ;
+        rdfs:label          "has actor type" ;
+        rdfs:range          sem:ActorType ;
+        rdfs:subPropertyOf  sem:type .
+
+sem:Constraint  a     owl:Class ;
+        rdfs:comment  "The SEM Constraint class contains instances of properties that have a constrained (i.e. not universal) validity. This includes time dependent validity (Temporary), validity in the guise of a specific role (Role), or validity according to a given Authority (View)." ;
+        rdfs:label    "Constraint" .
+
+sumo:GeographicArea  rdfs:isDefinedBy  sumo: .
+
+dolce:endurant  rdfs:isDefinedBy  dolce: .
+
+foaf:Agent  rdfs:isDefinedBy  foaf: .
+
+sem:placeType  a            owl:ObjectProperty ;
+        rdfs:comment        "Has place type is used to assign a type to a place." ;
+        rdfs:domain         sem:Place ;
+        rdfs:label          "has place type" ;
+        rdfs:range          sem:PlaceType ;
+        rdfs:subPropertyOf  sem:type .
+
+dolce:region  rdfs:isDefinedBy  dolce: .
+
+sem:Object  a             owl:Class ;
+        rdfs:comment      "Objects are passive, inanimate Actors." ;
+        rdfs:label        "Object" ;
+        rdfs:subClassOf   sem:Actor ;
+        skos:broadMatch   cyc:SomethingExisting , dolce:endurant ;
+        skos:closeMatch   cidoc:E21.Person , sumo:Object , cidoc:E19.Physical_Object ;
+        skos:narrowMatch  eo:Product , dcterms:PhysicalResource , eo:Factor , dctype:PhysicalObject .
+
+sem:TimeType  a          owl:Class ;
+        rdfs:comment     "EventType contains all resources that are used to classify Time, e.g. century." ;
+        rdfs:label       "Time type" ;
+        rdfs:subClassOf  sem:Type .
+
+sem:hasLatestBeginTimeStamp
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "Has latest begin timestamp is used to indicate the latest possible starting time of an uncertain time interval." ;
+        rdfs:label          "has latest begin timestamp" ;
+        rdfs:subPropertyOf  sem:hasBeginTimeStamp .
+
+sem:hasEarliestEndTimeStamp
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "Has earliest end timestamp is used to indicate the earliest possible ending time of an uncertain time interval." ;
+        rdfs:label          "has earliest end timestamp" ;
+        rdfs:subPropertyOf  sem:hasEndTimeStamp .
+
+cidoc:E39.Actor  rdfs:isDefinedBy  cidoc: .
+
+sem:subTypeOf  a            owl:ObjectProperty ;
+        rdfs:comment        "The inverse property of hasSubType." ;
+        rdfs:label          "subtype of" ;
+        rdfs:subPropertyOf  rdfs:subClassOf .
+
+eo:Product  rdfs:isDefinedBy  eo: .
+
+cyc:Situation  rdfs:isDefinedBy  cyc: .
+
+dcterms:Location  rdfs:isDefinedBy  dcterms: .
+
+cs:quality  rdfs:isDefinedBy  cs: .
+
+dolce:AbstractRegion  rdfs:isDefinedBy  dolce: .
+
+sumo:Process  rdfs:isDefinedBy  sumo: .
+
+sem:accordingTo  a    owl:ObjectProperty ;
+        rdfs:comment  "According to is used to state which Authority sais that a property constrained by the View Constraint is true." ;
+        rdfs:domain   sem:View ;
+        rdfs:label    "according to" ;
+        rdfs:range    sem:Authority .
+
+sem:hasActor  a             owl:ObjectProperty ;
+        rdfs:comment        "Has actor is used to state which Actors or Objects participate in an Event." ;
+        rdfs:label          "has Actor" ;
+        rdfs:range          sem:Actor ;
+        rdfs:subPropertyOf  sem:eventProperty ;
+        skos:exactMatch     lode:involved ;
+        skos:narrowMatch    cs:agent .
+
+sem:hasLatestEndTimeStamp
+        a                   owl:DatatypeProperty ;
+        rdfs:comment        "Has latest end timestamp is used to indicate the latest possible ending time of an uncertain time interval." ;
+        rdfs:label          "has latest end timestamp" ;
+        rdfs:subPropertyOf  sem:hasEndTimeStamp .
+
+cyc:EnduringThing-Localized
+        rdfs:isDefinedBy  cyc: .
+
+cs:agent  rdfs:isDefinedBy  cs: .
+
+cidoc:E21.Person  rdfs:isDefinedBy  cidoc: .

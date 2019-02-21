@@ -8,6 +8,12 @@
     <artifactId>ontology-tracker</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.7.RELEASE</version>
+    </parent>
+
     <properties>
         <!-- Project Settings -->
         <maven.test.skip>false</maven.test.skip>
@@ -26,6 +32,23 @@
     </properties>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>
+                                org.dbpedia.ontologytracker.webservice.WebService
+                            </mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -47,12 +70,30 @@
                     <enableAssertions>false</enableAssertions>
                 </configuration>
             </plugin>
+						<plugin>
+						    <groupId>org.springframework.boot</groupId>
+						    <artifactId>spring-boot-maven-plugin</artifactId>
+						    <executions>
+						        <execution>
+						            <goals>
+						                <goal>repackage</goal>
+						            </goals>
+						            <configuration>
+						                <classifier>spring-boot</classifier>
+						                <mainClass>
+						                  org.dbpedia.ontologytracker.webservice.WebService
+						                </mainClass>
+						            </configuration>
+						        </execution>
+						    </executions>
+						</plugin>
             <!--plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.0.2</version>
                 <executions>
                     <execution>
                         <id>copy-to-main</id>
+                        <idFromThisUser>copy-to-main</idFromThisUser>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -88,6 +129,39 @@
         </plugins>
     </build>
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!--dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -177,18 +251,39 @@
             <version>5.0.3</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
     </dependencies>
+
 
     <repositories>
         <repository>
-            <id>project-repo</id>
-            <url>${project.baseUri}lib</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </snapshots>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

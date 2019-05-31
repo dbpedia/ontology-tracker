@@ -15,15 +15,32 @@ mkdir -p /tmp/dbo-snapshots/$VERSION
 
 # get current version
 wget -q -O /tmp/dbo-snapshots/$VERSION/dbo.owl $URL
+
+# check if change in ontology if no change exit
+exit
+
 # get DL Axioms
 java -cp DisplayAxioms.jar DisplayAxioms /tmp/dbo-snapshots/$VERSION/dbo.owl | LC_ALL=C sort -u > /tmp/dbo-snapshots/$VERSION/dbo.dl
 # get ntriples
-rapper -i rdfxml -o ntriples /tmp/dbo-snapshots/$VERSION/dbo.owl | ascii2uni -a U | LC_ALL=C sort -u > /tmp/dbo-snapshots/$VERSION/dbo.nt
+rapper -i rdfxml -o ntriples /tmp/dbo-snapshots/$VERSION/dbo.owl | LC_ALL=C sort -u > /tmp/dbo-snapshots/$VERSION/dbo.nt
 
 
 
+#commit changed dbo files dl, nt, ttl 
 
-exit
+#get commit sha
+
+#set new version in pom
+
+#mk export with download URL as parameter
+
+#commit exported dataid file 
+
+#git push
+
+#sleep 30s for github "deploy time"
+
+#databus deploy
 
 YEAR=`date "+%Y"`
 MONTH=`date "+%m"`

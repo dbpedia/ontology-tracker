@@ -23,24 +23,25 @@ commitAndRelease() {
 
 # Handling the git process
 git add --all
-git commit -m "$data_commit_info"
+git commit -message="$data_commit_info"
 git push
 
 # Releasing the new Version to maven
 last_commit=$(git rev-parse HEAD)
 dataId_commit_info="dataId for the release on $(date), Commit-Hash:${last_commit}"
-cd $pomdir
 mvn versions:set -DnewVersion=$last_commit
 mvn deploy
 	
 # Commiting the new dataId to github
 git add --all
-git commit -m "$dataId_commit_info"
+git commit -message="$dataId_commit_info"
 git push
 }
 
 pomdir=$1
 startdir=$PWD
+
+cd $pomdir
 
 mkdir -p ./tmp/
 
@@ -62,8 +63,7 @@ if [ $is_equal -eq 1 ]
 then
 	echo "Some new Version!"
 	java -cp ./dbo-snapshots/DisplayAxioms.jar DisplayAxioms ./tmp/new-dbo-snapshots.owl | LC_ALL=C sort -u > ./tmp/dbo-snapshots.dl
-	# Is the turtlefile needed in the release?
-	# rapper -i rdfxml -o turtle ./tmp/new-dbo-snapshots.owl > ./tmp/dbo-snapshots.ttl
+	rapper -i rdfxml -o turtle ./tmp/new-dbo-snapshots.owl > ./tmp/dbo-snapshots.ttl
 	# Remove old release
 	rm "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/*.*
 	mv ./tmp/dbo-snapshots.* "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/
@@ -74,5 +74,5 @@ else
 
 fi
 
-
+cd $startdir
 

@@ -19,12 +19,28 @@ while read line; do
 done <<<$diff_output
 }
 
-getCommitID() {
-commit_output=$1
+commitAndRelease() {
 
+# Handling the git process
+git add --all
+git commit -m "$data_commit_info"
+git push
+
+# Releasing the new Version to maven
+last_commit=$(git rev-parse HEAD)
+dataId_commit_info="dataId for the release on $(date), Commit-Hash:${last_commit}"
+cd $pomdir
+mvn versions:set -DnewVersion=$last_commit
+mvn deploy
+	
+# Commiting the new dataId to github
+git add --all
+git commit -m "$dataId_commit_info"
+git push
 }
 
 pomdir=$1
+startdir=$PWD
 
 mkdir -p ./tmp/
 
@@ -52,23 +68,10 @@ then
 	rm "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/*.*
 	mv ./tmp/dbo-snapshots.* "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/
 	rm -rf ./tmp/
+else
+	echo "No new Version!"
+	rm -r ./tmp/
 
-	# Handling the git process
-	git add --all
-	git commit -m "$data_commit_info"
-	git push
-
-	# Releasing the new Version to maven
-	last_commit=$(git rev-parse HEAD)
-	dataId_commit_info="dataId for the release on $(date), Commit-Hash:${last_commit}"
-	cd $pomdir
-	mvn versions:set -DnewVersion=$last_commit
-	mvn deploy
-	
-	# Commiting the new dataId to github
-	git add --all
-	git commit -m "$dataId_commit_info"
-	git push
 fi
 
 

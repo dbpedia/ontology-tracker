@@ -76,6 +76,7 @@ then
 	rm "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/*.*
 	mv ./tmp/dbo-snapshots.* "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/
 	rm -rf ./tmp/
+	commitAndRelease
 else
 	echo "No new Version!"
 	rm -r ./tmp/

@@ -22,20 +22,28 @@ done <<<$diff_output
 commitAndRelease() {
 
 # Handling the git process
+echo "Commiting the data to git"
 git add --all
 git commit -message="$data_commit_info"
 git push
 
 # Releasing the new Version to maven
-last_commit=$(git rev-parse HEAD)
+file_commit=$(git rev-parse HEAD)
+echo "Commit-Hash of the files: ${file_commit}"
 dataId_commit_info="dataId for the release on $(date), Commit-Hash:${last_commit}"
-mvn versions:set -DnewVersion=$last_commit
-mvn deploy
+mvn versions:set -DnewVersion=${fullVersion}   
+mvn package -DfileHash=$file_commit
 	
 # Commiting the new dataId to github
+echo "Commitig DataId to Git..."
 git add --all
 git commit -message="$dataId_commit_info"
 git push
+
+dataId_commit=$(git rev-parse HEAD)
+echo "DataId Hash: $dataId_commit"
+
+mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
 }
 
 pomdir=$1
@@ -59,11 +67,11 @@ LC_ALL=C sort -u "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/dbo-snapshots.nt
 checkDiff ./tmp/old-dbo-snapshots.nt ./tmp/dbo-snapshots.nt
 
 # If is_equal is 1, they are not equal and therefore there needs to be a new version commited
-if [ $is_equal -eq 1 ]
+if [ $is_equal -eq 0 ]
 then
 	echo "Some new Version!"
-	java -cp ./dbo-snapshots/DisplayAxioms.jar DisplayAxioms ./tmp/new-dbo-snapshots.owl | LC_ALL=C sort -u > ./tmp/dbo-snapshots.dl
-	rapper -i rdfxml -o turtle ./tmp/new-dbo-snapshots.owl > ./tmp/dbo-snapshots.ttl
+	java -cp ./dbo-snapshots/DisplayAxioms.jar DisplayAxioms ./tmp/dbo-snapshots.owl | LC_ALL=C sort -u > ./tmp/dbo-snapshots.dl
+	rapper -i rdfxml -o turtle ./tmp/dbo-snapshots.owl > ./tmp/dbo-snapshots.ttl
 	# Remove old release
 	rm "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/*.*
 	mv ./tmp/dbo-snapshots.* "${pomdir}"/dbo-snapshots/2019.02.21T08.00.00Z/

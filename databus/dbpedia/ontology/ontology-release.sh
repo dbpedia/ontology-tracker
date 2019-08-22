@@ -48,6 +48,12 @@ commitAndRelease() {
 	mvn package -DfileHash=$file_commit
 
 	# Copying the new dataId into the git
+	if [ -f dbo-snapshots/target/databus/$fullVersion/dataid.ttl ]
+	then 
+		cat dbo-snapshots/target/databus/$fullVersion/dataid.ttl
+	else
+		echo "No dataid available!"
+	fi
 	cp dbo-snapshots/target/databus/$fullVersion/dataid.ttl $repoPomDir/dbo-snapshots/
 	
 	# Commiting the new dataId to github
@@ -59,7 +65,7 @@ commitAndRelease() {
 	dataId_commit=$(git rev-parse HEAD)
 	echo "DataId Hash: $dataId_commit"
 	
-	mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
+	#mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
 }
 
 repoPomDir=$1

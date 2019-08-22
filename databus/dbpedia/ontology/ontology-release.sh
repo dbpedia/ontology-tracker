@@ -22,7 +22,7 @@ checkDiff() {
 
 createDirectories() {
 
-	mkdir -p ./data/ontology/dbo-snapshots/$fullVersion
+	mkdir -p $repoPomDir/data/ontology/dbo-snapshots/$fullVersion
 	cp $repoPomDir/pom.xml data/ontology/pom.xml
 	cp $repoPomDir/dbo-snapshots/pom.xml data/ontology/dbo-snapshots/pom.xml
 	cp $repoPomDir/dbo-snapshots/dbo-snapshots.md data/ontology/dbo-snapshots/dbo-snapshots.md
@@ -48,12 +48,6 @@ commitAndRelease() {
 	mvn package -DfileHash=$file_commit
 
 	# Copying the new dataId into the git
-	if [ -f dbo-snapshots/target/databus/$fullVersion/dataid.ttl ]
-	then 
-		cat dbo-snapshots/target/databus/$fullVersion/dataid.ttl
-	else
-		echo "No dataid available!"
-	fi
 	cp dbo-snapshots/target/databus/$fullVersion/dataid.ttl $repoPomDir/dbo-snapshots/dataid.ttl
 	
 	# Commiting the new dataId to github
@@ -65,10 +59,10 @@ commitAndRelease() {
 	dataId_commit=$(git rev-parse HEAD)
 	echo "DataId Hash: $dataId_commit"
 	
-	#mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
+	mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
 }
 
-repoPomDir=$PWD
+repoPomDir=$PWD/$1
 startdir=$PWD
 
 fullVersion=$(date "+%Y.%m.%dT%H:%M:%SZ")
@@ -77,9 +71,9 @@ createDirectories
 
 data_commit_info="New ontology version on $(date)."
 
-newVersionDirectory=data/ontology/dbo-snapshots/$fullVersion
+newVersionDirectory=$repoPomDir/data/ontology/dbo-snapshots/$fullVersion
 
-dataPomDir=data/ontology
+dataPomDir=$repoPomDir/data/ontology
 
 # Downloads the DBpedia-Ontology from http://mappings.dbpedia.org/server/ontology/dbpedia.owl
 wget -O $newVersionDirectory/dbo-snapshots.owl http://mappings.dbpedia.org/server/ontology/dbpedia.owl

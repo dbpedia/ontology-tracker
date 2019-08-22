@@ -96,7 +96,7 @@ LC_ALL=C sort -u "${repoPomDir}"/dbo-snapshots/dbo-snapshots.nt > $newVersionDir
 checkDiff $newVersionDirectory/old-dbo-snapshots.nt $newVersionDirectory/dbo-snapshots.nt
 
 # If is_equal is 1, they are not equal and therefore there needs to be a new version commited
-if [ $is_equal -eq 0 ]
+if [ $is_equal -eq 1 ]
 then
 	echo "Some new Version!"
 	rm $newVersionDirectory/old-dbo-snapshots.nt

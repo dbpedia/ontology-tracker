@@ -64,7 +64,7 @@ commitAndRelease() {
 
 ######################## BEGIN ##################################################
 
-if [[ $1 =~ "\/.*"]]
+if [[ $1 =~ "\/.*" ]]
 then
 	# If absolute path to repo is given, just use it
 	repoPomDir=$1

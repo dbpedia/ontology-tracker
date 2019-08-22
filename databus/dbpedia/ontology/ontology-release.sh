@@ -54,7 +54,7 @@ commitAndRelease() {
 	else
 		echo "No dataid available!"
 	fi
-	cp dbo-snapshots/target/databus/$fullVersion/dataid.ttl $repoPomDir/dbo-snapshots/
+	cp dbo-snapshots/target/databus/$fullVersion/dataid.ttl $repoPomDir/dbo-snapshots/dataid.ttl
 	
 	# Commiting the new dataId to github
 	echo "Commitig DataId to Git..."
@@ -68,7 +68,7 @@ commitAndRelease() {
 	#mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
 }
 
-repoPomDir=$1
+repoPomDir=$PWD
 startdir=$PWD
 
 fullVersion=$(date "+%Y.%m.%dT%H:%M:%SZ")

@@ -37,13 +37,13 @@ commitAndRelease() {
 	# Handling the git process
 	echo "Commiting the data to git"
 	git add --all
-	git commit -message="$data_commit_info"
+	git commit -m "$data_commit_info"
 	git push
 
 	# Releasing the new Version to maven
 	file_commit=$(git rev-parse HEAD)
 	echo "Commit-Hash of the files: ${file_commit}"
-	dataId_commit_info="dataId for the release on $(date), Commit-Hash:${last_commit}"
+	dataId_commit_info="Upload dataid.ttl for version: ${fullVersion}"
 	mvn versions:set -DnewVersion=${fullVersion}   
 	mvn package -DfileHash=$file_commit
 
@@ -62,6 +62,17 @@ commitAndRelease() {
 	mvn databus:deploy -DfileHash=$file_commit -DdataIdHash=$dataId_commit
 }
 
+######################## BEGIN ##################################################
+
+if [[ $1 =~ "\/.*"]]
+then
+	# If absolute path to repo is given, just use it
+	repoPomDir=$1
+else
+	# If relative path is given, generate an absolute one
+	repoPomDir=$PWD/$1
+fi
+
 repoPomDir=$PWD/$1
 startdir=$PWD
 
@@ -69,7 +80,7 @@ fullVersion=$(date "+%Y.%m.%dT%H:%M:%SZ")
 
 createDirectories
 
-data_commit_info="New ontology version on $(date)."
+data_commit_info="Upload new ontology snapshot version: ${fullVersion}"
 
 newVersionDirectory=$repoPomDir/data/ontology/dbo-snapshots/$fullVersion
 

@@ -48,12 +48,12 @@ commitAndRelease() {
 	mvn package -DfileHash=$file_commit
 
 	# Copying the new dataId into the git
-	cp $newVersionDirectory/dataId.ttl $repoPomDir/dbo-snapshots/
+	cp $newVersionDirectory/dataid.ttl $repoPomDir/dbo-snapshots/
 	
 	# Commiting the new dataId to github
 	echo "Commitig DataId to Git..."
 	git add --all
-	git commit -message="$dataId_commit_info"
+	git commit -m "$dataId_commit_info"
 	git push
 	
 	dataId_commit=$(git rev-parse HEAD)

@@ -48,7 +48,7 @@ commitAndRelease() {
 	mvn package -DfileHash=$file_commit
 
 	# Copying the new dataId into the git
-	cp $newVersionDirectory/dataid.ttl $repoPomDir/dbo-snapshots/
+	cp data/ontology/dbo-snapshots/target/databus/$fullVersion/dataid.ttl $repoPomDir/dbo-snapshots/
 	
 	# Commiting the new dataId to github
 	echo "Commitig DataId to Git..."

@@ -65,7 +65,7 @@ commitAndRelease() {
 repoPomDir=$1
 startdir=$PWD
 
-fullVersion=$(date "%Y.%m.%dT%H:%M:%SZ")
+fullVersion=$(date "+%Y.%m.%dT%H:%M:%SZ")
 
 createDirectories
 

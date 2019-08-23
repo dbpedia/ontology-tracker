@@ -67,12 +67,14 @@ commitAndRelease() {
 ######################## BEGIN ##################################################
 
 
-repoPomDir=$PWD
+repoPomDir=$(realpath -s $0)
+repoPomDir=${repoPomDir%/*}
 startdir=$PWD
 
-if [ -f $repoPomDir/pom.xml ] && [ -d $repoPomDir/dbo-snapshots ]
+if ! [ -f $repoPomDir/pom.xml ] || ! [ -d $repoPomDir/dbo-snapshots ]
 then
 	echo "Started from the wrong directory! Try it again in the location of this script!"
+	exit 1
 fi
 
 

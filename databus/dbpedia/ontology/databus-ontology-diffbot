@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Care: just run this script just from its location!
+# CARE: this script needs to be located directly next to the parent pom of ontology repo 
 
 checkDiff() {
 	old_file=$1
@@ -45,7 +45,12 @@ commitAndRelease() {
 	# Releasing the new Version to maven
 	file_commit=$(git rev-parse HEAD)
 	echo "Commit-Hash of the files: ${file_commit}"
+
+	# Generates commit-Message for the dataId-Release
 	dataId_commit_info="Upload dataid.ttl for version: ${fullVersion}"
+	
+	
+	# generates the dataid.ttl for the right version
 	mvn versions:set -DnewVersion=${fullVersion}   
 	mvn package -DfileHash=$file_commit
 
@@ -58,6 +63,7 @@ commitAndRelease() {
 	git commit -m "$dataId_commit_info"
 	git push
 	
+	# deploy the data to the databus
 	dataId_commit=$(git rev-parse HEAD)
 	echo "DataId Hash: $dataId_commit"
 	
@@ -73,7 +79,7 @@ startdir=$PWD
 
 if ! [ -f $repoPomDir/pom.xml ] || ! [ -d $repoPomDir/dbo-snapshots ]
 then
-	echo "Started from the wrong directory! Try it again in the location of this script!"
+	echo "Started from the wrong directory! The script needs to be right at the parent-pom of the Group!"
 	exit 1
 fi
 
@@ -91,10 +97,10 @@ dataPomDir=$repoPomDir/data/ontology
 # Downloads the DBpedia-Ontology from http://mappings.dbpedia.org/server/ontology/dbpedia.owl
 wget -O $newVersionDirectory/dbo-snapshots.owl http://mappings.dbpedia.org/server/ontology/dbpedia.owl
 
+
+# Generates ntriples from new ontology, sorts them and check if its different from the old nt file
 rapper -i rdfxml -o ntriples $newVersionDirectory/dbo-snapshots.owl | LC_ALL=C sort -u > $newVersionDirectory/dbo-snapshots.nt
-
 LC_ALL=C sort -u "${repoPomDir}"/dbo-snapshots/dbo-snapshots.nt > $newVersionDirectory/old-dbo-snapshots.nt
-
 checkDiff $newVersionDirectory/old-dbo-snapshots.nt $newVersionDirectory/dbo-snapshots.nt
 
 

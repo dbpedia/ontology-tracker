@@ -1,5 +1,5 @@
 # DBpedia Ontology Snapshot
-(intial commit, no chronjob deployed yet) Hourly DBpedia Ontology snapshots from http://mappings.dbpedia.org/server/ontology/dbpedia.owl (only if changes are detected)
+(cronjob on the testrepo of dbpedia) Hourly DBpedia Ontology snapshots from http://mappings.dbpedia.org/server/ontology/dbpedia.owl (only if changes are detected)
 
 ## Description
 The DBpedia Ontology and Mappings can be edited in the mappings wiki.

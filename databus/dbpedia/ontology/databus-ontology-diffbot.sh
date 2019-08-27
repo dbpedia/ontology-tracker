@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash 
 
 # CARE: this script needs to be located directly next to the parent pom of ontology repo 
 # all data is saved in a data-Diretory right next to the pom, so write that to the gitignore to not commit it to the repository
@@ -84,6 +84,10 @@ then
 	exit 1
 fi
 
+# cd into the repo to pull and generate the files
+cd $repoPomDir
+# pulls from the repo to use changes and be able to push
+git pull
 
 fullVersion=$(date "+%Y.%m.%d-%H%M%S")
 
@@ -104,9 +108,6 @@ rapper -i rdfxml -o ntriples $newVersionDirectory/dbo-snapshots.owl | LC_ALL=C s
 LC_ALL=C sort -u "${repoPomDir}"/dbo-snapshots/dbo-snapshots.nt > $newVersionDirectory/old-dbo-snapshots.nt
 checkDiff $newVersionDirectory/old-dbo-snapshots.nt $newVersionDirectory/dbo-snapshots.nt
 
-
-# Change into the pomDirectory to generate all the files
-cd $repoPomDir
 
 # If is_equal is 1, they are not equal and therefore there needs to be a new version commited
 if [ $is_equal -eq 1 ]

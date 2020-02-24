@@ -1,0 +1,35 @@
+name: Ontology-tracker
+
+on:
+  schedule:
+    - cron:  '*/30 * * * *'
+
+
+jobs:
+        deploy-new-version:
+                runs-on: ubuntu-latest
+                steps:
+                        - uses: actions/checkout@v2
+                        - name: Set up JDK 1.8
+                          uses: actions/setup-java@v1
+                          with:
+                                java-version: 1.8
+                        - name: Install raptor-utils
+                          run: |
+                            # Install raptor-utils for parsing
+                            sudo apt-get install raptor2-utils
+                        - name: Add PKCS12 webid file
+                          env:
+                                WEBID_KEY: ${{ secrets.WEBID_KEY }}
+                                WEBID_CRT: ${{ secrets.WEBID_CRT }} 
+                          run: |
+                            git config --local user.email "ontology-commit-bot@test"
+                            git config --local user.name "ontology-commit-bot"  
+                            # Generating the PKCS12 file from github secrets certificate and key
+                            echo "$WEBID_KEY" > ~/.m2/webid_key.pem
+                            echo "$WEBID_CRT" > ~/.m2/webid_crt.pem
+                            openssl pkcs12 -export -out ~/.m2/webid_bundle.p12 -inkey ~/.m2/webid_key.pem -in ~/.m2/webid_crt.pem -passout pass:
+                        - name: Run the script
+                          run: |
+                            # Run the script
+                            bash  -c databus/dbpedia/ontology/databus-ontology-diffbot.sh

@@ -22,13 +22,23 @@ jobs:
                           env:
                                 WEBID_KEY: ${{ secrets.WEBID_KEY }}
                                 WEBID_CRT: ${{ secrets.WEBID_CRT }} 
+                                WEBID_BASE64: ${{ secrets.WEBID_BASE64 }} 
                           run: |
                             git config --local user.email "ontology-commit-bot@test"
                             git config --local user.name "ontology-commit-bot"  
                             # Generating the PKCS12 file from github secrets certificate and key
-                            echo "$WEBID_KEY" > ~/.m2/webid_key.pem
-                            echo "$WEBID_CRT" > ~/.m2/webid_crt.pem
-                            openssl pkcs12 -export -out ~/.m2/webid_bundle.p12 -inkey ~/.m2/webid_key.pem -in ~/.m2/webid_crt.pem -passout pass:
+                            if [[ -n $WEBID_BASE64 ]]
+                            then 
+                              echo "$WEBID_BASE64" | base64 --decode > ~/.m2/webid_bundle.p12
+                            elif [[ -n $WEBID_KEY ]] && [[ -n $WEBID_CRT ]]
+                            then 
+                              echo "$WEBID_KEY" > ~/.m2/webid_key.pem
+                              echo "$WEBID_CRT" > ~/.m2/webid_crt.pem
+                              openssl pkcs12 -export -out ~/.m2/webid_bundle.p12 -inkey ~/.m2/webid_key.pem -in ~/.m2/webid_crt.pem -passout pass:
+                            else
+                              echo "No proper webid in secrets!"
+                              exit 1
+                            fi
                         - name: Run the script
                           run: |
                             # Run the script

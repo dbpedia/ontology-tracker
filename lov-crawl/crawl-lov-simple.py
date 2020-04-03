@@ -61,12 +61,12 @@ def getDefinedByUris(ontgraph):
         """ )
   return results
 
-def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile):
+def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, filename):
   vocabInformation={}
   vocabInformation["ontology-resource"] = definedByUri
   vocabInformation["lastModified"] = lastModified
   vocabInformation["rapperErrorLog"] = rapperErrors
-  with open(pathToFile + os.sep + "vocabInformation.json", "w+") as outfile:
+  with open(pathToFile + os.sep + filename, "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)
 
 def getLastModified(url):
@@ -122,7 +122,7 @@ def rapperTheSource(uri, path, name):
 
         none, stderr=process.communicate()
         print(stderr.decode("utf-8"))
-        writeVocabInformation(uri, lastModifiedDate, returnRapperErrors(stderr.decode("utf-8")), path)
+        writeVocabInformation(uri, lastModifiedDate, returnRapperErrors(stderr.decode("utf-8")), path, name)
         return True
     else:
       return False

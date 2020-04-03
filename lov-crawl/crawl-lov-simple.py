@@ -126,11 +126,11 @@ def rapperTheSource(uri, path, name):
   except requests.exceptions.TooManyRedirects:
     print("Too many redirects, cancel parsing...")
   except requests.exceptions.ConnectionError:
-    print("Bad Connection "+ sourceuri)
+    print("Bad Connection "+ uri)
   except TimeoutError:
-    print("Timed out during parsing: "+sourceuri)
+    print("Timed out during parsing: "+uri)
   except requests.exceptions.ReadTimeout:
-    print("Connection timed out for URI ", sourceuri)
+    print("Connection timed out for URI ", uri)
 
 def getNtriplesFromVocabfile(vocabfile, targetpath, name):
   print("Parsing the vocabulary as N-Triples...")
@@ -154,16 +154,14 @@ def makeTheDirs(path):
 def crawl_lov(dataPath):
     req = requests.get(datasetUrl)
     json_data=req.json()
-    version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
     for dataObject in json_data:
+        version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
         vocab_uri=dataObject["uri"]
         print("Processing: VocabURI: " + vocab_uri)
         groupId, artifact = generateGroupAndArtifactFromUri(vocab_uri)
         filePath=dataPath + "/" + groupId + "/" + artifact + "/" + version
         makeTheDirs(filePath)
-        #rapperTheSource(vocab_uri, filePath, artifact)
         if not os.path.isfile(filePath + "/" + artifact + ".ttl"):
-            #downloadSource(vocab_uri, filePath, artifact)
             rapperTheSource(vocab_uri, filePath, artifact)
             getNtriplesFromVocabfile(filePath + "/" + artifact + ".ttl", filePath, artifact)
         else:

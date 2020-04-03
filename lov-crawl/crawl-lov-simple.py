@@ -13,7 +13,7 @@ datasetUrl="https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list"
 
 urlRegex=r"https?://(.+?)/(.*)"
 
-rapperRegex=r"^rapper: Error.*"
+rapperRegex=r"^rapper: (?:Error|Warning).*"
 
 def getGraphOfVocabFile(filepath, rdfFormat):
   graph = rdflib.Graph()
@@ -63,7 +63,7 @@ def getDefinedByUris(ontgraph):
 
 def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile):
   vocabInformation={}
-  vocabInformation["definedByURI"] = definedByUri
+  vocabInformation["ontology-resource"] = definedByUri
   vocabInformation["lastModified"] = lastModified
   vocabInformation["rapperErrorLog"] = rapperErrors
   with open(pathToFile + os.sep + "vocabInformation.json", "w+") as outfile:
@@ -123,14 +123,21 @@ def rapperTheSource(uri, path, name):
         none, stderr=process.communicate()
         print(stderr.decode("utf-8"))
         writeVocabInformation(uri, lastModifiedDate, returnRapperErrors(stderr.decode("utf-8")), path)
+        return True
+    else:
+      return False
   except requests.exceptions.TooManyRedirects:
     print("Too many redirects, cancel parsing...")
+    return False
   except requests.exceptions.ConnectionError:
     print("Bad Connection "+ uri)
+    return False
   except TimeoutError:
     print("Timed out during parsing: "+uri)
+    return False
   except requests.exceptions.ReadTimeout:
     print("Connection timed out for URI ", uri)
+    return False
 
 def getNtriplesFromVocabfile(vocabfile, targetpath, name):
   print("Parsing the vocabulary as N-Triples...")
@@ -154,16 +161,17 @@ def makeTheDirs(path):
 def crawl_lov(dataPath):
     req = requests.get(datasetUrl)
     json_data=req.json()
+    version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
     for dataObject in json_data:
-        version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
         vocab_uri=dataObject["uri"]
         print("Processing: VocabURI: " + vocab_uri)
         groupId, artifact = generateGroupAndArtifactFromUri(vocab_uri)
         filePath=dataPath + "/" + groupId + "/" + artifact + "/" + version
         makeTheDirs(filePath)
         if not os.path.isfile(filePath + "/" + artifact + ".ttl"):
-            rapperTheSource(vocab_uri, filePath, artifact)
-            getNtriplesFromVocabfile(filePath + "/" + artifact + ".ttl", filePath, artifact)
+            rapperedSucessfull=rapperTheSource(vocab_uri, filePath, artifact)
+            if rapperedSucessfull:
+              getNtriplesFromVocabfile(filePath + "/" + artifact + ".ttl", filePath, artifact)
         else:
             print("Already loaded: " + filePath + "/" + artifact + ".ttl")
 

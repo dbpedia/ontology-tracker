@@ -66,7 +66,7 @@ def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, 
   vocabInformation["ontology-resource"] = definedByUri
   vocabInformation["lastModified"] = lastModified
   vocabInformation["rapperErrorLog"] = rapperErrors
-  with open(pathToFile + os.sep + filename, "w+") as outfile:
+  with open(pathToFile + os.sep + filename + ".json", "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)
 
 def getLastModified(url):

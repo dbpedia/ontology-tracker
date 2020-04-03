@@ -118,7 +118,7 @@ def rapperTheSource(uri, path, name):
     if header.status_code < 400:
       lastModifiedDate=getLastModifiedFromHeader(header)
       with open(path + "/" + name + ".ttl", "w+") as ontfile:
-        process = subprocess.Popen(["rapper", "-g", uri, "-o", "turtle"], stdout=ontfile, stderr=subprocess.PIPE)
+        process = subprocess.Popen(["rapper", "-i", "rdfxml", uri, "-o", "turtle"], stdout=ontfile, stderr=subprocess.PIPE)
 
         none, stderr=process.communicate()
         print(stderr.decode("utf-8"))
@@ -135,7 +135,7 @@ def rapperTheSource(uri, path, name):
 def getNtriplesFromVocabfile(vocabfile, targetpath, name):
   print("Parsing the vocabulary as N-Triples...")
   with open(targetpath + "/" + name + ".nt", "w+") as ontfile:
-    process = subprocess.Popen(["rapper", "-g", vocabfile], stdout=ontfile, stderr=subprocess.PIPE)
+    process = subprocess.Popen(["rapper", "-i", "turtle", vocabfile, "-o", "ntriples"], stdout=ontfile, stderr=subprocess.PIPE)
     none, stderr=process.communicate()
     print(stderr.decode("utf-8"))
 

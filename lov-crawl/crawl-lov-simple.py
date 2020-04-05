@@ -15,6 +15,20 @@ urlRegex=r"https?://(.+?)/(.*)"
 
 rapperRegex=r"^rapper: (?:Error|Warning).*"
 
+#removes recursively all dirs that are empty or just contain empty files or directories
+def deleteEmptyDirsRecursive(startpath):
+  if os.path.isdir(startpath):
+    for pathname in os.listdir(startpath):
+      if os.path.isdir(startpath + os.sep + pathname):
+        deleteEmptyDirsRecursive(startpath + os.sep + pathname)
+      elif os.path.isfile(startpath + os.sep + pathname):
+        if os.stat(startpath + os.sep + pathname).st_size == 0:
+          os.remove(startpath + os.sep + pathname)
+    if len(os.listdir(startpath)) == 0:
+      os.rmdir(startpath)
+  else:
+    print(f"Not a directory: {startpath}")
+
 def getGraphOfVocabFile(filepath, rdfFormat):
   graph = rdflib.Graph()
   graph.parse(filepath, format=rdfFormat)
@@ -48,7 +62,7 @@ def getNIRofOntology(ontgraph):
             ?nir <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .
         }
         """ )
-  return results
+  return result
 
 # returns the non information resource of an ontology, representing the entity of the ontology
 def getDefinedByUris(ontgraph):
@@ -59,7 +73,7 @@ def getDefinedByUris(ontgraph):
             ?s rdfs:isDefinedBy ?defbyUri .
         }
         """ )
-  return results
+  return result
 
 def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, filename):
   vocabInformation={}
@@ -120,7 +134,7 @@ def rapperTheSource(uri, path, name):
       with open(path + "/" + name + ".ttl", "w+") as ontfile:
         process = subprocess.Popen(["rapper", "-i", "rdfxml", uri, "-o", "turtle"], stdout=ontfile, stderr=subprocess.PIPE)
 
-        none, stderr=process.communicate()
+        stderr=process.communicate()[1]
         print(stderr.decode("utf-8"))
         writeVocabInformation(uri, lastModifiedDate, returnRapperErrors(stderr.decode("utf-8")), path, name)
         return True
@@ -143,7 +157,7 @@ def getNtriplesFromVocabfile(vocabfile, targetpath, name):
   print("Parsing the vocabulary as N-Triples...")
   with open(targetpath + "/" + name + ".nt", "w+") as ontfile:
     process = subprocess.Popen(["rapper", "-i", "turtle", vocabfile, "-o", "ntriples"], stdout=ontfile, stderr=subprocess.PIPE)
-    none, stderr=process.communicate()
+    stderr=process.communicate()[1]
     print(stderr.decode("utf-8"))
 
 def makeTheDirs(path):
@@ -172,7 +186,14 @@ def crawl_lov(dataPath):
             rapperedSucessfull=rapperTheSource(vocab_uri, filePath, artifact)
             if rapperedSucessfull:
               getNtriplesFromVocabfile(filePath + "/" + artifact + ".ttl", filePath, artifact)
+            else:
+              if os.path.isfile(filePath + "/" + artifact + ".ttl"):
+                os.remove(filePath + "/" + artifact + ".ttl")
+              os.rmdir(filePath)
         else:
             print("Already loaded: " + filePath + "/" + artifact + ".ttl")
 
-crawl_lov(sys.argv[1])
+rootdir=sys.argv[1]
+
+crawl_lov(rootdir)
+deleteEmptyDirsRecursive(rootdir)

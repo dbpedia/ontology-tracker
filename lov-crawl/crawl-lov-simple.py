@@ -15,6 +15,22 @@ urlRegex=r"https?://(.+?)/(.*)"
 
 rapperRegex=r"^rapper: (?:Error|Warning).*"
 
+
+def getLabelFromJsonObject(jsonObj):
+  if "titles" in jsonObj.keys() and "value" in jsonObj["titles"][0]:
+    return jsonObj["titles"][0]["value"]
+  else:
+    return ""
+
+def writeMarkdownDescription(path, artifact, label, explaination, description=""):
+
+  with open(path  + os.sep + artifact + ".md", "w+") as mdfile:
+    mdstring=(f"# {label}\n"
+            f"{explaination}\n"
+            "\n"
+            f"{description}")
+    print(mdstring, file=mdfile)
+
 #removes recursively all dirs that are empty or just contain empty files or directories
 def deleteEmptyDirsRecursive(startpath):
   if os.path.isdir(startpath):
@@ -46,9 +62,9 @@ def generateGroupAndArtifactFromUri(vocab_uri):
   groupId=matcher.group(1)
   artifact=matcher.group(2)
   if artifact != "":
-    if artifact[-1] == "#" or artifact[-1] == "/":
+    if artifact[-1] == "#" or artifact[-1] == os.sep:
       artifact=artifact[:-1]
-    artifact=artifact.replace("/", "--").replace("_", "--").replace(".", "--")
+    artifact=artifact.replace(os.sep, "--").replace("_", "--").replace(".", "--")
   else:
     artifact="vocabulary"
   return groupId, artifact
@@ -83,24 +99,6 @@ def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, 
   with open(pathToFile + os.sep + filename + ".json", "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)
 
-def getLastModified(url):
-  try:
-    acc_header = {'content-type': 'application/rdf+xml'}
-    r=requests.head(url, headers=acc_header, timeout=30, allow_redirects=True)
-    if "last-modified" in r.headers.keys():
-      url_time = r.headers['last-modified']
-    else:
-      url_time = "blabla"
-    return url_time
-  except requests.exceptions.TooManyRedirects:
-    print("Too many redirects, cancel parsing...")
-  except TimeoutError:
-    print("Timed out during parsing: "+url)
-  except requests.exceptions.ConnectionError:
-    print("Bad Connection "+ url)
-  except requests.exceptions.ReadTimeout:
-    print("Connection timed out for URI ", url)
-
 def getLastModifiedFromHeader(header):
   if "last-modified" in header.headers.keys():
     return header.headers["last-modified"]
@@ -110,7 +108,7 @@ def getLastModifiedFromHeader(header):
 def downloadSource(uri, path, name):
     try:
         acc_header = {'content-type': 'application/rdf+xml'}
-        with open(path + "/" + name + ".rdf", "w+") as ontfile:
+        with open(path + os.sep + name + ".rdf", "w+") as ontfile:
             response=requests.get(uri, headers=acc_header, timeout=30, allow_redirects=True)
             print("Status: " + str(response.status_code))
             if response.status_code < 400:
@@ -131,7 +129,7 @@ def rapperTheSource(uri, path, name):
     print("File response: "+str(header.status_code))
     if header.status_code < 400:
       lastModifiedDate=getLastModifiedFromHeader(header)
-      with open(path + "/" + name + ".ttl", "w+") as ontfile:
+      with open(path + os.sep + name + ".ttl", "w+") as ontfile:
         process = subprocess.Popen(["rapper", "-i", "rdfxml", uri, "-o", "turtle"], stdout=ontfile, stderr=subprocess.PIPE)
 
         stderr=process.communicate()[1]
@@ -155,20 +153,20 @@ def rapperTheSource(uri, path, name):
 
 def getNtriplesFromVocabfile(vocabfile, targetpath, name):
   print("Parsing the vocabulary as N-Triples...")
-  with open(targetpath + "/" + name + ".nt", "w+") as ontfile:
+  with open(targetpath + os.sep + name + ".nt", "w+") as ontfile:
     process = subprocess.Popen(["rapper", "-i", "turtle", vocabfile, "-o", "ntriples"], stdout=ontfile, stderr=subprocess.PIPE)
     stderr=process.communicate()[1]
     print(stderr.decode("utf-8"))
 
 def makeTheDirs(path):
   # i dont know why os.makedirs was not working
-  dirs=path.split("/")
+  dirs=path.split(os.sep)
     
   for directory in dirs:
     if dirs.index(directory) == 0:
       fullpath=directory
     else:
-      fullpath="/".join(dirs[0:dirs.index(directory)]) + "/" + directory
+      fullpath=os.sep.join(dirs[0:dirs.index(directory)]) + os.sep + directory
     if not os.path.isdir(fullpath):
       os.mkdir(fullpath)
 
@@ -177,21 +175,32 @@ def crawl_lov(dataPath):
     json_data=req.json()
     version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
     for dataObject in json_data:
+      
         vocab_uri=dataObject["uri"]
-        print("Processing: VocabURI: " + vocab_uri)
         groupId, artifact = generateGroupAndArtifactFromUri(vocab_uri)
-        filePath=dataPath + "/" + groupId + "/" + artifact + "/" + version
+        
+        versionPath=dataPath + os.sep + groupId + os.sep + artifact
+        filePath=versionPath + os.sep + version
         makeTheDirs(filePath)
-        if not os.path.isfile(filePath + "/" + artifact + ".ttl"):
+        
+        print("Processing: VocabURI: " + vocab_uri)
+
+        vocab_label=getLabelFromJsonObject(dataObject)
+        print("Label: " + vocab_label)
+        if vocab_label == "":
+          vocab_label= artifact + " vocabulary"
+        vocab_description=f"This ontology was automatically crawled from https://lov.linkeddata.es to be deployed to the dbpedia databus"
+        if not os.path.isfile(filePath + os.sep + artifact + ".ttl"):
             rapperedSucessfull=rapperTheSource(vocab_uri, filePath, artifact)
             if rapperedSucessfull:
-              getNtriplesFromVocabfile(filePath + "/" + artifact + ".ttl", filePath, artifact)
+              getNtriplesFromVocabfile(filePath + os.sep + artifact + ".ttl", filePath, artifact)
+              writeMarkdownDescription(versionPath, artifact, vocab_label, vocab_description)
             else:
-              if os.path.isfile(filePath + "/" + artifact + ".ttl"):
-                os.remove(filePath + "/" + artifact + ".ttl")
+              if os.path.isfile(filePath + os.sep + artifact + ".ttl"):
+                os.remove(filePath + os.sep + artifact + ".ttl")
               os.rmdir(filePath)
         else:
-            print("Already loaded: " + filePath + "/" + artifact + ".ttl")
+            print("Already loaded: " + filePath + os.sep + artifact + ".ttl")
 
 rootdir=sys.argv[1]
 

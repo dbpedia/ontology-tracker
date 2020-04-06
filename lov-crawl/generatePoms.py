@@ -9,7 +9,7 @@ deployRepo="https://databus.dbpedia.org/repo"
 pub="https://yum-yab.github.io/webid.ttl#onto"
 
 
-def generateParentPom(groupId, artifactId, packaging, version, modules, packageDirectory, downloadUrlPath, deployRepoURL, publisher, maintainer):
+def generateParentPom(groupId, artifactId, packaging, version, modules, packageDirectory, downloadUrlPath, deployRepoURL, publisher, maintainer, groupdocu):
 
     modlueStrings = []
     for module in modules:
@@ -47,39 +47,8 @@ def generateParentPom(groupId, artifactId, packaging, version, modules, packageD
     f'      <databus.maintainer>{maintainer}</databus.maintainer>  \n'  
     '       <databus.license>http://purl.oclc.org/NET/rdflicense/cc-by3.0</databus.license>  \n'  
     '       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  \n'  
-    '       <databus.documentation><![CDATA[  \n'  
-    '       ## Attribution fulfilled by  \n'  
-    '       * (when deriving another dataset and releasing to the Databus) adding the Databus link to the provenance https://databus.dbpedia.org/dbpedia/${project.groupId}/${project.artifactId}/${project.artifactId}/${project.version}  \n' 
-    '       * on your website:  \n'  
-    '       * include the DBpedia logo and mention the usage of DBpedia with this link: https://databus.dbpedia.org/dbpedia  \n'  
-    '       * include backlinks from your pages to the individual entities, e.g. http://dbpedia.org/resource/Berlin  \n'  
-    '       * in academic publications cite: DBpedia - A Large-scale, Multilingual Knowledge Base Extracted from Wikipedia, J. Lehmann, R. Isele, M. Jakob, A. Jentzsch, D. Kontokostas, P. Mendes, S. Hellmann, M. Morsey, P. van Kleef, S. Auer, and C. Bizer. Semantic Web Journal 6 (2): 167--195 (2015)  \n' 
-    '     \n'  
-    '       ## How to contribute  \n'  
-    '       DBpedia is a community project, help us with:  \n'  
-    '       * editing the mappings at http://mappings.dbpedia.org  \n'  
-    '       * improve this documentation at https://github.com/dbpedia/databus-maven-plugin/tree/master/dbpedia/mappings/${project.artifactId}/${project.artifactId}.md  \n'  
-    '       * help with the software relevant for extraction:  \n'  
-    '       ** https://github.com/dbpedia/extraction-framework/tree/master/core/src/main/scala/org/dbpedia/extraction/mappings  \n' 
-    '       ** in particular https://github.com/dbpedia/extraction-framework/blob/master/core/src/main/scala/org/dbpedia/extraction/mappings/InfoboxMappingsExtractor.scala  \n' 
-    '       \n'  
-    '       ## Debug  \n'  
-    '       Parselogs are currently kept here: http://downloads.dbpedia.org/temporary/parselogs/  \n'  
-    '     \n'  
-    '       ## Origin  \n'  
-    '       This dataset was extracted using the wikipedia-dumps available on https://dumps.wikimedia.org/  \n' 
-    '       using the DBpedia Extraction-Framework available at https://github.com/dbpedia/extraction-framework  \n' 
-    '       For more technical information on how these datasets were generated, please visit http://dev.dbpedia.org  \n' 
-    '     \n'  
-    '       # Changelog  \n'  
-    '       ## since 2018.09.12  \n'   
-    '       * were created as new modular releases, some issues remain  \n'  
-    '       * we used rapper 2.0.14 to parse and `LC_ALL=C sort` to sort and ascii2uni -a U to unescape unicdoe xcharacters  \n'  
-    '       * parsing removed 250k triples total, debugging pending  \n'  
-    '       * object-uncleaned was not transformed into objects-cleaned and is missing  \n'  
-    '       * link to Wikimedia dump version is missing  \n'  
-    '       ## 2016.10.01  \n'  
-    '       * was taken from the previous BIG DBpedia releases under http://downloads.dbpedia.org/2016-10/ and included for completeness  \n'  
+    '       <databus.documentation><![CDATA['
+    f'      {groupdocu}'    
     '       ]]></databus.documentation>  \n'  
     '   </properties>  \n'  
     '     \n'  
@@ -127,15 +96,8 @@ def generateChildPom(groupId, parentArtifactId, version, artifactId, packaging):
     '\n'   
     '</project>\n')
 
-def generateMarkdownDescription(label, explaination, description=""):
-    return(f"# {label}\n"
-        f"{explaination}\n"
-        "\n"
-        f"{description}")
-
-
 def handleGroup(groupPath):
-    pathToGroup, groupId=os.path.split(groupPath)
+    groupId=os.path.split(groupPath)[1]
     print(f"Handling group: {groupId}")
     moduleList=[]
 
@@ -143,10 +105,6 @@ def handleGroup(groupPath):
 
     if os.path.isdir(groupPath):
         for directory in os.listdir(groupPath):
-            groupLabel=f"{groupId} ontologies"
-            groupExplaination=f"From https://lov.linkeddata.es/ automatically crawled vocabularies hosted on {groupId}. This is the vocabulary {directory}\n\n."
-            groupExplaination=groupExplaination + f"The {directory}.json file contains the ontology-uri, the last modified date (http last-modified) and the rapper error/warnings"
-
             if os.path.isdir(groupPath+os.sep+directory):
                 moduleList.append(directory)
 
@@ -159,10 +117,11 @@ def handleGroup(groupPath):
                                             )
                     print(childpomString, file=pomfile)
 
-                with open(groupPath+os.sep+directory+os.sep+directory+".md", "w+") as mdfile:
-                    print(generateMarkdownDescription(groupLabel, groupExplaination), file=mdfile)
-
     print(f"Modules found: {len(moduleList)}")
+
+    groupDoc=(f"#This group is for all vocabularies hosted on {groupId}\n\n"
+            "All the artifacts in this group refer to one vocabulary, deployed in different formats.\n"
+            "The ontologies are part of the Databus Archivo - A Web-Scale Ontology Interface for Time-Based and Semantic Archiving and Developing Good Ontologies.")
 
     if os.path.isdir(groupPath):
         with open(groupPath+os.sep+"pom.xml", "w+") as pomfile:
@@ -175,7 +134,8 @@ def handleGroup(groupPath):
                                         deployRepoURL=deployRepo,
                                         publisher=pub,
                                         maintainer=pub,
-                                        version=deployVersion
+                                        version=deployVersion,
+                                        groupdocu=groupDoc
                                         )
             print(pomstring, file=pomfile)
 

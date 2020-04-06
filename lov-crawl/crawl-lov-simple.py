@@ -13,7 +13,7 @@ datasetUrl="https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list"
 
 urlRegex=r"https?://(.+?)/(.*)"
 
-rapperRegex=r"^rapper: (?:Error|Warning).*"
+rapperRegex=re.compile(r"^rapper: (?:Error|Warning).*$")
 
 
 def getLabelFromJsonObject(jsonObj):
@@ -51,7 +51,13 @@ def getGraphOfVocabFile(filepath, rdfFormat):
   return graph
 
 def returnRapperErrors(rapperLog):
-  matches=re.findall(rapperRegex, rapperLog)
+  matches = []
+  for line in rapperLog.split("\n"):
+    if rapperRegex.match(line):
+      matches.append(line)
+      
+  print("Rapper Error Matches:")
+  print(matches)
   if matches is []:
     return ""
   else:
@@ -158,18 +164,6 @@ def getNtriplesFromVocabfile(vocabfile, targetpath, name):
     stderr=process.communicate()[1]
     print(stderr.decode("utf-8"))
 
-def makeTheDirs(path):
-  # i dont know why os.makedirs was not working
-  dirs=path.split(os.sep)
-    
-  for directory in dirs:
-    if dirs.index(directory) == 0:
-      fullpath=directory
-    else:
-      fullpath=os.sep.join(dirs[0:dirs.index(directory)]) + os.sep + directory
-    if not os.path.isdir(fullpath):
-      os.mkdir(fullpath)
-
 def crawl_lov(dataPath):
     req = requests.get(datasetUrl)
     json_data=req.json()
@@ -181,7 +175,7 @@ def crawl_lov(dataPath):
         
         versionPath=dataPath + os.sep + groupId + os.sep + artifact
         filePath=versionPath + os.sep + version
-        makeTheDirs(filePath)
+        os.makedirs(filePath, exist_ok=True)
         
         print("Processing: VocabURI: " + vocab_uri)
 

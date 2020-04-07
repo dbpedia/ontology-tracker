@@ -56,8 +56,6 @@ def returnRapperErrors(rapperLog):
     if rapperRegex.match(line):
       matches.append(line)
       
-  print("Rapper Error Matches:")
-  print(matches)
   if matches is []:
     return ""
   else:

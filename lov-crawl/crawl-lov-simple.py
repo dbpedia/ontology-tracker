@@ -45,10 +45,29 @@ def deleteEmptyDirsRecursive(startpath):
   else:
     print(f"Not a directory: {startpath}")
 
-def getGraphOfVocabFile(filepath, rdfFormat):
+def getGraphOfVocabFile(filepath):
+  rdfFormat=rdflib.util.guess_format(filepath)
   graph = rdflib.Graph()
   graph.parse(filepath, format=rdfFormat)
   return graph
+
+def getRelevantVocabInfo(graph):
+    queryString=(
+        "SELECT DISTINCT ?uri ?license ?label ?comment ?description \n"
+        "WHERE {\n"
+        " ?uri a owl:Ontology .\n"
+        " OPTIONAL { ?uri dct:license ?license }\n"
+        " OPTIONAL { ?uri rdfs:label ?label }\n"    
+        " OPTIONAL { ?uri rdfs:comment ?comment }\n"
+        " OPTIONAL { ?uri rdfs:description ?description }\n"
+        "} LIMIT 1"
+        )
+    result=graph.query(queryString, initNs={"owl": OWL, "dct":DCTERMS, "rdfs":RDFS})
+    if result != None and len(result) > 0:
+        for row in result:
+            return row
+    else:
+        return (None, None, None, None, None)
 
 def returnRapperErrors(rapperLog):
   matches = []
@@ -196,5 +215,14 @@ def crawl_lov(dataPath):
 
 rootdir=sys.argv[1]
 
-crawl_lov(rootdir)
-deleteEmptyDirsRecursive(rootdir)
+#crawl_lov(rootdir)
+#deleteEmptyDirsRecursive(rootdir)
+graph=getGraphOfVocabFile("/home/denis/Workspace/Job/ontology-tracker/lov-crawl/testdir/w3id.org/arco--ontology--core/2020.04.07-141739/arco--ontology--core.ttl")
+
+uri, vocabLicense, label, comment, description = getRelevantVocabInfo(graph)
+
+print("URI: ", uri.n3())
+print("License: ", vocabLicense.n3())
+print("Label: ",label)
+print("Comment ", comment)
+print("Description: ", description)

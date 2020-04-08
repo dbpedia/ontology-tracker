@@ -41,13 +41,13 @@ def inspectVocabs(rootdir):
             if not os.path.isdir(versionDir):
                 continue
             for version in os.listdir(versionDir):
-                print("File: " + artifact + ".nt")
                 if not os.path.isdir(versionDir + os.sep + version):
                    continue
                 dataPath=versionDir + os.sep + version
                 filepath = dataPath + os.sep + artifact + ".nt"
                 if not os.path.isfile(filepath):
                     continue
+                print("File: " + filepath)
                 graph = getGraphOfVocabFile(filepath)
                 vocab_uri, vocab_license, vocab_label, vocab_comment, vocab_description = getRelevantVocabInfo(graph)
                 if vocab_uri != None:

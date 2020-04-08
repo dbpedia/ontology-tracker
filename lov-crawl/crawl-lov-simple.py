@@ -6,6 +6,9 @@ import sys
 from datetime import datetime
 from dateutil.parser import parse as parsedate
 import rdflib
+from rdflib import OWL
+from rdflib import RDFS
+from rdflib.namespace import DCTERMS
 import json
 
 # url to get all vocabs and their resource

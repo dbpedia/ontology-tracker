@@ -18,22 +18,6 @@ urlRegex=r"https?://(.+?)/(.*)"
 
 rapperRegex=re.compile(r"^rapper: (?:Error|Warning).*$")
 
-
-def getLabelFromJsonObject(jsonObj):
-  if "titles" in jsonObj.keys() and "value" in jsonObj["titles"][0]:
-    return jsonObj["titles"][0]["value"]
-  else:
-    return ""
-
-def writeMarkdownDescription(path, artifact, label, explaination, description=""):
-
-  with open(path  + os.sep + artifact + ".md", "w+") as mdfile:
-    mdstring=(f"# {label}\n"
-            f"{explaination}\n"
-            "\n"
-            f"{description}")
-    print(mdstring, file=mdfile)
-
 #removes recursively all dirs that are empty or just contain empty files or directories
 def deleteEmptyDirsRecursive(startpath):
   if os.path.isdir(startpath):
@@ -47,30 +31,6 @@ def deleteEmptyDirsRecursive(startpath):
       os.rmdir(startpath)
   else:
     print(f"Not a directory: {startpath}")
-
-def getGraphOfVocabFile(filepath):
-  rdfFormat=rdflib.util.guess_format(filepath)
-  graph = rdflib.Graph()
-  graph.parse(filepath, format=rdfFormat)
-  return graph
-
-def getRelevantVocabInfo(graph):
-    queryString=(
-        "SELECT DISTINCT ?uri ?license ?label ?comment ?description \n"
-        "WHERE {\n"
-        " ?uri a owl:Ontology .\n"
-        " OPTIONAL { ?uri dct:license ?license }\n"
-        " OPTIONAL { ?uri rdfs:label ?label }\n"    
-        " OPTIONAL { ?uri rdfs:comment ?comment }\n"
-        " OPTIONAL { ?uri rdfs:description ?description }\n"
-        "} LIMIT 1"
-        )
-    result=graph.query(queryString, initNs={"owl": OWL, "dct":DCTERMS, "rdfs":RDFS})
-    if result != None and len(result) > 0:
-        for row in result:
-            return row
-    else:
-        return (None, None, None, None, None)
 
 def returnRapperErrors(rapperLog):
   matches = []
@@ -95,28 +55,6 @@ def generateGroupAndArtifactFromUri(vocab_uri):
     artifact="vocabulary"
   return groupId, artifact
 
-# returns the non information resource of an ontology, representing the entity of the ontology
-def getNIRofOntology(ontgraph):
-  result=ontgraph.query(
-        """
-        SELECT DISTINCT ?nir
-        WHERE {
-            ?nir <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .
-        }
-        """ )
-  return result
-
-# returns the non information resource of an ontology, representing the entity of the ontology
-def getDefinedByUris(ontgraph):
-  result=ontgraph.query(
-        """
-        SELECT DISTINCT ?defbyUri
-        WHERE {
-            ?s rdfs:isDefinedBy ?defbyUri .
-        }
-        """ )
-  return result
-
 def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, filename):
   vocabInformation={}
   vocabInformation["ontology-resource"] = definedByUri
@@ -125,28 +63,36 @@ def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, 
   with open(pathToFile + os.sep + filename + ".json", "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)
 
-def getLastModifiedFromHeader(header):
-  if "last-modified" in header.headers.keys():
-    return header.headers["last-modified"]
+def getLastModifiedFromResponse(response):
+  if "last-modified" in response.headers.keys():
+    return response.headers["last-modified"]
   else:
     return ""
 
 def downloadSource(uri, path, name):
     try:
-        acc_header = {'content-type': 'application/rdf+xml'}
-        with open(path + os.sep + name + ".rdf", "w+") as ontfile:
+        acc_header = {'Accept': 'application/rdf+xml'}
+        with open(path + os.sep + name + ".owl", "w+") as ontfile:
             response=requests.get(uri, headers=acc_header, timeout=30, allow_redirects=True)
+            lastModified=getLastModifiedFromResponse(response)
             print("Status: " + str(response.status_code))
             if response.status_code < 400:
                 print(response.text, file=ontfile)
+                return True, lastModified
+            else:
+                return False, lastModified
     except requests.exceptions.TooManyRedirects:
         print("Too many redirects, cancel parsing...")
+        return False, lastModified
     except TimeoutError:
         print("Timed out during parsing: "+uri)
+        return False, lastModified
     except requests.exceptions.ConnectionError:
         print("Bad Connection "+ uri)
+        return False, lastModified
     except requests.exceptions.ReadTimeout:
         print("Connection timed out for URI ", uri)
+        return False, lastModified
 
 def rapperTheSource(uri, path, name):
   try:
@@ -154,7 +100,7 @@ def rapperTheSource(uri, path, name):
     header=requests.head(uri, headers=acc_header, timeout=30, allow_redirects=True)
     print("File response: "+str(header.status_code))
     if header.status_code < 400:
-      lastModifiedDate=getLastModifiedFromHeader(header)
+      lastModifiedDate=getLastModifiedFromResponse(header)
       with open(path + os.sep + name + ".ttl", "w+") as ontfile:
         process = subprocess.Popen(["rapper", "-i", "rdfxml", uri, "-o", "turtle"], stdout=ontfile, stderr=subprocess.PIPE)
 
@@ -177,14 +123,22 @@ def rapperTheSource(uri, path, name):
     print("Connection timed out for URI ", uri)
     return False
 
-def getNtriplesFromVocabfile(vocabfile, targetpath, name):
+def generateTurtleFromVocabfile(vocabfile, targetpath, name):
+  print("Parsing the vocabulary as N-Triples...")
+  with open(targetpath + os.sep + name + ".ttl", "w+") as ontfile:
+    process = subprocess.Popen(["rapper", "-g", vocabfile, "-o", "turtle"], stdout=ontfile, stderr=subprocess.PIPE)
+    stderr=process.communicate()[1].decode("utf-8")
+    print(stderr)
+    return returnRapperErrors(stderr)
+
+def generateNtriplesFromVocabfile(vocabfile, targetpath, name):
   print("Parsing the vocabulary as N-Triples...")
   with open(targetpath + os.sep + name + ".nt", "w+") as ontfile:
     process = subprocess.Popen(["rapper", "-i", "turtle", vocabfile, "-o", "ntriples"], stdout=ontfile, stderr=subprocess.PIPE)
     stderr=process.communicate()[1]
     print(stderr.decode("utf-8"))
 
-def crawl_lov(dataPath):
+def crawlLOV(dataPath):
     req = requests.get(datasetUrl)
     json_data=req.json()
     version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
@@ -199,33 +153,15 @@ def crawl_lov(dataPath):
         
         print("Processing: VocabURI: " + vocab_uri)
 
-        vocab_label=getLabelFromJsonObject(dataObject)
-        print("Label: " + vocab_label)
-        if vocab_label == "":
-          vocab_label= artifact + " vocabulary"
-        vocab_description=f"This ontology was automatically crawled from https://lov.linkeddata.es to be deployed to the dbpedia databus"
         if not os.path.isfile(filePath + os.sep + artifact + ".ttl"):
-            rapperedSucessfull=rapperTheSource(vocab_uri, filePath, artifact)
-            if rapperedSucessfull:
-              getNtriplesFromVocabfile(filePath + os.sep + artifact + ".ttl", filePath, artifact)
-              writeMarkdownDescription(versionPath, artifact, vocab_label, vocab_description)
+            downloadSucessful, lastMod=downloadSource(vocab_uri, filePath, artifact)
+            if downloadSucessful:
+              rapperLog=generateTurtleFromVocabfile(filePath + os.sep + artifact + ".owl", filePath, artifact)
+              generateNtriplesFromVocabfile(filePath + os.sep + artifact + ".ttl", filePath, artifact)
+              writeVocabInformation(vocab_uri, lastMod, rapperLog, filePath, artifact)
             else:
-              if os.path.isfile(filePath + os.sep + artifact + ".ttl"):
-                os.remove(filePath + os.sep + artifact + ".ttl")
+              if os.path.isfile(filePath + os.sep + artifact + ".owl"):
+                os.remove(filePath + os.sep + artifact + ".owl")
               os.rmdir(filePath)
         else:
-            print("Already loaded: " + filePath + os.sep + artifact + ".ttl")
-
-rootdir=sys.argv[1]
-
-#crawl_lov(rootdir)
-#deleteEmptyDirsRecursive(rootdir)
-graph=getGraphOfVocabFile("/home/denis/Workspace/Job/ontology-tracker/lov-crawl/testdir/w3id.org/arco--ontology--core/2020.04.07-141739/arco--ontology--core.ttl")
-
-uri, vocabLicense, label, comment, description = getRelevantVocabInfo(graph)
-
-print("URI: ", uri.n3())
-print("License: ", vocabLicense.n3())
-print("Label: ",label)
-print("Comment ", comment)
-print("Description: ", description)
+            print("Already loaded: " + filePath + os.sep + artifact + ".owl")

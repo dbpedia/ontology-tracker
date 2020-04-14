@@ -1,15 +1,8 @@
 import os
 import sys
 
-parentArtifact="common-metadata"
-downloadUrl="http://akswnc7.informatik.uni-leipzig.de/dstreitmatter/timed-lov-crawl/${project.groupId}/${project.artifactId}/${project.version}/"
-packDir="/home/dstreitmatter/www/timed-lov-crawl/${project.groupId}/${project.artifactId}/"
-deployVersion="2020.04.03-141057"
-deployRepo="https://databus.dbpedia.org/repo"
-pub="https://yum-yab.github.io/webid.ttl#onto"
 
-
-def generateParentPom(groupId, artifactId, packaging, version, modules, packageDirectory, downloadUrlPath, deployRepoURL, publisher, maintainer, groupdocu):
+def generateParentPom(groupId, artifactId, packaging, version, modules, packageDirectory, downloadUrlPath, deployRepoURL, publisher, maintainer, groupdocu, license):
 
     modlueStrings = []
     for module in modules:
@@ -42,10 +35,10 @@ def generateParentPom(groupId, artifactId, packaging, version, modules, packageD
     '       <databus.downloadUrlPath>  \n'  
     f'          {downloadUrlPath} \n '  
     '       </databus.downloadUrlPath>  \n'  
-    f'      <databus.deployRepoURL>{deployRepoURL}</databus.deployRepoURL>  \n'  
-    f'      <databus.publisher>{publisher}</databus.publisher>  \n'  
-    f'      <databus.maintainer>{maintainer}</databus.maintainer>  \n'  
-    '       <databus.license>http://purl.oclc.org/NET/rdflicense/cc-by3.0</databus.license>  \n'  
+    f'       <databus.deployRepoURL>{deployRepoURL}</databus.deployRepoURL>  \n'  
+    f'       <databus.publisher>{publisher}</databus.publisher>  \n'  
+    f'       <databus.maintainer>{maintainer}</databus.maintainer>  \n'  
+    f'       <databus.license>{license}</databus.license>  \n'  
     '       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  \n'  
     '       <databus.documentation><![CDATA[\n'
     f'      {groupdocu}\n'    
@@ -72,78 +65,66 @@ def generateParentPom(groupId, artifactId, packaging, version, modules, packageD
     '     \n'  
     '</project>  \n')  
 
-def generateChildPom(groupId, parentArtifactId, version, artifactId, packaging):
-    return ('<?xml version="1.0" ?>  '  
-    '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  \n'  
-    '\n'  
-    '\n'  
-    '   <parent>  \n'   
-    f'      <groupId>{groupId}</groupId>  \n'  
-    '\n'    
-    f'      <artifactId>{parentArtifactId}</artifactId>  \n'  
-    '\n'  
-    f'      <version>{version}</version>  \n'  
-    '\n'  
-    '   </parent>  \n'  
-    '\n'  
-    '   <modelVersion>4.0.0</modelVersion>  \n'  
-    '\n'  
-    f'  <groupId>{groupId}</groupId>  \n' 
-    '\n'    
-    f'  <artifactId>{artifactId}</artifactId>  \n'  
-    '\n'  
-    f'  <packaging>{packaging}</packaging>  \n'  
-    '\n'   
-    '</project>\n')
-
-def handleGroup(groupPath):
-    groupId=os.path.split(groupPath)[1]
-    print(f"Handling group: {groupId}")
-    moduleList=[]
-
-
-
-    if os.path.isdir(groupPath):
-        for directory in os.listdir(groupPath):
-            if os.path.isdir(groupPath+os.sep+directory):
-                moduleList.append(directory)
-
-                with open(groupPath+os.sep+directory+os.sep+"pom.xml", "w+") as pomfile:
-                    childpomString=generateChildPom(groupId=groupId,
-                                            parentArtifactId=parentArtifact,
-                                            version=deployVersion,
-                                            artifactId=directory,
-                                            packaging="jar"
-                                            )
-                    print(childpomString, file=pomfile)
-
-    print(f"Modules found: {len(moduleList)}")
-
-    groupDoc=(f"#This group is for all vocabularies hosted on {groupId}\n\n"
-            "All the artifacts in this group refer to one vocabulary, deployed in different formats.\n"
-            "The ontologies are part of the Databus Archivo - A Web-Scale Ontology Interface for Time-Based and Semantic Archiving and Developing Good Ontologies.")
-
-    if os.path.isdir(groupPath):
-        with open(groupPath+os.sep+"pom.xml", "w+") as pomfile:
-            pomstring=generateParentPom(groupId=groupId,
-                                        artifactId=parentArtifact,
-                                        packaging="pom",
-                                        modules=moduleList,
-                                        packageDirectory=packDir,
-                                        downloadUrlPath=downloadUrl,
-                                        deployRepoURL=deployRepo,
-                                        publisher=pub,
-                                        maintainer=pub,
-                                        version=deployVersion,
-                                        groupdocu=groupDoc
-                                        )
-            print(pomstring, file=pomfile)
+def generateChildPom(groupId, parentArtifactId, version, artifactId, packaging, license=None):
+    if license == None:
+        return ('<?xml version="1.0" ?>  '  
+        '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  \n'  
+        '\n'  
+        '\n'  
+        '   <parent>  \n'   
+        f'      <groupId>{groupId}</groupId>  \n'  
+        '\n'    
+        f'      <artifactId>{parentArtifactId}</artifactId>  \n'  
+        '\n'  
+        f'      <version>{version}</version>  \n'  
+        '\n'  
+        '   </parent>  \n'  
+        '\n'  
+        '   <modelVersion>4.0.0</modelVersion>  \n'  
+        '\n'  
+        f'  <groupId>{groupId}</groupId>  \n' 
+        '\n'    
+        f'  <artifactId>{artifactId}</artifactId>  \n'  
+        '\n'  
+        f'  <packaging>{packaging}</packaging>  \n'  
+        '\n'   
+        '</project>\n')
+    else:
+        return ('<?xml version="1.0" ?>  '  
+        '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  \n'  
+        '\n'  
+        '\n'  
+        '   <parent>  \n'   
+        f'      <groupId>{groupId}</groupId>  \n'  
+        '\n'    
+        f'      <artifactId>{parentArtifactId}</artifactId>  \n'  
+        '\n'  
+        f'      <version>{version}</version>  \n'  
+        '\n'  
+        '   </parent>  \n'  
+        '\n'  
+        '   <modelVersion>4.0.0</modelVersion>  \n'  
+        '\n'  
+        f'  <groupId>{groupId}</groupId>  \n' 
+        '\n'    
+        f'  <artifactId>{artifactId}</artifactId>  \n'  
+        '\n'  
+        f'  <packaging>{packaging}</packaging>  \n'  
+        '\n'
+        '   <properties>\n'
+        f'    <databus.license>{license}</databus.license>\n'  
+        '   </properties>\n' 
+        '</project>\n')
 
 
+def writeMarkdownDescription(path, artifact, label, explaination, description=""):
 
-dataPath=sys.argv[1]
-for groupDir in os.listdir(dataPath):
-    if os.path.isdir(dataPath+os.sep+groupDir):
-        handleGroup(dataPath+os.sep+groupDir)
+  with open(path  + os.sep + artifact + ".md", "w+") as mdfile:
+    mdstring=(f"# {label}\n"
+            f"{explaination}\n"
+            "\n"
+            f"{description}")
+    print(mdstring, file=mdfile)
+
 
 

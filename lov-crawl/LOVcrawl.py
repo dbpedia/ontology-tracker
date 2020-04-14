@@ -70,6 +70,7 @@ def getLastModifiedFromResponse(response):
     return ""
 
 def downloadSource(uri, path, name):
+    lastModified=""
     try:
         acc_header = {'Accept': 'application/rdf+xml'}
         with open(path + os.sep + name + ".owl", "w+") as ontfile:

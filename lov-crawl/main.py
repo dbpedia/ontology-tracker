@@ -3,12 +3,12 @@ import generatePoms
 import sys
 import os
 import LOVcrawl as lovcrawl
-
+from datetime import datetime
+from dateutil.parser import parse as parsedate
 
 parentArtifact="common-metadata"
 downloadUrl="http://akswnc7.informatik.uni-leipzig.de/dstreitmatter/timed-lov-crawl/${project.groupId}/${project.artifactId}/${project.version}/"
 packDir="/home/dstreitmatter/www/timed-lov-crawl/${project.groupId}/${project.artifactId}/"
-deployVersion="2020.04.03-141057"
 deployRepo="https://databus.dbpedia.org/repo"
 pub="https://yum-yab.github.io/webid.ttl#onto"
 default_license="http://ontotrack.dbpedia.org/issue?license=unknown"
@@ -60,7 +60,7 @@ def handleArtifact(pathToArtifactFiles):
             childpomString=generatePoms.generateChildPom(
                                                 groupId=groupName,
                                                 parentArtifactId=parentArtifact,
-                                                version=deployVersion,
+                                                version=version,
                                                 artifactId=artifactName,
                                                 packaging="jar",
                                                 license=dcterms_license
@@ -88,7 +88,7 @@ def handleGroup(pathToGroup):
                                         groupId=groupName,
                                         artifactId=parentArtifact,
                                         packaging="pom",
-                                        version=deployVersion,
+                                        version=version,
                                         modules=moduleList,
                                         packageDirectory=packDir,
                                         downloadUrlPath=downloadUrl,
@@ -101,12 +101,11 @@ def handleGroup(pathToGroup):
         print(pomString, file=pomfile)
 
 rootdir=sys.argv[1]
-#lovcrawl.crawlLOV(rootdir)
-#lovcrawl.deleteEmptyDirsRecursive(rootdir)
+version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
 
-#for directory in os.listdir(rootdir):
-    #if os.path.isdir(rootdir + os.sep + directory):
-        #handleGroup(rootdir + os.sep + directory)
+lovcrawl.crawlLOV(rootdir, version)
+lovcrawl.deleteEmptyDirsRecursive(rootdir)
 
-ontgraph = inspectVocabs.getGraphOfVocabFile("/home/denis/license.ttl")
-inspectVocabs.getAllSubProps(ontgraph)
+for directory in os.listdir(rootdir):
+    if os.path.isdir(rootdir + os.sep + directory):
+        handleGroup(rootdir + os.sep + directory)

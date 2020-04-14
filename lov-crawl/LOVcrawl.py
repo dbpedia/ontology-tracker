@@ -138,10 +138,9 @@ def generateNtriplesFromVocabfile(vocabfile, targetpath, name):
     stderr=process.communicate()[1]
     print(stderr.decode("utf-8"))
 
-def crawlLOV(dataPath):
+def crawlLOV(dataPath, version):
     req = requests.get(datasetUrl)
     json_data=req.json()
-    version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
     for dataObject in json_data:
       
         vocab_uri=dataObject["uri"]

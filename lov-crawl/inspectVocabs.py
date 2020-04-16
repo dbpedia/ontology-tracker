@@ -107,7 +107,7 @@ def getOntologyReport(rootdir):
                 if not os.path.isdir(versionDir + os.sep + version):
                    continue
                 dataPath=versionDir + os.sep + version
-                filepath = dataPath + os.sep + artifact + ".nt"
+                filepath = dataPath + os.sep + artifact + ".ttl"
                 jsonPath = dataPath + os.sep + artifact + ".json"
                 if not os.path.isfile(filepath):
                     continue

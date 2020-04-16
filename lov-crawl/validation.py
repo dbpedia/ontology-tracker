@@ -1,8 +1,8 @@
 from pyshacl import validate
-import pprint
-from rdflib import Graph, Namespace, URIRef, BNode, Literal
-from rdflib.namespace import RDFS, RDF, DCTERMS, OWL
+from rdflib import Graph
 import inspectVocabs
+import os
+import sys
 
 # returns triple with (coforms : bool, result_graph : rdflib.Graph, result_text: string)
 def validateOntologyGraph(ontograph, shaclgraph):
@@ -10,25 +10,9 @@ def validateOntologyGraph(ontograph, shaclgraph):
     return r
 
 
-def generatingShaclForUri(uri):
+def loadShaclGraph():
     shaclgraph = Graph()
-    uriref = URIRef(uri)
-    sh = Namespace("http://www.w3.org/ns/shacl#")
-
-    anode = BNode()
-
-    shaclgraph.add((uriref, RDF.type, sh.NodeShape))
-    # Uri needs to be an ontology
-    shaclgraph.add((uriref, sh.targetClass, OWL.Ontology))
-
-    # Adds requiried properties with a anonymous node as reference
-    shaclgraph.add((uriref, sh.property, anode))
-
-    # needs to have a min one license which needs to be an uriref
-    shaclgraph.add((anode, sh.path, DCTERMS.license))
-    shaclgraph.add((anode, sh.minCount, Literal(1)))
-    shaclgraph.add((anode, sh.nodeKind, sh.IRI))
-
+    shaclgraph.parse(os.path.abspath(os.path.dirname(sys.argv[0])) + os.sep + "onto_shacl.ttl")
     return shaclgraph
 
 
@@ -36,4 +20,3 @@ def generatingShaclForUri(uri):
 def printGraphToTurtleFile(graph, filepath):    
     with open(filepath, "w+") as turtlefile:
         print(graph.serialize(format='turtle'), file=turtlefile)
-

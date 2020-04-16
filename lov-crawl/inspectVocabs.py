@@ -5,6 +5,7 @@ from rdflib import OWL
 from rdflib import RDFS
 from rdflib.namespace import DCTERMS
 from rdflib.namespace import DC
+import json
 
 def getGraphOfVocabFile(filepath):
   rdfFormat=rdflib.util.guess_format(filepath)
@@ -94,7 +95,7 @@ def getDefinedByUris(ontgraph):
         return None
 
 
-def inspectVocabs(rootdir):
+def getOntologyReport(rootdir):
     for group in os.listdir(rootdir):
         if not os.path.isdir(rootdir + os.sep +group):
             continue
@@ -107,21 +108,21 @@ def inspectVocabs(rootdir):
                    continue
                 dataPath=versionDir + os.sep + version
                 filepath = dataPath + os.sep + artifact + ".nt"
+                jsonPath = dataPath + os.sep + artifact + ".json"
                 if not os.path.isfile(filepath):
                     continue
                 print("File: " + filepath)
-                #graph = getGraphOfVocabFile(filepath)
-                #vocab_uri, vocab_license, vocab_label, vocab_comment, vocab_description = getRelevantVocabInfo(graph)
-                #if vocab_uri != None:
-                #    print("Uri: ",vocab_uri.n3())
-                #if vocab_license != None:
-                #    print("License: ",vocab_license.n3())
-                #if vocab_label != None:
-                #    print("Label: ", vocab_label) 
-                #if vocab_comment != None:
-                #    print("Comment: ", vocab_comment)
-                #if vocab_description != None:
-                #    print("Description: ", vocab_description)
-
+                graph = getGraphOfVocabFile(filepath)
+                vocab_uri, vocab_license = getRelevantDCTERMSVocabInfo(graph)[:2]
+                if vocab_uri != None:
+                    print("Uri: ",vocab_uri.n3())
+                if vocab_license != None:
+                    print("License: ",vocab_license.n3())
+                with open(jsonPath) as json_file:
+                    data = json.load(json_file)
+                    if data["lastModified"] != "":
+                        print("LastModified: ", data["lastModified"])
+                    if data["rapperErrorLog"] != "":
+                        print("RapperErrors: ", data["rapperErrorLog"])
 
             

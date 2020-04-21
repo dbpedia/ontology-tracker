@@ -3,20 +3,29 @@ import sys
 import json
 import subprocess
 import re
+import csv
 
-rapperErrors=re.compile(r"^rapper: Error.*$")
-rapperWarnings=re.compile(r"^rapper: Warning.*$")
+rapperErrorsRegex=re.compile(r"^rapper: Error.*$")
+rapperWarningsRegex=re.compile(r"^rapper: Warning.*$")
+rapperTriplesRegex=re.compile(r"rapper: Parsing returned (\d+) triples")
 
 
 def returnRapperErrors(rapperLog):
   errorMatches = []
   warningMatches = []
   for line in rapperLog.split("\n"):
-    if rapperErrors.match(line):
+    if rapperErrorsRegex.match(line):
       errorMatches.append(line)
-    elif rapperWarnings.match(line):
+    elif rapperWarningsRegex.match(line):
       warningMatches.append(line)
   return ";".join(errorMatches), ";".join(warningMatches)
+
+def getTripleNumberFromRapperLog(rapperlog):
+  match = rapperTriplesRegex.search(rapperlog)
+  if match != None:
+    return match.group(1)
+  else:
+    return None
 
 #removes recursively all dirs that are empty or just contain empty files or directories
 def deleteEmptyDirsRecursive(startpath):
@@ -32,18 +41,59 @@ def deleteEmptyDirsRecursive(startpath):
   else:
     print(f"Not a directory: {startpath}")
 
-def writeVocabInformation(definedByUri, lastModified, rapperErrors, pathToFile, filename):
+def writeVocabInformation(pathToFile, definedByUri, lastModified, rapperErrors, rapperWarnings, etag, tripleSize, bestHeader, shaclValidated, accessed):
   vocabInformation={}
   vocabInformation["ontology-resource"] = definedByUri
+  vocabInformation["accessed"] = accessed
   vocabInformation["lastModified"] = lastModified
-  vocabInformation["rapperErrorLog"] = rapperErrors
-  with open(pathToFile + os.sep + filename + "_type=meta.json", "w+") as outfile:
+  vocabInformation["rapperErrors"] = rapperErrors
+  vocabInformation["rapperWarnings"] = rapperWarnings
+  vocabInformation["E-Tag"] = etag
+  vocabInformation["triples"] = tripleSize
+  vocabInformation["best-header"] = bestHeader
+  vocabInformation["SHACL-validated"] = shaclValidated
+
+  with open(pathToFile, "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)
 
-def parseRDFSource(sourcefile, targetpath, name, outputType):
+def parseRDFSource(sourcefile, filepath, outputType, deleteEmpty=True):
   print("Parsing the vocabulary as N-Triples...")
-  with open(targetpath + os.sep + name + "_type=parsed.nt", "w+") as ontfile:
+  with open(filepath, "w+") as ontfile:
     process = subprocess.Popen(["rapper", "-g", sourcefile, "-o", outputType], stdout=ontfile, stderr=subprocess.PIPE)
     stderr=process.communicate()[1].decode("utf-8")
     print(stderr)
-    return returnRapperErrors(stderr)
+  if deleteEmpty:
+    returnedTriples = getTripleNumberFromRapperLog(stderr)
+    if returnedTriples == None or returnedTriples == 0:
+      os.remove(filepath)
+  return returnRapperErrors(stderr)
+
+def getParsedTriples(filepath):
+  process = subprocess.Popen(["rapper", "-c", "-g", filepath], stderr=subprocess.PIPE)
+  try:
+    stderr = process.communicate()[1].decode("utf-8")
+  except UnicodeDecodeError:
+    print("There was a decoding error at parsing " + filepath)
+    return None
+  return getTripleNumberFromRapperLog(stderr)
+
+# for efficiency the tsv reads in as a dict, with the vocab_uri as the key and (bestHeader, lastMod, etag) as value 
+def loadIndex():
+  resultDict = {}
+  with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.tsv"), "r") as indexfile:
+    reader = csv.reader(indexfile, delimiter="|")
+    for row in reader:
+      print(row)
+      vocabUri = row[0]
+      bestHeader = row[1]
+      lastMod = row[2]
+      etag = row[3]
+      resultDict[vocabUri] = (bestHeader, lastMod, etag)
+  return resultDict
+
+def writeIndex(index):
+  with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.tsv"), "w") as indexfile:
+    writer = csv.writer(indexfile, delimiter="\t")
+    writer.writerows(index)
+
+print(loadIndex())

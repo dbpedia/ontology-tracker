@@ -2,9 +2,10 @@ import inspectVocabs
 import generatePoms
 import sys
 import os
-import LOVcrawl as lovcrawl
+import crawlURIs
 from datetime import datetime
 from dateutil.parser import parse as parsedate
+import ontoFiles
 
 parentArtifact="common-metadata"
 downloadUrl="http://akswnc7.informatik.uni-leipzig.de/dstreitmatter/timed-lov-crawl/${project.groupId}/${project.artifactId}/${project.version}/"
@@ -21,8 +22,8 @@ def handleArtifact(pathToArtifactFiles):
         if os.path.isdir(pathToArtifactFiles + os.sep + versionDir):
             versionDir=pathToArtifactFiles + os.sep + versionDir
             break
-    if os.path.isfile(versionDir + os.sep + artifactName + ".ttl"):         
-        vocab_graph=inspectVocabs.getGraphOfVocabFile(versionDir + os.sep + artifactName + ".ttl")
+    if os.path.isfile(versionDir + os.sep + artifactName + "_type=parsed.ttl"):         
+        vocab_graph=inspectVocabs.getGraphOfVocabFile(versionDir + os.sep + artifactName + "_type=parsed.ttl")
         vocab_uri,  rdfs_label, rdfs_comment, rdfs_description = inspectVocabs.getRelevantRDFSVocabInfo(vocab_graph)
         dcterms_license, dcterms_title, dcterms_abstract, dcterms_description = inspectVocabs.getRelevantDCTERMSVocabInfo(vocab_graph)[1:]
         dc_title, dc_description = inspectVocabs.getRelevantDCVocabInfo(vocab_graph)[1:]
@@ -101,11 +102,10 @@ def handleGroup(pathToGroup):
         print(pomString, file=pomfile)
 
 rootdir=sys.argv[1]
-version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
-
-lovcrawl.crawlLOV(rootdir, version)
-lovcrawl.deleteEmptyDirsRecursive(rootdir)
-
+#version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
+version="2020.04.20-130532"
+crawlURIs.crawlLOV(rootdir, version)
+ontoFiles.deleteEmptyDirsRecursive(rootdir)
 for directory in os.listdir(rootdir):
     if os.path.isdir(rootdir + os.sep + directory):
         handleGroup(rootdir + os.sep + directory)

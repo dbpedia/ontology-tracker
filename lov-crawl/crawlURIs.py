@@ -25,7 +25,7 @@ rdfHeaders=["application/rdf+xml", "application/ntriples", "text/turtle", "text/
 
 urlRegex=r"https?://(.+?)/(.*)"
 
-fileTypeDict = {"turtle": ".ttl", "rdf+xml": ".owl", "ntriples": ".nt", "rdf+n3":".n3", "html":".html"}
+fileTypeDict = {"turtle": ".ttl", "rdf+xml": ".rdf", "ntriples": ".nt", "rdf+n3":".n3", "html":".html", "xml":".xml"}
 
 # regex to get the content type
 contentTypeRegex = re.compile(r"\w+/([\w+-]+)(?:.*)?")
@@ -37,6 +37,7 @@ def isNoneOrEmpty(string):
     return True
 
 def getLodeDocuFile(vocab_uri):
+  print("Generating lode-docu...")
   try:
     response = requests.get(lodeServiceUrl + vocab_uri)
     if response.status_code < 400:
@@ -191,35 +192,45 @@ def handleUri(vocab_uri, index, dataPath):
   filePath=versionPath + os.sep + version
   os.makedirs(filePath, exist_ok=True)
   print("Processing VocabURI: " + vocab_uri)
-  isNew = vocab_uri not in index.keys()
-  if not isNew:
-    bestHeader, oldLastMod, oldETag = index[vocab_uri]
-  else:
+  i = ontoFiles.checkIfUriInIndex(vocab_uri, index)
+  if i == None:
     bestHeader = determineBestAccHeader(vocab_uri)
-  
+  else:
+    bestHeader = index[i]["best-header"]
+    oldLastMod = index[i]["last-modified"]
+    oldETag = index[i]["e-tag"]
+
+  # check the best header, if its None the file is not available
   if bestHeader != None:
     downloadSucessful, pathToOrigFile, response=downloadSource(vocab_uri, filePath, artifact, bestHeader)
   else:
     downloadSucessful = False
+
   if downloadSucessful:
     # get some metadata
     accessDate = datetime.now().strftime("%Y.%m.%d; %H:%M:%S")
     lastMod = getLastModifiedFromResponse(response)
     etag = getEtagFromResponse(response)
     # append uri to index with updated values
-    index[vocab_uri] = (bestHeader, lastMod, etag)
+    index.append({"vocab-uri":vocab_uri, "last-modified":lastMod, "best-header":bestHeader, "e-tag":etag})
 
     # generate parsed variants of the ontology
-    rapperErrors, rapperWarnings=ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.ttl"), outputType="turtle")
-    ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.nt"), outputType="ntriples")
+    rapperErrors, rapperWarnings=ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.ttl"), outputType="turtle", deleteEmpty=True)
+    ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.nt"), outputType="ntriples", deleteEmpty=True)
     triples = ontoFiles.getParsedTriples(pathToOrigFile)
     if triples == None:
       triples = 0
     # shacl-validation
-    ontoGraph = inspectVocabs.getGraphOfVocabFile(os.path.join(filePath, artifact+"_type=parsed.ttl"))
-    conforms, reportGraph, reportText = validation.validateOntologyGraph(ontoGraph)
-    print(reportText)
-    validation.printGraphToTurtleFile(reportGraph, os.path.join(filePath, artifact+"_type=shaclReport.ttl"))
+    # uses the turtle file since there were some problems with the blankNodes of rapper and rdflib
+    # no empty parsed files since shacl is valid on empty files.
+    if os.path.isfile(os.path.join(filePath, artifact+"_type=parsed.ttl")):
+      ontoGraph = inspectVocabs.getGraphOfVocabFile(os.path.join(filePath, artifact+"_type=parsed.ttl"))
+      conforms, reportGraph, reportText = validation.validateOntologyGraph(ontoGraph)
+      print(reportText)
+      validation.printGraphToTurtleFile(reportGraph, os.path.join(filePath, artifact+"_type=shaclReport.ttl"))
+    else:
+      print("No valid syntax, no shacl report")
+      conforms = False
     # write the metadata json file
     ontoFiles.writeVocabInformation(pathToFile=os.path.join(filePath, artifact+"_type=meta.json"),
                                     definedByUri=vocab_uri,
@@ -232,7 +243,6 @@ def handleUri(vocab_uri, index, dataPath):
                                     shaclValidated=conforms,
                                     accessed= accessDate
                                     )
-
     docustring = getLodeDocuFile(vocab_uri)
     if docustring != None:
       with open(filePath + os.sep + artifact + "_type=generatedDocu.html", "w+") as docufile:
@@ -241,6 +251,7 @@ def handleUri(vocab_uri, index, dataPath):
     # when ontologies are not available, add them to a special group (are the only ones who have an empty string at the key accessed)
     failedPath= os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact, version)
     os.makedirs(failedPath, exist_ok=True)
+    index.append({"vocab-uri":vocab_uri, "last-modified":"", "best-header":"", "e-tag":""})
     ontoFiles.writeVocabInformation(pathToFile=os.path.join(failedPath, groupId + "--" + artifact + "_type=meta.json"),
                                     definedByUri=vocab_uri,
                                     lastModified="",
@@ -259,9 +270,10 @@ def handleUri(vocab_uri, index, dataPath):
 def crawlLOV(dataPath):
     req = requests.get(lovOntologiesURL)
     json_data=req.json()
-    index = ontoFiles.loadIndex()
+    index = ontoFiles.loadIndexJson()
     for dataObject in json_data:
       vocab_uri=dataObject["uri"]
       handleUri(vocab_uri, index, dataPath)
+    ontoFiles.writeIndexJson(index)
 
         

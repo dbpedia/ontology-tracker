@@ -23,7 +23,7 @@ def returnRapperErrors(rapperLog):
 def getTripleNumberFromRapperLog(rapperlog):
   match = rapperTriplesRegex.search(rapperlog)
   if match != None:
-    return match.group(1)
+    return int(match.group(1))
   else:
     return None
 
@@ -64,7 +64,9 @@ def parseRDFSource(sourcefile, filepath, outputType, deleteEmpty=True):
     print(stderr)
   if deleteEmpty:
     returnedTriples = getTripleNumberFromRapperLog(stderr)
+    print("Returned Triples: ", returnedTriples)
     if returnedTriples == None or returnedTriples == 0:
+      print("Parsed file empty, deleting...")
       os.remove(filepath)
   return returnRapperErrors(stderr)
 
@@ -91,9 +93,28 @@ def loadIndex():
       resultDict[vocabUri] = (bestHeader, lastMod, etag)
   return resultDict
 
+def loadIndexJson():
+  with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.json"), "r") as indexfile:
+    jsonIndex = json.load(indexfile)
+  return jsonIndex
+
 def writeIndex(index):
   with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.tsv"), "w") as indexfile:
     writer = csv.writer(indexfile, delimiter="\t")
     writer.writerows(index)
 
-print(loadIndex())
+def checkIfUriInIndex(uri, index):
+  for i, uriObj in enumerate(index):
+    if uriObj["vocab-uri"] == uri:
+      return i
+  return None
+
+def writeIndexJson(index):
+  with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.json"), "w+") as indexfile:
+    json.dump(index, indexfile, indent=4, sort_keys=True)
+
+
+parseRDFSource("/home/denis/Workspace/Job/ontology-tracker/lov-crawl/testdir/data.istex.fr/ontology--istex/2020.04.20-130532/ontology--istex_type=orig.html",
+              "./SHOULD_BE_DELETED.nt",
+              "turtle",
+              True)

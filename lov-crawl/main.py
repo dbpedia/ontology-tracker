@@ -28,7 +28,7 @@ def handleArtifact(pathToArtifactFiles):
         dcterms_license, dcterms_title, dcterms_abstract, dcterms_description = inspectVocabs.getRelevantDCTERMSVocabInfo(vocab_graph)[1:]
         dc_title, dc_description = inspectVocabs.getRelevantDCVocabInfo(vocab_graph)[1:]
         if vocab_uri != None:
-            print("Handling the metadata for " + vocab_uri)
+            print("INFO: Handling the metadata for " + vocab_uri)
         else:
             print(f"Error: No valid ontology-uri for: group: {groupName}; artifact: {artifactName}")
 
@@ -104,7 +104,7 @@ def handleGroup(pathToGroup):
 rootdir=sys.argv[1]
 #version=datetime.now().strftime("%Y.%m.%d-%H%M%S")
 version="2020.04.20-130532"
-crawlURIs.crawlLOV(rootdir, version)
+#crawlURIs.crawlLOV(rootdir)
 ontoFiles.deleteEmptyDirsRecursive(rootdir)
 for directory in os.listdir(rootdir):
     if os.path.isdir(rootdir + os.sep + directory):

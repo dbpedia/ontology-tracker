@@ -1,18 +1,21 @@
 import requests
-import subprocess
 import re
 import os
 import sys
 from datetime import datetime
 from dateutil.parser import parse as parsedate
-import rdflib
-from rdflib import OWL
-from rdflib import RDFS
-from rdflib.namespace import DCTERMS
-import json
 import ontoFiles
 import validation
 import inspectVocabs
+import generatePoms
+
+# docu for failed ontologies
+failedGroupDoc = (f"#This group is for all unavailable ontologies\n\n"
+                "All the artifacts in this group refer to one vocabulary.\n"
+                "The ontologies are part of the Databus Archivo - A Web-Scale Ontology Interface for Time-Based and Semantic Archiving and Developing Good Ontologies.")
+
+# explaination for the md-File
+explaination="This ontology is part of the Databus Archivo - A Web-Scale OntologyInterface for Time-Based and SemanticArchiving and Developing Good Ontologies"
 
 # url to get all vocabs and their resource
 lovOntologiesURL="https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list"
@@ -25,6 +28,7 @@ rdfHeaders=["application/rdf+xml", "application/ntriples", "text/turtle", "text/
 
 urlRegex=r"https?://(.+?)/(.*)"
 
+#should be extended maybe
 fileTypeDict = {"turtle": ".ttl", "rdf+xml": ".rdf", "ntriples": ".nt", "rdf+n3":".n3", "html":".html", "xml":".xml"}
 
 # regex to get the content type
@@ -184,6 +188,46 @@ def checkForNewVersion(vocab_uri, oldETag, oldLastMod, bestHeader):
         return None
   
 
+def generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, lastMod, etag, accessDate):
+  # generate parsed variants of the ontology
+  rapperErrors, rapperWarnings=ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.ttl"), outputType="turtle", deleteEmpty=True)
+  ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.nt"), outputType="ntriples", deleteEmpty=True)
+  triples = ontoFiles.getParsedTriples(pathToOrigFile)
+  if triples == None:
+    triples = 0
+  # shacl-validation
+  # uses the turtle file since there were some problems with the blankNodes of rapper and rdflib
+  # no empty parsed files since shacl is valid on empty files.
+  if os.path.isfile(os.path.join(filePath, artifact+"_type=parsed.ttl")):
+    ontoGraph = inspectVocabs.getGraphOfVocabFile(os.path.join(filePath, artifact+"_type=parsed.ttl"))
+    conforms, reportGraph, reportText = validation.validateOntologyGraph(ontoGraph)
+    print(reportText)
+    validation.printGraphToTurtleFile(reportGraph, os.path.join(filePath, artifact+"_type=shaclReport.ttl"))
+  else:
+    print("No valid syntax, no shacl report")
+    conforms = False
+    ontoGraph = None
+  # write the metadata json file
+  ontoFiles.writeVocabInformation(pathToFile=os.path.join(filePath, artifact+"_type=meta.json"),
+                                  definedByUri=vocab_uri,
+                                  lastModified=lastMod,
+                                  rapperErrors=rapperErrors,
+                                  rapperWarnings=rapperWarnings,
+                                  etag=etag,
+                                  tripleSize=triples,
+                                  bestHeader=bestHeader,
+                                  shaclValidated=conforms,
+                                  accessed= accessDate
+                                  )
+  docustring = getLodeDocuFile(vocab_uri)
+  if docustring != None:
+    with open(filePath + os.sep + artifact + "_type=generatedDocu.html", "w+") as docufile:
+      print(docustring, file=docufile)
+  # returns the ontograph for proper metadata generation
+  return ontoGraph
+
+
+
 # handles a vocab-uri, parameters are 
 def handleUri(vocab_uri, index, dataPath):
   groupId, artifact = generateGroupAndArtifactFromUri(vocab_uri)
@@ -195,62 +239,98 @@ def handleUri(vocab_uri, index, dataPath):
   i = ontoFiles.checkIfUriInIndex(vocab_uri, index)
   if i == None:
     bestHeader = determineBestAccHeader(vocab_uri)
+    isNew = True
   else:
     bestHeader = index[i]["best-header"]
     oldLastMod = index[i]["last-modified"]
     oldETag = index[i]["e-tag"]
+    isNew = False
 
-  # check the best header, if its None the file is not available
-  if bestHeader != None:
+  if not os.path.isfile(os.path.join(dataPath, groupId, "pom.xml")):
+    groupDoc=(f"#This group is for all vocabularies hosted on {groupId}\n\n"
+            "All the artifacts in this group refer to one vocabulary, deployed in different formats.\n"
+            "The ontologies are part of the Databus Archivo - A Web-Scale Ontology Interface for Time-Based and Semantic Archiving and Developing Good Ontologies.")
+ 
+    pomString=generatePoms.generateParentPom(groupId=groupId,
+                                            packaging="pom",
+                                            modules=[],
+                                            packageDirectory=generatePoms.packDir,
+                                            downloadUrlPath=generatePoms.downloadUrl,
+                                            publisher=generatePoms.pub,
+                                            maintainer=generatePoms.pub,
+                                            groupdocu=groupDoc,
+                                            )
+    with open(os.path.join(dataPath, groupId, "pom.xml"), "w+") as parentPomFile:
+      print(pomString, file=parentPomFile)
+
+
+  # check the best header, if its None or the empty string the file is not available
+  if bestHeader != None and bestHeader != "":
     downloadSucessful, pathToOrigFile, response=downloadSource(vocab_uri, filePath, artifact, bestHeader)
+    accessDate = datetime.now().strftime("%Y.%m.%d; %H:%M:%S")
   else:
     downloadSucessful = False
 
   if downloadSucessful:
     # get some metadata
-    accessDate = datetime.now().strftime("%Y.%m.%d; %H:%M:%S")
+    
     lastMod = getLastModifiedFromResponse(response)
     etag = getEtagFromResponse(response)
     # append uri to index with updated values
-    index.append({"vocab-uri":vocab_uri, "last-modified":lastMod, "best-header":bestHeader, "e-tag":etag})
+    if isNew:
+      index.append({"vocab-uri":vocab_uri, "last-modified":lastMod, "best-header":bestHeader, "e-tag":etag})
+    
+    ontograph=generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, lastMod, etag, accessDate)
+    md_label=artifact + " ontology"
+    md_description=""
+    license=None
+    if ontograph != None:
+      labelList = inspectVocabs.getPossibleLabels(ontograph)
+      descriptionList = inspectVocabs.getPossibleDescriptions(ontograph)
+      if labelList != None:
+        possibleLabels = [label for label in labelList if label != None]
+      else:
+        possibleLabels = []
 
-    # generate parsed variants of the ontology
-    rapperErrors, rapperWarnings=ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.ttl"), outputType="turtle", deleteEmpty=True)
-    ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.nt"), outputType="ntriples", deleteEmpty=True)
-    triples = ontoFiles.getParsedTriples(pathToOrigFile)
-    if triples == None:
-      triples = 0
-    # shacl-validation
-    # uses the turtle file since there were some problems with the blankNodes of rapper and rdflib
-    # no empty parsed files since shacl is valid on empty files.
-    if os.path.isfile(os.path.join(filePath, artifact+"_type=parsed.ttl")):
-      ontoGraph = inspectVocabs.getGraphOfVocabFile(os.path.join(filePath, artifact+"_type=parsed.ttl"))
-      conforms, reportGraph, reportText = validation.validateOntologyGraph(ontoGraph)
-      print(reportText)
-      validation.printGraphToTurtleFile(reportGraph, os.path.join(filePath, artifact+"_type=shaclReport.ttl"))
-    else:
-      print("No valid syntax, no shacl report")
-      conforms = False
-    # write the metadata json file
-    ontoFiles.writeVocabInformation(pathToFile=os.path.join(filePath, artifact+"_type=meta.json"),
-                                    definedByUri=vocab_uri,
-                                    lastModified=lastMod,
-                                    rapperErrors=rapperErrors,
-                                    rapperWarnings=rapperWarnings,
-                                    etag=etag,
-                                    tripleSize=triples,
-                                    bestHeader=bestHeader,
-                                    shaclValidated=conforms,
-                                    accessed= accessDate
-                                    )
-    docustring = getLodeDocuFile(vocab_uri)
-    if docustring != None:
-      with open(filePath + os.sep + artifact + "_type=generatedDocu.html", "w+") as docufile:
-        print(docustring, file=docufile)
-  else:
+      if descriptionList != None:
+        possibleDescriptions = [desc for desc in descriptionList if desc != None]
+      else:
+        possibleDescriptions = []
+      license =inspectVocabs.getLicense(ontograph)
+      if possibleLabels != [] and len(possibleLabels) > 0:
+        md_label = possibleLabels[0]
+      if possibleDescriptions != [] and len(possibleDescriptions) > 0:
+        md_description = possibleDescriptions[0]  
+    childpomString = generatePoms.generateChildPom(groupId=groupId,
+                                                  version=version,
+                                                  artifactId=artifact,
+                                                  packaging="jar",
+                                                  license=license)
+    with open(os.path.join(versionPath, "pom.xml"), "w+") as childPomFile:
+      print(childpomString, file=childPomFile)
+    generatePoms.writeMarkdownDescription(versionPath, artifact, md_label, explaination, md_description)
+  # no need of deploying a new version of unavailable ontologies
+  elif not os.path.isfile(os.path.join(versionPath, "pom.xml")):
+    # removenot used dirs and files
+    ontoFiles.deleteEmptyDirsRecursive(os.path.join(dataPath, groupId))
+    if len([dirname for dirname in os.listdir(os.path.join(dataPath, groupId)) if os.path.isdir(os.path.join(dataPath, groupId, dirname))]) == 0:
+      os.remove(os.path.join(dataPath, groupId, "pom.xml"))
+      os.rmdir(os.path.join(dataPath, groupId))
     # when ontologies are not available, add them to a special group (are the only ones who have an empty string at the key accessed)
     failedPath= os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact, version)
     os.makedirs(failedPath, exist_ok=True)
+    # generate parent-pom if not existent
+    if not os.path.isfile(os.path.join(dataPath, "unavailable-ontologies", "pom.xml")):
+      pomString=generatePoms.generateParentPom(groupId="unavailable-ontologies",
+                                            packaging="pom",
+                                            modules=[],
+                                            packageDirectory=generatePoms.packDir,
+                                            downloadUrlPath=generatePoms.downloadUrl,
+                                            publisher=generatePoms.pub,
+                                            maintainer=generatePoms.pub,
+                                            groupdocu=failedGroupDoc,
+                                            )
+
     index.append({"vocab-uri":vocab_uri, "last-modified":"", "best-header":"", "e-tag":""})
     ontoFiles.writeVocabInformation(pathToFile=os.path.join(failedPath, groupId + "--" + artifact + "_type=meta.json"),
                                     definedByUri=vocab_uri,
@@ -263,6 +343,16 @@ def handleUri(vocab_uri, index, dataPath):
                                     shaclValidated=False,
                                     accessed=""
                                     )
+    childpomString = generatePoms.generateChildPom(groupId=groupId,
+                                                  version=version,
+                                                  artifactId=groupId + "--" + artifact,
+                                                  packaging="jar",
+                                                  license=None)
+    generatePoms.writeMarkdownDescription(path=os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact), 
+                                          artifact=groupId + "--" + artifact,
+                                          label=groupId + "--" + artifact + " ontology", 
+                                          explaination=explaination,
+                                          description="This is a Ontology wich cant be accessed")
   
 
 

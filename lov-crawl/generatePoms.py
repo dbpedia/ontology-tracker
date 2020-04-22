@@ -1,13 +1,25 @@
 import os
 import sys
 
+# some defaults for the pom generation
+default_license="http://ontotrack.dbpedia.org/issue?license=unknown"
+default_parentArtifact="common-metadata"
+default_repo="https://databus.dbpedia.org/repo"
+default_version="0.0.0-notRelevant"
 
-def generateParentPom(groupId, artifactId, packaging, version, modules, packageDirectory, downloadUrlPath, deployRepoURL, publisher, maintainer, groupdocu, license):
+# edit for your dataset
+downloadUrl="http://akswnc7.informatik.uni-leipzig.de/dstreitmatter/timed-lov-crawl/${project.groupId}/${project.artifactId}/${project.version}/"
+packDir="/home/dstreitmatter/www/timed-lov-crawl/${project.groupId}/${project.artifactId}/"
+pub="https://yum-yab.github.io/webid.ttl#onto"
 
-    modlueStrings = []
-    for module in modules:
-        modlueStrings.append(f"    <module>{module}</module>")
+def generateParentPom(groupId, packaging, modules, packageDirectory, downloadUrlPath, publisher, maintainer, groupdocu, license=default_license, deployRepoURL=default_repo, version=default_version, artifactId=default_parentArtifact):
 
+    modlueStrings = [f"    <module>{module}</module>" for module in modules]
+    
+    if modules == []:
+        moduleString = ""
+    else:
+        moduleString = "   <modules>"+"\n".join(modlueStrings)+"\n   </modules>\n "
 
     return ('<?xml version="1.0" encoding="UTF-8"?>  \n'  
     '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  \n'  
@@ -23,9 +35,7 @@ def generateParentPom(groupId, artifactId, packaging, version, modules, packageD
     f'  <artifactId>{artifactId}</artifactId>  \n'  
     f'  <packaging>{packaging}</packaging>  \n'  
     f'  <version>{version}</version> \n '  
-    '   <modules>  \n'
-    ""+"\n".join(modlueStrings) + "\n"  
-    '   </modules>  \n'   
+    f'{moduleString}'  
     '   <properties>  \n'  
     '       <databus.tryVersionAsIssuedDate>false</databus.tryVersionAsIssuedDate>  \n'  
     '       <databus.packageDirectory>  \n'  
@@ -65,32 +75,21 @@ def generateParentPom(groupId, artifactId, packaging, version, modules, packageD
     '     \n'  
     '</project>  \n')  
 
-def generateChildPom(groupId, parentArtifactId, version, artifactId, packaging, license=None):
-    if license == None:
-        return ('<?xml version="1.0" ?>  '  
-        '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  \n'  
-        '\n'  
-        '\n'  
-        '   <parent>  \n'   
-        f'      <groupId>{groupId}</groupId>  \n'  
-        '\n'    
-        f'      <artifactId>{parentArtifactId}</artifactId>  \n'  
-        '\n'  
-        f'      <version>{version}</version>  \n'  
-        '\n'  
-        '   </parent>  \n'  
-        '\n'  
-        '   <modelVersion>4.0.0</modelVersion>  \n'  
-        '\n'  
-        f'  <groupId>{groupId}</groupId>  \n' 
-        '\n'    
-        f'  <artifactId>{artifactId}</artifactId>  \n'  
-        '\n'  
-        f'  <packaging>{packaging}</packaging>  \n'  
-        '\n'   
-        '</project>\n')
+def generateChildPom(groupId, artifactId, packaging, version, license=None, parentArtifactId=default_parentArtifact, parentVersion=default_version):
+    if version == None or version == "":
+        versionString = ""
     else:
-        return ('<?xml version="1.0" ?>  '  
+        versionString = f"<version>{version}</version>"
+
+    if license == None or license == "":
+        licenseString = ""
+    else:
+        licenseString = (
+                        '   <properties>\n'
+                        f'      <databus.license>{license}</databus.license>\n'
+                        '   </properties>\n'
+                        )
+    return ('<?xml version="1.0" ?>  '  
         '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  \n'  
         '\n'  
         '\n'  
@@ -105,15 +104,15 @@ def generateChildPom(groupId, parentArtifactId, version, artifactId, packaging, 
         '\n'  
         '   <modelVersion>4.0.0</modelVersion>  \n'  
         '\n'  
+        f'{versionString}'
+        '\n'
         f'  <groupId>{groupId}</groupId>  \n' 
         '\n'    
         f'  <artifactId>{artifactId}</artifactId>  \n'  
         '\n'  
         f'  <packaging>{packaging}</packaging>  \n'  
         '\n'
-        '   <properties>\n'
-        f'    <databus.license>{license}</databus.license>\n'  
-        '   </properties>\n' 
+        f'{licenseString}' 
         '</project>\n')
 
 

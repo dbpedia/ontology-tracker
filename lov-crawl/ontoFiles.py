@@ -56,17 +56,20 @@ def writeVocabInformation(pathToFile, definedByUri, lastModified, rapperErrors, 
   with open(pathToFile, "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)
 
-def parseRDFSource(sourcefile, filepath, outputType, deleteEmpty=True):
+def parseRDFSource(sourcefile, filepath, outputType, deleteEmpty=True, silent=False):
   print("Parsing the vocabulary as N-Triples...")
   with open(filepath, "w+") as ontfile:
     process = subprocess.Popen(["rapper", "-g", sourcefile, "-o", outputType], stdout=ontfile, stderr=subprocess.PIPE)
     stderr=process.communicate()[1].decode("utf-8")
-    print(stderr)
+    if not silent:
+      print(stderr)
   if deleteEmpty:
     returnedTriples = getTripleNumberFromRapperLog(stderr)
-    print("Returned Triples: ", returnedTriples)
+    if not silent:
+      print("Returned Triples: ", returnedTriples)
     if returnedTriples == None or returnedTriples == 0:
-      print("Parsed file empty, deleting...")
+      if not silent:
+        print("Parsed file empty, deleting...")
       os.remove(filepath)
   return returnRapperErrors(stderr)
 
@@ -112,9 +115,3 @@ def checkIfUriInIndex(uri, index):
 def writeIndexJson(index):
   with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.json"), "w+") as indexfile:
     json.dump(index, indexfile, indent=4, sort_keys=True)
-
-
-parseRDFSource("/home/denis/Workspace/Job/ontology-tracker/lov-crawl/testdir/data.istex.fr/ontology--istex/2020.04.20-130532/ontology--istex_type=orig.html",
-              "./SHOULD_BE_DELETED.nt",
-              "turtle",
-              True)

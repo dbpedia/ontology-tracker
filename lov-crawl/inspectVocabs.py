@@ -42,6 +42,59 @@ def getRelevantRDFSVocabInfo(graph):
     else:
         return (None, None, None, None)
 
+# Returns the possible labels for a ontology
+def getPossibleLabels(graph):
+    queryString=(
+        "SELECT DISTINCT ?label ?dctTitle ?dcTitle \n"
+        "WHERE {\n"
+        " ?uri a owl:Ontology .\n"
+        " OPTIONAL { ?uri rdfs:label ?label FILTER langMatches(lang(?label), \"en\")}\n"    
+        " OPTIONAL { ?uri dcterms:title ?dctTitle }\n"
+        " OPTIONAL { ?uri dc:title ?dcTitle }\n"
+        "} LIMIT 1"
+        )
+    result=graph.query(queryString, initNs={"owl": OWL, "rdfs":RDFS, "dcterms":DCTERMS, "dc":DC})
+    if result != None and len(result) > 0:
+        for row in result:
+            return row
+    else:
+        return None
+
+# returns the possible descriptions for a ontology
+def getPossibleDescriptions(graph):
+    queryString=(
+        "SELECT DISTINCT ?rdfsDescription ?dctDescription ?dcDescription ?rdfsComment ?dctAbstract\n"
+        "WHERE {\n"
+        " ?uri a owl:Ontology .\n"
+        " OPTIONAL { ?uri rdfs:description ?rdfsDescription }\n"
+        " OPTIONAL { ?uri dcterms:description ?dctDescription }\n"
+        " OPTIONAL { ?uri dc:description ?dcDescription }\n"    
+        " OPTIONAL { ?uri rdfs:comment ?rdfsComment }\n"
+        " OPTIONAL { ?uri dcterms:abstract ?dctAbstract }\n"
+        "} LIMIT 1"
+        )
+    result=graph.query(queryString, initNs={"owl": OWL, "rdfs":RDFS, "dcterms":DCTERMS, "dc":DC})
+    if result != None and len(result) > 0:
+        for row in result:
+            return row
+    else:
+        return None
+
+# returns the license if there is any
+def getLicense(graph):
+    queryString=(
+        "SELECT DISTINCT ?license \n"
+        "WHERE {\n"
+        " ?uri a owl:Ontology .\n"
+        " OPTIONAL { ?uri dcterms:license ?license }\n"   
+        "} LIMIT 1"
+        )
+    result=graph.query(queryString, initNs={"owl": OWL, "dcterms": DCTERMS})
+    if result != None and len(result) > 0:
+        for row in result:
+            return row[0]
+    else:
+        return None
 # returns the relevant dcterms values (uri, dcterms:license, dcterms:title, dcterms:abstract, dcterms:description)
 def getRelevantDCTERMSVocabInfo(graph):
     queryString=(
@@ -68,7 +121,7 @@ def getRelevantDCVocabInfo(graph):
         "SELECT DISTINCT ?uri ?title ?description\n"
         "WHERE {\n"
         " ?uri a owl:Ontology .\n"
-        " OPTIONAL { ?uri dc:title ?license }\n"
+        " OPTIONAL { ?uri dc:title ?title }\n"
         " OPTIONAL { ?uri dc:description ?description }\n"    
         "} LIMIT 1"
         )
@@ -124,5 +177,3 @@ def getOntologyReport(rootdir):
                         print("LastModified: ", data["lastModified"])
                     if data["rapperErrorLog"] != "":
                         print("RapperErrors: ", data["rapperErrorLog"])
-
-            

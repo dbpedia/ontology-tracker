@@ -119,18 +119,19 @@ def getEtagFromResponse(response):
     return ""
   
 
-def getFileEnding(response, accHeader):
+def getFileEnding(response):
   if "Content-Type" in response.headers.keys():
     contentType = response.headers["content-type"]
     match = contentTypeRegex.search(contentType)
+    fileEnding = ""
     if match == None:
-      return ""
+      fileEnding = ""
     else:
-      contentType = match.group(1)
-      if contentType == "octet-stream":
-        contentType = accHeader.split("/")[1]
+      fileEnding = fileTypeDict.get(match.group(1), "")
+    if contentType == "":
+      fileEnding = getFileExtensionFromUri(response.url)
     print("Content Type: " + contentType)
-    return fileTypeDict.get(contentType, "")
+    return fileEnding
   else:
     return ""
 
@@ -138,7 +139,7 @@ def downloadSource(uri, path, name, accHeader):
   try:
     acc_header = {'Accept': accHeader}
     response=requests.get(uri, headers=acc_header, timeout=30, allow_redirects=True)    
-    fileEnding = getFileEnding(response, accHeader)
+    fileEnding = getFileEnding(response)
     if fileEnding == "":
       fileEnding = getFileExtensionFromUri(response.url)
     filePath = path + os.sep + name +"_type=orig"+ fileEnding
@@ -199,7 +200,7 @@ def checkForNewVersion(vocab_uri, oldETag, oldLastMod, bestHeader):
         return None
   
 
-def generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, lastMod, etag, accessDate):
+def generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, response, accessDate):
   # generate parsed variants of the ontology
   rapperErrors, rapperWarnings=ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.ttl"), outputType="turtle", deleteEmpty=True)
   ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.nt"), outputType="ntriples", deleteEmpty=True)
@@ -221,16 +222,20 @@ def generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader
   # write the metadata json file
   ontoFiles.writeVocabInformation(pathToFile=os.path.join(filePath, artifact+"_type=meta.json"),
                                   definedByUri=vocab_uri,
-                                  lastModified=lastMod,
+                                  lastModified=getLastModifiedFromResponse(response),
                                   rapperErrors=rapperErrors,
                                   rapperWarnings=rapperWarnings,
-                                  etag=etag,
+                                  etag=getEtagFromResponse(response),
                                   tripleSize=triples,
                                   bestHeader=bestHeader,
                                   shaclValidated=conforms,
-                                  accessed= accessDate
+                                  accessed= accessDate,
+                                  headerString=str(response.headers)
                                   )
-  docustring = getLodeDocuFile(vocab_uri)
+  if triples > 0:                                                                
+    docustring = getLodeDocuFile(vocab_uri)
+  else:
+    docustring = None
   if docustring != None:
     with open(filePath + os.sep + artifact + "_type=generatedDocu.html", "w+") as docufile:
       print(docustring, file=docufile)
@@ -284,14 +289,14 @@ def handleUri(vocab_uri, index, dataPath):
 
   if downloadSucessful:
     # get some metadata
-    
+    headersString = str(response.headers)
     lastMod = getLastModifiedFromResponse(response)
     etag = getEtagFromResponse(response)
     # append uri to index with updated values
     if isNew:
       index.append({"vocab-uri":vocab_uri, "last-modified":lastMod, "best-header":bestHeader, "e-tag":etag})
     
-    ontograph=generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, lastMod, etag, accessDate)
+    ontograph=generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, response, accessDate)
     md_label=artifact + " ontology"
     md_description=""
     license=None
@@ -354,7 +359,8 @@ def handleUri(vocab_uri, index, dataPath):
                                     tripleSize= 0,
                                     bestHeader="",
                                     shaclValidated=False,
-                                    accessed=""
+                                    accessed="",
+                                    headerString=""
                                     )
     with open(os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact, "pom.xml"), "w+") as childpom:
       childpomString = generatePoms.generateChildPom(groupId=groupId,

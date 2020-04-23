@@ -41,7 +41,7 @@ def deleteEmptyDirsRecursive(startpath):
   else:
     print(f"Not a directory: {startpath}")
 
-def writeVocabInformation(pathToFile, definedByUri, lastModified, rapperErrors, rapperWarnings, etag, tripleSize, bestHeader, shaclValidated, accessed):
+def writeVocabInformation(pathToFile, definedByUri, lastModified, rapperErrors, rapperWarnings, etag, tripleSize, bestHeader, shaclValidated, accessed, headerString):
   vocabInformation={}
   vocabInformation["ontology-resource"] = definedByUri
   vocabInformation["accessed"] = accessed
@@ -52,6 +52,7 @@ def writeVocabInformation(pathToFile, definedByUri, lastModified, rapperErrors, 
   vocabInformation["triples"] = tripleSize
   vocabInformation["best-header"] = bestHeader
   vocabInformation["SHACL-validated"] = shaclValidated
+  vocabInformation["response-header"] = headerString
 
   with open(pathToFile, "w+") as outfile:
     json.dump(vocabInformation, outfile, indent=4, sort_keys=True)

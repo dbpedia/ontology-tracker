@@ -79,7 +79,7 @@ def generateChildPom(groupId, artifactId, packaging, version, license=None, pare
     if version == None or version == "":
         versionString = ""
     else:
-        versionString = f"<version>{version}</version>"
+        versionString = f"<version>{version}</version>\n"
 
     if license == None or license == "":
         licenseString = ""
@@ -98,19 +98,19 @@ def generateChildPom(groupId, artifactId, packaging, version, license=None, pare
         '\n'    
         f'      <artifactId>{parentArtifactId}</artifactId>  \n'  
         '\n'  
-        f'      <version>{version}</version>  \n'  
+        f'      <version>{parentVersion}</version>  \n'  
         '\n'  
         '   </parent>  \n'  
         '\n'  
         '   <modelVersion>4.0.0</modelVersion>  \n'  
         '\n'  
-        f'{versionString}'
+        f'   {versionString}'
         '\n'
-        f'  <groupId>{groupId}</groupId>  \n' 
+        f'   <groupId>{groupId}</groupId>  \n' 
         '\n'    
-        f'  <artifactId>{artifactId}</artifactId>  \n'  
+        f'   <artifactId>{artifactId}</artifactId>  \n'  
         '\n'  
-        f'  <packaging>{packaging}</packaging>  \n'  
+        f'   <packaging>{packaging}</packaging>  \n'  
         '\n'
         f'{licenseString}' 
         '</project>\n')
@@ -124,6 +124,4 @@ def writeMarkdownDescription(path, artifact, label, explaination, description=""
             "\n"
             f"{description}")
     print(mdstring, file=mdfile)
-
-
 

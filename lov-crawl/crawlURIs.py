@@ -321,7 +321,8 @@ def handleUri(vocab_uri, index, dataPath):
     os.makedirs(failedPath, exist_ok=True)
     # generate parent-pom if not existent
     if not os.path.isfile(os.path.join(dataPath, "unavailable-ontologies", "pom.xml")):
-      pomString=generatePoms.generateParentPom(groupId="unavailable-ontologies",
+      with open(os.path.join(dataPath, "unavailable-ontologies", "pom.xml"), "w+") as pomfile:
+        pomString=generatePoms.generateParentPom(groupId="unavailable-ontologies",
                                             packaging="pom",
                                             modules=[],
                                             packageDirectory=generatePoms.packDir,
@@ -330,8 +331,9 @@ def handleUri(vocab_uri, index, dataPath):
                                             maintainer=generatePoms.pub,
                                             groupdocu=failedGroupDoc,
                                             )
-
-    index.append({"vocab-uri":vocab_uri, "last-modified":"", "best-header":"", "e-tag":""})
+        print(pomString, file=pomfile)
+    if not isNew:
+      index.append({"vocab-uri":vocab_uri, "last-modified":"", "best-header":"", "e-tag":""})
     ontoFiles.writeVocabInformation(pathToFile=os.path.join(failedPath, groupId + "--" + artifact + "_type=meta.json"),
                                     definedByUri=vocab_uri,
                                     lastModified="",
@@ -343,11 +345,13 @@ def handleUri(vocab_uri, index, dataPath):
                                     shaclValidated=False,
                                     accessed=""
                                     )
-    childpomString = generatePoms.generateChildPom(groupId=groupId,
+    with open(os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact, "pom.xml"), "w+") as childpom:
+      childpomString = generatePoms.generateChildPom(groupId=groupId,
                                                   version=version,
                                                   artifactId=groupId + "--" + artifact,
                                                   packaging="jar",
                                                   license=None)
+      print(childpomString, file=childpom)
     generatePoms.writeMarkdownDescription(path=os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact), 
                                           artifact=groupId + "--" + artifact,
                                           label=groupId + "--" + artifact + " ontology", 

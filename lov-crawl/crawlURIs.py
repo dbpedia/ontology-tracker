@@ -343,7 +343,7 @@ def handleUri(vocab_uri, index, dataPath):
                                             groupdocu=failedGroupDoc,
                                             )
         print(pomString, file=pomfile)
-    if not isNew:
+    if isNew:
       index.append({"vocab-uri":vocab_uri, "last-modified":"", "best-header":"", "e-tag":""})
     ontoFiles.writeVocabInformation(pathToFile=os.path.join(failedPath, groupId + "--" + artifact + "_type=meta.json"),
                                     definedByUri=vocab_uri,

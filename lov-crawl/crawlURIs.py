@@ -201,6 +201,10 @@ def checkForNewVersion(vocab_uri, oldETag, oldLastMod, bestHeader):
   
 
 def generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader, response, accessDate):
+  if len(response.history) > 0:
+    nirHeader = str(response.history[0].headers)
+  else:
+    nirHeader = ""
   # generate parsed variants of the ontology
   rapperErrors, rapperWarnings=ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.ttl"), outputType="turtle", deleteEmpty=True)
   ontoFiles.parseRDFSource(pathToOrigFile, os.path.join(filePath, artifact+"_type=parsed.nt"), outputType="ntriples", deleteEmpty=True)
@@ -230,7 +234,8 @@ def generateNewRelease(vocab_uri, filePath, artifact, pathToOrigFile, bestHeader
                                   bestHeader=bestHeader,
                                   shaclValidated=conforms,
                                   accessed= accessDate,
-                                  headerString=str(response.headers)
+                                  headerString=str(response.headers),
+                                  nirHeader = nirHeader
                                   )
   if triples > 0:                                                                
     docustring = getLodeDocuFile(vocab_uri)
@@ -360,7 +365,8 @@ def handleUri(vocab_uri, index, dataPath):
                                     bestHeader="",
                                     shaclValidated=False,
                                     accessed="",
-                                    headerString=""
+                                    headerString="",
+                                    nirHeader=""
                                     )
     with open(os.path.join(dataPath, "unavailable-ontologies", groupId + "--" + artifact, "pom.xml"), "w+") as childpom:
       childpomString = generatePoms.generateChildPom(groupId=groupId,
@@ -386,6 +392,3 @@ def crawlLOV(dataPath):
       vocab_uri=dataObject["uri"]
       handleUri(vocab_uri, index, dataPath)
     ontoFiles.writeIndexJson(index)
-
-
-downloadSource("https://w3id.org/arco/ontology/location", ".", "testont", "application/rdf+xml")

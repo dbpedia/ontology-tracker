@@ -28,6 +28,9 @@ rdfHeaders=["application/rdf+xml", "application/ntriples", "text/turtle", "text/
 
 urlRegex=r"https?://(.+?)/(.*)"
 
+# regex for parsing the file ending  of an url
+uriFileExtensionRegex = re.compile(r"^.*\/.+(\.\w+)$")
+
 #should be extended maybe
 fileTypeDict = {"turtle": ".ttl", "rdf+xml": ".rdf", "ntriples": ".nt", "rdf+n3":".n3", "html":".html", "xml":".xml"}
 
@@ -39,6 +42,13 @@ def isNoneOrEmpty(string):
     return False
   else:
     return True
+
+def getFileExtensionFromUri(uri):
+  match = uriFileExtensionRegex.match(uri)
+  if match != None:
+    return match.group(1)
+  else:
+    return ""
 
 def getLodeDocuFile(vocab_uri):
   print("Generating lode-docu...")
@@ -127,9 +137,10 @@ def getFileEnding(response, accHeader):
 def downloadSource(uri, path, name, accHeader):
   try:
     acc_header = {'Accept': accHeader}
-    response=requests.get(uri, headers=acc_header, timeout=30, allow_redirects=True)
-    print("Status: " + str(response.status_code))
+    response=requests.get(uri, headers=acc_header, timeout=30, allow_redirects=True)    
     fileEnding = getFileEnding(response, accHeader)
+    if fileEnding == "":
+      fileEnding = getFileExtensionFromUri(response.url)
     filePath = path + os.sep + name +"_type=orig"+ fileEnding
     if response.status_code < 400:
       with open(filePath, "w+") as ontfile:
@@ -370,4 +381,5 @@ def crawlLOV(dataPath):
       handleUri(vocab_uri, index, dataPath)
     ontoFiles.writeIndexJson(index)
 
-        
+
+downloadSource("https://w3id.org/arco/ontology/location", ".", "testont", "application/rdf+xml")

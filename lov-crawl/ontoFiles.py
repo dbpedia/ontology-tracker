@@ -88,20 +88,26 @@ def getParsedTriples(filepath):
 def loadIndex():
   resultDict = {}
   with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.tsv"), "r") as indexfile:
-    reader = csv.reader(indexfile, delimiter="|")
+    reader = csv.reader(indexfile, delimiter="\t")
     for row in reader:
       print(row)
       vocabUri = row[0]
-      bestHeader = row[1]
-      lastMod = row[2]
-      etag = row[3]
-      resultDict[vocabUri] = (bestHeader, lastMod, etag)
   return resultDict
 
 def loadIndexJson():
   with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.json"), "r") as indexfile:
     jsonIndex = json.load(indexfile)
   return jsonIndex
+
+def loadSimpleIndex():
+  with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.txt"), "r") as indexfile:
+    lines = [line.rstrip() for line in indexfile]
+  return lines
+
+def writeSimpleIndex(index):
+  with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.txt"), "w") as indexfile: 
+    print("\n".join(index), file=indexfile)
+
 
 def writeIndex(index):
   with open(os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "vocab_index.tsv"), "w") as indexfile:

@@ -9,5 +9,16 @@ import ontoFiles
 
 
 rootdir=sys.argv[1]
-crawlURIs.crawlLOV(rootdir)
-ontoFiles.deleteEmptyDirsRecursive(rootdir)
+
+index = ontoFiles.loadSimpleIndex()
+
+new_uris = []
+
+for uri in crawlURIs.getLovUrls():
+    if not uri in index:
+        new_uris.append(uri)
+
+for uri in new_uris:
+    crawlURIs.handleNewUri(uri, index, rootdir)
+
+ontoFiles.writeSimpleIndex(index)

@@ -1,8 +1,7 @@
 import os
 import sys
 import rdflib
-from rdflib import OWL
-from rdflib import RDFS
+from rdflib import OWL, RDFS, RDF, URIRef, ConjunctiveGraph
 from rdflib.namespace import DCTERMS
 from rdflib.namespace import DC
 import json
@@ -41,6 +40,23 @@ def getRelevantRDFSVocabInfo(graph):
             return row
     else:
         return (None, None, None, None)
+
+# returns the NIR-URI if it got a owl:Ontology prop, else None
+def getNIRUri(graph):
+    queryString=(
+        "SELECT DISTINCT ?uri\n"
+        "WHERE {\n"
+        " ?uri a owl:Ontology .\n"
+        "} LIMIT 1"
+        )
+    result = graph.query(queryString, initNs={"owl": OWL, "rdf":RDF})
+    if result != None and len(result) > 0:
+        for row in result:
+            return row[0]
+    else:
+        return None
+
+
 
 # Returns the possible labels for a ontology
 def getPossibleLabels(graph):
@@ -133,7 +149,7 @@ def getRelevantDCVocabInfo(graph):
         return (None, None, None)
 
 # returns the non information resource of an ontology, representing the entity of the ontology
-def getDefinedByUris(ontgraph):
+def getDefinedByUri(ontgraph):
     result=ontgraph.query(
         """
         SELECT DISTINCT ?defbyUri
@@ -143,7 +159,7 @@ def getDefinedByUris(ontgraph):
         """ )
     if result != None and len(result) > 0:
         for row in result:
-            return row
+            return row[0]
     else:
         return None
 
@@ -177,3 +193,35 @@ def getOntologyReport(rootdir):
                         print("LastModified: ", data["lastModified"])
                     if data["rapperErrorLog"] != "":
                         print("RapperErrors: ", data["rapperErrorLog"])
+
+
+def checkNIRuris(rootdir):
+    for groupdir in [dir for dir in os.listdir(rootdir) if os.path.isdir(os.path.join(rootdir, dir))]:
+        for artifactDir in [dir for dir in os.listdir(os.path.join(rootdir, groupdir)) if os.path.isdir(os.path.join(rootdir, groupdir, dir))]:
+            versionDir = [dir for dir in os.listdir(os.path.join(rootdir, groupdir, artifactDir)) if os.path.isdir(os.path.join(rootdir, groupdir, artifactDir, dir))][0]
+            filepath = os.path.join(rootdir, groupdir, artifactDir, versionDir, artifactDir + "_type=parsed.ttl")
+            jsonPath = os.path.join(rootdir, groupdir, artifactDir, versionDir, artifactDir + "_type=meta.json")
+
+            with open(jsonPath, "r") as jsonFile:
+                jsonData = json.load(jsonFile)
+            if os.path.isfile(filepath):
+                graph = getGraphOfVocabFile(filepath)
+            else:
+                print("Not parseable")
+                continue
+            vocabUri_json_ref = URIRef(jsonData["ontology-resource"])
+            vocabUri_graph = getNIRUri(graph)
+            if vocabUri_graph == None:
+                print("No Ontology", groupdir, artifactDir)
+            elif vocabUri_graph == vocabUri_json_ref:
+                print("Equal")
+            else:
+                print("Differs", vocabUri_json_ref, vocabUri_graph)
+
+def loadNQuadsFile(filepath):
+    conGraph = ConjunctiveGraph()
+    conGraph.parse(filepath)
+
+    print(len([x for x in conGraph.store.contexts()]))
+
+#loadNQuadsFile("/home/denis/Downloads/lov.nq")

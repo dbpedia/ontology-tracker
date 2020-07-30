@@ -20,8 +20,13 @@ jobs:
                             sudo apt-get install raptor2-utils
                         - name: Add PKCS12 webid file
                           env:
-                                WEBID_KEY: ${{ secrets.WEBID_KEY }}
-                                WEBID_CRT: ${{ secrets.WEBID_CRT }} 
+                                # Not used if WEBID_BASE64 is set. But generation similar to WEBID_BASE64 just with certificate and key seperated
+                                WEBID_KEY: ${{ secrets.WEBID_KEY }} 
+                                WEBID_CRT: ${{ secrets.WEBID_CRT }}
+                                # How to set the WEBID_BASE64 variable: 
+                                # 1. Follow the webid-guide here: https://github.com/dbpedia/webid (Note: Don't use a password on the .p12 file)
+                                # 2. Result from 1. should be webid_bundle.pfx or webid_bundle.p12 -> run base64 webid_bundle.p12 > webid_bundle.p12.base64
+                                # 3. Copy the content from webid_bundle.p12.base64 into the github secret and name it accordingly 
                                 WEBID_BASE64: ${{ secrets.WEBID_BASE64 }} 
                           run: |
                             git config --local user.email "ontology-commit-bot@test"

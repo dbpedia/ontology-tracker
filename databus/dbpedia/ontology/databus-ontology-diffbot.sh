@@ -102,6 +102,14 @@ dataPomDir=$repoPomDir/data/ontology
 # Downloads the DBpedia-Ontology from http://mappings.dbpedia.org/server/ontology/dbpedia.owl
 wget -O $newVersionDirectory/dbo-snapshots.owl http://mappings.dbpedia.org/server/ontology/dbpedia.owl
 
+# Checks if mappngs ontology is empty
+
+if ! [[ -s $newVersionDirectory/dbo-snapshots.owl ]]
+then
+	echo "Downloaded ontology is empty, probably error while downloading."
+	exit 1
+fi
+
 
 # Generates ntriples from new ontology, sorts them and check if its different from the old nt file
 rapper -i rdfxml -o ntriples $newVersionDirectory/dbo-snapshots.owl | LC_ALL=C sort -u > $newVersionDirectory/dbo-snapshots.nt

@@ -100,8 +100,7 @@ newVersionDirectory=$repoPomDir/data/ontology/dbo-snapshots/$fullVersion
 dataPomDir=$repoPomDir/data/ontology
 
 # Downloads the DBpedia-Ontology from http://mappings.dbpedia.org/server/ontology/dbpedia.owl
-wget -O $newVersionDirectory/dbo-snapshots.owl http://mappings.dbpedia.org/server/ontology/dbpedia.owl
-
+wget -O $newVersionDirectory/dbo-snapshots.owl http://dief.tools.dbpedia.org/server/ontology/dbpedia.owl
 # Checks if mappngs ontology is empty
 
 if ! [[ -s $newVersionDirectory/dbo-snapshots.owl ]]

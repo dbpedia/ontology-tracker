@@ -20,7 +20,7 @@ public class ValidateOntology {
 
     private static Logger L = Logger.getLogger(ValidateOntology.class);
 
-    private static final File DBPEDIA_ONTOLOGY = new File("ontology/dbpedia_ontology.ttl");
+    private static final File DBPEDIA_ONTOLOGY = new File("ontology/ontology.ttl");
     private static final String baseUri = "http://dbpedia.org/ontology/";
     private static String outdir = "result";
 

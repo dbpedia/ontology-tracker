@@ -18,7 +18,7 @@ public class TestRunner {
     public RdfReader getInputData() throws RdfReaderException {
         return new RdfModelReader(
                 RdfReaderFactory.createFileOrResourceReader(
-                        "ontology/dbpedia_ontology.ttl", "").read());
+                        "ontology/ontology.ttl", "").read());
     }
     ;
 

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class RDFUnitValidate {
 
     TestSuite ts = null;
-    static String defaultSchema = "ontology/dbo.tests.shapes.ttl";
+    static String defaultSchema = "guidelines/dbo.tests.shapes.ttl";
     private static Logger L = Logger.getLogger(RDFUnitValidate.class);
 
     public RDFUnitValidate() {
